@@ -1,0 +1,40 @@
+#!/usr/bin/env php
+<?php
+
+declare(strict_types=1);
+
+use Qmdb\Bootstrap\Application;
+use Qmdb\Bootstrap\Console\ConsoleApplication;
+use Qmdb\Bootstrap\RuntimeRequirements;
+use Qmdb\Bootstrap\Shared\ExitCode;
+
+try {
+    require_once dirname(__DIR__) . '/src/Bootstrap/Shared/ExitCode.php';
+    require_once dirname(__DIR__) . '/src/Bootstrap/RuntimeViolation.php';
+    require_once dirname(__DIR__) . '/src/Bootstrap/RuntimeRequirementResult.php';
+    require_once dirname(__DIR__) . '/src/Bootstrap/RuntimeRequirements.php';
+
+    $runtimeResult = (new RuntimeRequirements())->evaluateCurrentRuntime();
+
+    if (!$runtimeResult->isSatisfied()) {
+        fwrite(STDERR, $runtimeResult->toCliString() . "\n");
+        exit(ExitCode::FAILURE->value);
+    }
+
+    require_once dirname(__DIR__) . '/vendor/autoload.php';
+
+    $result = (new ConsoleApplication(Application::bootstrap()))->run(array_slice($argv, 1));
+
+    if ($result->standardOutput() !== '') {
+        fwrite(STDOUT, $result->standardOutput());
+    }
+
+    if ($result->standardError() !== '') {
+        fwrite(STDERR, $result->standardError());
+    }
+
+    exit($result->exitCode()->value);
+} catch (Throwable) {
+    fwrite(STDERR, "QMDB bootstrap failed.\n");
+    exit(ExitCode::FAILURE->value);
+}

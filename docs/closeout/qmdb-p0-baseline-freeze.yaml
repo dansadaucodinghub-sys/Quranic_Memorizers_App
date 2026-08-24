@@ -1,0 +1,673 @@
+freeze_manifest:
+  project: "Qur'an Memorizer DB"
+  project_code: QMDB
+  source_baseline: QMDB-BL-001
+  freeze_id: QMDB-P0-FRZ-001
+  closeout_batch: QMDB-P0-CLOSE
+  readiness: READY_WITH_DEFERRED_DECISIONS
+  generated_at_utc: "2026-08-24T18:20:10Z"
+  freeze_scope: "Approved P0 product, functional, non-functional, security, privacy, accessibility, data, and implementation-readiness artifacts"
+  approval_basis: "Explicit project-owner instruction and successful repository readiness validation"
+
+  completed_batches:
+    - QMDB-P0-B01
+    - QMDB-P0-B02
+    - QMDB-P0-B03
+    - QMDB-P0-B04
+    - QMDB-P0-CLOSE
+
+  locked_architecture:
+    database: mysql
+    storage_engine: InnoDB
+    backend: core_php_8_5
+    architecture: modular_monolith
+    presentation: mvc
+    tenancy: shared_schema
+    cache: redis
+    durable_events: redis_streams
+    live_transport: sse
+    media_storage: private_object_storage
+
+  baseline_categories:
+    - LOCKED_ARCHITECTURE
+    - APPROVED_REQUIREMENT
+    - APPROVED_TECHNICAL_CONVENTION
+    - CONTROLLED_OPEN_DECISION
+    - CONTROLLED_PARAMETER
+    - DEFERRED_MODULE_POLICY
+    - REFERENCE_EVIDENCE
+    - DYNAMIC_PROJECT_STATE
+
+  readiness_gates:
+    product: PASS
+    functional_requirements: PASS
+    non_functional_requirements: PASS
+    security: PASS
+    privacy: PASS_WITH_DEFERRED_DEPENDENCIES
+    child_safety: PASS_WITH_DEFERRED_DEPENDENCIES
+    accessibility: PASS_WITH_DEFERRED_DEPENDENCIES
+    mysql_logical_schema: PASS
+    tenant_isolation: PASS
+    traceability: PASS
+    implementation_roadmap: PASS
+    p1_b01_prompt: PASS
+
+  controlled_counts:
+    repository_files: 90
+    markdown_files: 87
+    yaml_files: 3
+    frozen_files: 82
+    excluded_dynamic_files: 8
+    p0_requirements: 263
+    baseline_requirements: 68
+    functional_requirements: 113
+    non_functional_requirements: 50
+    data_requirements: 32
+    use_cases: 65
+    user_journeys: 24
+    state_machines: 29
+    capabilities: 32
+    events: 47
+    notifications: 29
+    audit_event_categories: 15
+    edge_cases: 80
+    functional_acceptance_scenarios: 48
+    non_functional_acceptance_scenarios: 63
+    threats: 46
+    critical_threats: 42
+    abuse_cases: 34
+    controls: 30
+    risks: 63
+    quality_parameters: 34
+    data_quality_rules: 24
+    logical_tables: 250
+    logical_columns: 1909
+    relationships: 469
+    constraints: 785
+    indexes: 658
+    tenant_owned_or_root_child_tables: 158
+    workspace_aware_relationships: 172
+    open_decisions: 65
+    deferred_decisions: 65
+    resolved_decisions: 5
+    blocking_p1_b01_decisions: 0
+    resolved_gaps: 8
+    remaining_deferred_gaps: 4
+    corrections: 1
+
+  corrections:
+    - correction_id: QMDB-COR-001
+      gap_id: QMDB-GAP-001
+      status: RESOLVED
+      files:
+        - docs/requirements/P0-B04-data-requirements.md
+        - docs/requirements/P0-B04-traceability-matrix.md
+      summary: "Removed two non-canonical module labels from Affected Aggregates fields and corrected trace summaries without changing requirement or schema meaning."
+
+  frozen_files:
+    - path: "docs/accessibility/accessibility-verification-matrix.md"
+      category: APPROVED_REQUIREMENT
+      sha256: 5e75c8f841ec6697914f3a5c8a2090859882911edec85a813d7b323fd2dab1c3
+    - path: "docs/closeout/01-P0-closeout-report.md"
+      category: APPROVED_TECHNICAL_CONVENTION
+      sha256: 1914c3070d6019bb8e5842a41d5003b4326acf299fb5e37cd1d43de710e9ae46
+    - path: "docs/closeout/02-implementation-readiness-assessment.md"
+      category: APPROVED_TECHNICAL_CONVENTION
+      sha256: a1fc1ecbf5461a9aaadc306f3d5b65fec1ef2b59d44ac3938ffd9a7d1f8d1df1
+    - path: "docs/closeout/04-requirement-coverage-and-traceability-summary.md"
+      category: REFERENCE_EVIDENCE
+      sha256: c5a1c03ed8dd4ff987c3a6652e9036ea6f080ac184f2e0743c68c148992d9acb
+    - path: "docs/closeout/05-baseline-freeze-and-change-control.md"
+      category: APPROVED_TECHNICAL_CONVENTION
+      sha256: 3aa519ff937fcda2e1cf472a93afdd11289040b765f395b8d3802de7feeef612
+    - path: "docs/data/01-data-architecture-overview.md"
+      category: REFERENCE_EVIDENCE
+      sha256: 4acf0c08a3ed24c6f14978d0eeef3fd19ff99e95f6e066c38c3e04a2ebfc29ea
+    - path: "docs/data/02-domain-aggregate-and-ownership-model.md"
+      category: REFERENCE_EVIDENCE
+      sha256: c2f03e01ce603f257c052de3b706a896316d37ddc1ed4fc05f595ce0b9858948
+    - path: "docs/data/03-mysql-schema-conventions.md"
+      category: APPROVED_TECHNICAL_CONVENTION
+      sha256: 3c095d55ca75aa94039538ac00c632f45f58db963749c308a538fece046d6b7a
+    - path: "docs/data/04-entity-relationship-model.md"
+      category: REFERENCE_EVIDENCE
+      sha256: a6715f1c8a8b58621463a12b999c14784e33047946b09e5fed1e81b9f8ec58f5
+    - path: "docs/data/05-table-and-column-data-dictionary.md"
+      category: REFERENCE_EVIDENCE
+      sha256: 23a0b0752c99b8a76169f714367ad48c8b6d773e35af877113a330f887acac49
+    - path: "docs/data/06-relationship-constraint-and-integrity-catalog.md"
+      category: REFERENCE_EVIDENCE
+      sha256: c4c30655f3535463b4ab0e54bd83260abf074e95f45eb0968e0c3889ba5dff84
+    - path: "docs/data/07-indexing-and-query-access-patterns.md"
+      category: REFERENCE_EVIDENCE
+      sha256: cc076b21feee98611f33b4267f63191424f2431483949b5d6f613c061bf7eecc
+    - path: "docs/data/08-record-versioning-lifecycle-and-deletion.md"
+      category: REFERENCE_EVIDENCE
+      sha256: ba7b59d14cc0f1dbbd593abe0355479da52de187febc3582da3a02fd0a31e968
+    - path: "docs/data/09-tenant-isolation-data-model.md"
+      category: APPROVED_TECHNICAL_CONVENTION
+      sha256: 55be736416a286df6b952236e08232e20c73229b08d0e1db70e3f21bd6d42f82
+    - path: "docs/data/10-data-classification-ownership-and-lineage.md"
+      category: REFERENCE_EVIDENCE
+      sha256: 56cd3cc3f9e845855f0dbe13d6c95651ff253b2f9a29d8b72f9be9dcf32cfefd
+    - path: "docs/data/11-migration-seed-and-bootstrap-plan.md"
+      category: APPROVED_TECHNICAL_CONVENTION
+      sha256: 0edb480adcb7c66b8ed70e5d979bd935c6495f6d8f2408a712ba0ec3024d8f57
+    - path: "docs/data/12-volume-archival-and-partitioning-strategy.md"
+      category: REFERENCE_EVIDENCE
+      sha256: 0c44426f2c56fc44ed4a1ca65760b70f8032f2366a5b7fe83f97289ff9bbafff
+    - path: "docs/data/13-schema-review-and-implementation-readiness.md"
+      category: REFERENCE_EVIDENCE
+      sha256: 3e254e15b8abdde30ec27bdf080f33086b1c4bd8446ec1e741ae278bb9172b61
+    - path: "docs/data/controlled-taxonomy-and-seed-catalog.yaml"
+      category: APPROVED_TECHNICAL_CONVENTION
+      sha256: b4ed5423ce303c31e48a008725ac2628d829de2f88b5d0f3984df5f322bf91d6
+    - path: "docs/data/mysql-logical-schema.yaml"
+      category: APPROVED_TECHNICAL_CONVENTION
+      sha256: 43dad01150ad94aacfe3a4a098a3b91b21416abf9d19ff2612e5522c7d9d7038
+    - path: "docs/data/README.md"
+      category: REFERENCE_EVIDENCE
+      sha256: 9e576bca75dfd891a6f0630560e1b1660a27dc42b36c2b2cecd682d6f4b3ced6
+    - path: "docs/domain/core-modules-and-business-invariants.md"
+      category: LOCKED_ARCHITECTURE
+      sha256: 84336566457008edd3c0a2f8b98b5a16a1d4a737ffbb2dd57dc2a60653022eb0
+    - path: "docs/domain/domain-glossary.md"
+      category: APPROVED_REQUIREMENT
+      sha256: d4cbb20b08831d89d0e4aac636ec6204e9908722da906e1ad30de1933a2c9d07
+    - path: "docs/domain/platform-sides-and-capabilities.md"
+      category: APPROVED_REQUIREMENT
+      sha256: 968ea1be3e0c12d36433920d1828bcb01eed9dcca15093ecd3bc8a3cf6d1da43
+    - path: "docs/domain/stakeholders-and-actors.md"
+      category: APPROVED_REQUIREMENT
+      sha256: dd02ea8c9fc192fcf5f5109dc3d1da1d7132f7f928c2b859fdd639bbb6fa63e1
+    - path: "docs/implementation/definition-of-ready-and-done.md"
+      category: APPROVED_TECHNICAL_CONVENTION
+      sha256: e17771e9e1e41e436e16fcf7d9c5044cdf4f89d978e1ce769b7966b1534e4258
+    - path: "docs/implementation/P1-engineering-foundation-backlog.md"
+      category: APPROVED_TECHNICAL_CONVENTION
+      sha256: 38e17177df134c056f8e28d39f99da9e1fdd5cf16b054be42793d9700daa17a2
+    - path: "docs/implementation/phase-and-batch-roadmap.md"
+      category: APPROVED_TECHNICAL_CONVENTION
+      sha256: 873abc3a179ed5df62d3bf8547a93aa0813198f090554c36ae925124299a0512
+    - path: "docs/implementation/prompts/QMDB-P1-B01-core-php-repository-and-runtime-foundation.md"
+      category: APPROVED_TECHNICAL_CONVENTION
+      sha256: 8b8c017f06e0da0d06dcf6e507f8fc41a2abc7364a9662ea4f133c10930b9911
+    - path: "docs/implementation/requirements-to-implementation-map.md"
+      category: APPROVED_TECHNICAL_CONVENTION
+      sha256: df3e88784be2dad63d6808a94c5ee0064ad3316c94c6431b48eb5968c65988d2
+    - path: "docs/operations/backup-recovery-and-continuity-requirements.md"
+      category: REFERENCE_EVIDENCE
+      sha256: ed50d0cab7f0a521c3f3290c21f0216e48240e8c919c22d114ec0ea612b03a71
+    - path: "docs/operations/observability-and-alerting-requirements.md"
+      category: REFERENCE_EVIDENCE
+      sha256: 9c1cdca57b676ec39c851f331910f0825db694ff42bb61b415500d49cd250d3b
+    - path: "docs/operations/quality-attribute-parameter-register.md"
+      category: CONTROLLED_PARAMETER
+      sha256: 7ed88b7bef95e0fd5bc0336d7dd5c9623c96c28bba7eb768568bc900ed109b96
+    - path: "docs/operations/service-criticality-and-degradation-policy.md"
+      category: REFERENCE_EVIDENCE
+      sha256: f49445a9e4f23ced5bdc3a956d8daa164f693a7010e8fc3fe8d07667006b3b4d
+    - path: "docs/privacy/consent-and-minor-safety-control-matrix.md"
+      category: APPROVED_REQUIREMENT
+      sha256: f9d1f33f8e15441ceddc424e2c97c72c922b4997d57e11e2c3b8cba4a2f149d8
+    - path: "docs/privacy/data-classification-and-handling.md"
+      category: APPROVED_REQUIREMENT
+      sha256: 3c723efaf067479de34af194d14c6c5b7ebce2ce479ad7c8fa2a9f9c21474c9c
+    - path: "docs/privacy/privacy-impact-screening.md"
+      category: APPROVED_REQUIREMENT
+      sha256: 9044b7fb3cbb3aac5d514cb8cffd0ee051bd3d28b8cafe7165aa103611d91d49
+    - path: "docs/privacy/retention-and-deletion-decision-register.md"
+      category: APPROVED_REQUIREMENT
+      sha256: c4942ff069ede8eeac5d3fb6e122be0a7bdda6c19aeb76f65a5186d82ba28ecf
+    - path: "docs/project/decision-register.md"
+      category: LOCKED_ARCHITECTURE
+      sha256: 5d01db03107d945951df99355242bc941ee6a919555af877b49e61ffb1c48dd4
+    - path: "docs/project/product-constitution.md"
+      category: LOCKED_ARCHITECTURE
+      sha256: 034ce17961880fb05be05bc86cc66c7c3470cfcc801faa29a776e9637d627dd2
+    - path: "docs/project/system-boundaries.md"
+      category: LOCKED_ARCHITECTURE
+      sha256: 0f2d748fb7dc845e16f6b3d753b38c54b3bb82c9335e178306102db44d953fb2
+    - path: "docs/references/standards-and-regulatory-evidence.md"
+      category: REFERENCE_EVIDENCE
+      sha256: c88f3400593790083af9bc6879f32bd78ccd8b60fb7774189ab3a4bc05934748
+    - path: "docs/requirements/functional/01-identity-access-and-tenancy.md"
+      category: APPROVED_REQUIREMENT
+      sha256: 1d3da2a23fb420450937232afd392e239caa92234fd911eb7a17164ee99e2c2f
+    - path: "docs/requirements/functional/02-people-profiles-and-guardianship.md"
+      category: APPROVED_REQUIREMENT
+      sha256: b932ecee987eeb901b3f93937e957d041f2539469aa903e269ba0d6a3a1fb757
+    - path: "docs/requirements/functional/03-geography-and-organizations.md"
+      category: APPROVED_REQUIREMENT
+      sha256: 246647c13b8fb21a392d90b3270688b5f52f5f62983f951e4a43fc1eb0fd9f73
+    - path: "docs/requirements/functional/04-quran-reference-governance.md"
+      category: APPROVED_REQUIREMENT
+      sha256: 7b6d690a36bfd7cfb009c3f8c3be462e149e00ede53947f227af037709da4939
+    - path: "docs/requirements/functional/05-competition-configuration-and-registration.md"
+      category: APPROVED_REQUIREMENT
+      sha256: 50cd1846a5b8fc8d919f67c24c7f2d5179e9d92580d09ae464467f819e856d69
+    - path: "docs/requirements/functional/06-scheduling-judging-and-scoring.md"
+      category: APPROVED_REQUIREMENT
+      sha256: 4ce6e80d605c0af3545592512a4c4033ffd0fb53552487b5051958b49bb272d9
+    - path: "docs/requirements/functional/07-results-appeals-certificates-and-records.md"
+      category: APPROVED_REQUIREMENT
+      sha256: 7fd8002981d60aab749f3683c027259a2096167cfe9d1ec1222151fa1b74c392
+    - path: "docs/requirements/functional/08-media-recitation-clips-and-moderation.md"
+      category: APPROVED_REQUIREMENT
+      sha256: a09f7788605329c42e7877b83b1f9bd01ffbb380269f52fb73bc62e8659aca20
+    - path: "docs/requirements/functional/09-search-notifications-and-reporting.md"
+      category: APPROVED_REQUIREMENT
+      sha256: d21026682480f0afe99b472b76f720526b6131bf3b4509e07b5dd0f307b8ef4f
+    - path: "docs/requirements/functional/10-privacy-audit-security-operations-and-integrations.md"
+      category: APPROVED_REQUIREMENT
+      sha256: e5fd6a0faad975633b2af2cdf11a6b277cda938d75cfd03ab8cfd5202aab6487
+    - path: "docs/requirements/non-functional/01-security-and-zero-trust.md"
+      category: APPROVED_REQUIREMENT
+      sha256: 8172a5da2c41cac58306fc333b8d44d5e7bea169f8d42a0d45cd575e9709445b
+    - path: "docs/requirements/non-functional/02-privacy-data-protection-and-child-safety.md"
+      category: APPROVED_REQUIREMENT
+      sha256: d5f502ce3dab565ac1154aa21e524cdbd087139797ce993cb6caf0343a4e1d03
+    - path: "docs/requirements/non-functional/03-accessibility-localization-and-inclusive-ux.md"
+      category: APPROVED_REQUIREMENT
+      sha256: 0d998223567c20cfd224e4fed121ac9bc00365225777f09a3de3b26807123fc6
+    - path: "docs/requirements/non-functional/04-performance-scalability-and-capacity.md"
+      category: APPROVED_REQUIREMENT
+      sha256: 71a9fefe5d51a44df7de82e468b13e6353c644b6e1511398af83fd604e2896dc
+    - path: "docs/requirements/non-functional/05-availability-resilience-and-disaster-recovery.md"
+      category: APPROVED_REQUIREMENT
+      sha256: 51d553e728ab52d91cc42cd522c3d2319de1424e446f7458542a2a284ff031fc
+    - path: "docs/requirements/non-functional/06-observability-audit-and-incident-response.md"
+      category: APPROVED_REQUIREMENT
+      sha256: 7cf358889ab6398afa0a781443779c3856ca5f9a40497ecfb8cd01409cde4f22
+    - path: "docs/requirements/non-functional/07-maintainability-testability-and-release-quality.md"
+      category: APPROVED_REQUIREMENT
+      sha256: 6d37fb4f9c724af7f3f48795799647c80209aecb96645035406020a300a0dcbe
+    - path: "docs/requirements/non-functional/08-infrastructure-deployment-and-supply-chain.md"
+      category: APPROVED_REQUIREMENT
+      sha256: 82cd2725ea8bff193094742f0ed68ca8f041d14d173197d362c52dce9ebccc34
+    - path: "docs/requirements/P0-B01-requirements.md"
+      category: APPROVED_REQUIREMENT
+      sha256: f7fe4b8c471fff2ae28507e19128e7f77a7efe643dae3244fe76a43278af81e8
+    - path: "docs/requirements/P0-B01-traceability-matrix.md"
+      category: REFERENCE_EVIDENCE
+      sha256: c5879e107d81a7eacdbb9f7f07697b5240ac3a5d5f5e8b78717c71dfcd991c54
+    - path: "docs/requirements/P0-B02-acceptance-scenarios.md"
+      category: REFERENCE_EVIDENCE
+      sha256: 3d9ac89d2be33d6a3ca57d506f58a7f38aa56b79d705b76b4d16a7bed2a24278
+    - path: "docs/requirements/P0-B02-edge-cases-and-failure-behavior.md"
+      category: REFERENCE_EVIDENCE
+      sha256: 62d847d1dbc84c02c0861af963de3dfc0305af4d029551f3343be814ba0c9456
+    - path: "docs/requirements/P0-B02-event-and-notification-catalog.md"
+      category: REFERENCE_EVIDENCE
+      sha256: a63ee8a10da9244a33e6f70ad6b4fc72d3a173e71bb17371cd48f3b2d088eb6f
+    - path: "docs/requirements/P0-B02-functional-requirements-index.md"
+      category: REFERENCE_EVIDENCE
+      sha256: c6fe5f4c78a0acfa7e9c17f92b867d74ad05494c3217863772b8ea20e3e99a2b
+    - path: "docs/requirements/P0-B02-permission-capability-matrix.md"
+      category: REFERENCE_EVIDENCE
+      sha256: 7e1f701fbade45707a273249a3bf295e97313597f23d86b0fcdbfffb8886e3ff
+    - path: "docs/requirements/P0-B02-traceability-matrix.md"
+      category: REFERENCE_EVIDENCE
+      sha256: bf57a69bec55a18c54ac8705360d8fbb08d34b0f064cb83d62b2f9456b5f7c82
+    - path: "docs/requirements/P0-B02-use-case-catalog.md"
+      category: REFERENCE_EVIDENCE
+      sha256: cee4997a195fa537a85c7722914839517b73bc2146a1c219d0000d6745cae63c
+    - path: "docs/requirements/P0-B02-user-journeys.md"
+      category: REFERENCE_EVIDENCE
+      sha256: 4fe2f7c9cf367510156346588c941d4b428c0d8196b447cb4480f1f14d684d13
+    - path: "docs/requirements/P0-B02-workflows-and-state-machines.md"
+      category: REFERENCE_EVIDENCE
+      sha256: 31facf871dcd0e51e521f7c26f3a95099a264c9eb81871cd10751bb1b2934bcc
+    - path: "docs/requirements/P0-B03-non-functional-acceptance-scenarios.md"
+      category: REFERENCE_EVIDENCE
+      sha256: e00584247b287e57af9fc9ecbfc8ebcadd2e28f91ff91d649085c414ab167a9e
+    - path: "docs/requirements/P0-B03-non-functional-requirements-index.md"
+      category: REFERENCE_EVIDENCE
+      sha256: 5bf620a85bc88b9f1500fc738cb8ca1824e55a2300923abdebfb054ca588bd9c
+    - path: "docs/requirements/P0-B03-quality-attribute-scenarios.md"
+      category: APPROVED_REQUIREMENT
+      sha256: bcb7db80628364530bee869e568402b4d2beeea60730cec3f8494068a8a7e3fa
+    - path: "docs/requirements/P0-B03-security-and-abuse-cases.md"
+      category: REFERENCE_EVIDENCE
+      sha256: 8fb87d76a431f522152b45ca5bf2d5c234f466dba1bd914d409441a9095b776b
+    - path: "docs/requirements/P0-B03-traceability-matrix.md"
+      category: REFERENCE_EVIDENCE
+      sha256: 3cc8ea9df530d24efd008fa18914fa4f00e0b82f0343ee6debece02b05fefcf2
+    - path: "docs/requirements/P0-B04-data-requirements.md"
+      category: APPROVED_REQUIREMENT
+      sha256: 8b0754c7efbf45f5f8d3ee49f0b2f2c7932278cd712b74221e5eeb0d2476971c
+    - path: "docs/requirements/P0-B04-traceability-matrix.md"
+      category: REFERENCE_EVIDENCE
+      sha256: 95f26dfaee5b1e0a163203cdb9a20e65d96c705c432aa2811e6c4a7e5d3d4e37
+    - path: "docs/security/security-control-catalog.md"
+      category: APPROVED_REQUIREMENT
+      sha256: 47f68d69b413e6402a3d7b490778163d182d3e2fa42fa36bb008c627936cbf64
+    - path: "docs/security/security-verification-matrix.md"
+      category: APPROVED_REQUIREMENT
+      sha256: 80dfec64499a210620953dd857d7336b5665bde104ef9c7bd6d748a3d612e4f0
+    - path: "docs/security/threat-model.md"
+      category: APPROVED_REQUIREMENT
+      sha256: ca67912690363431aacc15f71c194552a973131aaf2076c21c5ce82beb1103e0
+    - path: "docs/security/trust-boundary-and-data-flow-analysis.md"
+      category: APPROVED_REQUIREMENT
+      sha256: 5357fad6aa56beac1c85a49432fe1857551f3e7f0c8898f2150dd48a71c981ca
+
+  excluded_dynamic_files:
+    - path: docs/README.md
+      category: DYNAMIC_PROJECT_STATE
+      reason: "Navigation and repository counts advance with implementation."
+    - path: docs/project/project-state.md
+      category: DYNAMIC_PROJECT_STATE
+      reason: "The execution ledger must advance after each verified batch."
+    - path: docs/project/open-decisions.md
+      category: CONTROLLED_OPEN_DECISION
+      reason: "Decision status, approval evidence and phase gates evolve through governance."
+    - path: docs/project/risk-register.md
+      category: DYNAMIC_PROJECT_STATE
+      reason: "Risk controls, residual assessments and release gates evolve with evidence."
+    - path: docs/closeout/README.md
+      category: DYNAMIC_PROJECT_STATE
+      reason: "Closeout navigation may receive non-semantic link and status maintenance."
+    - path: docs/implementation/README.md
+      category: DYNAMIC_PROJECT_STATE
+      reason: "Implementation navigation and authorization status advance by batch."
+    - path: docs/closeout/03-contradiction-gap-and-resolution-register.md
+      category: DYNAMIC_PROJECT_STATE
+      reason: "The gap ledger remains appendable under change control."
+    - path: docs/closeout/qmdb-p0-baseline-freeze.yaml
+      category: DYNAMIC_PROJECT_STATE
+      reason: "The manifest cannot include its own circular checksum and is regenerated after approved baseline change."
+
+  resolved_decisions:
+    - decision_id: OD-030
+      classification: TECHNICAL_CONVENTION_REQUIRED_NOW
+      status: RESOLVED
+    - decision_id: OD-047
+      classification: TECHNICAL_CONVENTION_REQUIRED_NOW
+      status: RESOLVED
+    - decision_id: OD-048
+      classification: TECHNICAL_CONVENTION_REQUIRED_NOW
+      status: RESOLVED
+    - decision_id: OD-056
+      classification: TECHNICAL_CONVENTION_REQUIRED_NOW
+      status: RESOLVED
+    - decision_id: OD-057
+      classification: TECHNICAL_CONVENTION_REQUIRED_NOW
+      status: RESOLVED
+
+  deferred_decisions:
+    - decision_id: OD-001
+      classification: PROVIDER_SELECTION
+      blocker: BLOCKS_PHASE_P12
+      required_resolution_phase: "Before production architecture approval"
+    - decision_id: OD-002
+      classification: TECHNICAL_CONVENTION_DEFERRED
+      blocker: BLOCKS_PHASE_P12
+      required_resolution_phase: "Before production data architecture"
+    - decision_id: OD-003
+      classification: PROVIDER_SELECTION
+      blocker: BLOCKS_PHASE_P9
+      required_resolution_phase: "Before media implementation procurement"
+    - decision_id: OD-004
+      classification: PROVIDER_SELECTION
+      blocker: BLOCKS_PHASE_P9
+      required_resolution_phase: "Before public media delivery"
+    - decision_id: OD-005
+      classification: PROVIDER_SELECTION
+      blocker: BLOCKS_PHASE_P2
+      required_resolution_phase: "Before email-enabled release"
+    - decision_id: OD-006
+      classification: PROVIDER_SELECTION
+      blocker: BLOCKS_PHASE_P2
+      required_resolution_phase: "Before SMS-enabled release"
+    - decision_id: OD-007
+      classification: PROVIDER_SELECTION
+      blocker: BLOCKS_PHASE_P2
+      required_resolution_phase: "Before push-enabled release"
+    - decision_id: OD-008
+      classification: MODULE_POLICY_DECISION
+      blocker: NON_BLOCKING
+      required_resolution_phase: "Before interface content freeze"
+    - decision_id: OD-009
+      classification: DOMAIN_AUTHORITY_DECISION
+      blocker: BLOCKS_PHASE_P3
+      required_resolution_phase: "Before external organization onboarding"
+    - decision_id: OD-010
+      classification: DOMAIN_AUTHORITY_DECISION
+      blocker: BLOCKS_PHASE_P6
+      required_resolution_phase: "Before scoring implementation"
+    - decision_id: OD-011
+      classification: LEGAL_OR_PRIVACY_REVIEW
+      blocker: BLOCKS_PHASE_P3
+      required_resolution_phase: "Before Minor onboarding specification is finalized"
+    - decision_id: OD-012
+      classification: LEGAL_OR_PRIVACY_REVIEW
+      blocker: BLOCKS_PHASE_P3
+      required_resolution_phase: "Before sensitive Minor consent workflows"
+    - decision_id: OD-013
+      classification: LEGAL_OR_PRIVACY_REVIEW
+      blocker: BLOCKS_PHASE_P9
+      required_resolution_phase: "Before production media lifecycle rules"
+    - decision_id: OD-014
+      classification: LEGAL_OR_PRIVACY_REVIEW
+      blocker: BLOCKS_PHASE_P12
+      required_resolution_phase: "Before production retention automation"
+    - decision_id: OD-015
+      classification: LEGAL_OR_PRIVACY_REVIEW
+      blocker: BLOCKS_PHASE_P3
+      required_resolution_phase: "Before any identity-document workflow"
+    - decision_id: OD-016
+      classification: LEGAL_OR_PRIVACY_REVIEW
+      blocker: BLOCKS_PHASE_P3
+      required_resolution_phase: "Before public profiles are implemented"
+    - decision_id: OD-017
+      classification: DOMAIN_AUTHORITY_DECISION
+      blocker: BLOCKS_PHASE_P8
+      required_resolution_phase: "Before production certificate issuance"
+    - decision_id: OD-018
+      classification: LEGAL_OR_PRIVACY_REVIEW
+      blocker: BLOCKS_PHASE_P12
+      required_resolution_phase: "Before provider contracting"
+    - decision_id: OD-019
+      classification: DOMAIN_AUTHORITY_DECISION
+      blocker: BLOCKS_PHASE_P8
+      required_resolution_phase: "Before legacy import publication"
+    - decision_id: OD-020
+      classification: OPERATIONAL_PARAMETER
+      blocker: BLOCKS_PHASE_P10
+      required_resolution_phase: "Before community launch"
+    - decision_id: OD-021
+      classification: DOMAIN_AUTHORITY_DECISION
+      blocker: BLOCKS_PHASE_P7
+      required_resolution_phase: "Before appeals workflow implementation"
+    - decision_id: OD-022
+      classification: DOMAIN_AUTHORITY_DECISION
+      blocker: BLOCKS_PHASE_P13
+      required_resolution_phase: "Before national rollout"
+    - decision_id: OD-023
+      classification: OPERATIONAL_PARAMETER
+      blocker: BLOCKS_PHASE_P12
+      required_resolution_phase: "Before production resilience sign-off"
+    - decision_id: OD-024
+      classification: OPERATIONAL_PARAMETER
+      blocker: BLOCKS_PHASE_P12
+      required_resolution_phase: "Before production operational acceptance"
+    - decision_id: OD-025
+      classification: TECHNICAL_CONVENTION_DEFERRED
+      blocker: BLOCKS_PHASE_P10
+      required_resolution_phase: "Before recommendation features"
+    - decision_id: OD-026
+      classification: FUTURE_PRODUCT_DECISION
+      blocker: NON_BLOCKING
+      required_resolution_phase: "Before any payment design"
+    - decision_id: OD-027
+      classification: FUTURE_PRODUCT_DECISION
+      blocker: NON_BLOCKING
+      required_resolution_phase: "Before sponsorship functionality"
+    - decision_id: OD-028
+      classification: FUTURE_PRODUCT_DECISION
+      blocker: NON_BLOCKING
+      required_resolution_phase: "Before non-Nigerian production rollout"
+    - decision_id: OD-029
+      classification: FUTURE_PRODUCT_DECISION
+      blocker: NON_BLOCKING
+      required_resolution_phase: "Before monetization design"
+    - decision_id: OD-031
+      classification: MODULE_POLICY_DECISION
+      blocker: BLOCKS_PHASE_P2
+      required_resolution_phase: "Before P2 authentication/recovery implementation acceptance"
+    - decision_id: OD-032
+      classification: MODULE_POLICY_DECISION
+      blocker: BLOCKS_PHASE_P3
+      required_resolution_phase: "Before P3 Person deduplication implementation"
+    - decision_id: OD-033
+      classification: MODULE_POLICY_DECISION
+      blocker: BLOCKS_PHASE_P13
+      required_resolution_phase: "Before P13 pilot package issuance"
+    - decision_id: OD-034
+      classification: DOMAIN_AUTHORITY_DECISION
+      blocker: BLOCKS_PHASE_P2
+      required_resolution_phase: "Before the first affected phase implements its approval transition"
+    - decision_id: OD-035
+      classification: MODULE_POLICY_DECISION
+      blocker: BLOCKS_PHASE_P7
+      required_resolution_phase: "Before P7 Appeal implementation if any fee is proposed"
+    - decision_id: OD-036
+      classification: OPERATIONAL_PARAMETER
+      blocker: BLOCKS_PHASE_P13
+      required_resolution_phase: "Before P13 national pilot approval"
+    - decision_id: OD-037
+      classification: OPERATIONAL_PARAMETER
+      blocker: BLOCKS_PHASE_P12
+      required_resolution_phase: "Before production retention/backup automation"
+    - decision_id: OD-038
+      classification: OPERATIONAL_PARAMETER
+      blocker: BLOCKS_PHASE_P2
+      required_resolution_phase: "Before affected P2/P7/P12 production gates"
+    - decision_id: OD-039
+      classification: PROVIDER_SELECTION
+      blocker: BLOCKS_PHASE_P12
+      required_resolution_phase: "Before production DR environment procurement"
+    - decision_id: OD-040
+      classification: PROVIDER_SELECTION
+      blocker: BLOCKS_PHASE_P8
+      required_resolution_phase: "Before P8 production signing design"
+    - decision_id: OD-041
+      classification: LEGAL_OR_PRIVACY_REVIEW
+      blocker: BLOCKS_PHASE_P12
+      required_resolution_phase: "Before the first affected production processing"
+    - decision_id: OD-042
+      classification: DOMAIN_AUTHORITY_DECISION
+      blocker: BLOCKS_PHASE_P12
+      required_resolution_phase: "Before P12 production accessibility sign-off"
+    - decision_id: OD-043
+      classification: OPERATIONAL_PARAMETER
+      blocker: BLOCKS_PHASE_P13
+      required_resolution_phase: "Before P13 national rollout approval"
+    - decision_id: OD-044
+      classification: DOMAIN_AUTHORITY_DECISION
+      blocker: BLOCKS_PHASE_P12
+      required_resolution_phase: "Before P12 incident-response acceptance"
+    - decision_id: OD-045
+      classification: DOMAIN_AUTHORITY_DECISION
+      blocker: BLOCKS_PHASE_P10
+      required_resolution_phase: "Before P10 community launch"
+    - decision_id: OD-046
+      classification: OPERATIONAL_PARAMETER
+      blocker: BLOCKS_PHASE_P13
+      required_resolution_phase: "Before P13 national rollout and after material recovery change"
+    - decision_id: OD-049
+      classification: OPERATIONAL_PARAMETER
+      blocker: BLOCKS_PHASE_P6
+      required_resolution_phase: "Before P6"
+    - decision_id: OD-050
+      classification: OPERATIONAL_PARAMETER
+      blocker: BLOCKS_PHASE_P6
+      required_resolution_phase: "Before dependent P6 feature"
+    - decision_id: OD-051
+      classification: MODULE_POLICY_DECISION
+      blocker: BLOCKS_PHASE_P2
+      required_resolution_phase: "Before P2 email implementation"
+    - decision_id: OD-052
+      classification: MODULE_POLICY_DECISION
+      blocker: BLOCKS_PHASE_P2
+      required_resolution_phase: "Before P2 phone implementation"
+    - decision_id: OD-053
+      classification: MODULE_POLICY_DECISION
+      blocker: BLOCKS_PHASE_P10
+      required_resolution_phase: "Before P10 handles"
+    - decision_id: OD-054
+      classification: TECHNICAL_CONVENTION_DEFERRED
+      blocker: BLOCKS_PHASE_P4
+      required_resolution_phase: "Before P4"
+    - decision_id: OD-055
+      classification: MODULE_POLICY_DECISION
+      blocker: BLOCKS_PHASE_P4
+      required_resolution_phase: "Before P4/P11 search"
+    - decision_id: OD-058
+      classification: LEGAL_OR_PRIVACY_REVIEW
+      blocker: BLOCKS_PHASE_P2
+      required_resolution_phase: "Before each affected module"
+    - decision_id: OD-059
+      classification: TECHNICAL_CONVENTION_DEFERRED
+      blocker: BLOCKS_PHASE_P12
+      required_resolution_phase: "Before production topology"
+    - decision_id: OD-060
+      classification: TECHNICAL_CONVENTION_DEFERRED
+      blocker: BLOCKS_PHASE_P12
+      required_resolution_phase: "Before archive automation"
+    - decision_id: OD-061
+      classification: DOMAIN_AUTHORITY_DECISION
+      blocker: BLOCKS_PHASE_P3
+      required_resolution_phase: "Before P3 seed"
+    - decision_id: OD-062
+      classification: DOMAIN_AUTHORITY_DECISION
+      blocker: BLOCKS_PHASE_P2
+      required_resolution_phase: "Before P2"
+    - decision_id: OD-063
+      classification: DOMAIN_AUTHORITY_DECISION
+      blocker: BLOCKS_PHASE_P4
+      required_resolution_phase: "Before P4"
+    - decision_id: OD-064
+      classification: DOMAIN_AUTHORITY_DECISION
+      blocker: BLOCKS_PHASE_P6
+      required_resolution_phase: "Before P6"
+    - decision_id: OD-065
+      classification: DOMAIN_AUTHORITY_DECISION
+      blocker: BLOCKS_PHASE_P8
+      required_resolution_phase: "Before P8"
+    - decision_id: OD-066
+      classification: DOMAIN_AUTHORITY_DECISION
+      blocker: BLOCKS_PHASE_P8
+      required_resolution_phase: "Before P8"
+    - decision_id: OD-067
+      classification: TECHNICAL_CONVENTION_DEFERRED
+      blocker: BLOCKS_PHASE_P11
+      required_resolution_phase: "Before analytics extraction"
+    - decision_id: OD-068
+      classification: TECHNICAL_CONVENTION_DEFERRED
+      blocker: BLOCKS_PHASE_P11
+      required_resolution_phase: "Before external search"
+    - decision_id: OD-069
+      classification: TECHNICAL_CONVENTION_DEFERRED
+      blocker: NON_BLOCKING
+      required_resolution_phase: "Before partitioning proposal"
+    - decision_id: OD-070
+      classification: OPERATIONAL_PARAMETER
+      blocker: BLOCKS_PHASE_P11
+      required_resolution_phase: "Before affected production gate"
+
+  integrity:
+    algorithm: SHA-256
+    manifest_self_checksum_included: false
+    frozen_file_order: lexicographic_repository_relative_path
+    verification_rule: "Every listed file must exist and match its lowercase SHA-256 value; any approved frozen-file change requires complete manifest regeneration."
+
+  next_phase:
+    phase: P1
+    phase_name: "Engineering and Repository Foundation"
+    status: READY
+    batch: QMDB-P1-B01
+    batch_name: "Core PHP Repository and Runtime Foundation"
+    prompt_path: docs/implementation/prompts/QMDB-P1-B01-core-php-repository-and-runtime-foundation.md
+    authorization_scope: "Execute P1-B01 only; no domain migration or later module is authorized."
