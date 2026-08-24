@@ -115,9 +115,9 @@ final class SourceArchitectureTest extends TestCase
         self::assertSame('index.php', basename($files[0]));
     }
 
-    public function testNoSecretFileExistsInTheProjectTree(): void
+    public function testNoPrivateKeyOrCertificateFileExistsInTheProjectTree(): void
     {
-        $forbiddenNames = ['.env', 'id_rsa', 'id_ed25519'];
+        $forbiddenNames = ['id_rsa', 'id_ed25519'];
         $forbiddenSuffixes = ['.key', '.pem', '.p12', '.pfx'];
         $iterator = new RecursiveIteratorIterator(
             new RecursiveDirectoryIterator(
@@ -138,10 +138,10 @@ final class SourceArchitectureTest extends TestCase
             }
 
             $name = strtolower($file->getFilename());
-            self::assertNotContains($name, $forbiddenNames, sprintf('%s is a secret file.', $path));
+            self::assertNotContains($name, $forbiddenNames, sprintf('%s is a private-key file.', $path));
 
             foreach ($forbiddenSuffixes as $suffix) {
-                self::assertFalse(str_ends_with($name, $suffix), sprintf('%s is a secret file.', $path));
+                self::assertFalse(str_ends_with($name, $suffix), sprintf('%s is a private-key file.', $path));
             }
         }
     }

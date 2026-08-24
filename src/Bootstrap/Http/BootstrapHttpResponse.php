@@ -6,6 +6,13 @@ namespace Qmdb\Bootstrap\Http;
 
 final readonly class BootstrapHttpResponse
 {
+    /** @var array<string, string> */
+    private const JSON_HEADERS = [
+        'Content-Type' => 'application/json; charset=utf-8',
+        'Cache-Control' => 'no-store',
+        'X-Content-Type-Options' => 'nosniff',
+    ];
+
     /**
      * @param array<string, string> $headers
      */
@@ -30,5 +37,14 @@ final readonly class BootstrapHttpResponse
     public function body(): string
     {
         return $this->body;
+    }
+
+    public static function configurationFailure(): self
+    {
+        return new self(
+            statusCode: 500,
+            headers: self::JSON_HEADERS,
+            body: '{"application":"QMDB","status":"error","code":"CONFIGURATION_FAILURE"}',
+        );
     }
 }

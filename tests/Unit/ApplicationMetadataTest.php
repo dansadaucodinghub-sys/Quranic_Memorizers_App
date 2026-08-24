@@ -18,7 +18,7 @@ final class ApplicationMetadataTest extends TestCase
         self::assertSame('QMDB', $metadata->applicationCode());
         self::assertSame('QMDB-P0-FRZ-001', $metadata->frozenBaseline());
         self::assertSame('P1', $metadata->currentPhase());
-        self::assertSame('QMDB-P1-B01', $metadata->currentBatch());
+        self::assertSame('QMDB-P1-B02', $metadata->currentBatch());
         self::assertSame('0.1.0-dev', $metadata->developmentVersion());
         self::assertSame(
             [
@@ -26,7 +26,7 @@ final class ApplicationMetadataTest extends TestCase
                 'application_code' => 'QMDB',
                 'frozen_baseline' => 'QMDB-P0-FRZ-001',
                 'current_phase' => 'P1',
-                'current_batch' => 'QMDB-P1-B01',
+                'current_batch' => 'QMDB-P1-B02',
                 'development_version' => '0.1.0-dev',
             ],
             $metadata->toArray(),
@@ -37,7 +37,7 @@ final class ApplicationMetadataTest extends TestCase
                 'Application Code: QMDB',
                 'Frozen Baseline: QMDB-P0-FRZ-001',
                 'Current Phase: P1',
-                'Current Batch: QMDB-P1-B01',
+                'Current Batch: QMDB-P1-B02',
                 'Development Version: 0.1.0-dev',
             ],
             $metadata->toCliLines(),

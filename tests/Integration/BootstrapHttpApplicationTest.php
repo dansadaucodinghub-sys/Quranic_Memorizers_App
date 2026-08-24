@@ -5,9 +5,9 @@ declare(strict_types=1);
 namespace Qmdb\Tests\Integration;
 
 use PHPUnit\Framework\TestCase;
-use Qmdb\Bootstrap\Application;
 use Qmdb\Bootstrap\Http\BootstrapHttpApplication;
 use Qmdb\Bootstrap\Http\BootstrapHttpResponse;
+use Qmdb\Tests\Support\ApplicationTestFactory;
 use ReflectionClass;
 
 final class BootstrapHttpApplicationTest extends TestCase
@@ -32,7 +32,7 @@ final class BootstrapHttpApplicationTest extends TestCase
 
         self::assertSame(
             '{"application":"QMDB","status":"ready","phase":"P1",'
-            . '"batch":"QMDB-P1-B01","baseline":"QMDB-P0-FRZ-001"}',
+            . '"batch":"QMDB-P1-B02","baseline":"QMDB-P0-FRZ-001"}',
             $response->body(),
         );
         self::assertSame(
@@ -40,7 +40,7 @@ final class BootstrapHttpApplicationTest extends TestCase
                 'application' => 'QMDB',
                 'status' => 'ready',
                 'phase' => 'P1',
-                'batch' => 'QMDB-P1-B01',
+                'batch' => 'QMDB-P1-B02',
                 'baseline' => 'QMDB-P0-FRZ-001',
             ],
             json_decode($response->body(), true, flags: JSON_THROW_ON_ERROR),
@@ -122,6 +122,30 @@ final class BootstrapHttpApplicationTest extends TestCase
         self::assertSame($first->body(), $second->body());
     }
 
+    public function testPublicSuccessDoesNotExposeConfigurationDetails(): void
+    {
+        $body = $this->successfulResponse()->body();
+
+        foreach (['environment', 'debug', 'timezone', 'configuration', 'source'] as $forbidden) {
+            self::assertStringNotContainsString($forbidden, strtolower($body));
+        }
+    }
+
+    public function testConfigurationFailureResponseIsGenericAndSafe(): void
+    {
+        $response = BootstrapHttpResponse::configurationFailure();
+
+        self::assertSame(500, $response->statusCode());
+        self::assertSame(
+            '{"application":"QMDB","status":"error","code":"CONFIGURATION_FAILURE"}',
+            $response->body(),
+        );
+        self::assertStringNotContainsString('APP_ENV', $response->body());
+        self::assertStringNotContainsString('secret', strtolower($response->body()));
+        self::assertSame('no-store', $response->headers()['Cache-Control']);
+        self::assertSame('nosniff', $response->headers()['X-Content-Type-Options']);
+    }
+
     private function successfulResponse(): BootstrapHttpResponse
     {
         return $this->http()->handle('8.5.4', ['json', 'mbstring']);
@@ -129,6 +153,6 @@ final class BootstrapHttpApplicationTest extends TestCase
 
     private function http(): BootstrapHttpApplication
     {
-        return new BootstrapHttpApplication(Application::bootstrap());
+        return new BootstrapHttpApplication(ApplicationTestFactory::create());
     }
 }

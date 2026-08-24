@@ -5,21 +5,15 @@ declare(strict_types=1);
 namespace Qmdb\Bootstrap;
 
 use InvalidArgumentException;
+use Qmdb\Shared\Configuration\ApplicationConfiguration;
 
 final readonly class Application
 {
     public function __construct(
         private ApplicationMetadata $metadata,
         private RuntimeRequirements $runtimeRequirements,
+        private ApplicationConfiguration $configuration,
     ) {
-    }
-
-    public static function bootstrap(): self
-    {
-        return new self(
-            metadata: ApplicationMetadata::current(),
-            runtimeRequirements: new RuntimeRequirements(),
-        );
     }
 
     public function metadata(): ApplicationMetadata
@@ -30,6 +24,11 @@ final readonly class Application
     public function runtimeRequirements(): RuntimeRequirements
     {
         return $this->runtimeRequirements;
+    }
+
+    public function configuration(): ApplicationConfiguration
+    {
+        return $this->configuration;
     }
 
     /**

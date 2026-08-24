@@ -50,7 +50,12 @@ final readonly class ConsoleApplication
         }
 
         $effectivePhpVersion = $phpVersion ?? PHP_VERSION;
+        $configuration = $this->application->configuration();
         $lines = $this->application->metadata()->toCliLines();
+        $lines[] = 'Environment: ' . $configuration->environment()->toSafeString();
+        $lines[] = 'Debug Mode: ' . ($configuration->debugEnabled() ? 'enabled' : 'disabled');
+        $lines[] = 'Authoritative Timezone: ' . $configuration->timezone()->getName();
+        $lines[] = 'Configuration Source: ' . $configuration->source()->toSafeDisplay();
         $lines[] = 'Current PHP Version: ' . $effectivePhpVersion;
         $lines[] = 'Runtime Requirements: satisfied';
 

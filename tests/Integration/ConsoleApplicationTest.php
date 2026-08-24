@@ -5,9 +5,9 @@ declare(strict_types=1);
 namespace Qmdb\Tests\Integration;
 
 use PHPUnit\Framework\TestCase;
-use Qmdb\Bootstrap\Application;
 use Qmdb\Bootstrap\Console\ConsoleApplication;
 use Qmdb\Bootstrap\Shared\ExitCode;
+use Qmdb\Tests\Support\ApplicationTestFactory;
 
 final class ConsoleApplicationTest extends TestCase
 {
@@ -30,8 +30,12 @@ final class ConsoleApplicationTest extends TestCase
                 'QMDB',
                 'QMDB-P0-FRZ-001',
                 'P1',
-                'QMDB-P1-B01',
+                'QMDB-P1-B02',
                 '0.1.0-dev',
+                'Environment: test',
+                'Debug Mode: disabled',
+                'Authoritative Timezone: UTC',
+                'Configuration Source: process environment',
                 '8.5.3',
                 'Runtime Requirements: satisfied',
             ] as $expected
@@ -103,8 +107,27 @@ final class ConsoleApplicationTest extends TestCase
         self::assertSame($first->standardError(), $second->standardError());
     }
 
+    public function testAboutDisplaysEnabledDebugWithoutRawEnvironmentValues(): void
+    {
+        $console = new ConsoleApplication(ApplicationTestFactory::create(['APP_DEBUG' => 'true']));
+        $result = $console->run(['app:about'], '8.5.0', ['json', 'mbstring']);
+
+        self::assertStringContainsString('Debug Mode: enabled', $result->standardOutput());
+        self::assertStringNotContainsString('APP_DEBUG=true', $result->standardOutput());
+    }
+
+    public function testAboutDoesNotExposeUnusedSecretValues(): void
+    {
+        $secret = 'QMDB_CLI_SECRET_7a062a';
+        $console = new ConsoleApplication(ApplicationTestFactory::create(['CLI_TEST_SECRET' => $secret]));
+        $result = $console->run(['app:about'], '8.5.0', ['json', 'mbstring']);
+
+        self::assertStringNotContainsString($secret, $result->standardOutput());
+        self::assertStringNotContainsString($secret, $result->standardError());
+    }
+
     private function console(): ConsoleApplication
     {
-        return new ConsoleApplication(Application::bootstrap());
+        return new ConsoleApplication(ApplicationTestFactory::create());
     }
 }
