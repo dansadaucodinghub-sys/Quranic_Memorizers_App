@@ -9,8 +9,8 @@ engineering_freeze:
   closeout_batch: QMDB-P1-CLOSE
   freeze_status: APPROVED
   readiness: P1_COMPLETE
-  generated_at_utc: "2026-08-26T13:53:27Z"
-  source_revision: "a278d897058c5d641df7bc629f6cbcd98122915c"
+  generated_at_utc: "2026-08-26T13:57:37Z"
+  source_revision: "82671634010fef204cbe33327f4b6ac9de7b0adf"
   source_state: governed_clean
   completed_batches:
     - QMDB-P1-B01
@@ -1485,7 +1485,7 @@ engineering_freeze:
       sha256: fa447cc9612d331d33af426720420dbc0ca5e7ba2dc4ffc99700d99aaaae4dc1
     - path: "tests/Architecture/SupplyChainArchitectureTest.php"
       category: FROZEN_ENGINEERING_FOUNDATION
-      sha256: 0f3177ec55f453297e54bfe4f13656fb15a09e5b5de46128920c0f35624b952f
+      sha256: 534ab742cd70dd0857c3154b9679b969a0d6661ca11ab723c19ac1c250e7dbef
     - path: "tests/Frontend/fetch-client.test.js"
       category: FROZEN_ENGINEERING_FOUNDATION
       sha256: 287d1ef774c011194ddf318535bbce34ab2dc4f296383d1d9215345d5d634dec
@@ -2115,7 +2115,7 @@ engineering_freeze:
       sha256: 8b33ecb99cddc8773f8d9f1a2b9c09d04be70ebd1434b4d8355d38a87219a6b5
     - path: "tools/Security/tool-versions.json"
       category: FROZEN_ENGINEERING_FOUNDATION
-      sha256: 5a454c3fefff17380a9ba157bbcb3256ebe81a645927a19e0cd1c6ee9a3f3bcd
+      sha256: 4a1f66ae0fe928df891cd5aa2128bbc1bed6fa0bf438f409b295e60c5565a28f
     - path: "tools/Support/FileSystem.php"
       category: FROZEN_ENGINEERING_FOUNDATION
       sha256: 82e56a18e39200c78f428d34316f069c23a6e8da996a5b7efced15eecf3d4a07
@@ -2142,7 +2142,7 @@ engineering_freeze:
       sha256: b2a176695bc382c0f3a603b52239a12082b7d428a92af0b1751323a889614ba6
     - path: "tools/windows/install-qmdb-security-tools.ps1"
       category: FROZEN_ENGINEERING_FOUNDATION
-      sha256: 37dc444b44e28ac8b79706220c7246775d1dfd22b4fe5e5103c56d87a407e5d3
+      sha256: 11a48c2615a134f0d8e1f844c12b6735a506db5f80dcc2741b45ce61a00b1fcb
     - path: "tools/windows/qmdb-toolchain-common.ps1"
       category: FROZEN_ENGINEERING_FOUNDATION
       sha256: bb5b0e1e31443733d82337e0201023150911f118eb12a393a994266e6a1967fe
