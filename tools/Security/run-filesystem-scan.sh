@@ -26,6 +26,9 @@ mkdir -p "${report_root}"
   --output "${report_root}/trivy-${mode}.json" \
   --skip-dirs .git \
   --skip-dirs .runtime \
+  --skip-dirs .build \
+  --skip-dirs .phpstan.cache \
+  --skip-dirs .phpunit.cache \
   --skip-dirs node_modules \
   --skip-dirs build \
   "${target}"

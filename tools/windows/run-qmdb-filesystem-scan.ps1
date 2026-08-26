@@ -24,7 +24,9 @@ New-Item -ItemType Directory -Force -Path $reportRoot | Out-Null
 
 & $binary filesystem --scanners vuln,secret,misconfig --severity HIGH,CRITICAL --exit-code 1 `
     --format json --output (Join-Path $reportRoot "trivy-$Mode.json") `
-    --skip-dirs .git --skip-dirs .runtime --skip-dirs node_modules --skip-dirs build $resolvedTarget
+    --skip-dirs .git --skip-dirs .runtime --skip-dirs .build `
+    --skip-dirs .phpstan.cache --skip-dirs .phpunit.cache `
+    --skip-dirs node_modules --skip-dirs build $resolvedTarget
 if ($LASTEXITCODE -ne 0) {
     exit $LASTEXITCODE
 }
