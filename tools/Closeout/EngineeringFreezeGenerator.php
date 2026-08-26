@@ -113,6 +113,7 @@ final readonly class EngineeringFreezeGenerator
             '    - docs/project/risk-register.md',
             '  excluded_generated_files:',
             '    - .git/',
+            '    - .runtime/',
             '    - .phpstan.cache/',
             '    - build/',
             '    - coverage/',

@@ -61,6 +61,7 @@ final class EngineeringFreezePolicy
     /** @var list<string> */
     public const GENERATED_PATHS = [
         '.git/',
+        '.runtime/',
         '.phpstan.cache/',
         'build/',
         'coverage/',

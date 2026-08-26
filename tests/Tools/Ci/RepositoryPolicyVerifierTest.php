@@ -36,6 +36,7 @@ final class RepositoryPolicyVerifierTest extends TestCase
         yield 'private key' => ['config/application.pem'];
         yield 'vendor' => ['vendor/autoload.php'];
         yield 'node modules' => ['node_modules/jsdom/index.js'];
+        yield 'portable runtime' => ['.runtime/toolchain/php/php.exe'];
         yield 'database dump' => ['backup.sql.gz'];
     }
 }

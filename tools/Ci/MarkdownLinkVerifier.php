@@ -99,6 +99,6 @@ final class MarkdownLinkVerifier
 
     private function ignored(string $relative): bool
     {
-        return preg_match('#(^|/)(\.git|vendor|node_modules|build|reports)(/|$)#', $relative) === 1;
+        return preg_match('#(^|/)(\.git|\.runtime|vendor|node_modules|build|reports)(/|$)#', $relative) === 1;
     }
 }

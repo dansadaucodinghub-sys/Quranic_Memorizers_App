@@ -25,8 +25,8 @@ final class SensitiveContentScanner
         foreach (FileSystem::files($root) as $file) {
             $relative = FileSystem::relative($root, $file);
             $excluded = $excludeDependencies
-                ? '#(^|/)(\.git|vendor|node_modules|build|reports|\.phpstan\.cache|\.phpunit\.cache)(/|$)#'
-                : '#(^|/)(\.git|node_modules|build|reports|\.phpstan\.cache|\.phpunit\.cache)(/|$)#';
+                ? '#(^|/)(\.git|\.runtime|vendor|node_modules|build|reports|\.phpstan\.cache|\.phpunit\.cache)(/|$)#'
+                : '#(^|/)(\.git|\.runtime|node_modules|build|reports|\.phpstan\.cache|\.phpunit\.cache)(/|$)#';
             if (preg_match($excluded, $relative) === 1) {
                 continue;
             }

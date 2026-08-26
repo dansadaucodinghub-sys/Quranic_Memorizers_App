@@ -42,4 +42,13 @@ final class SensitiveContentScannerTest extends TestCase
         self::assertSame([], (new SensitiveContentScanner())->scanDirectory($this->directory));
         self::assertNotSame([], (new SensitiveContentScanner())->scanDirectory($this->directory, false));
     }
+
+    public function testPortableRuntimeDirectoryIsAlwaysExcluded(): void
+    {
+        mkdir($this->directory . '/.runtime', 0755);
+        file_put_contents($this->directory . '/.runtime/generated.pem', '-----BEGIN ' . 'PRIVATE KEY-----');
+
+        self::assertSame([], (new SensitiveContentScanner())->scanDirectory($this->directory));
+        self::assertSame([], (new SensitiveContentScanner())->scanDirectory($this->directory, false));
+    }
 }

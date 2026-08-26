@@ -20,6 +20,7 @@ final class EngineeringFreezeTest extends TestCase
         self::assertSame(EngineeringFreezePolicy::EXTENSION, $policy->category('composer.json'));
         self::assertSame(EngineeringFreezePolicy::EXTENSION, $policy->category('routes/web.php'));
         self::assertFalse($policy->isIncluded('build/release/application.tar.gz'));
+        self::assertFalse($policy->isIncluded('.runtime/toolchain/php/php.exe'));
         self::assertFalse($policy->isIncluded('docs/project/project-state.md'));
     }
 

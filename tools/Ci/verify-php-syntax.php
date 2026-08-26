@@ -12,7 +12,7 @@ foreach (FileSystem::files(QMDB_PROJECT_ROOT) as $file) {
     if (!str_ends_with(strtolower($relative), '.php')) {
         continue;
     }
-    $excluded = '#(^|/)(\.git|\.build|\.phpstan\.cache|\.phpunit\.cache'
+    $excluded = '#(^|/)(\.git|\.runtime|\.build|\.phpstan\.cache|\.phpunit\.cache'
         . '|vendor|node_modules|build|reports)(/|$)#';
     if (preg_match($excluded, $relative) === 1) {
         continue;

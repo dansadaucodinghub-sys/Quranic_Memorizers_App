@@ -5,7 +5,7 @@ useDefault = true
 
 [[allowlists]]
 description = "Generated and dependency roots are governed by repository policy and lockfile scanning"
-paths = ['''^(?:vendor|node_modules|\.phpstan\.cache|\.build|build|coverage)/''']
+paths = ['''^(?:\.runtime|vendor|node_modules|\.phpstan\.cache|\.build|build|coverage)/''']
 
 # These are exact, non-production credentials used only by the isolated MySQL CI service.
 [[allowlists]]

@@ -146,7 +146,11 @@ final class SourceArchitectureTest extends TestCase
 
             $path = str_replace('\\', '/', $file->getPathname());
 
-            if (str_contains($path, '/vendor/') || str_contains($path, '/.git/')) {
+            if (
+                str_contains($path, '/vendor/')
+                || str_contains($path, '/.git/')
+                || str_contains($path, '/.runtime/')
+            ) {
                 continue;
             }
 

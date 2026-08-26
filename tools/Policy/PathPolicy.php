@@ -30,7 +30,7 @@ final class PathPolicy
         if ($this->isSensitivePath($path)) {
             return 'Forbidden or sensitive tracked file: ' . $path;
         }
-        if (preg_match('#(^|/)(vendor|node_modules|build|dist|coverage)(/|$)#', $path) === 1) {
+        if (preg_match('#(^|/)(\.runtime|vendor|node_modules|build|dist|coverage)(/|$)#', $path) === 1) {
             return 'Generated or dependency directory must not be tracked: ' . $path;
         }
         return null;
@@ -42,7 +42,9 @@ final class PathPolicy
         if ($this->isSensitivePath($path)) {
             return 'Forbidden or sensitive release file: ' . $path;
         }
-        if (preg_match('#(^|/)(\.git|\.github|docs|tests|tools|node_modules|build|dist|coverage)(/|$)#', $path) === 1) {
+        $developmentPathPattern =
+            '#(^|/)(\.git|\.runtime|\.github|docs|tests|tools|node_modules|build|dist|coverage)(/|$)#';
+        if (preg_match($developmentPathPattern, $path) === 1) {
             return 'Development-only path is forbidden in releases: ' . $path;
         }
         if (preg_match('#(^|/)(phpunit\.xml|phpstan\.neon|phpcs\.xml)#', $path) === 1) {
