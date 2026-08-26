@@ -7,14 +7,14 @@
 | Source Baseline | QMDB-BL-001 |
 | Product Freeze | QMDB-P0-FRZ-001 |
 | Engineering Freeze | QMDB-P1-FRZ-001 |
-| Document Version | 3.0.0 |
+| Document Version | 3.1.0 |
 | Last Updated | 2026-08-26 |
-| Status | P0 COMPLETE; P1 COMPLETE; P2 BLOCKED |
-| Current Phase | P1 — Engineering and Repository Foundation |
-| Current Batch | QMDB-P1-CLOSE — Engineering Foundation Verification |
-| Batch Status | DONE |
-| Implementation Readiness | P1_COMPLETE |
-| P2 Status | BLOCKED_BY_OD_051_OD_052 |
+| Status | P0 COMPLETE; P1 COMPLETE; P2 RECOVERY IN PROGRESS |
+| Current Phase | P2 — Identity, Security, and Tenant Isolation |
+| Current Batch | QMDB-P2-B01 — Workspace, Account, Credential, and Tenant Boundary Foundation |
+| Batch Status | IN PROGRESS |
+| Implementation Readiness | RECOVERY_EXECUTION_IN_PROGRESS |
+| P2 Status | IN PROGRESS |
 
 ## Authoritative outcome
 
@@ -22,9 +22,20 @@ P1 is complete. All ten implementation batches and the closeout batch satisfy th
 `QMDB-P1-FRZ-001` governs the resulting repository foundation. The original product and requirements freeze
 `QMDB-P0-FRZ-001` remains intact.
 
-P2 is not authorized by this closeout. Its first batch remains blocked by the unresolved email- and phone-normalization
-contracts recorded as `OD-051` and `OD-052`. Those decisions belong to identity, security and privacy governance and
-were not invented during P1.
+`QMDB-RECOVERY-RUN-001` is an explicit project-owner authorization that supersedes the prior P2 execution block. It
+requires toolchain recovery, repository-truth verification, conservative resolution of `OD-051`/`OD-052`, and strict
+sequential execution of P2-B01 through P2-B05. P1 remains frozen; P2 changes use its controlled extension points.
+
+## Recovery execution ledger
+
+| Field | Current value |
+| --- | --- |
+| Recovery Run | QMDB-RECOVERY-RUN-001 |
+| Recovery Status | IN PROGRESS |
+| Last Fully Completed Batch | QMDB-P1-CLOSE |
+| Current Executable Batch | QMDB-P2-B01 |
+| Sequence Rule | B01 → B02 → B03 → B04 → B05; no batch advances before its mandatory gates pass |
+| P2-B06 Status | BLOCKED — outside recovery scope |
 
 ## P1 batch ledger
 
@@ -89,11 +100,11 @@ build reports.
 These items are not represented as executed. They remain fail-closed release/deployment gates in their owning
 environments and do not conceal an incomplete P1 source contract.
 
-## P2 entry blockers
+## Historical P2 entry blockers and recovery disposition
 
-1. `OD-051` — approve the canonical email-normalization and test-vector contract.
-2. `OD-052` — approve the canonical phone-number normalization and test-vector contract.
-3. Rerun the clean hosted CI/release workflow from the controlled revision before merge or release publication.
+1. `OD-051` — resolved for recovery execution with a conservative ASCII email contract and executable vectors.
+2. `OD-052` — resolved for recovery execution with strict canonical E.164 input and executable vectors.
+3. Hosted CI/release execution remains required before merge or publication; it does not block local recovery work.
 
 ## State block
 
@@ -103,14 +114,20 @@ Frozen Baseline: QMDB-P0-FRZ-001
 
 Engineering Freeze: QMDB-P1-FRZ-001
 
-Current Phase: P1 — Engineering and Repository Foundation
+Recovery Run: QMDB-RECOVERY-RUN-001
 
-Current Batch: QMDB-P1-CLOSE
+Current Phase: P2 — Identity, Security, and Tenant Isolation
+
+Current Executable Batch: QMDB-P2-B01
 
 P1 Status: COMPLETE
 
-Batch Status: DONE
+P2 Status: IN PROGRESS
 
-Implementation Readiness: P1_COMPLETE
+Recovery Status: IN PROGRESS
 
-P2 Status: BLOCKED_BY_OD_051_OD_052
+Batch Status: IN PROGRESS
+
+Implementation Status: RECOVERY EXECUTION IN PROGRESS
+
+P2-B06 Status: BLOCKED

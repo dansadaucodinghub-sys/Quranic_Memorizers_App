@@ -13,9 +13,11 @@ use Qmdb\Bootstrap\Module\ConsoleFoundationModule;
 use Qmdb\Bootstrap\Module\CoreFoundationModule;
 use Qmdb\Bootstrap\Module\DatabaseFoundationModule;
 use Qmdb\Bootstrap\Module\HttpFoundationModule;
+use Qmdb\Bootstrap\Module\IdentityFoundationModule;
 use Qmdb\Bootstrap\Module\ObservabilityFoundationModule;
 use Qmdb\Bootstrap\Module\PresentationFoundationModule;
 use Qmdb\Bootstrap\Module\SchemaFoundationModule;
+use Qmdb\Bootstrap\Module\TenancyFoundationModule;
 use Qmdb\Shared\Background\Configuration\BackgroundExecutionConfigurationFactory;
 use Qmdb\Shared\Configuration\ApplicationConfigurationFactory;
 use Qmdb\Shared\Configuration\Database\DatabaseConfigurationFactory;
@@ -120,6 +122,8 @@ final readonly class ApplicationFactory
             new ApplicationServicesFoundationModule(),
             new ObservabilityFoundationModule($loggingConfiguration),
             new DatabaseFoundationModule($databaseConfiguration),
+            new IdentityFoundationModule(),
+            new TenancyFoundationModule(),
             new SchemaFoundationModule($this->projectRoot),
             new BackgroundExecutionFoundationModule($backgroundConfiguration),
             new PresentationFoundationModule($this->projectRoot),

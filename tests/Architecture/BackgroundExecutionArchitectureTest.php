@@ -76,7 +76,7 @@ final class BackgroundExecutionArchitectureTest extends TestCase
     {
         self::assertDirectoryDoesNotExist($this->root() . '/src/Shared/Background/Http');
         self::assertDirectoryDoesNotExist($this->root() . '/src/Shared/Background/Frontend');
-        self::assertDirectoryDoesNotExist($this->root() . '/src/Modules');
+        self::assertDirectoryDoesNotExist($this->root() . '/src/Modules/Background');
         self::assertSame([], $this->filesUnder('src/Shared/Background', ['js', 'jsx', 'ts', 'tsx', 'vue']));
     }
 

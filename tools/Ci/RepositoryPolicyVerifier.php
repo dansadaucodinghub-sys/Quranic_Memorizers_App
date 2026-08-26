@@ -117,13 +117,15 @@ final class RepositoryPolicyVerifier
             );
         }
         $state = file_get_contents($this->root . '/docs/project/project-state.md');
+        $p1CloseoutRetained = is_string($state)
+            && (
+                str_contains($state, 'Current Batch: QMDB-P1-CLOSE')
+                || str_contains($state, 'Last Fully Completed Batch | QMDB-P1-CLOSE')
+            );
+        $report->check($p1CloseoutRetained, 'Project state must retain QMDB-P1-CLOSE as completed history.');
         $report->check(
-            is_string($state) && str_contains($state, 'Current Batch: QMDB-P1-CLOSE'),
-            'Project state must identify QMDB-P1-CLOSE.',
-        );
-        $report->check(
-            is_string($state) && str_contains($state, 'Implementation Readiness: P1_COMPLETE'),
-            'Project state must retain the verified P1_COMPLETE closeout outcome.',
+            is_string($state) && str_contains($state, 'P1 Status: COMPLETE'),
+            'Project state must retain the verified P1 complete outcome.',
         );
         $report->check(
             is_string($state) && str_contains($state, 'QMDB-P0-FRZ-001'),

@@ -43,7 +43,8 @@ final class EngineeringFreezeTest extends TestCase
         self::assertStringContainsString('source_state: governed_clean', $first);
         self::assertStringContainsString('    - QMDB-P1-B10', $first);
         self::assertStringContainsString('p1_blockers: []', $first);
-        self::assertStringContainsString('status: BLOCKED_BY_OD_051_OD_052', $first);
+        self::assertStringContainsString('p2_blockers: []', $first);
+        self::assertStringContainsString('status: AUTHORIZED_BY_QMDB_RECOVERY_RUN_001', $first);
     }
 
     public function testRepositoryCandidateChecksumsAndExclusionsValidate(): void

@@ -30,7 +30,8 @@ final readonly class EngineeringFreezeVerifier
             'source_state: governed_clean',
             'completed_batches:',
             'p1_blockers: []',
-            'status: BLOCKED_BY_OD_051_OD_052',
+            'p2_blockers: []',
+            'status: AUTHORIZED_BY_QMDB_RECOVERY_RUN_001',
         ];
         foreach ($requiredIdentities as $identity) {
             $report->check(str_contains($yaml, $identity), 'Missing candidate identity: ' . $identity);

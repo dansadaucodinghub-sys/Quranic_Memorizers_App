@@ -19,6 +19,8 @@ final class DatabaseArchitectureTest extends TestCase
             $normalized = str_replace('\\', '/', $path);
             self::assertTrue(
                 str_contains($normalized, '/Shared/Infrastructure/Persistence/MySql/')
+                || str_contains($normalized, '/Modules/Identity/Infrastructure/Persistence/')
+                || str_contains($normalized, '/Modules/Tenancy/Infrastructure/Persistence/')
                 || str_ends_with($normalized, '/Shared/Database/Connection/DatabaseConnectionProvider.php')
                 || str_contains($normalized, '/Shared/Schema/')
                 || str_contains($normalized, '/Shared/Background/Scheduler/Infrastructure/'),
@@ -53,7 +55,7 @@ final class DatabaseArchitectureTest extends TestCase
         self::assertFileExists($this->root() . '/database/seeds.php');
         self::assertSame(1, count(glob($this->root() . '/database/migrations/*') ?: []));
         self::assertSame(1, count(glob($this->root() . '/database/seeds/*') ?: []));
-        self::assertDirectoryDoesNotExist($this->root() . '/src/Modules');
+        self::assertDirectoryDoesNotExist($this->root() . '/src/Modules/Database');
     }
 
     public function testDatabaseModuleAndHttpDependencyAreExplicit(): void

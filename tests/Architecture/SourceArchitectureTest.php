@@ -107,6 +107,8 @@ final class SourceArchitectureTest extends TestCase
             }
             self::assertTrue(
                 str_contains($path, '/Shared/Infrastructure/Persistence/MySql/')
+                || str_contains($path, '/Modules/Identity/Infrastructure/Persistence/')
+                || str_contains($path, '/Modules/Tenancy/Infrastructure/Persistence/')
                 || str_ends_with($path, '/Shared/Database/Connection/DatabaseConnectionProvider.php')
                 || str_contains($path, '/Shared/Schema/')
                 || str_contains($path, '/Shared/Background/Scheduler/Infrastructure/'),
@@ -115,9 +117,12 @@ final class SourceArchitectureTest extends TestCase
         }
     }
 
-    public function testNoDomainModuleImplementationExistsInThisBatch(): void
+    public function testOnlyAuthorizedP2DomainModulesExist(): void
     {
-        self::assertDirectoryDoesNotExist($this->projectRoot() . '/src/Modules');
+        $modules = glob($this->projectRoot() . '/src/Modules/*', GLOB_ONLYDIR);
+        self::assertIsArray($modules);
+        self::assertSame(['Identity', 'Tenancy'], array_map('basename', $modules));
+        self::assertDirectoryDoesNotExist($this->projectRoot() . '/src/Modules/Authorization');
     }
 
     public function testPublicIndexIsTheOnlyPhpWebEntryPoint(): void

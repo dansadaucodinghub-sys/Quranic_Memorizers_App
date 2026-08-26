@@ -21,4 +21,27 @@ $env:npm_config_engine_strict = 'true'
 New-Item -ItemType Directory -Force -Path $env:COMPOSER_HOME, $env:COMPOSER_CACHE_DIR, $env:npm_config_cache | Out-Null
 Import-QmdbTestEnvironment
 
+if ($env:QMDB_TEST_DB_HOST) {
+    $testRuntimeMap = @{
+        APP_ENV = 'test'
+        APP_DEBUG = 'false'
+        APP_TIMEZONE = 'UTC'
+        APP_LOG_LEVEL = 'emergency'
+        DB_HOST = $env:QMDB_TEST_DB_HOST
+        DB_PORT = $env:QMDB_TEST_DB_PORT
+        DB_NAME = $env:QMDB_TEST_DB_NAME
+        DB_USERNAME = $env:QMDB_TEST_DB_USERNAME
+        DB_PASSWORD = $env:QMDB_TEST_DB_PASSWORD
+        DB_SCHEMA_USERNAME = $env:QMDB_TEST_DB_SCHEMA_USERNAME
+        DB_SCHEMA_PASSWORD = $env:QMDB_TEST_DB_SCHEMA_PASSWORD
+        DB_TLS_MODE = $env:QMDB_TEST_DB_TLS_MODE
+        DB_TLS_CA_FILE = $env:QMDB_TEST_DB_TLS_CA_FILE
+    }
+    foreach ($entry in $testRuntimeMap.GetEnumerator()) {
+        if ([string]::IsNullOrEmpty([System.Environment]::GetEnvironmentVariable($entry.Key, 'Process'))) {
+            [System.Environment]::SetEnvironmentVariable($entry.Key, $entry.Value, 'Process')
+        }
+    }
+}
+
 Write-Host 'QMDB portable PHP, Node.js, Composer, and MySQL client are active for this PowerShell process.'

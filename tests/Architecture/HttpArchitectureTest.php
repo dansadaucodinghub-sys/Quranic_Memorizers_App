@@ -173,7 +173,7 @@ final class HttpArchitectureTest extends TestCase
 
     public function testNoRedisOrBusinessModuleExistsAndSchemaManifestsAreExplicit(): void
     {
-        foreach (['src/Database', 'src/Domain', 'src/Modules'] as $directory) {
+        foreach (['src/Database', 'src/Domain', 'src/Modules/Http'] as $directory) {
             self::assertDirectoryDoesNotExist($this->root() . '/' . $directory);
         }
 

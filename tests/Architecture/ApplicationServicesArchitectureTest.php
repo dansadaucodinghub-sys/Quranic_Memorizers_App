@@ -107,7 +107,14 @@ final class ApplicationServicesArchitectureTest extends TestCase
         }
 
         foreach (
-            ['foundation.core', 'foundation.application', 'foundation.http', 'foundation.console'] as $moduleId
+            [
+                'foundation.core',
+                'foundation.application',
+                'foundation.http',
+                'foundation.console',
+                'identity.accounts',
+                'tenancy.workspaces',
+            ] as $moduleId
         ) {
             self::assertStringContainsString($moduleId, $source);
         }
