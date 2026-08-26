@@ -22,6 +22,7 @@
 | QMDB-P1-GAP-018 secret scan included generated roots | High | bounded generated-root exclusion plus repository policy | RESOLVED | No | No |
 | QMDB-P1-GAP-019 Composer PHAR dependency deprecations on PHP 8.5 | Low | commands pass; track Composer PHAR update without changing application runtime policy | DEFERRED_MAINTENANCE | No | No |
 | QMDB-P1-GAP-020 Windows npm launcher resolution | High | resolve the real npm CLI across all PATH entries and execute it through Node without shell interpolation; regression test added | RESOLVED | No | No |
+| QMDB-P1-GAP-021 scheduler integration teardown changed migrated schema state | High | capture and restore the pre-test ledger-table state; assert cleanup symmetry in both real MySQL scheduler suites | RESOLVED | No | No |
 
 There are no open P1 blockers. Deferred operational evidence is explicit and cannot be promoted to a pass without its
 own execution record.

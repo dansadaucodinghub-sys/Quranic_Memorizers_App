@@ -14,6 +14,7 @@ final class SchedulerLedgerIntegrationTest extends SchemaMySqlIntegrationTestCas
     {
         $connection = $this->schemaProvider()->connection();
         $migration = new CreateScheduledTaskRunsMigration();
+        $ledgerInitiallyExisted = $this->tableExists($connection);
         $this->dropLedger($connection);
 
         try {
@@ -54,7 +55,12 @@ final class SchedulerLedgerIntegrationTest extends SchemaMySqlIntegrationTestCas
             self::assertTrue($this->tableExists($connection));
         } finally {
             $this->dropLedger($connection);
+            if ($ledgerInitiallyExisted) {
+                $this->apply($connection, $migration->up());
+            }
         }
+
+        self::assertSame($ledgerInitiallyExisted, $this->tableExists($connection));
     }
 
     /** @param list<\Qmdb\Shared\Schema\Migration\SqlMigrationStep> $steps */

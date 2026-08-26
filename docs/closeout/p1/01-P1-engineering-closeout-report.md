@@ -37,6 +37,8 @@ normalization rules.
    frozen ER relationship identifiers.
 7. Corrected Windows npm resolution in the shell-free process runner so a wrapper earlier on PATH cannot hide the real
    Node installation's npm CLI; added an executable regression test.
+8. Corrected scheduler integration cleanup so destructive DDL tests restore and assert the pre-test ledger-table state
+   instead of leaving a migrated disposable database inconsistent with its migration ledger.
 
 ## Scope integrity
 

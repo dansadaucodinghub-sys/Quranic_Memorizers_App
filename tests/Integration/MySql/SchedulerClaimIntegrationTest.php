@@ -31,6 +31,7 @@ final class SchedulerClaimIntegrationTest extends SchemaMySqlIntegrationTestCase
     {
         $firstProvider = $this->schemaProvider();
         $connection = $firstProvider->connection();
+        $ledgerInitiallyExisted = $this->tableExists($connection);
         $this->createLedger($connection);
         $secondProvider = $this->schemaProvider();
         $first = $this->repository($firstProvider);
@@ -80,7 +81,12 @@ final class SchedulerClaimIntegrationTest extends SchemaMySqlIntegrationTestCase
             $this->assertIndependentSlotsAndSafeFailure($first, $now);
         } finally {
             $connection->exec('DROP TABLE IF EXISTS qmdb_scheduled_task_runs');
+            if ($ledgerInitiallyExisted) {
+                $this->createLedger($connection);
+            }
         }
+
+        self::assertSame($ledgerInitiallyExisted, $this->tableExists($connection));
     }
 
     private function assertIndependentSlotsAndSafeFailure(
@@ -135,5 +141,18 @@ final class SchedulerClaimIntegrationTest extends SchemaMySqlIntegrationTestCase
             $statement = $connection->prepare($step->sql());
             $statement->execute($step->parameters());
         }
+    }
+
+    private function tableExists(PDO $connection): bool
+    {
+        $statement = $connection->query(
+            "SELECT COUNT(*) FROM information_schema.TABLES "
+                . "WHERE TABLE_SCHEMA = DATABASE() AND TABLE_NAME = 'qmdb_scheduled_task_runs'",
+        );
+        if ($statement === false) {
+            throw new RuntimeException('Unable to inspect the scheduler ledger table.');
+        }
+
+        return (int) $statement->fetchColumn() === 1;
     }
 }
