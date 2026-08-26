@@ -24,7 +24,9 @@ This standard implements the approved QMDB-CR-001 direction for the QMDB-P1-B09 
 
 - Full documents use `text/html; charset=utf-8`; fragments use `text/vnd.qmdb.fragment+html; charset=utf-8` and `X-QMDB-Fragment: 1`.
 - HTML and fragments are `no-store`, `nosniff`, correlated with `X-Request-ID`, and receive `Content-Language`.
-- Each fragment has exactly one `data-qmdb-fragment-root`, contains no document shell, script, style, external asset, inline event attribute, nested modal, or mutation form.
+- Each fragment has exactly one `data-qmdb-fragment-root` and contains no document shell, script, style, external asset,
+  inline event attribute, or nested modal. P2-B02 permits only its explicitly marked same-origin POST forms with CSRF and
+  required idempotency controls; every other mutation form remains rejected.
 - CSS and JavaScript are local static assets. There is no runtime frontend dependency, framework, bundler, CDN, or external font host.
 
 ## Design tokens and themes
@@ -62,6 +64,18 @@ This standard implements the approved QMDB-CR-001 direction for the QMDB-P1-B09 
 
 Automated checks cover landmarks, one page heading, language/direction, controls, live region, dialog labelling, non-color status, focus behavior, reduced motion, high contrast, and prohibited attributes. Manual verification is still required for screen readers, keyboard-only use, 200% and 400% zoom, RTL reading order, mobile viewports, forced/high contrast, reduced motion, and no-JavaScript operation. Automated evidence is not a claim of complete WCAG 2.2 AA conformance.
 
+## P2-B02 registration and verification forms
+
+P2-B02 implements the first approved state-changing progressive forms. Registration, verification confirmation, and
+resend remain complete server-rendered pages and are never placed in a modal. The one authorized mutation client accepts
+only same-origin POST, sends action-bound CSRF and required idempotency values, blocks duplicate submission, performs no
+automatic retry, and consumes only validated form fragments or bounded problem details. Error focus, safe email
+preservation, password clearing, request-reference presentation, English/Arabic parity and normal POST fallback are
+executable requirements.
+
 ## Deferred boundaries
 
-Mutation forms require authentication, authorization, CSRF, idempotency, concurrency, validation-fragment, audit, and transaction decisions. SSE, bounded polling fallback, background-job progress, browser-history policy, asset hashing/minification, user locale/theme persistence, and business modals remain deferred to their owning phases.
+Authenticated/authorized tenant mutations beyond B02 still require their owning CSRF, idempotency, concurrency,
+validation-fragment, audit and transaction decisions. SSE, bounded polling fallback, background-job progress,
+browser-history policy, asset hashing/minification, user locale/theme persistence, and business modals remain deferred
+to their owning phases.

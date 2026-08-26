@@ -116,11 +116,13 @@ final readonly class MySqlIdentityAccessRepository implements IdentityAccessRepo
     public function revokePendingChallenges(int $emailInternalId, DateTimeImmutable $now): void
     {
         $statement = $this->provider->connection()->prepare(
-            "UPDATE account_email_verification_challenges SET status = 'REVOKED', revoked_at = :now, "
-            . 'version = version + 1, updated_at = :now '
+            "UPDATE account_email_verification_challenges SET status = 'REVOKED', revoked_at = :revoked_at, "
+            . 'version = version + 1, updated_at = :updated_at '
             . "WHERE account_email_address_id = :email_id AND status = 'PENDING'",
         );
-        $statement->bindValue(':now', self::format($now));
+        $formatted = self::format($now);
+        $statement->bindValue(':revoked_at', $formatted);
+        $statement->bindValue(':updated_at', $formatted);
         $statement->bindValue(':email_id', $emailInternalId, PDO::PARAM_INT);
         $statement->execute();
     }
@@ -222,12 +224,14 @@ final readonly class MySqlIdentityAccessRepository implements IdentityAccessRepo
         }
         $connection = $this->provider->connection();
         $challengeUpdate = $connection->prepare(
-            "UPDATE account_email_verification_challenges SET status = 'CONSUMED', consumed_at = :now, "
-            . 'version = version + 1, updated_at = :now '
+            "UPDATE account_email_verification_challenges SET status = 'CONSUMED', consumed_at = :consumed_at, "
+            . 'version = version + 1, updated_at = :updated_at '
             . "WHERE id = :id AND version = :version AND status = 'PENDING'",
         );
+        $formatted = self::format($now);
         $challengeUpdate->execute([
-            'now' => self::format($now),
+            'consumed_at' => $formatted,
+            'updated_at' => $formatted,
             'id' => $challenge->internalId,
             'version' => $challenge->version,
         ]);
@@ -235,12 +239,13 @@ final readonly class MySqlIdentityAccessRepository implements IdentityAccessRepo
             return VerificationPersistenceResult::INVALID;
         }
         $email = $connection->prepare(
-            "UPDATE account_email_addresses SET status_code = 'VERIFIED', verified_at = :now, "
-            . 'version = version + 1, updated_at = :now '
+            "UPDATE account_email_addresses SET status_code = 'VERIFIED', verified_at = :verified_at, "
+            . 'version = version + 1, updated_at = :updated_at '
             . "WHERE id = :email_id AND user_account_id = :account_id AND status_code = 'UNVERIFIED'",
         );
         $email->execute([
-            'now' => self::format($now),
+            'verified_at' => $formatted,
+            'updated_at' => $formatted,
             'email_id' => $challenge->emailInternalId,
             'account_id' => $challenge->accountInternalId,
         ]);
@@ -264,7 +269,6 @@ final readonly class MySqlIdentityAccessRepository implements IdentityAccessRepo
             . '(user_account_id, event_type, occurred_at, payload_json, content_hash) '
             . "VALUES (:account_id, 'ACCOUNT_ACTIVATED_EMAIL_VERIFIED', :now, NULL, :content_hash)",
         );
-        $formatted = self::format($now);
         $event->bindValue(':account_id', $challenge->accountInternalId, PDO::PARAM_INT);
         $event->bindValue(':now', $formatted);
         $event->bindValue(
@@ -289,7 +293,7 @@ final readonly class MySqlIdentityAccessRepository implements IdentityAccessRepo
     ): void {
         $sql = match ($timestampColumn) {
             'expired_at' => "UPDATE account_email_verification_challenges SET status = 'EXPIRED', "
-                . 'expired_at = :now, version = version + 1, updated_at = :now '
+                . 'expired_at = :expired_at, version = version + 1, updated_at = :updated_at '
                 . "WHERE id = :id AND version = :version AND status = 'PENDING'",
             default => throw new \LogicException('Unsupported challenge terminal transition.'),
         };
@@ -297,8 +301,10 @@ final readonly class MySqlIdentityAccessRepository implements IdentityAccessRepo
             throw new \LogicException('Unsupported challenge terminal status.');
         }
         $statement = $this->provider->connection()->prepare($sql);
+        $formatted = self::format($now);
         $statement->execute([
-            'now' => self::format($now),
+            'expired_at' => $formatted,
+            'updated_at' => $formatted,
             'id' => $challenge->internalId,
             'version' => $challenge->version,
         ]);

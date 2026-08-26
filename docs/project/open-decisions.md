@@ -316,6 +316,19 @@ These dynamic implementation decisions remain open and do not alter the frozen P
 
 ## Decision closure rules
 
+## QMDB-P2-B02 decision disposition
+
+| Reference | Disposition | Evidence | Remaining boundary |
+| --- | --- | --- | --- |
+| P1-B07 OD-101 | RESOLVED for public B02 forms | ADR-056; action/time/cookie-bound CSRF, canonical Origin validation and production `__Host-` cookie tests | Authenticated session integration belongs to B03 |
+| P1-B07 OD-105 | RESOLVED for B02 mutation failures | Progressive form controller presents bounded request references, focuses errors and performs no blind retry | Broader authenticated workflows retain owning-batch review |
+| B09-OD-001 | RESOLVED for registration, verification and resend | Explicit same-origin POST fragment protocol with CSRF/idempotency controls and frontend tests | Optimistic concurrency for later business aggregates remains open |
+| B02-OD-001 | OPEN | Provider-neutral Symfony Mailer DSN and local/test null/SMTP support are implemented | Production mail provider, credentials, deliverability monitoring and operational ownership before deployment |
+| B02-OD-002 | OPEN | Defaults are typed and executable | Final password cost, TTL, attempt, window and block parameters require production capacity/security approval |
+
+These dispositions do not change the unrelated earlier OD-101/OD-105 identifiers used by background-execution records.
+No email provider, secret store, production threshold or session policy is inferred by B02.
+
 ## QMDB-P1-B10 CI and release open decisions
 
 | ID | Decision | Owner | Required resolution phase | Status |

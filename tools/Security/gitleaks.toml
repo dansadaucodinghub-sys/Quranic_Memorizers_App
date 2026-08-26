@@ -25,6 +25,12 @@ paths = ['''(?:^|[\\/])tests[\\/]Unit[\\/]Shared[\\/](?:Configuration[\\/]Enviro
 regexes = ['''QMDB_(?:TEST|EXCEPTION|FATAL)_SECRET_[a-f0-9]{4,8}''']
 
 [[allowlists]]
+description = "Exact synthetic CSRF key used only by isolated test bootstrap fixtures"
+condition = "AND"
+paths = ['''(?:^|[\\/])tests[\\/](?:Support[\\/]Http[\\/]ProductionHttpRuntimeFactory|Integration[\\/]Bootstrap[\\/]FoundationCompilationTest)\.php$''']
+regexes = ['''test-csrf-signing-key-with-at-least-32-bytes''']
+
+[[allowlists]]
 description = "Frozen ER relationship identifiers are not credentials"
 condition = "AND"
 paths = ['''(?:^|[\\/])docs[\\/]data[\\/]04-entity-relationship-model\.md$''']

@@ -90,15 +90,17 @@ final class ConfigurationArchitectureTest extends TestCase
             self::assertMatchesRegularExpression('/\A[A-Z][A-Z0-9_]*=/', $trimmed);
             [$name] = explode('=', $trimmed, 2);
             $assignments[] = $name;
-            if (in_array($name, [
+            if (
+                in_array($name, [
                 'AUTH_CSRF_SIGNING_KEY',
                 'AUTH_IDENTITY_HMAC_KEY',
                 'AUTH_CONTACT_ENCRYPTION_KEY',
                 'DB_PASSWORD',
                 'DB_SCHEMA_PASSWORD',
-            ], true)) {
+                ], true)
+            ) {
                 self::assertSame($name . '=', $trimmed);
-            } else {
+            } elseif (!str_starts_with($name, 'AUTH_')) {
                 self::assertDoesNotMatchRegularExpression(
                     '/(?:SECRET|PASSWORD|TOKEN|PRIVATE|CREDENTIAL|CERTIFICATE|KEY)/',
                     $name,

@@ -4,11 +4,13 @@ declare(strict_types=1);
 
 namespace Qmdb\Modules\IdentityAccess\Application\Readiness;
 
+use DateTimeImmutable;
 use Qmdb\Modules\IdentityAccess\Configuration\IdentityAccessConfiguration;
 use Qmdb\Modules\IdentityAccess\Security\Fingerprint\IdentityFingerprintGenerator;
 use Qmdb\Modules\IdentityAccess\Security\Password\PasswordHashingPolicy;
 use Qmdb\Modules\IdentityAccess\Security\Password\PasswordPolicy;
 use Qmdb\Modules\IdentityAccess\Security\Password\SensitivePlaintextPassword;
+use Qmdb\Modules\SecurityWeb\Csrf\CsrfAction;
 use Qmdb\Modules\SecurityWeb\Csrf\CsrfCookieNonce;
 use Qmdb\Modules\SecurityWeb\Csrf\CsrfTokenManager;
 use Qmdb\Shared\Schema\Health\SchemaHealthCheck;
@@ -46,11 +48,14 @@ final readonly class IdentityAccessReadinessCheck
             }
             $dsn = $this->secrets->get(SecretName::fromString('MAILER_DSN'));
             Transport::fromDsn($dsn->reveal());
-            if ($this->configuration->productionLike && str_starts_with(strtolower($dsn->reveal()), 'null:')) {
+            if (
+                $this->configuration->productionLike
+                && str_starts_with(strtolower($dsn->reveal()), 'null:')
+            ) {
                 return false;
             }
             $nonce = CsrfCookieNonce::generate();
-            $this->csrf->issue(\Qmdb\Modules\SecurityWeb\Csrf\CsrfAction::ACCOUNT_REGISTER, $nonce, new \DateTimeImmutable());
+            $this->csrf->issue(CsrfAction::ACCOUNT_REGISTER, $nonce, new DateTimeImmutable());
             $this->fingerprints->generate('registration-peer', 'readiness-probe');
             return true;
         } catch (Throwable) {

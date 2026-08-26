@@ -49,14 +49,16 @@ final class PresentationArchitectureTest extends TestCase
         $mutationClient = (string) file_get_contents(
             dirname(__DIR__, 2) . '/public/assets/js/mutation-fetch-client.js',
         );
-        foreach ([
+        foreach (
+            [
             "target.origin !== new URL(base).origin",
             "credentials: 'same-origin'",
             "redirect: 'error'",
             "'X-QMDB-CSRF'",
             "'Idempotency-Key'",
             'retryable: false',
-        ] as $requiredControl) {
+            ] as $requiredControl
+        ) {
             self::assertStringContainsString($requiredControl, $mutationClient);
         }
         self::assertStringNotContainsString('setTimeout(', $mutationClient);

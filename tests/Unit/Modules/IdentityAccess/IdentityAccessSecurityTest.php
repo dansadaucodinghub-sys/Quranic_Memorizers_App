@@ -19,9 +19,11 @@ use Qmdb\Modules\IdentityAccess\Security\Password\PasswordPolicy;
 use Qmdb\Modules\IdentityAccess\Security\Password\SensitivePlaintextPassword;
 use Qmdb\Modules\IdentityAccess\Security\Peer\DirectPeerAddressResolver;
 use Qmdb\Modules\SecurityWeb\Csrf\CsrfAction;
+use Qmdb\Modules\SecurityWeb\Csrf\CsrfCookieFactory;
 use Qmdb\Modules\SecurityWeb\Csrf\CsrfCookieNonce;
 use Qmdb\Modules\SecurityWeb\Csrf\CsrfTokenVerificationResult;
 use Qmdb\Modules\SecurityWeb\Csrf\HmacCsrfTokenManager;
+use Qmdb\Modules\SecurityWeb\Csrf\SameOriginMutationValidator;
 
 final class IdentityAccessSecurityTest extends TestCase
 {
@@ -89,6 +91,41 @@ final class IdentityAccessSecurityTest extends TestCase
             CsrfTokenVerificationResult::INVALID,
             $manager->verify(CsrfAction::ACCOUNT_REGISTER, $nonce, $token, $now->modify('+61 seconds')),
         );
+    }
+
+    public function testProductionCsrfCookieIsHostOnlyHttpOnlySecureAndStrict(): void
+    {
+        $cookie = (new CsrfCookieFactory(true, 1800))->resolve(new ServerRequest('GET', '/register'));
+        self::assertNotNull($cookie->setCookieHeader);
+        self::assertStringStartsWith('__Host-qmdb_csrf=', $cookie->setCookieHeader);
+        self::assertStringContainsString('; Path=/', $cookie->setCookieHeader);
+        self::assertStringContainsString('; HttpOnly', $cookie->setCookieHeader);
+        self::assertStringContainsString('; SameSite=Strict', $cookie->setCookieHeader);
+        self::assertStringContainsString('; Secure', $cookie->setCookieHeader);
+        self::assertStringNotContainsString('Domain=', $cookie->setCookieHeader);
+    }
+
+    public function testSameOriginValidatorRejectsCrossOriginEvenWithValidToken(): void
+    {
+        $manager = new HmacCsrfTokenManager(str_repeat('k', 32), 60);
+        $validator = new SameOriginMutationValidator($manager, 'https://example.test');
+        $nonce = CsrfCookieNonce::generate();
+        $now = new DateTimeImmutable('2026-08-26T12:00:00Z');
+        $token = $manager->issue(CsrfAction::ACCOUNT_REGISTER, $nonce, $now)->value();
+        self::assertFalse($validator->validate(
+            new ServerRequest('POST', '/register', ['Origin' => 'https://evil.example']),
+            CsrfAction::ACCOUNT_REGISTER,
+            $nonce,
+            $token,
+            $now,
+        ));
+        self::assertTrue($validator->validate(
+            new ServerRequest('POST', '/register', ['Origin' => 'https://example.test']),
+            CsrfAction::ACCOUNT_REGISTER,
+            $nonce,
+            $token,
+            $now,
+        ));
     }
 
     public function testFingerprintsAreDomainSeparatedAndDoNotExposeInputs(): void

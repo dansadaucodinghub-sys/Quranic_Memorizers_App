@@ -7,13 +7,13 @@
 | Source Baseline | QMDB-BL-001 |
 | Product Freeze | QMDB-P0-FRZ-001 |
 | Engineering Freeze | QMDB-P1-FRZ-001 |
-| Document Version | 3.1.0 |
+| Document Version | 3.2.0 |
 | Last Updated | 2026-08-26 |
 | Status | P0 COMPLETE; P1 COMPLETE; P2 RECOVERY IN PROGRESS |
 | Current Phase | P2 — Identity, Security, and Tenant Isolation |
-| Current Batch | QMDB-P2-B02 — Account Registration, Email Verification, and Password Authentication |
-| Batch Status | NOT STARTED — AUTHORIZED FOR EXECUTION |
-| Implementation Readiness | RECOVERY_EXECUTION_IN_PROGRESS |
+| Current Batch | QMDB-P2-B03 — Secure Sessions, Cookies, Devices, Login, and Logout |
+| Batch Status | QMDB-P2-B02 COMPLETE — B03 AUTHORIZED FOR EXECUTION |
+| Implementation Readiness | READY_FOR_NEXT_BATCH |
 | P2 Status | IN PROGRESS |
 
 ## Authoritative outcome
@@ -32,8 +32,8 @@ sequential execution of P2-B01 through P2-B05. P1 remains frozen; P2 changes use
 | --- | --- |
 | Recovery Run | QMDB-RECOVERY-RUN-001 |
 | Recovery Status | IN PROGRESS |
-| Last Fully Completed Batch | QMDB-P2-B01 |
-| Current Executable Batch | QMDB-P2-B02 |
+| Last Fully Completed Batch | QMDB-P2-B02 |
+| Current Executable Batch | QMDB-P2-B03 |
 | Sequence Rule | B01 → B02 → B03 → B04 → B05; no batch advances before its mandatory gates pass |
 | P2-B06 Status | BLOCKED — outside recovery scope |
 
@@ -94,8 +94,8 @@ build reports.
 | Batch | Status | Evidence |
 | --- | --- | --- |
 | QMDB-P2-B01 | COMPLETE | Identity/tenancy source, four migrations, 731-test quality suite, 16-test MySQL suite, scanners, release and 4,271 freeze checks pass |
-| QMDB-P2-B02 | NOT STARTED | Current authorized recovery batch |
-| QMDB-P2-B03 | NOT STARTED | Blocked by sequential prerequisite B02 |
+| QMDB-P2-B02 | COMPLETE | Registration, verification, password authentication, two migrations, parallel concurrency, frontend, scanner, release and freeze gates pass |
+| QMDB-P2-B03 | NOT STARTED | Current authorized recovery batch |
 | QMDB-P2-B04 | NOT STARTED | Blocked by sequential prerequisite B03 |
 | QMDB-P2-B05 | NOT STARTED | Blocked by sequential prerequisite B04 |
 
@@ -128,9 +128,9 @@ Recovery Run: QMDB-RECOVERY-RUN-001
 
 Current Phase: P2 — Identity, Security, and Tenant Isolation
 
-Last Completed Batch: QMDB-P2-B01
+Last Completed Batch: QMDB-P2-B02
 
-Current Executable Batch: QMDB-P2-B02
+Current Executable Batch: QMDB-P2-B03
 
 P1 Status: COMPLETE
 
@@ -138,8 +138,8 @@ P2 Status: IN PROGRESS
 
 Recovery Status: IN PROGRESS
 
-Batch Status: NOT STARTED — AUTHORIZED FOR EXECUTION
+Batch Status: QMDB-P2-B02 COMPLETE — QMDB-P2-B03 AUTHORIZED FOR EXECUTION
 
-Implementation Status: RECOVERY EXECUTION IN PROGRESS
+Implementation Status: READY FOR NEXT BATCH
 
 P2-B06 Status: BLOCKED

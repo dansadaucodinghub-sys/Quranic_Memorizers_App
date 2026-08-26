@@ -36,6 +36,19 @@ SSE may later project accepted, processing, completed, or failed state and relat
 
 QMDB-P1-B09 is titled **View Rendering, Localization, RTL, Theme, and Progressive AJAX/Modal Foundation**. It owns the first presentation implementation of these rules; P1-B08 adds no JavaScript, modal, polling, partial-rendering, or SSE runtime.
 
+## P2-B02 public mutation protocol
+
+P2-B02 authorizes one narrowly owned mutation client for registration and email-verification forms. Only a form marked
+`data-qmdb-progressive-form` inside an approved form region can be intercepted. The action must be same-origin POST;
+file inputs, `formaction`, missing CSRF, and missing registration/resend idempotency values are rejected by the fragment
+policy. The client sends URL-encoded content with same-origin credentials, `redirect: error`, `X-QMDB-CSRF`, and the
+applicable `Idempotency-Key`.
+
+One in-flight submission is allowed per form. There is no automatic retry. A successful authoritative response replaces
+only the governed region and focuses completion content. Validation fragments focus the accessible error summary and
+retain only safe email input. Unexpected failure preserves the form, clears every password control, restores controls,
+and announces a validated request reference when supplied. Ordinary form POST remains the no-JavaScript path.
+
 ## Security authority
 
 The browser is never authoritative for scores, deductions, results, certificates, registration eligibility, guardian authority, consent, organization verification, permissions, workspace scope, conflicts of interest, official corrections, canonical Qur’an text, or moderation decisions. Problem-details responses remain generic at public trust boundaries and detailed only in protected operational telemetry.

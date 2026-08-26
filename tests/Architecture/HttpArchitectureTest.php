@@ -135,9 +135,16 @@ final class HttpArchitectureTest extends TestCase
         $routeNames = [
             'system.home', 'system.about.page', 'system.status.page',
             'system.health.live', 'system.health.ready', 'api.v1.system.about',
+            'account.registration.form', 'account.registration.submit', 'account.registration.accepted',
+            'account.email_verification.resend.form', 'account.email_verification.resend.submit',
+            'account.email_verification.form', 'account.email_verification.submit',
+            'account.email_verification.completed',
         ];
         foreach ($routeNames as $name) {
             self::assertStringContainsString($name, $source);
+        }
+        foreach (['/login', '/logout', '/account', '/sessions'] as $deferredPath) {
+            self::assertStringNotContainsString("new RoutePattern('" . $deferredPath, $source);
         }
     }
 

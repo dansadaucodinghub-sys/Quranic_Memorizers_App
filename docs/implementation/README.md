@@ -6,13 +6,13 @@
 | Project Code | QMDB |
 | Source Baseline | QMDB-BL-001 |
 | Freeze ID | QMDB-P0-FRZ-001 |
-| Batch ID | QMDB-P1-CLOSE |
+| Batch ID | QMDB-P2-B02 |
 | Document Title | Implementation Entry Point |
 | Document Version | 1.0.0 |
-| Document Status | P1 COMPLETE — P2-B01 BLOCKED BY OD-051 AND OD-052 |
+| Document Status | P1 COMPLETE; P2-B01 AND P2-B02 COMPLETE |
 | Document Owner Role | Product, Architecture and Engineering Governance |
 | Last Updated | 2026-08-26 |
-| Approval Status | QMDB-P1-CLOSE accepted after executable engineering verification; P2-B01 is not authorized |
+| Approval Status | Recovery-authorized B01/B02 accepted after complete executable gates; B03 is next |
 | Related Documents | [Closeout entry point](../closeout/README.md); [freeze manifest](../closeout/qmdb-p0-baseline-freeze.yaml); [project state](../project/project-state.md) |
 
 ## Purpose
@@ -32,18 +32,21 @@ The artifacts cover phased implementation routing, readiness/completion policy, 
 5. [QMDB-P1-B01 implementation prompt](prompts/QMDB-P1-B01-core-php-repository-and-runtime-foundation.md) — preserved executable batch specification.
 6. [CI, build, security, and release-artifact standard](ci-build-and-release-standard.md) — executable B10 pipeline and artifact contract.
 7. [P1 closeout evidence](../closeout/p1/README.md) — final batch ledger, executable evidence, risk disposition, freeze, and P2 readiness decision.
+8. [P2-B01 implementation report](reports/QMDB-P2-B01-implementation-report.md) — workspace, account, credential and tenant-boundary evidence.
+9. [Registration, verification and password-authentication standard](account-registration-email-verification-and-password-authentication-standard.md) — implemented P2-B02 security and workflow contract.
+10. [P2-B02 implementation report](reports/QMDB-P2-B02-implementation-report.md) — executable B02 evidence and corrections.
+11. [P2 implementation decisions](../project/p2-implementation-decisions.md) — controlled post-freeze technical decisions.
 
 ## Current authorization
 
-P0 remains complete and frozen. P1-B01 through P1-B10 are complete and P1 is closed. Deferred operational evidence is
-listed in the P1 closeout package and remains binding at its assigned deployment or release gate. OD-051 and OD-052 are
-the explicit `BLOCKS_P2_B01` decisions; no P2 identity schema or authentication implementation is authorized until the
-qualified owners approve those normalization contracts.
+P0 remains complete and frozen. P1-B01 through P1-B10 are complete and P1 is closed/frozen. The project-owner recovery
+authorization established conservative executable OD-051/OD-052 contracts, after which P2-B01 and P2-B02 passed their
+mandatory schema, security, MySQL, frontend, scanner, release and engineering-freeze gates.
 
 ## Exact next action
 
-Resolve OD-051 and OD-052 through Identity, Security, and Privacy Governance, record approved email and phone
-normalization/test-vector decisions, then rerun the P2-B01 readiness gate. Do not invent those policy decisions in code.
+Execute `QMDB-P2-B03 — Secure Sessions, Cookies, Devices, Login, and Logout` without changing the completed B02 public
+registration/verification and password-authentication contracts except through governed compatibility corrections.
 
 ## Governance
 

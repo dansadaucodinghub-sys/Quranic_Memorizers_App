@@ -314,9 +314,26 @@ Every Critical current risk maps preventive and detective/corrective/recovery co
 | QMDB-RSK-071 | Manual accessibility/browser matrix is incomplete | Semantic HTML, RTL, reduced motion, focus/fallback automated tests | Moderate until keyboard, AT, zoom and forced-colour evidence | Accessibility Governance | P2 UI and P12 | UI/release gate | No | Yes for affected UI | Yes | Deferred operational gate |
 | QMDB-RSK-072 | PCNTL/POSIX signal behavior is unobserved on Windows | Bounded worker, once mode, injectable signal unit tests, production fail-closed policy | Medium on supported worker hosts | Platform Operations | Before continuous-worker deployment | Background-runtime deployment gate | No | Yes before workers | Yes | Deferred deployment gate |
 | QMDB-RSK-073 | Dirty source cannot be an approved engineering/release baseline | Controlled source revision, governed freeze manifest, Git cleanliness and deterministic hashes | Low after final freeze commit and clean release rebuild | Release Governance | P1 closeout | Freeze/release gate | No | Yes at release | Yes | Resolved for P1 |
-| QMDB-RSK-074 | Email and phone normalization contracts are unresolved | Encrypted-original/keyed-hash direction and nullable active-key uniqueness | High identity collision/takeover risk if invented | Identity, Security and Privacy Governance | Before P2-B01 | P2-B01 entry gate | Yes | Yes | Yes | Open — blocks P2-B01 |
+| QMDB-RSK-074 | Email and phone normalization contracts were unresolved | Conservative ASCII email and canonical E.164 contracts, encrypted originals, purpose-bound keyed hashes, nullable active-key uniqueness and executable vectors | Low within the authorized B01 contract; broader EAI/provider alias behavior requires a governed change | Identity, Security and Privacy Governance | QMDB-RECOVERY-RUN-001 / P2-B01 | P2-B01 gate passed | No | Review broader internationalization before expansion | Review before national expansion | Resolved for P2-B01 |
 
 QMDB-RSK-064 through QMDB-RSK-067 are resolved for P1 by the locked PHP 8.5 quality suite, real CLI/HTTP execution,
 and the isolated MySQL 8.4 acceptance matrix. Their earlier entries remain historical discovery records. No high P1
 engineering risk is accepted. QMDB-RSK-070 through QMDB-RSK-072 remain explicit hosted, manual, or deployment-host
-evidence gates and do not reopen the portable P1 source foundation. QMDB-RSK-074 remains open and blocks P2-B01.
+evidence gates and do not reopen the portable P1 source foundation. QMDB-RSK-074 is resolved within the conservative
+recovery-authorized B01 normalization contract.
+
+## QMDB-P2-B02 identity-access risk treatment
+
+| Risk area | Executable mitigation | Residual state |
+| --- | --- | --- |
+| Plaintext or weak password handling | Non-string-convertible redacted value, exact input preservation, Argon2id-only hashing/verification, bounded policy and no persistence/logging | MITIGATED in source/unit/MySQL scans; production cost approval remains OPEN |
+| Account enumeration | Generic registration/resend/authentication results, historical keyed lookup, dummy Argon2id verification and HMAC-keyed throttles | MITIGATED in HTTP/unit tests; operational timing/load review remains OPEN |
+| CSRF and cross-origin mutation | Action/time/cookie-bound HMAC tokens, host-only HttpOnly Strict cookie, production Secure `__Host-`, canonical Origin validation | MITIGATED in unit/HTTP tests; deployment-origin review remains OPEN |
+| Registration duplication | UUIDv7 idempotency claim bound to request fingerprint, unique contact constraint and short atomic transaction | MITIGATED by four-process registration concurrency test |
+| Rate-limit race bypass | Deterministic bucket order and `SELECT ... FOR UPDATE` serialization using purpose-separated HMAC keys | MITIGATED by seven-process threshold test |
+| Verification-token disclosure or replay | 256-bit random token, hash-only persistence, no token logging, GET confirmation only, bounded attempts and one pending challenge | MITIGATED in source/MySQL/HTTP tests |
+| Double activation | Challenge row lock plus atomic consume/email/account/event transition and optimistic account version | MITIGATED by two-process verification test with exactly one activation event |
+| SMTP inside a transaction | Registration/resend commit before notifier invocation; safe wrapped delivery failure cannot roll back authority | MITIGATED in service structure and no-network mail tests; provider operations OPEN |
+| Host-header link poisoning | Configured canonical public base URL; production HTTPS required | MITIGATED in configuration/unit tests; deployment value approval OPEN |
+| Progressive duplicate or blind retry | Busy-form guard, one Fetch call, redirect error, no automatic retry, safe fragment policy and password clearing | MITIGATED in frontend tests; manual browser/AT review OPEN |
+| Session boundary crossed early | Password-authentication service only; route and architecture allowlists prohibit login/logout/session surfaces | MITIGATED by architecture and HTTP regression; B03 owns sessions |

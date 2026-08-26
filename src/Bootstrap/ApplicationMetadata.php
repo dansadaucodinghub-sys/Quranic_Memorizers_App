@@ -22,8 +22,8 @@ final readonly class ApplicationMetadata
             applicationName: 'Qur’an Memorizer DB',
             applicationCode: 'QMDB',
             frozenBaseline: 'QMDB-P0-FRZ-001',
-            currentPhase: 'P1',
-            currentBatch: 'QMDB-P1-CLOSE',
+            currentPhase: 'P2',
+            currentBatch: 'QMDB-P2-B02',
             developmentVersion: '0.1.0-dev',
         );
     }

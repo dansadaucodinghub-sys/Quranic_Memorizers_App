@@ -217,5 +217,4 @@ final readonly class AccountRegistrationService
             ),
         ];
     }
-
 }

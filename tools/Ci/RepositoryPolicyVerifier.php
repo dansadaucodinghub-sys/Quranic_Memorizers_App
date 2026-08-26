@@ -100,14 +100,16 @@ final class RepositoryPolicyVerifier
         $mutationClient = file_get_contents($this->root . '/public/assets/js/mutation-fetch-client.js');
         $report->check(is_string($mutationClient), 'The authorized mutation client is required.');
         if (is_string($mutationClient)) {
-            foreach ([
+            foreach (
+                [
                 "target.origin !== new URL(base).origin",
                 "credentials: 'same-origin'",
                 "redirect: 'error'",
                 "'X-QMDB-CSRF'",
                 "'Idempotency-Key'",
                 'retryable: false',
-            ] as $control) {
+                ] as $control
+            ) {
                 $report->check(
                     str_contains($mutationClient, $control),
                     'The authorized mutation client is missing control: ' . $control,
@@ -150,6 +152,7 @@ final class RepositoryPolicyVerifier
             && (
                 str_contains($state, 'Current Batch: QMDB-P1-CLOSE')
                 || str_contains($state, 'Last Fully Completed Batch | QMDB-P1-CLOSE')
+                || preg_match('/\|\s*QMDB-P1-CLOSE\s*\|[^\r\n]*\|\s*DONE\s*\|/', $state) === 1
             );
         $report->check($p1CloseoutRetained, 'Project state must retain QMDB-P1-CLOSE as completed history.');
         $report->check(

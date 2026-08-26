@@ -17,8 +17,8 @@ final class HttpRoutesTest extends TestCase
         $about = [
             'application' => 'QMDB',
             'name' => 'Qur’an Memorizer DB',
-            'phase' => 'P1',
-            'batch' => 'QMDB-P1-CLOSE',
+            'phase' => 'P2',
+            'batch' => 'QMDB-P2-B02',
             'baseline' => 'QMDB-P0-FRZ-001',
             'status' => 'ready',
         ];

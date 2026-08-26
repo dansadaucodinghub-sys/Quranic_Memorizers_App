@@ -1,8 +1,8 @@
 # Qur’an Memorizer DB
 
-QMDB is the governed Qur’an Memorizer Database platform. This repository contains the bounded P1 Core PHP engineering
-foundation and its `QMDB-P1-CLOSE` evidence. Closeout is currently `NOT_READY`; the engineering freeze is a candidate,
-and P2 implementation is not authorized.
+QMDB is the governed Qur’an Memorizer Database platform. This repository contains the frozen P1 Core PHP engineering
+foundation and the active P2 identity and tenancy implementation. `QMDB-P2-B01` and `QMDB-P2-B02` are complete under
+the authorized recovery run; sessions, login, logout, devices, recovery and MFA remain owned by their later batches.
 
 ## Project identity
 
@@ -10,10 +10,11 @@ and P2 implementation is not authorized.
 - Code: QMDB
 - Source baseline: QMDB-BL-001
 - Frozen baseline: QMDB-P0-FRZ-001
-- Phase: P1 — Engineering and Repository Foundation
-- Batch: QMDB-P1-CLOSE
-- Readiness: NOT_READY
-- Engineering freeze: QMDB-P1-FRZ-001 CANDIDATE_NOT_FROZEN
+- Phase: P2 — Identity, Security, and Tenant Isolation
+- Completed batch: QMDB-P2-B02
+- Next batch: QMDB-P2-B03 — Secure Sessions, Cookies, Devices, Login, and Logout
+- Readiness: READY_FOR_NEXT_BATCH
+- Engineering freeze: QMDB-P1-FRZ-001
 - Development version: 0.1.0-dev
 
 ## Prerequisites
@@ -91,6 +92,11 @@ production
 - Secret values require an explicit reveal operation and redact debug and JSON output.
 - A production secret-provider integration will be selected by a later owning batch; no cloud provider is selected here.
 
+P2-B02 additionally requires externally supplied CSRF, identity-HMAC and contact-encryption keys; a canonical public
+base URL; and a Symfony Mailer DSN. Production requires HTTPS for the public base URL, a non-`.test` sender, a secure
+`__Host-` CSRF cookie, and a non-null mail transport. The safe `.env.example` documents names and non-secret defaults
+without supplying deployable secret values.
+
 ## Quality commands
 
 ```powershell
@@ -135,6 +141,12 @@ GET /system/status         full HTML page or negotiated status fragment
 GET /health/live           process liveness
 GET /health/ready          foundation readiness
 GET /api/v1/system/about   system metadata
+GET /register              localized registration form
+POST /register             CSRF/idempotency-protected registration
+GET /register/accepted     generic registration completion
+GET|POST /verify-email/resend
+GET|POST /verify-email/{challengeId}
+GET /verify-email/completed
 ```
 
 Every `GET` route supports automatic `HEAD`, and every known path supports automatic `OPTIONS`. Unknown paths return `404`; unsupported methods return `405` with `Allow`; unsafe request targets return `400`; unexpected handler failures return a generic `500`. JSON and problem responses use `no-store` and `nosniff`, and public output excludes environment, debug, PHP-version, path, dependency, and secret details. Stop the development server after verification.
@@ -145,7 +157,8 @@ Every `GET` route supports automatic `HEAD`, and every known path supports autom
 - Factories receive a restricted resolver that rejects undeclared dependencies; registrations freeze at compilation.
 - Service and alias graphs are validated for missing targets, cycles, ownership, and forbidden cross-module edges before a runtime is returned.
 - Modules are registered explicitly and ordered deterministically; there is no reflection autowiring, class scanning, filesystem discovery, or runtime plugin loading.
-- Current modules are `foundation.core`, `foundation.application`, `foundation.database`, `foundation.schema`, `foundation.observability`, `foundation.background`, `foundation.http`, and `foundation.console`.
+- Current modules also include `identity.accounts`, `tenancy.workspaces`, `security.web`, `identity.access`, and
+  `application.http` as explicit controlled extensions to the frozen foundation.
 - `foundation.presentation` explicitly owns locale, translation, view, escaping, response, asset, and CSP-nonce services.
 - The unrestricted compiled container remains inside `ApplicationFactory`; controllers, handlers, domain objects, and entry points do not receive it.
 
@@ -153,18 +166,22 @@ Every `GET` route supports automatic `HEAD`, and every known path supports autom
 
 QMDB-P1-B04 provides exact-class synchronous command and query buses plus a synchronous in-process domain-event dispatcher. Production currently registers one query handler, `GetSystemInformationHandler`; command and event maps are intentionally empty. Domain events are not durable, queued, retried, persisted, or written to an outbox in this batch.
 
-The current foundation includes typed application/database/background configuration, controlled local environment loading, secret-value protection, UTC time, secure runtime identifiers, the validated HTTP kernel, dependency injection, module compilation, formal CLI dispatch, bounded worker execution, duplicate-safe fixed-interval scheduling, lazy MySQL connection/session verification, and transactions.
+The current application includes typed configuration, secret-value protection, UTC time, the validated HTTP kernel,
+dependency injection, module compilation, CLI/background execution, MySQL transactions, workspace/account/credential
+persistence, encrypted contact values, tenant-scoped memberships, Argon2id password services, stateless action-bound
+CSRF, database-backed identity throttling and idempotency, email-verification challenges, and provider-neutral mail.
 
-It does not include business tables, repositories, tenant data, sessions, authentication, authorization, CSRF, Redis, a durable job queue, a transactional outbox, state-changing AJAX, SSE, cloud secret providers, or business modules. The only production migration is the global scheduler operational ledger.
+P2-B02 password authentication deliberately creates no session and exposes no login route. Authorization, Redis, a
+durable job queue, transactional outbox, SSE, account recovery and MFA are not part of the completed B02 boundary.
 
 ## Current implementation status
 
-P1 — Engineering and Repository Foundation is complete and accepted as `QMDB-P1-CLOSE`. The locked PHP 8.5 suite,
-isolated MySQL 8.4 LTS matrix, Node.js 24 frontend gates, pinned Windows security scanners, SBOM/licence controls,
-deterministic release verification, and P0 frozen-baseline checks pass locally. Hosted CI, manual assistive-technology
-coverage, and PCNTL-enabled deployment-host behavior remain explicit operational evidence gates rather than P1 source
-blockers. P2-B01 is not authorized until OD-051 and OD-052 are resolved by their qualified owners. Consult
-`docs/project/project-state.md` and `docs/closeout/p1/README.md`.
+P1 — Engineering and Repository Foundation is complete and frozen. P2-B01 supplies the workspace, account, credential
+and tenant schema foundation. P2-B02 supplies registration, email verification and password-authentication services.
+The locked PHP 8.5 suite, isolated MySQL 8.4 LTS matrix, Node.js 24 frontend gates, pinned security scanners,
+SBOM/licence controls, deterministic release verification, P0 freeze and controlled-extension P1 freeze are mandatory
+completion evidence. Consult `docs/project/project-state.md` and the batch reports under
+`docs/implementation/reports/` for the current verified counts.
 
 ## CI, security, SBOM, and release artifacts
 
@@ -187,7 +204,11 @@ The interface supports system, light, dark, high-contrast, and emerald-and-gold 
 
 Production JavaScript uses native ES modules, Fetch, AbortController, URL, DOM APIs, and native dialog behavior. System details open in the single modal and the status card refreshes in place when supported. Both retain ordinary fallback links. Requests are same-origin GETs, require the QMDB fragment media type and marker, reject executable markup, cancel superseded reads, ignore stale responses, preserve focus, and show only safe request-ID references on failure.
 
-There is no AJAX mutation, automatic retry, nested modal, polling, SSE, client router, service worker, frontend framework, CSS framework, bundler, external CDN, or external font host in B09.
+The approved mutation client progressively enhances only explicitly marked same-origin POST forms. It sends CSRF and
+idempotency headers, blocks duplicate submission, validates returned fragments, clears passwords after failure, moves
+focus to completion/error content, and never retries mutations automatically. Normal form submission remains the
+no-JavaScript fallback. There is no nested modal, polling, SSE, client router, service worker, frontend framework, CSS
+framework, bundler, external CDN, or external font host.
 
 ## MySQL prerequisites and local configuration
 
@@ -249,7 +270,9 @@ Future asynchronous HTTP commands may return `202 Accepted` only after authentic
 ## Schema ledger and operations
 
 QMDB owns its migration and once-only seed framework. The production manifests are explicit:
-`database/migrations.php` and `database/seeds.php`. P1-B06 registers no business migration and no business seed; the
+`database/migrations.php` and `database/seeds.php`. P1-B06 registers the operational scheduler migration; P2-B01 adds
+workspace/account/security/membership migrations, and P2-B02 adds verification/idempotency and identity rate-limit
+migrations. No production seed is registered; the
 six `qmdb_schema_*` tables are framework metadata installed separately from business migrations.
 
 ### Schema management prerequisites
