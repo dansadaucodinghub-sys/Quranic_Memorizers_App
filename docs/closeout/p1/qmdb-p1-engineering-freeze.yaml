@@ -9,8 +9,8 @@ engineering_freeze:
   closeout_batch: QMDB-P1-CLOSE
   freeze_status: APPROVED
   readiness: P1_COMPLETE
-  generated_at_utc: "2026-08-26T19:47:07Z"
-  source_revision: "f309cb6ac0ae1778ae89fa3002e55f0337fd4695"
+  generated_at_utc: "2026-08-26T20:56:39Z"
+  source_revision: "30b3d1a48fe2dbfd19edf62d6740001f19276d60"
   source_state: governed_clean
   completed_batches:
     - QMDB-P1-B01
@@ -2727,7 +2727,7 @@ engineering_freeze:
       sha256: 8b4bc2c5c170d864d363bd829dc913d4007fb469444e01350005b5155079d0ba
     - path: "tools/Security/run-filesystem-scan.sh"
       category: FROZEN_ENGINEERING_FOUNDATION
-      sha256: 666900f3f11b66fd8f230a3d1ff17348d2d2599faf85337c610379fc66ef3ae6
+      sha256: e59af0db2b035716aca6da20797661d02e5602f371e81c5ac64ca8a254f2650c
     - path: "tools/Security/run-secret-scan.sh"
       category: FROZEN_ENGINEERING_FOUNDATION
       sha256: 8b33ecb99cddc8773f8d9f1a2b9c09d04be70ebd1434b4d8355d38a87219a6b5
@@ -2772,7 +2772,7 @@ engineering_freeze:
       sha256: 078505ef9bf801a6ca84e3a9f21b60cb77985d1c465e2d32a0375183ea30bd73
     - path: "tools/windows/run-qmdb-filesystem-scan.ps1"
       category: FROZEN_ENGINEERING_FOUNDATION
-      sha256: 517f8838c95b3337ce40cf59d70d8394457ca816b67b6e01479d3ed5764eba1e
+      sha256: 3290869d4f4fdd6ae3f81f5bd345344d2769ec8a181bf231266e249e20d2c61e
     - path: "tools/windows/run-qmdb-secret-scan.ps1"
       category: FROZEN_ENGINEERING_FOUNDATION
       sha256: b27c36c1e643d4874d45735ef476e9337907a2ca96905fdf5747166691414f02
