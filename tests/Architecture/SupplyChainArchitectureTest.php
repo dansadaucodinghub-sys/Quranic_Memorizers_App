@@ -58,7 +58,7 @@ final class SupplyChainArchitectureTest extends TestCase
         self::assertStringContainsString('actionlint -no-color', $workflow);
         self::assertStringNotContainsString('actionlint -color=never', $workflow);
         self::assertStringContainsString(
-            '^(?:vendor|node_modules|\\.phpstan\\.cache|\\.build|build|coverage)/',
+            '^(?:\\.runtime|vendor|node_modules|\\.phpstan\\.cache|\\.build|build|coverage)/',
             $gitleaks,
         );
         self::assertStringContainsString('^docs/data/04-entity-relationship-model\\.md$', $gitleaks);
