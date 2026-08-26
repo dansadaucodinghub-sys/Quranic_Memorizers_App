@@ -58,10 +58,47 @@ final class SupplyChainArchitectureTest extends TestCase
         self::assertStringContainsString('actionlint -no-color', $workflow);
         self::assertStringNotContainsString('actionlint -color=never', $workflow);
         self::assertStringContainsString(
-            '^(?:\\.runtime|vendor|node_modules|\\.phpstan\\.cache|\\.build|build|coverage)/',
+            '(?:^|[\\\\/])(?:\\.git|\\.runtime|vendor|node_modules|\\.phpstan\\.cache|\\.build|build|coverage)[\\\\/]',
             $gitleaks,
         );
-        self::assertStringContainsString('^docs/data/04-entity-relationship-model\\.md$', $gitleaks);
+        self::assertStringContainsString(
+            '(?:^|[\\\\/])docs[\\\\/]data[\\\\/]04-entity-relationship-model\\.md$',
+            $gitleaks,
+        );
+    }
+
+    public function testWindowsSecurityToolsAreChecksumPinnedAndRunEquivalentScans(): void
+    {
+        $root = dirname(__DIR__, 2);
+        $manifest = json_decode(
+            (string) file_get_contents($root . '/tools/Security/tool-versions.json'),
+            true,
+            flags: JSON_THROW_ON_ERROR,
+        );
+        self::assertIsArray($manifest);
+        $windows = $manifest['windows_x86_64'] ?? null;
+        self::assertIsArray($windows);
+        foreach (['gitleaks', 'trivy'] as $tool) {
+            $definition = $windows[$tool] ?? null;
+            self::assertIsArray($definition);
+            $url = $definition['url'] ?? null;
+            $sha256 = $definition['sha256'] ?? null;
+            self::assertIsString($url);
+            self::assertIsString($sha256);
+            self::assertMatchesRegularExpression(
+                '/\Ahttps:\/\/github\.com\/.+\/releases\/download\//',
+                $url,
+            );
+            self::assertMatchesRegularExpression('/\A[a-f0-9]{64}\z/', $sha256);
+        }
+
+        $installer = (string) file_get_contents($root . '/tools/windows/install-qmdb-security-tools.ps1');
+        $gitleaks = (string) file_get_contents($root . '/tools/windows/run-qmdb-secret-scan.ps1');
+        $trivy = (string) file_get_contents($root . '/tools/windows/run-qmdb-filesystem-scan.ps1');
+        self::assertStringContainsString('Get-FileHash -Algorithm SHA256', $installer);
+        self::assertStringContainsString('--redact', $gitleaks);
+        self::assertStringContainsString('--scanners vuln,secret,misconfig', $trivy);
+        self::assertStringContainsString('--severity HIGH,CRITICAL', $trivy);
     }
 
     /** @return array{string, string} */

@@ -5,13 +5,13 @@ useDefault = true
 
 [[allowlists]]
 description = "Generated and dependency roots are governed by repository policy and lockfile scanning"
-paths = ['''^(?:\.runtime|vendor|node_modules|\.phpstan\.cache|\.build|build|coverage)/''']
+paths = ['''(?:^|[\\/])(?:\.git|\.runtime|vendor|node_modules|\.phpstan\.cache|\.build|build|coverage)[\\/]''']
 
 # These are exact, non-production credentials used only by the isolated MySQL CI service.
 [[allowlists]]
 description = "Exact QMDB CI-only MySQL values"
 condition = "AND"
-paths = ['''^\.github/workflows/(?:ci|release-artifact)\.yml$''']
+paths = ['''(?:^|[\\/])\.github[\\/]workflows[\\/](?:ci|release-artifact)\.yml$''']
 regexes = [
   '''qmdb-test-only-root''',
   '''qmdb-test-only-runtime''',
@@ -21,11 +21,11 @@ regexes = [
 [[allowlists]]
 description = "Bounded synthetic secret markers used by redaction tests"
 condition = "AND"
-paths = ['''^tests/Unit/Shared/(?:Configuration/EnvironmentVariablesTest|Http/Middleware/ExceptionHandlingMiddlewareTest|Observability/Error/ErrorHandlingTest)\.php$''']
+paths = ['''(?:^|[\\/])tests[\\/]Unit[\\/]Shared[\\/](?:Configuration[\\/]EnvironmentVariablesTest|Http[\\/]Middleware[\\/]ExceptionHandlingMiddlewareTest|Observability[\\/]Error[\\/]ErrorHandlingTest)\.php$''']
 regexes = ['''QMDB_(?:TEST|EXCEPTION|FATAL)_SECRET_[a-f0-9]{4,8}''']
 
 [[allowlists]]
 description = "Frozen ER relationship identifiers are not credentials"
 condition = "AND"
-paths = ['''^docs/data/04-entity-relationship-model\.md$''']
+paths = ['''(?:^|[\\/])docs[\\/]data[\\/]04-entity-relationship-model\.md$''']
 regexes = ['''QMDB-REL-[0-9]{4}''']

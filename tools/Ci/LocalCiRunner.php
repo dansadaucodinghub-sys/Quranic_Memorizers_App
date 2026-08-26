@@ -52,16 +52,7 @@ final class LocalCiRunner
             }
         }
 
-        $securityStages = [
-            ['secret-scan', ['bash', 'tools/security/run-secret-scan.sh', 'repository']],
-            ['filesystem-scan', ['bash', 'tools/security/run-filesystem-scan.sh', 'repository']],
-            ['shellcheck', [
-                $this->root . '/.build/security-tools/bin/shellcheck',
-                'tools/security/install-tools.sh',
-                'tools/security/run-secret-scan.sh',
-                'tools/security/run-filesystem-scan.sh',
-            ]],
-        ];
+        $securityStages = $this->securityStages();
         foreach ($securityStages as [$name, $command]) {
             if (!$hosted && !$this->securityToolAvailable($name)) {
                 $this->recordSkipped($name, 'Pinned Linux security binary is unavailable on this host.');
@@ -170,7 +161,46 @@ final class LocalCiRunner
             'shellcheck' => 'shellcheck',
             default => throw new \InvalidArgumentException('Unknown security stage: ' . $stage),
         };
-        return is_file($this->root . '/.build/security-tools/bin/' . $binary);
+        $suffix = PHP_OS_FAMILY === 'Windows' ? '.exe' : '';
+        return is_file($this->root . '/.build/security-tools/bin/' . $binary . $suffix);
+    }
+
+    /** @return list<array{string, non-empty-list<string>}> */
+    private function securityStages(): array
+    {
+        if (PHP_OS_FAMILY === 'Windows') {
+            return [
+                ['secret-scan', [
+                    'powershell.exe',
+                    '-NoProfile',
+                    '-ExecutionPolicy',
+                    'Bypass',
+                    '-File',
+                    'tools/windows/run-qmdb-secret-scan.ps1',
+                    'repository',
+                ]],
+                ['filesystem-scan', [
+                    'powershell.exe',
+                    '-NoProfile',
+                    '-ExecutionPolicy',
+                    'Bypass',
+                    '-File',
+                    'tools/windows/run-qmdb-filesystem-scan.ps1',
+                    'repository',
+                ]],
+            ];
+        }
+
+        return [
+            ['secret-scan', ['bash', 'tools/security/run-secret-scan.sh', 'repository']],
+            ['filesystem-scan', ['bash', 'tools/security/run-filesystem-scan.sh', 'repository']],
+            ['shellcheck', [
+                $this->root . '/.build/security-tools/bin/shellcheck',
+                'tools/security/install-tools.sh',
+                'tools/security/run-secret-scan.sh',
+                'tools/security/run-filesystem-scan.sh',
+            ]],
+        ];
     }
 
     private function redact(string $output): string
