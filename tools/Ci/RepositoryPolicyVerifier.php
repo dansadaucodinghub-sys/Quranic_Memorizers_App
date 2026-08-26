@@ -79,6 +79,11 @@ final class RepositoryPolicyVerifier
         }
 
         $javascript = $this->readTree('public/assets/js', 'js');
+        $javascriptWithoutMutationClient = $this->readTree(
+            'public/assets/js',
+            'js',
+            ['mutation-fetch-client.js'],
+        );
         foreach (['jquery', 'react', 'vue', 'angular', 'alpine', 'htmx', 'document.cookie'] as $prohibited) {
             $report->check(
                 !str_contains(strtolower($javascript), strtolower($prohibited)),
@@ -86,9 +91,33 @@ final class RepositoryPolicyVerifier
             );
         }
         $report->check(
-            preg_match('/method\s*:\s*[\'\"](?:POST|PUT|PATCH|DELETE)/i', $javascript) !== 1,
-            'State-changing Fetch methods are not authorized.',
+            preg_match(
+                '/method\s*:\s*[\'\"](?:POST|PUT|PATCH|DELETE)/i',
+                $javascriptWithoutMutationClient,
+            ) !== 1,
+            'State-changing Fetch methods are limited to the authorized mutation client.',
         );
+        $mutationClient = file_get_contents($this->root . '/public/assets/js/mutation-fetch-client.js');
+        $report->check(is_string($mutationClient), 'The authorized mutation client is required.');
+        if (is_string($mutationClient)) {
+            foreach ([
+                "target.origin !== new URL(base).origin",
+                "credentials: 'same-origin'",
+                "redirect: 'error'",
+                "'X-QMDB-CSRF'",
+                "'Idempotency-Key'",
+                'retryable: false',
+            ] as $control) {
+                $report->check(
+                    str_contains($mutationClient, $control),
+                    'The authorized mutation client is missing control: ' . $control,
+                );
+            }
+            $report->check(
+                !str_contains($mutationClient, 'setTimeout('),
+                'The authorized mutation client must not retry automatically.',
+            );
+        }
         $report->check(
             preg_match('/localStorage\.(?:setItem|getItem)\s*\(\s*[\'\"](?!qmdb\.theme)/i', $javascript) !== 1,
             'Only the qmdb.theme localStorage key is approved.',
@@ -165,7 +194,8 @@ final class RepositoryPolicyVerifier
         return $files;
     }
 
-    private function readTree(string $relative, string $extension): string
+    /** @param list<string> $excludedFileNames */
+    private function readTree(string $relative, string $extension, array $excludedFileNames = []): string
     {
         $directory = $this->root . '/' . $relative;
         if (!is_dir($directory)) {
@@ -177,7 +207,12 @@ final class RepositoryPolicyVerifier
             \FilesystemIterator::SKIP_DOTS,
         ));
         foreach ($iterator as $file) {
-            if ($file instanceof \SplFileInfo && $file->isFile() && $file->getExtension() === $extension) {
+            if (
+                $file instanceof \SplFileInfo
+                && $file->isFile()
+                && $file->getExtension() === $extension
+                && !in_array($file->getFilename(), $excludedFileNames, true)
+            ) {
                 $value = file_get_contents($file->getPathname());
                 $contents .= is_string($value) ? $value : '';
             }

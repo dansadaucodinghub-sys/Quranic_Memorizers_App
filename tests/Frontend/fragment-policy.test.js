@@ -20,3 +20,16 @@ for (const [name, markup] of [
     ['multiple roots', '<section data-qmdb-fragment-root></section><section data-qmdb-fragment-root></section>'],
     ['nested modal', '<section data-qmdb-fragment-root><dialog id="qmdb-dialog"></dialog></section>'],
 ]) test(`rejects ${name}`, () => assert.throws(() => parseSafeFragment(markup), TypeError));
+
+test('accepts an approved same-origin registration mutation form', () => {
+    const root = parseSafeFragment('<section data-qmdb-fragment-root><form method="post" action="/register" data-qmdb-progressive-form><input type="hidden" name="csrf_token"><input type="hidden" name="registration_submission_id" data-qmdb-idempotency-key></form></section>');
+    assert.equal(root.querySelector('form').method, 'post');
+});
+
+for (const [name, markup] of [
+    ['cross-origin mutation', '<section data-qmdb-fragment-root><form method="post" action="https://evil.example" data-qmdb-progressive-form><input type="hidden" name="csrf_token"></form></section>'],
+    ['file mutation', '<section data-qmdb-fragment-root><form method="post" action="/register" data-qmdb-progressive-form><input type="hidden" name="csrf_token"><input type="hidden" data-qmdb-idempotency-key><input type="file"></form></section>'],
+    ['missing CSRF', '<section data-qmdb-fragment-root><form method="post" action="/verify-email/id" data-qmdb-progressive-form></form></section>'],
+    ['missing idempotency', '<section data-qmdb-fragment-root><form method="post" action="/register" data-qmdb-progressive-form><input type="hidden" name="csrf_token"></form></section>'],
+    ['formaction override', '<section data-qmdb-fragment-root><form method="post" action="/verify-email/id" data-qmdb-progressive-form><input type="hidden" name="csrf_token"><button formaction="/other"></button></form></section>'],
+]) test(`rejects ${name}`, () => assert.throws(() => parseSafeFragment(markup), TypeError));

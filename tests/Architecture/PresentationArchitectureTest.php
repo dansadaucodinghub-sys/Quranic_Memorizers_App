@@ -34,15 +34,32 @@ final class PresentationArchitectureTest extends TestCase
             self::assertStringNotContainsString('new Function', $source, $file);
             self::assertStringNotContainsString('document.write', $source, $file);
             self::assertStringNotContainsString('document.cookie', $source, $file);
-            self::assertDoesNotMatchRegularExpression(
-                '/method\s*:\s*[\'\"](?:POST|PUT|PATCH|DELETE)/i',
-                $source,
-                $file,
-            );
+            if (basename($file) !== 'mutation-fetch-client.js') {
+                self::assertDoesNotMatchRegularExpression(
+                    '/method\s*:\s*[\'\"](?:POST|PUT|PATCH|DELETE)/i',
+                    $source,
+                    $file,
+                );
+            }
         }
         foreach (['jquery', 'react', 'vue', 'angular', 'alpine', 'htmx'] as $framework) {
             self::assertStringNotContainsString($framework, strtolower($all));
         }
+
+        $mutationClient = (string) file_get_contents(
+            dirname(__DIR__, 2) . '/public/assets/js/mutation-fetch-client.js',
+        );
+        foreach ([
+            "target.origin !== new URL(base).origin",
+            "credentials: 'same-origin'",
+            "redirect: 'error'",
+            "'X-QMDB-CSRF'",
+            "'Idempotency-Key'",
+            'retryable: false',
+        ] as $requiredControl) {
+            self::assertStringContainsString($requiredControl, $mutationClient);
+        }
+        self::assertStringNotContainsString('setTimeout(', $mutationClient);
     }
 
     public function testCssProvidesThemesLogicalLayoutAndAccessibilityMedia(): void

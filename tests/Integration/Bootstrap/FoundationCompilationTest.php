@@ -9,14 +9,19 @@ use Qmdb\Bootstrap\Application;
 use Qmdb\Bootstrap\Console\ConsoleApplication;
 use Qmdb\Bootstrap\Http\HttpRuntime;
 use Qmdb\Bootstrap\Module\ApplicationServicesFoundationModule;
+use Qmdb\Bootstrap\Module\ApplicationHttpModule;
 use Qmdb\Bootstrap\Module\BackgroundExecutionFoundationModule;
 use Qmdb\Bootstrap\Module\ConsoleFoundationModule;
 use Qmdb\Bootstrap\Module\CoreFoundationModule;
 use Qmdb\Bootstrap\Module\DatabaseFoundationModule;
 use Qmdb\Bootstrap\Module\HttpFoundationModule;
+use Qmdb\Bootstrap\Module\IdentityAccessModule;
+use Qmdb\Bootstrap\Module\IdentityFoundationModule;
 use Qmdb\Bootstrap\Module\ObservabilityFoundationModule;
 use Qmdb\Bootstrap\Module\PresentationFoundationModule;
 use Qmdb\Bootstrap\Module\SchemaFoundationModule;
+use Qmdb\Bootstrap\Module\SecurityWebModule;
+use Qmdb\Bootstrap\Module\TenancyFoundationModule;
 use Qmdb\Bootstrap\RuntimeEnvironment;
 use Qmdb\Shared\Application\Query\QueryBus;
 use Qmdb\Shared\Application\System\GetSystemInformation;
@@ -27,6 +32,7 @@ use Qmdb\Shared\Configuration\ConfigurationSource;
 use Qmdb\Shared\Configuration\Database\DatabaseConfigurationFactory;
 use Qmdb\Shared\Configuration\EnvironmentVariables;
 use Qmdb\Shared\Configuration\Logging\LoggingConfigurationFactory;
+use Qmdb\Modules\IdentityAccess\Configuration\IdentityAccessConfigurationFactory;
 use Qmdb\Shared\DependencyInjection\CompiledContainer;
 use Qmdb\Shared\DependencyInjection\ContainerBuilder;
 use Qmdb\Shared\Module\ModuleRegistry;
@@ -42,11 +48,16 @@ final class FoundationCompilationTest extends TestCase
             'foundation.application',
             'foundation.database',
             'foundation.observability',
+            'foundation.presentation',
             'foundation.schema',
+            'foundation.http',
+            'identity.accounts',
+            'security.web',
+            'identity.access',
+            'application.http',
             'foundation.background',
             'foundation.console',
-            'foundation.presentation',
-            'foundation.http',
+            'tenancy.workspaces',
         ], $registry->orderedModuleIds());
     }
 
@@ -90,11 +101,17 @@ final class FoundationCompilationTest extends TestCase
             'DB_HOST' => '127.0.0.1',
             'DB_NAME' => 'qmdb_test',
             'DB_USERNAME' => 'qmdb_test',
+            'APP_PUBLIC_BASE_URL' => 'http://127.0.0.1:8080',
+            'AUTH_CSRF_SIGNING_KEY' => 'test-csrf-signing-key-with-at-least-32-bytes',
+            'AUTH_IDENTITY_HMAC_KEY' => 'test-identity-hmac-key-with-at-least-32-bytes',
+            'AUTH_CONTACT_ENCRYPTION_KEY' => 'Y2NjY2NjY2NjY2NjY2NjY2NjY2NjY2NjY2NjY2NjY2M=',
+            'MAILER_DSN' => 'null://null',
         ]);
         $configuration = (new ApplicationConfigurationFactory())->create(
             $variables,
             ConfigurationSource::PROCESS,
         );
+        $identityAccess = (new IdentityAccessConfigurationFactory())->create($variables, $configuration);
         $registry = new ModuleRegistry([
             new CoreFoundationModule(
                 $configuration,
@@ -108,12 +125,17 @@ final class FoundationCompilationTest extends TestCase
             new DatabaseFoundationModule(
                 (new DatabaseConfigurationFactory())->create($variables, $configuration->environment()),
             ),
+            new IdentityFoundationModule(),
+            new TenancyFoundationModule(),
             new SchemaFoundationModule(dirname(__DIR__, 3)),
             new BackgroundExecutionFoundationModule(
                 (new BackgroundExecutionConfigurationFactory())->create($variables),
             ),
             new PresentationFoundationModule(dirname(__DIR__, 3)),
             new HttpFoundationModule(dirname(__DIR__, 3)),
+            new SecurityWebModule($identityAccess),
+            new IdentityAccessModule($identityAccess),
+            new ApplicationHttpModule(dirname(__DIR__, 3)),
             new ConsoleFoundationModule(),
         ]);
         $builder = new ContainerBuilder();

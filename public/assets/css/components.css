@@ -32,3 +32,17 @@
 .noscript-notice { background: var(--color-surface); border-block-start: .2rem solid var(--color-accent); margin: 0; max-inline-size: none; padding: var(--space-4); text-align: center; }
 [aria-busy="true"] { cursor: progress; opacity: .78; }
 .async-error { background: var(--color-surface); border-inline-start: .25rem solid var(--color-not-ready); color: var(--color-text); margin-block: var(--space-3); padding: var(--space-3) var(--space-4); }
+.identity-page { max-inline-size: 48rem; }
+.identity-form-region { background: var(--color-surface); border: var(--border-width) solid var(--color-border); border-radius: var(--radius-lg); box-shadow: var(--shadow-soft); margin-block-start: var(--space-6); padding: clamp(1rem, 4vw, 2rem); }
+.identity-form-region form { display: grid; gap: var(--space-5); }
+.form-field { display: grid; gap: var(--space-2); }
+.form-field label { font-weight: 750; }
+.form-field input { background: var(--color-bg); border: var(--border-width) solid var(--color-border); border-radius: var(--radius-sm); color: var(--color-text); font: inherit; min-block-size: var(--touch-target); padding: var(--space-2) var(--space-3); }
+.form-field input[aria-invalid="true"] { border-color: var(--color-not-ready); outline-color: var(--color-not-ready); }
+.form-error-summary { border-inline-start: .25rem solid var(--color-not-ready); margin-block-end: var(--space-5); padding: var(--space-3) var(--space-4); }
+.form-error-summary h2 { font-size: 1.05rem; margin-block-start: 0; }
+.form-field-error { color: var(--color-not-ready); font-weight: 650; margin: 0; }
+.password-requirements { border-inline-start: .2rem solid var(--color-accent); padding-inline-start: var(--space-4); }
+.password-requirements h2 { font-size: 1rem; margin-block: 0 var(--space-1); }
+.password-requirements p { margin: 0; }
+.identity-result { background: var(--color-surface); border: var(--border-width) solid var(--color-border); border-radius: var(--radius-lg); box-shadow: var(--shadow-soft); padding: clamp(1.25rem, 5vw, 2.5rem); }

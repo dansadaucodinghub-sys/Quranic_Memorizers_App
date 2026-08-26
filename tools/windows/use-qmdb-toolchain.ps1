@@ -27,6 +27,14 @@ if ($env:QMDB_TEST_DB_HOST) {
         APP_DEBUG = 'false'
         APP_TIMEZONE = 'UTC'
         APP_LOG_LEVEL = 'emergency'
+        APP_PUBLIC_BASE_URL = 'http://127.0.0.1:8080'
+        AUTH_CSRF_SIGNING_KEY = 'qmdb-test-csrf-signing-key-32-bytes-minimum'
+        AUTH_IDENTITY_HMAC_KEY = 'qmdb-test-identity-hmac-key-32-bytes-minimum'
+        AUTH_CONTACT_ENCRYPTION_KEY = 'Y2NjY2NjY2NjY2NjY2NjY2NjY2NjY2NjY2NjY2NjY2M='
+        AUTH_CONTACT_ENCRYPTION_KEY_ID = 'test-v1'
+        MAILER_DSN = 'null://null'
+        MAIL_FROM_ADDRESS = 'no-reply@example.test'
+        MAIL_FROM_NAME = 'QMDB Test'
         DB_HOST = $env:QMDB_TEST_DB_HOST
         DB_PORT = $env:QMDB_TEST_DB_PORT
         DB_NAME = $env:QMDB_TEST_DB_NAME

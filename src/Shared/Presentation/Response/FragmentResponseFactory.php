@@ -18,7 +18,7 @@ final readonly class FragmentResponseFactory
     ) {
     }
 
-    public function create(SafeHtml $html): ResponseInterface
+    public function create(SafeHtml $html, int $status = 200): ResponseInterface
     {
         $markup = trim($html->trustedHtml());
         if (
@@ -29,7 +29,7 @@ final readonly class FragmentResponseFactory
             throw new RuntimeException('Rendered fragment violates the fragment contract.');
         }
 
-        return $this->responses->createResponse()
+        return $this->responses->createResponse($status)
             ->withHeader('Content-Type', FragmentRequestDetector::MEDIA_TYPE . '; charset=utf-8')
             ->withHeader('X-QMDB-Fragment', '1')
             ->withHeader('Cache-Control', 'no-store')

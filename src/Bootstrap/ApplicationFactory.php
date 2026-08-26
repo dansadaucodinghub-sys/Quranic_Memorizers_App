@@ -8,15 +8,18 @@ use InvalidArgumentException;
 use Qmdb\Bootstrap\Console\ConsoleApplication;
 use Qmdb\Bootstrap\Http\HttpRuntime;
 use Qmdb\Bootstrap\Module\ApplicationServicesFoundationModule;
+use Qmdb\Bootstrap\Module\ApplicationHttpModule;
 use Qmdb\Bootstrap\Module\BackgroundExecutionFoundationModule;
 use Qmdb\Bootstrap\Module\ConsoleFoundationModule;
 use Qmdb\Bootstrap\Module\CoreFoundationModule;
 use Qmdb\Bootstrap\Module\DatabaseFoundationModule;
 use Qmdb\Bootstrap\Module\HttpFoundationModule;
 use Qmdb\Bootstrap\Module\IdentityFoundationModule;
+use Qmdb\Bootstrap\Module\IdentityAccessModule;
 use Qmdb\Bootstrap\Module\ObservabilityFoundationModule;
 use Qmdb\Bootstrap\Module\PresentationFoundationModule;
 use Qmdb\Bootstrap\Module\SchemaFoundationModule;
+use Qmdb\Bootstrap\Module\SecurityWebModule;
 use Qmdb\Bootstrap\Module\TenancyFoundationModule;
 use Qmdb\Shared\Background\Configuration\BackgroundExecutionConfigurationFactory;
 use Qmdb\Shared\Configuration\ApplicationConfigurationFactory;
@@ -24,6 +27,7 @@ use Qmdb\Shared\Configuration\Database\DatabaseConfigurationFactory;
 use Qmdb\Shared\Configuration\EnvironmentLoader;
 use Qmdb\Shared\Configuration\Infrastructure\DotenvEnvironmentLoader;
 use Qmdb\Shared\Configuration\Logging\LoggingConfigurationFactory;
+use Qmdb\Modules\IdentityAccess\Configuration\IdentityAccessConfigurationFactory;
 use Qmdb\Shared\DependencyInjection\CompiledContainer;
 use Qmdb\Shared\DependencyInjection\ContainerBuilder;
 use Qmdb\Shared\Module\ModuleRegistry;
@@ -116,6 +120,10 @@ final readonly class ApplicationFactory
         $backgroundConfiguration = (new BackgroundExecutionConfigurationFactory())->create(
             $loadedEnvironment->variables(),
         );
+        $identityAccessConfiguration = (new IdentityAccessConfigurationFactory())->create(
+            $loadedEnvironment->variables(),
+            $configuration,
+        );
 
         $registry = new ModuleRegistry([
             new CoreFoundationModule($configuration, $loadedEnvironment->variables(), $runtimeEnvironment),
@@ -128,6 +136,9 @@ final readonly class ApplicationFactory
             new BackgroundExecutionFoundationModule($backgroundConfiguration),
             new PresentationFoundationModule($this->projectRoot),
             new HttpFoundationModule($this->projectRoot),
+            new SecurityWebModule($identityAccessConfiguration),
+            new IdentityAccessModule($identityAccessConfiguration),
+            new ApplicationHttpModule($this->projectRoot),
             new ConsoleFoundationModule(),
         ]);
         $builder = new ContainerBuilder();

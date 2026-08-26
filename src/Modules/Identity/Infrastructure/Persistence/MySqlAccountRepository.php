@@ -7,9 +7,11 @@ namespace Qmdb\Modules\Identity\Infrastructure\Persistence;
 use DateTimeImmutable;
 use DateTimeZone;
 use PDO;
+use PDOException;
 use Qmdb\Modules\Identity\Domain\AccountAuthenticationRecord;
 use Qmdb\Modules\Identity\Domain\AccountContactStatus;
 use Qmdb\Modules\Identity\Domain\AccountStatus;
+use Qmdb\Modules\Identity\Domain\Exception\DuplicateIdentityContactException;
 use Qmdb\Modules\Identity\Domain\Repository\AccountRepository;
 use Qmdb\Modules\Identity\Domain\UserAccount;
 use Qmdb\Modules\Identity\Domain\Value\AccountEmailId;
@@ -154,6 +156,31 @@ final readonly class MySqlAccountRepository implements AccountRepository
         );
     }
 
+    public function appendStatusEvent(
+        int $accountInternalId,
+        string $eventType,
+        DateTimeImmutable $occurredAt,
+    ): void {
+        if (preg_match('/\A[A-Z][A-Z0-9_]{2,95}\z/', $eventType) !== 1) {
+            throw new \InvalidArgumentException('Account status event type is invalid.');
+        }
+        $formatted = self::format($occurredAt);
+        $statement = $this->provider->connection()->prepare(
+            'INSERT INTO account_status_events '
+            . '(user_account_id, event_type, occurred_at, payload_json, content_hash) '
+            . 'VALUES (:account_id, :event_type, :occurred_at, NULL, :content_hash)',
+        );
+        $statement->bindValue(':account_id', $accountInternalId, PDO::PARAM_INT);
+        $statement->bindValue(':event_type', $eventType);
+        $statement->bindValue(':occurred_at', $formatted);
+        $statement->bindValue(
+            ':content_hash',
+            hash('sha256', $accountInternalId . "\0" . $eventType . "\0" . $formatted, true),
+            PDO::PARAM_LOB,
+        );
+        $statement->execute();
+    }
+
     public function activateVerifiedEmail(
         int $accountInternalId,
         int $emailInternalId,
@@ -233,7 +260,15 @@ final readonly class MySqlAccountRepository implements AccountRepository
         $statement->bindValue(':status_code', $status->value);
         $statement->bindValue(':created_at', self::format($createdAt));
         $statement->bindValue(':updated_at', self::format($createdAt));
-        $statement->execute();
+        try {
+            $statement->execute();
+        } catch (PDOException $exception) {
+            $driverCode = $exception->errorInfo[1] ?? null;
+            if ($exception->getCode() === '23000' && ($driverCode === 1062 || $driverCode === '1062')) {
+                throw new DuplicateIdentityContactException('The identity contact already exists.', 0, $exception);
+            }
+            throw $exception;
+        }
 
         return (int) $this->provider->connection()->lastInsertId();
     }

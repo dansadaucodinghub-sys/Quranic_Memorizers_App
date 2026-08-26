@@ -7,6 +7,8 @@ namespace Qmdb\Tests\Architecture;
 use PHPUnit\Framework\TestCase;
 use Qmdb\Modules\Identity\Infrastructure\Migration\CreateAccountSecurityFoundationMigration;
 use Qmdb\Modules\Identity\Infrastructure\Migration\CreateUserAccountsMigration;
+use Qmdb\Modules\IdentityAccess\Infrastructure\Migration\CreateIdentityRateLimitFoundationMigration;
+use Qmdb\Modules\IdentityAccess\Infrastructure\Migration\CreateIdentityVerificationFoundationMigration;
 use Qmdb\Modules\Tenancy\Infrastructure\Migration\CreateWorkspaceMembershipsMigration;
 use Qmdb\Modules\Tenancy\Infrastructure\Migration\CreateWorkspacesMigration;
 use Qmdb\Shared\Background\Scheduler\Migration\CreateScheduledTaskRunsMigration;
@@ -17,7 +19,7 @@ use SplFileInfo;
 
 final class SchemaFoundationArchitectureTest extends TestCase
 {
-    public function testProductionManifestsContainOnlyAuthorizedP1AndP2B01Migrations(): void
+    public function testProductionManifestsContainOnlyAuthorizedP1ThroughP2B02Migrations(): void
     {
         $migrationFactory = require dirname(__DIR__, 2) . '/database/migrations.php';
         $seedFactory = require dirname(__DIR__, 2) . '/database/seeds.php';
@@ -32,7 +34,7 @@ final class SchemaFoundationArchitectureTest extends TestCase
         }
 
         $ordered = $migrations->ordered();
-        self::assertCount(5, $ordered);
+        self::assertCount(7, $ordered);
         self::assertSame(
             [
                 CreateScheduledTaskRunsMigration::class,
@@ -40,6 +42,8 @@ final class SchemaFoundationArchitectureTest extends TestCase
                 CreateUserAccountsMigration::class,
                 CreateAccountSecurityFoundationMigration::class,
                 CreateWorkspaceMembershipsMigration::class,
+                CreateIdentityVerificationFoundationMigration::class,
+                CreateIdentityRateLimitFoundationMigration::class,
             ],
             array_map(static fn (Migration $migration): string => $migration::class, $ordered),
         );
@@ -50,6 +54,8 @@ final class SchemaFoundationArchitectureTest extends TestCase
                 '20260826010200_create_user_accounts',
                 '20260826010300_create_account_security_foundation',
                 '20260826010400_create_workspace_memberships',
+                '20260826010500_create_identity_verification_foundation',
+                '20260826010600_create_identity_rate_limit_foundation',
             ],
             array_map(static fn (Migration $migration): string => $migration->id()->value(), $ordered),
         );

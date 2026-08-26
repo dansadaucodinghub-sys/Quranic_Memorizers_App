@@ -31,8 +31,20 @@ export function parseSafeFragment(markup, baseUrl = globalThis.location?.href ??
     }
     for (const form of document.querySelectorAll('form')) {
         const method = (form.getAttribute('method') ?? 'get').toLowerCase();
-        if (method !== 'get') {
+        if (method === 'get') continue;
+        const action = (form.getAttribute('action') ?? '').trim();
+        const approved = method === 'post'
+            && form.hasAttribute('data-qmdb-progressive-form')
+            && action.startsWith('/')
+            && !action.startsWith('//')
+            && !form.querySelector('input[type="file"], [formaction]')
+            && form.querySelector('input[type="hidden"][name="csrf_token"]');
+        if (!approved) {
             throw new TypeError('Fragment contains a mutation form.');
+        }
+        if ((action === '/register' || action === '/verify-email/resend')
+            && !form.querySelector('[data-qmdb-idempotency-key]')) {
+            throw new TypeError('Fragment mutation form lacks idempotency protection.');
         }
     }
     return roots[0];

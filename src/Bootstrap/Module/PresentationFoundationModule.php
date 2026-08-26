@@ -83,8 +83,31 @@ final readonly class PresentationFoundationModule implements Module
                     'pages.home' => $root . '/resources/views/pages/home.php',
                     'pages.system-about' => $root . '/resources/views/pages/system-about.php',
                     'pages.system-status' => $root . '/resources/views/pages/system-status.php',
+                    'pages.account-register' => $root . '/resources/views/pages/account-register.php',
+                    'pages.account-registration-accepted' =>
+                        $root . '/resources/views/pages/account-registration-accepted.php',
+                    'pages.email-verification-confirm' =>
+                        $root . '/resources/views/pages/email-verification-confirm.php',
+                    'pages.email-verification-completed' =>
+                        $root . '/resources/views/pages/email-verification-completed.php',
+                    'pages.email-verification-resend' =>
+                        $root . '/resources/views/pages/email-verification-resend.php',
                     'fragments.system-about-dialog' => $root . '/resources/views/fragments/system-about-dialog.php',
                     'fragments.system-status-card' => $root . '/resources/views/fragments/system-status-card.php',
+                    'fragments.account-register-form' =>
+                        $root . '/resources/views/fragments/account-register-form.php',
+                    'fragments.account-registration-accepted' =>
+                        $root . '/resources/views/fragments/account-registration-accepted.php',
+                    'fragments.email-verification-confirm' =>
+                        $root . '/resources/views/fragments/email-verification-confirm.php',
+                    'fragments.email-verification-completed' =>
+                        $root . '/resources/views/fragments/email-verification-completed.php',
+                    'fragments.email-verification-resend-form' =>
+                        $root . '/resources/views/fragments/email-verification-resend-form.php',
+                    'fragments.email-verification-resend-accepted' =>
+                        $root . '/resources/views/fragments/email-verification-resend-accepted.php',
+                    'emails.email-verification-html' => $root . '/resources/views/emails/email-verification.html.php',
+                    'emails.email-verification-text' => $root . '/resources/views/emails/email-verification.txt.php',
                     'components.application-header' => $root . '/resources/views/components/application-header.php',
                     'components.application-footer' => $root . '/resources/views/components/application-footer.php',
                     'components.language-switcher' => $root . '/resources/views/components/language-switcher.php',
@@ -92,6 +115,10 @@ final readonly class PresentationFoundationModule implements Module
                     'components.status-badge' => $root . '/resources/views/components/status-badge.php',
                     'components.modal-shell' => $root . '/resources/views/components/modal-shell.php',
                     'components.live-region' => $root . '/resources/views/components/live-region.php',
+                    'components.form-error-summary' => $root . '/resources/views/components/form-error-summary.php',
+                    'components.form-field-error' => $root . '/resources/views/components/form-field-error.php',
+                    'components.password-requirements' =>
+                        $root . '/resources/views/components/password-requirements.php',
                 ])),
         ));
         $context->service(ServiceDefinition::factory(

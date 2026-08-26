@@ -48,6 +48,12 @@ interface AccountRepository
         DateTimeImmutable $createdAt,
     ): int;
 
+    public function appendStatusEvent(
+        int $accountInternalId,
+        string $eventType,
+        DateTimeImmutable $occurredAt,
+    ): void;
+
     public function authenticationByEmailHash(LookupHash $lookupHash): ?AccountAuthenticationRecord;
 
     public function activateVerifiedEmail(

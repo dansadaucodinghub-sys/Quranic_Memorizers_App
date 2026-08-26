@@ -59,17 +59,16 @@ final class ApplicationFactoryTest extends TestCase
         }
     }
 
-    public function testFactoryConstructsDatabaseFoundationButNoDomainModules(): void
+    public function testFactoryConstructsExplicitFoundationAndIdentityModulesWithoutDirectDrivers(): void
     {
         $path = (new ReflectionClass(ApplicationFactory::class))->getFileName();
         self::assertIsString($path);
         $source = file_get_contents($path);
         self::assertIsString($source);
 
-        self::assertDoesNotMatchRegularExpression(
-            '/\b(?:mysqli|Redis|Modules)\b/',
-            $source,
-        );
+        self::assertStringContainsString('IdentityAccessModule', $source);
+        self::assertStringContainsString('ApplicationHttpModule', $source);
+        self::assertDoesNotMatchRegularExpression('/\b(?:mysqli|Redis)\b/', $source);
     }
 
     /** @param array<string, string> $variables */

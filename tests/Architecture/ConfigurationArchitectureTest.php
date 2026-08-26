@@ -90,7 +90,13 @@ final class ConfigurationArchitectureTest extends TestCase
             self::assertMatchesRegularExpression('/\A[A-Z][A-Z0-9_]*=/', $trimmed);
             [$name] = explode('=', $trimmed, 2);
             $assignments[] = $name;
-            if (in_array($name, ['DB_PASSWORD', 'DB_SCHEMA_PASSWORD'], true)) {
+            if (in_array($name, [
+                'AUTH_CSRF_SIGNING_KEY',
+                'AUTH_IDENTITY_HMAC_KEY',
+                'AUTH_CONTACT_ENCRYPTION_KEY',
+                'DB_PASSWORD',
+                'DB_SCHEMA_PASSWORD',
+            ], true)) {
                 self::assertSame($name . '=', $trimmed);
             } else {
                 self::assertDoesNotMatchRegularExpression(
@@ -105,6 +111,27 @@ final class ConfigurationArchitectureTest extends TestCase
             'APP_DEBUG',
             'APP_TIMEZONE',
             'APP_LOG_LEVEL',
+            'APP_PUBLIC_BASE_URL',
+            'AUTH_CSRF_SIGNING_KEY',
+            'AUTH_IDENTITY_HMAC_KEY',
+            'AUTH_CONTACT_ENCRYPTION_KEY',
+            'AUTH_CONTACT_ENCRYPTION_KEY_ID',
+            'AUTH_CSRF_TTL_SECONDS',
+            'AUTH_FORM_MAX_BYTES',
+            'AUTH_PASSWORD_MIN_LENGTH',
+            'AUTH_PASSWORD_MAX_BYTES',
+            'AUTH_EMAIL_VERIFICATION_TTL_SECONDS',
+            'AUTH_EMAIL_VERIFICATION_MAX_ATTEMPTS',
+            'AUTH_REGISTRATION_WINDOW_SECONDS',
+            'AUTH_REGISTRATION_MAX_ATTEMPTS',
+            'AUTH_VERIFICATION_RESEND_WINDOW_SECONDS',
+            'AUTH_VERIFICATION_RESEND_MAX_ATTEMPTS',
+            'AUTH_PASSWORD_WINDOW_SECONDS',
+            'AUTH_PASSWORD_MAX_ATTEMPTS',
+            'AUTH_RATE_LIMIT_BLOCK_SECONDS',
+            'MAILER_DSN',
+            'MAIL_FROM_ADDRESS',
+            'MAIL_FROM_NAME',
             'WORKER_MAX_JOBS',
             'WORKER_MAX_RUNTIME_SECONDS',
             'WORKER_IDLE_SLEEP_MS',

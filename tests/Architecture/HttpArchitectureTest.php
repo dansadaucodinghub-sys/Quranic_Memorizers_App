@@ -163,6 +163,7 @@ final class HttpArchitectureTest extends TestCase
             'psr/http-server-handler',
             'psr/http-server-middleware',
             'psr/log',
+            'symfony/mailer',
             'vlucas/phpdotenv',
         ], array_keys($runtime));
 

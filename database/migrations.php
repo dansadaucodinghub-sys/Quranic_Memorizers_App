@@ -5,6 +5,8 @@ declare(strict_types=1);
 use Qmdb\Shared\Background\Scheduler\Migration\CreateScheduledTaskRunsMigration;
 use Qmdb\Modules\Identity\Infrastructure\Migration\CreateAccountSecurityFoundationMigration;
 use Qmdb\Modules\Identity\Infrastructure\Migration\CreateUserAccountsMigration;
+use Qmdb\Modules\IdentityAccess\Infrastructure\Migration\CreateIdentityRateLimitFoundationMigration;
+use Qmdb\Modules\IdentityAccess\Infrastructure\Migration\CreateIdentityVerificationFoundationMigration;
 use Qmdb\Modules\Tenancy\Infrastructure\Migration\CreateWorkspaceMembershipsMigration;
 use Qmdb\Modules\Tenancy\Infrastructure\Migration\CreateWorkspacesMigration;
 use Qmdb\Shared\Schema\Migration\MigrationRegistry;
@@ -17,5 +19,7 @@ return static function (): MigrationRegistry {
         ->register(new CreateUserAccountsMigration())
         ->register(new CreateAccountSecurityFoundationMigration())
         ->register(new CreateWorkspaceMembershipsMigration())
+        ->register(new CreateIdentityVerificationFoundationMigration())
+        ->register(new CreateIdentityRateLimitFoundationMigration())
         ->build();
 };

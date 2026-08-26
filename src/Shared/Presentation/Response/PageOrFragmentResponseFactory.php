@@ -17,11 +17,15 @@ final readonly class PageOrFragmentResponseFactory
     ) {
     }
 
-    public function create(ServerRequestInterface $request, SafeHtml $page, SafeHtml $fragment): ResponseInterface
-    {
+    public function create(
+        ServerRequestInterface $request,
+        SafeHtml $page,
+        SafeHtml $fragment,
+        int $status = 200,
+    ): ResponseInterface {
         $response = $this->detector->isFragment($request)
-            ? $this->fragments->create($fragment)
-            : $this->pages->create($page);
+            ? $this->fragments->create($fragment, $status)
+            : $this->pages->create($page, $status);
 
         return $response->withHeader('Vary', 'Accept');
     }

@@ -7,9 +7,9 @@ namespace Qmdb\Tests\Integration\MySql;
 use DateTimeImmutable;
 use DateTimeZone;
 use PDO;
-use PDOException;
 use Qmdb\Modules\Identity\Domain\AccountContactStatus;
 use Qmdb\Modules\Identity\Domain\AccountStatus;
+use Qmdb\Modules\Identity\Domain\Exception\DuplicateIdentityContactException;
 use Qmdb\Modules\Identity\Domain\UserAccount;
 use Qmdb\Modules\Identity\Domain\Value\AccountEmailId;
 use Qmdb\Modules\Identity\Domain\Value\AccountId;
@@ -178,7 +178,7 @@ final class IdentityTenancyFoundationIntegrationTest extends MySqlIntegrationTes
                 $now,
             ));
             if ($attempt === 2) {
-                $this->expectException(PDOException::class);
+                $this->expectException(DuplicateIdentityContactException::class);
             }
             $accounts->addEmail(
                 $accountId,
@@ -207,6 +207,9 @@ final class IdentityTenancyFoundationIntegrationTest extends MySqlIntegrationTes
     {
         foreach (
             [
+                'identity_rate_limit_buckets',
+                'account_email_verification_challenges',
+                'identity_idempotency_records',
                 'workspace_memberships',
                 'account_status_events',
                 'account_credentials',

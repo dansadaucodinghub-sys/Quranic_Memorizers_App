@@ -62,8 +62,9 @@ final readonly class HttpFoundationModule implements Module
 {
     private const ID = 'foundation.http';
 
-    public function __construct(private string $projectRoot)
+    public function __construct(string $projectRoot)
     {
+        unset($projectRoot);
     }
 
     public function id(): ModuleId
@@ -222,59 +223,11 @@ final readonly class HttpFoundationModule implements Module
             ),
         ));
         $context->service(ServiceDefinition::factory(
-            RouteCollection::class,
-            self::ID,
-            [SystemHomeController::class, SystemAboutPageController::class, SystemStatusPageController::class,
-                SystemAboutApiController::class, LivenessController::class, ReadinessController::class],
-            new ClosureServiceFactory(function (DependencyResolver $resolver): RouteCollection {
-                $factory = require $this->projectRoot . '/routes/web.php';
-                if (!$factory instanceof Closure) {
-                    throw new RuntimeException('Production route definitions must return a factory closure.');
-                }
-
-                $routes = $factory(
-                    ServiceReference::get($resolver, SystemHomeController::class),
-                    ServiceReference::get($resolver, SystemAboutPageController::class),
-                    ServiceReference::get($resolver, SystemStatusPageController::class),
-                    ServiceReference::get($resolver, SystemAboutApiController::class),
-                    ServiceReference::get($resolver, LivenessController::class),
-                    ServiceReference::get($resolver, ReadinessController::class),
-                );
-                if (!$routes instanceof RouteCollection) {
-                    throw new RuntimeException('Production route factory returned an invalid route collection.');
-                }
-
-                return $routes;
-            }),
-        ));
-        $context->service(ServiceDefinition::factory(
-            Router::class,
-            self::ID,
-            [RouteCollection::class],
-            new ClosureServiceFactory(
-                static fn (DependencyResolver $resolver): Router =>
-                    new Router(ServiceReference::get($resolver, RouteCollection::class)),
-            ),
-        ));
-        $context->service(ServiceDefinition::factory(
             ControllerDispatcher::class,
             self::ID,
             [],
             new ClosureServiceFactory(
                 static fn (DependencyResolver $resolver): ControllerDispatcher => new ControllerDispatcher(),
-            ),
-        ));
-        $context->service(ServiceDefinition::factory(
-            RoutingRequestHandler::class,
-            self::ID,
-            [Router::class, ControllerDispatcher::class, ProblemDetailsResponseFactory::class, Psr17Factory::class],
-            new ClosureServiceFactory(
-                static fn (DependencyResolver $resolver): RoutingRequestHandler => new RoutingRequestHandler(
-                    ServiceReference::get($resolver, Router::class),
-                    ServiceReference::get($resolver, ControllerDispatcher::class),
-                    ServiceReference::get($resolver, ProblemDetailsResponseFactory::class),
-                    ServiceReference::get($resolver, Psr17Factory::class),
-                ),
             ),
         ));
         $context->service(ServiceDefinition::factory(
@@ -350,57 +303,11 @@ final readonly class HttpFoundationModule implements Module
                 new LocaleMiddleware(ServiceReference::get($resolver, LocaleResolver::class))),
         ));
         $context->service(ServiceDefinition::factory(
-            HttpKernel::class,
-            self::ID,
-            [
-                ExceptionHandlingMiddleware::class,
-                CorrelationIdMiddleware::class,
-                CspNonceMiddleware::class,
-                SecurityHeadersMiddleware::class,
-                HttpRequestLoggingMiddleware::class,
-                RequestTargetValidationMiddleware::class,
-                LocaleMiddleware::class,
-                RoutingRequestHandler::class,
-            ],
-            new ClosureServiceFactory(
-                static fn (DependencyResolver $resolver): HttpKernel => new HttpKernel(
-                    [
-                        ServiceReference::get($resolver, CorrelationIdMiddleware::class),
-                        ServiceReference::get($resolver, CspNonceMiddleware::class),
-                        ServiceReference::get($resolver, SecurityHeadersMiddleware::class),
-                        ServiceReference::get($resolver, HttpRequestLoggingMiddleware::class),
-                        ServiceReference::get($resolver, ExceptionHandlingMiddleware::class),
-                        ServiceReference::get($resolver, RequestTargetValidationMiddleware::class),
-                        ServiceReference::get($resolver, LocaleMiddleware::class),
-                    ],
-                    ServiceReference::get($resolver, RoutingRequestHandler::class),
-                ),
-            ),
-        ));
-        $context->service(ServiceDefinition::factory(
             ResponseEmitter::class,
             self::ID,
             [],
             new ClosureServiceFactory(
                 static fn (DependencyResolver $resolver): SapiResponseEmitter => new SapiResponseEmitter(),
-            ),
-        ));
-        $context->service(ServiceDefinition::factory(
-            HttpRuntime::class,
-            self::ID,
-            [
-                NativeServerRequestFactory::class,
-                HttpKernel::class,
-                ResponseEmitter::class,
-                ErrorHandlingRuntime::class,
-            ],
-            new ClosureServiceFactory(
-                static fn (DependencyResolver $resolver): HttpRuntime => new HttpRuntime(
-                    ServiceReference::get($resolver, NativeServerRequestFactory::class),
-                    ServiceReference::get($resolver, HttpKernel::class),
-                    ServiceReference::get($resolver, ResponseEmitter::class),
-                    ServiceReference::get($resolver, ErrorHandlingRuntime::class),
-                ),
             ),
         ));
     }
