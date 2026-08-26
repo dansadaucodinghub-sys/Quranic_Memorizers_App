@@ -11,8 +11,8 @@
 | Last Updated | 2026-08-26 |
 | Status | P0 COMPLETE; P1 COMPLETE; P2 RECOVERY IN PROGRESS |
 | Current Phase | P2 — Identity, Security, and Tenant Isolation |
-| Current Batch | QMDB-P2-B01 — Workspace, Account, Credential, and Tenant Boundary Foundation |
-| Batch Status | IN PROGRESS |
+| Current Batch | QMDB-P2-B02 — Account Registration, Email Verification, and Password Authentication |
+| Batch Status | NOT STARTED — AUTHORIZED FOR EXECUTION |
 | Implementation Readiness | RECOVERY_EXECUTION_IN_PROGRESS |
 | P2 Status | IN PROGRESS |
 
@@ -32,8 +32,8 @@ sequential execution of P2-B01 through P2-B05. P1 remains frozen; P2 changes use
 | --- | --- |
 | Recovery Run | QMDB-RECOVERY-RUN-001 |
 | Recovery Status | IN PROGRESS |
-| Last Fully Completed Batch | QMDB-P1-CLOSE |
-| Current Executable Batch | QMDB-P2-B01 |
+| Last Fully Completed Batch | QMDB-P2-B01 |
+| Current Executable Batch | QMDB-P2-B02 |
 | Sequence Rule | B01 → B02 → B03 → B04 → B05; no batch advances before its mandatory gates pass |
 | P2-B06 Status | BLOCKED — outside recovery scope |
 
@@ -89,6 +89,16 @@ sequential execution of P2-B01 through P2-B05. P1 remains frozen; P2 changes use
 Exact final test counts, artifact hashes and source revisions are retained in the P1 closeout evidence set and generated
 build reports.
 
+## P2 recovery batch ledger
+
+| Batch | Status | Evidence |
+| --- | --- | --- |
+| QMDB-P2-B01 | COMPLETE | Identity/tenancy source, four migrations, 731-test quality suite, 16-test MySQL suite, scanners, release and 4,271 freeze checks pass |
+| QMDB-P2-B02 | NOT STARTED | Current authorized recovery batch |
+| QMDB-P2-B03 | NOT STARTED | Blocked by sequential prerequisite B02 |
+| QMDB-P2-B04 | NOT STARTED | Blocked by sequential prerequisite B03 |
+| QMDB-P2-B05 | NOT STARTED | Blocked by sequential prerequisite B04 |
+
 ## Deferred evidence that does not reopen P1
 
 | Evidence | Classification | Required point |
@@ -118,7 +128,9 @@ Recovery Run: QMDB-RECOVERY-RUN-001
 
 Current Phase: P2 — Identity, Security, and Tenant Isolation
 
-Current Executable Batch: QMDB-P2-B01
+Last Completed Batch: QMDB-P2-B01
+
+Current Executable Batch: QMDB-P2-B02
 
 P1 Status: COMPLETE
 
@@ -126,7 +138,7 @@ P2 Status: IN PROGRESS
 
 Recovery Status: IN PROGRESS
 
-Batch Status: IN PROGRESS
+Batch Status: NOT STARTED — AUTHORIZED FOR EXECUTION
 
 Implementation Status: RECOVERY EXECUTION IN PROGRESS
 

@@ -40,8 +40,8 @@ This table is updated only after a batch passes its mandatory gates.
 
 | Batch | Starting State | Current Classification | Evidence |
 | --- | --- | --- | --- |
-| QMDB-P2-B01 | NOT_STARTED | IMPLEMENTED_UNVERIFIED | Production source, migrations and tests exist; final full gates and freeze reconciliation pending |
-| QMDB-P2-B02 | NOT_STARTED | NOT_STARTED | Sequential prerequisite B01 not yet closed |
+| QMDB-P2-B01 | NOT_STARTED | COMPLETE | Production source, four migrations, tests, MySQL lifecycle, security/release gates and 4,271-check freeze reconciliation pass |
+| QMDB-P2-B02 | NOT_STARTED | NOT_STARTED | First genuinely missing batch; authorized after B01 closure |
 | QMDB-P2-B03 | NOT_STARTED | NOT_STARTED | Sequential prerequisite B02 not yet closed |
 | QMDB-P2-B04 | NOT_STARTED | NOT_STARTED | Sequential prerequisite B03 not yet closed |
 | QMDB-P2-B05 | NOT_STARTED | NOT_STARTED | Sequential prerequisite B04 not yet closed |
