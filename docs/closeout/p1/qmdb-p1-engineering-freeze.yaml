@@ -9,8 +9,8 @@ engineering_freeze:
   closeout_batch: QMDB-P1-CLOSE
   freeze_status: APPROVED
   readiness: P1_COMPLETE
-  generated_at_utc: "2026-08-26T06:35:01Z"
-  source_revision: "fece9bd4e4903039fa157487cc975cc963974351"
+  generated_at_utc: "2026-08-26T06:45:11Z"
+  source_revision: "3c40b811e655d90589bd01c7c6344d4993e00494"
   source_state: governed_clean
   completed_batches:
     - QMDB-P1-B01
@@ -1714,6 +1714,9 @@ engineering_freeze:
     - path: "tests/Tools/Security/SensitiveContentScannerTest.php"
       category: FROZEN_ENGINEERING_FOUNDATION
       sha256: ad51ff32a47c608251dd338f7443b0e2780c75571ddfe8f3222ce877dea6778a
+    - path: "tests/Tools/Support/ProcessRunnerTest.php"
+      category: FROZEN_ENGINEERING_FOUNDATION
+      sha256: 02d82d1d25ce2093681851240f6f62352ef586e219570a6043d76b878eaa18da
     - path: "tests/Unit/ApplicationMetadataTest.php"
       category: FROZEN_ENGINEERING_FOUNDATION
       sha256: 4a86b83284d04d56a5da29ddeb5a339c6e50ed68b239a47c1ababe05cfc439b3
@@ -2013,7 +2016,7 @@ engineering_freeze:
       sha256: d05e5878339db0f0179a0c6a9e3661a96e99824993a805e3bb53e11d28c3b7f8
     - path: "tools/Support/ProcessRunner.php"
       category: FROZEN_ENGINEERING_FOUNDATION
-      sha256: fb9e3b71975ad50fa85dca51fa2113022eb1fef0b50c3caba57f2ffce26b1f0c
+      sha256: 4d01f591daf108c98605e3bbbf2f9eda608c09ea94d1f4e27472617c393c78fd
     - path: "tools/bootstrap.php"
       category: FROZEN_ENGINEERING_FOUNDATION
       sha256: 3dbb6c9b4150112bfd74cc063988b9c689c30a1bd31232def88c68d4b9f6e508
