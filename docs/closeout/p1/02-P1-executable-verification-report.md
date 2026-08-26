@@ -25,7 +25,7 @@ isolated runtimes did not replace XAMPP or modify its MariaDB service.
 | Composer strict validation, audit, platform and autoload | PASS |
 | PHPCS | PASS |
 | PHPStan maximum level | PASS |
-| Locked PHPUnit suite with MySQL configured | PASS; no environment-driven MySQL skips |
+| Locked PHPUnit suite with MySQL configured | PASS — 704 tests, 35,186 assertions; no environment-driven MySQL skips |
 | JavaScript syntax | PASS — 17 files |
 | Frontend tests | PASS — 23 tests |
 | npm audit | PASS — zero vulnerabilities |
@@ -65,3 +65,13 @@ isolated runtimes did not replace XAMPP or modify its MariaDB service.
 | Deterministic release build and verification | PASS |
 
 Generated reports and release artifacts under `build/` are intentionally excluded from the engineering freeze.
+
+## Engineering freeze identity
+
+- Governed source revision: `fece9bd4e4903039fa157487cc975cc963974351`.
+- Governed inventory: 655 files.
+- Freeze manifest verification: PASS — 3,963 checks.
+- Manifest SHA-256 at approval: `9618ee84c2efd42dbc54cf44bfce7553b0ebbb2abd106ced656f87fface39b89`.
+
+Composer 2.8.8 emits upstream deprecation notices when its PHAR dependencies run on PHP 8.5.10, but all Composer
+commands exit successfully. This is a toolchain-maintenance observation, not an application-runtime failure.

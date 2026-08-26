@@ -60,7 +60,7 @@ were not invented during P1.
 | Frozen P0 baseline | PASS — 82 governed entries; 177 verifier checks |
 | Composer validation/audit/platform | PASS |
 | PHPCS and maximum-level PHPStan | PASS |
-| Locked PHPUnit suite | PASS, including all 13 MySQL cases without environment skips |
+| Locked PHPUnit suite | PASS — 704 tests, 35,186 assertions, including all 13 MySQL cases without environment skips |
 | Frontend syntax/tests/audit | PASS — 17 JavaScript files, 23 tests, zero npm vulnerabilities |
 | MySQL schema lifecycle | PASS — install, verify, plan, migrate, seed, rollback and reapply |
 | Database boundary | PASS — seven InnoDB foundation tables and no domain/business tables |
@@ -73,7 +73,7 @@ were not invented during P1.
 | CycloneDX SBOM | PASS — 15 runtime components; 99 validation checks |
 | Runtime licences | PASS — zero unknown or review-required runtime licences |
 | Release artifact | PASS — deterministic build, extracted-file lint, CLI/HTTP and MySQL readiness verification |
-| Engineering freeze | PASS — governed inventory and SHA-256 verification |
+| Engineering freeze | PASS — 655 governed files and 3,963 checks; source revision `fece9bd4e4903039fa157487cc975cc963974351` |
 
 Exact final test counts, artifact hashes and source revisions are retained in the P1 closeout evidence set and generated
 build reports.

@@ -1,0 +1,2049 @@
+engineering_freeze:
+  project: "Qur'an Memorizer DB"
+  project_code: QMDB
+  product_baseline: QMDB-BL-001
+  product_freeze: QMDB-P0-FRZ-001
+  approved_changes:
+    - QMDB-CR-001
+  engineering_freeze: QMDB-P1-FRZ-001
+  closeout_batch: QMDB-P1-CLOSE
+  freeze_status: APPROVED
+  readiness: P1_COMPLETE
+  generated_at_utc: "2026-08-26T06:35:01Z"
+  source_revision: "fece9bd4e4903039fa157487cc975cc963974351"
+  source_state: governed_clean
+  completed_batches:
+    - QMDB-P1-B01
+    - QMDB-P1-B02
+    - QMDB-P1-B03
+    - QMDB-P1-B04
+    - QMDB-P1-B05
+    - QMDB-P1-B06
+    - QMDB-P1-B07
+    - QMDB-P1-B08
+    - QMDB-P1-B09
+    - QMDB-P1-B10
+  engineering_baseline:
+    php: "8.5"
+    database: mysql
+    storage_engine: InnoDB
+    architecture: modular_monolith
+    presentation: mvc
+    tenancy: shared_schema
+    http_messages: psr_7
+    middleware: psr_15
+    container: psr_11_project_owned
+    logging: psr_3_monolog_json
+    frontend: server_rendered_progressive_enhancement
+    asynchronous_reads: native_fetch
+    modal: single_accessible_dialog
+    live_direction: server_sent_events
+    build: reproducible_release_archive
+  readiness_gates:
+    php_quality: PASS
+    frontend_quality: PASS_NODE_24
+    mysql: PASS_MYSQL_8_4_11
+    schema: PASS_INSTALL_MIGRATE_ROLLBACK_REAPPLY
+    http: PASS_WITH_MYSQL_READINESS
+    background: PASS_PORTABLE_LIFECYCLE
+    accessibility_foundation: PASS_AUTOMATED_MANUAL_RELEASE_REVIEW_DEFERRED
+    security: PASS_PINNED_EXTERNAL_AND_INTERNAL_SCANS
+    supply_chain: PASS_LOCAL_AND_STATIC_HOSTED_POLICY
+    release_artifact: PASS_VERIFIED_REPRODUCIBLE_FOUNDATION
+    p2_b01_prompt: PASS
+  files:
+    - path: ".editorconfig"
+      category: CONTROLLED_EXTENSION_POINT
+      sha256: 0d402e72a5a6254626dba62073990b20c1f58e6122ca70f207e5a85c4a88dac9
+    - path: ".env.example"
+      category: CONTROLLED_EXTENSION_POINT
+      sha256: a3e9a9cbedb7cea5783174032f1cf1d13f4b80af704b6da37a7a733d1acff54f
+    - path: ".gitattributes"
+      category: CONTROLLED_EXTENSION_POINT
+      sha256: 7def0b1248edf11eb0fe9fd646a5bac99ac60c25b0647edc8f4787d7095c6e0b
+    - path: ".github/SECURITY.md"
+      category: CONTROLLED_EXTENSION_POINT
+      sha256: 0d69332044dba2a711fa16fc23e2710f42f581b903b622dc91bf6453f21257e8
+    - path: ".github/dependabot.yml"
+      category: CONTROLLED_EXTENSION_POINT
+      sha256: ad5e3b2aebe8820597970783928d9255b17306504016b04819ea49783ccab82a
+    - path: ".github/workflows/ci.yml"
+      category: CONTROLLED_EXTENSION_POINT
+      sha256: 99bb80fc60b92036cf65333776b1c11d0c50723f918ae992ab58dc5e08e03e25
+    - path: ".github/workflows/release-artifact.yml"
+      category: CONTROLLED_EXTENSION_POINT
+      sha256: 103273ddb3c2881fc4156a428724818ad98d6a3c9de83b020cefeecc1f7a9d9e
+    - path: ".gitignore"
+      category: CONTROLLED_EXTENSION_POINT
+      sha256: c0a0f56d9b9e720edcf30a0260b5067f9ad23cc55767a24d463a95c016cad11a
+    - path: ".npmrc"
+      category: CONTROLLED_EXTENSION_POINT
+      sha256: c17fc696faf4477ca21e0c08f876cd73b890b9348aee8bd55f57babfeaa78f19
+    - path: ".nvmrc"
+      category: CONTROLLED_EXTENSION_POINT
+      sha256: 68ca3fba3b7e864770cb61aeb306d4bd4354b68ab4dd38450860c5d823e42a53
+    - path: "README.md"
+      category: CONTROLLED_EXTENSION_POINT
+      sha256: e9c67ccb11c315d8fd3154f5c04e9527b6e231fbcd8bd7ca6c19be1cb7d8924e
+    - path: "bin/console"
+      category: FROZEN_ENGINEERING_FOUNDATION
+      sha256: a77ede49773737522a05ebdf5246c6ba8819cada2de1d7d2023a8fdbedc00f0c
+    - path: "compose.mysql-test.yaml"
+      category: CONTROLLED_EXTENSION_POINT
+      sha256: f9f932ed127c53e37bad6eeb880bad0adf56c3a93c5c02d45c0391a30ecc5afc
+    - path: "composer.json"
+      category: CONTROLLED_EXTENSION_POINT
+      sha256: 039ff92fa5ee9080bc4afea82840b6555439b92fab735e55a6a7d03c41007ef4
+    - path: "composer.lock"
+      category: CONTROLLED_EXTENSION_POINT
+      sha256: 8c5dcbe0f20e1ca1da9899271c0a0405dec702429ac46ae2a2060435c9271944
+    - path: "database/migrations.php"
+      category: CONTROLLED_EXTENSION_POINT
+      sha256: e7cab39b8f0e5b8d5420f6e4a889340caa58950cc095d888775e7d0c75e6b8ff
+    - path: "database/migrations/README.md"
+      category: CONTROLLED_EXTENSION_POINT
+      sha256: a898aff7e83f7f2108cc273051ec27182a02c84a09e8b084530518c40227a4d3
+    - path: "database/seeds.php"
+      category: CONTROLLED_EXTENSION_POINT
+      sha256: 832ee8d985937b566060255dc3c9d0a9f08fa2a21db4033c32d3a95362982a07
+    - path: "database/seeds/README.md"
+      category: CONTROLLED_EXTENSION_POINT
+      sha256: 789072f6dc4cbbdc43d1b1d3678b7e01ba8e5632a81540ac9c01a80b12b93b1d
+    - path: "docs/implementation/P1-engineering-foundation-backlog.md"
+      category: FROZEN_ENGINEERING_FOUNDATION
+      sha256: 38e17177df134c056f8e28d39f99da9e1fdd5cf16b054be42793d9700daa17a2
+    - path: "docs/implementation/README.md"
+      category: FROZEN_ENGINEERING_FOUNDATION
+      sha256: 056e1f61316e3e2d4ad641c0cf5d05b17fcc46a2d05bdc3a98f68b8f9620d8b5
+    - path: "docs/implementation/background-execution-standard.md"
+      category: FROZEN_ENGINEERING_FOUNDATION
+      sha256: 4d7dbcd0ca4272b7cbf687080bbf25d88cd4c70118e294e2179e05f09c48ba35
+    - path: "docs/implementation/ci-build-and-release-standard.md"
+      category: FROZEN_ENGINEERING_FOUNDATION
+      sha256: c987bccdf2e9710c7375ac735cf86cbb6940bfc359ee88e91d5c46d2aa8637c3
+    - path: "docs/implementation/definition-of-ready-and-done.md"
+      category: FROZEN_ENGINEERING_FOUNDATION
+      sha256: e17771e9e1e41e436e16fcf7d9c5044cdf4f89d978e1ce769b7966b1534e4258
+    - path: "docs/implementation/frontend-interaction-standard.md"
+      category: FROZEN_ENGINEERING_FOUNDATION
+      sha256: 4817c7265f7550f478edfdd6c18a36077bec860ee93870fecb0d01bc0b2c0232
+    - path: "docs/implementation/phase-and-batch-roadmap.md"
+      category: FROZEN_ENGINEERING_FOUNDATION
+      sha256: 873abc3a179ed5df62d3bf8547a93aa0813198f090554c36ae925124299a0512
+    - path: "docs/implementation/presentation-and-progressive-interaction-standard.md"
+      category: FROZEN_ENGINEERING_FOUNDATION
+      sha256: 945d4b6a88fd77037f886a7e3d484975e679d2da50294d81fe29b8d1b618c6af
+    - path: "docs/implementation/requirements-to-implementation-map.md"
+      category: FROZEN_ENGINEERING_FOUNDATION
+      sha256: df3e88784be2dad63d6808a94c5ee0064ad3316c94c6431b48eb5968c65988d2
+    - path: "docs/project/change-requests/QMDB-CR-001-asynchronous-progressive-interaction.md"
+      category: FROZEN_ENGINEERING_FOUNDATION
+      sha256: 705b1b74264044dbf400914e017ea66a1cda6390810cba0fdf43fa5cae967a3e
+    - path: "package-lock.json"
+      category: CONTROLLED_EXTENSION_POINT
+      sha256: 90ca5cb1ff035a2601b67852b0612015ae84f359ff7031f1fea9ac7eccab0e81
+    - path: "package.json"
+      category: CONTROLLED_EXTENSION_POINT
+      sha256: b9e5d6a4bb2f236fde1455394dd074032559aa331ca56dd1a5951d206a12b0e8
+    - path: "phpcs.xml.dist"
+      category: CONTROLLED_EXTENSION_POINT
+      sha256: 871cb66785189d35c1ae1bb2ab16e63795623091569d3bace768a22d5f4b0046
+    - path: "phpstan.neon.dist"
+      category: CONTROLLED_EXTENSION_POINT
+      sha256: 6cd564eb0ff453e673c1a397d2524dae9ea33ea040fb676b91f81dc240a0bb8d
+    - path: "phpunit.xml.dist"
+      category: CONTROLLED_EXTENSION_POINT
+      sha256: 0d9809a644c2390772d1c78340b2fa7f9427cb0797473870ce07dbcc4640f894
+    - path: "public/assets/css/base.css"
+      category: FROZEN_ENGINEERING_FOUNDATION
+      sha256: 9bfaded5fe5cb7dcfb92de0b66f47ead7fa0dcf2655030534521007803b42e4c
+    - path: "public/assets/css/components.css"
+      category: FROZEN_ENGINEERING_FOUNDATION
+      sha256: 58cd7910b6932b0fbafb322f971ed1d217e21d239c3c6656c74ba1ec076c0636
+    - path: "public/assets/css/layout.css"
+      category: FROZEN_ENGINEERING_FOUNDATION
+      sha256: 33ddab7a3eac1b970b54a04d672224c6565c5ceecd14ac6d7d04a1d94d72084f
+    - path: "public/assets/css/themes.css"
+      category: FROZEN_ENGINEERING_FOUNDATION
+      sha256: e61dafdd2878c94b29862df4d2ee6f86b64c2b4b82b0860cdd5c7d8c203d4bcd
+    - path: "public/assets/css/tokens.css"
+      category: FROZEN_ENGINEERING_FOUNDATION
+      sha256: b51e41ec113eae4e863ddc6dd16328bfd4fcaa37a5579cf8d84afc7799ffda8a
+    - path: "public/assets/css/utilities.css"
+      category: FROZEN_ENGINEERING_FOUNDATION
+      sha256: 0e98f27dfe78065debe79dc3c64e7247940cc3241727e9e3e5f0853b2e6a8535
+    - path: "public/assets/js/app.js"
+      category: FROZEN_ENGINEERING_FOUNDATION
+      sha256: 74e05f73f953414d3c2922b2e6bff99513724a65252971df3a607a61ee73a9f5
+    - path: "public/assets/js/fetch-client.js"
+      category: FROZEN_ENGINEERING_FOUNDATION
+      sha256: 662941fa7f9952b91337a5de3010ba19b96e007660e2c2ceafd4e52c4dafd0a9
+    - path: "public/assets/js/focus-manager.js"
+      category: FROZEN_ENGINEERING_FOUNDATION
+      sha256: 4ceca8ab7918e740e9465542ac4142e46e8e4483425b3dc83d12a30f2ca060dc
+    - path: "public/assets/js/fragment-policy.js"
+      category: FROZEN_ENGINEERING_FOUNDATION
+      sha256: e53054e059c765f4e4aa20ada9e64248e57e38e37f5cbdb7891638c3759724a1
+    - path: "public/assets/js/live-region.js"
+      category: FROZEN_ENGINEERING_FOUNDATION
+      sha256: 754c63bc3aa326eafb40d59e85b5898e4805f3a4b38a5fbeadeb9b9373e8e4f8
+    - path: "public/assets/js/modal-controller.js"
+      category: FROZEN_ENGINEERING_FOUNDATION
+      sha256: 9209ddbd760bc028716241b40f36caa91c54c4218c22b14f9f941f8f3a45a59a
+    - path: "public/assets/js/partial-refresh-controller.js"
+      category: FROZEN_ENGINEERING_FOUNDATION
+      sha256: c8d32231d73e6f02527458df2139e640b1746162d9e58a4522984fd2482052f1
+    - path: "public/assets/js/request-coordinator.js"
+      category: FROZEN_ENGINEERING_FOUNDATION
+      sha256: 1055845c81e7f3628d5a3528eaff5b4df7042f9a9663e60da9f4789b9f6b2f79
+    - path: "public/assets/js/theme-controller.js"
+      category: FROZEN_ENGINEERING_FOUNDATION
+      sha256: a236d8168ac3a17dc232d43569a8a62c8369e4af0ca48cd9c541ba6bbb0adb00
+    - path: "public/index.php"
+      category: FROZEN_ENGINEERING_FOUNDATION
+      sha256: 5ce0074151f7a5e1ff098aac93dd0b762ae71a539a471e88044299ab72120cbd
+    - path: "resources/translations/ar.php"
+      category: CONTROLLED_EXTENSION_POINT
+      sha256: 698b41dcfb2896f7d7189569a6aff7a1513a55ddab76b9ceb67896f0f44df90d
+    - path: "resources/translations/en.php"
+      category: CONTROLLED_EXTENSION_POINT
+      sha256: 987e5d2d38aed07b0a4e2db58f8f9d6746fdb89144767369df5a830de526efd1
+    - path: "resources/views/components/application-footer.php"
+      category: CONTROLLED_EXTENSION_POINT
+      sha256: e5df10c1064e9d1c591ede775dd03ec3198113ee4de8d0c28f701f21b70194b0
+    - path: "resources/views/components/application-header.php"
+      category: CONTROLLED_EXTENSION_POINT
+      sha256: 27292f2173f23afb2a5a9a85b7dcbf3b1936d7cc90b8df2ba5acf0627ed064eb
+    - path: "resources/views/components/language-switcher.php"
+      category: CONTROLLED_EXTENSION_POINT
+      sha256: 97ea408ecff561ee270ef0dc5664d846648c0ecb006820f20b76f41ec8a3cfd8
+    - path: "resources/views/components/live-region.php"
+      category: CONTROLLED_EXTENSION_POINT
+      sha256: 264e5a40053f1b3d2716059085e8a68ed00c58a7e1e7e5dc40b8ff149a75d112
+    - path: "resources/views/components/modal-shell.php"
+      category: CONTROLLED_EXTENSION_POINT
+      sha256: 16d987854f7fdf09ddf138b80f2377c6f2cb224f2f1066b8d6b69c017250b5a2
+    - path: "resources/views/components/status-badge.php"
+      category: CONTROLLED_EXTENSION_POINT
+      sha256: 5f918d95cb8fb9e61044b690febd39b9675f3d0926b5cbf7ae773e8e427b3f6b
+    - path: "resources/views/components/theme-switcher.php"
+      category: CONTROLLED_EXTENSION_POINT
+      sha256: a8e2ba6038cf670f12b071602c589d06500d8f777dfd75bca038ed89f064a86b
+    - path: "resources/views/fragments/system-about-dialog.php"
+      category: CONTROLLED_EXTENSION_POINT
+      sha256: 4a4f90bff79fd2eea3c9222ec3cca57ef425c389abcf267010558d405f1b0e32
+    - path: "resources/views/fragments/system-status-card.php"
+      category: CONTROLLED_EXTENSION_POINT
+      sha256: 517c2e4180023014c3a59519fa34cfee4f5070074143d2a74e6ff0a389132fac
+    - path: "resources/views/layouts/application.php"
+      category: CONTROLLED_EXTENSION_POINT
+      sha256: 063c7795c6db46670c864ffc4f0f9e5fff9f7c58d8c1fd3a5b49aadc9e9f2af6
+    - path: "resources/views/pages/home.php"
+      category: CONTROLLED_EXTENSION_POINT
+      sha256: 56bfe2be0d57af2dc4c66429817fbf8aa7d36aa7570e23e8d8ac4a4b649f1aed
+    - path: "resources/views/pages/system-about.php"
+      category: CONTROLLED_EXTENSION_POINT
+      sha256: de28abbf77b164228a1f569ab9745efdaec030982251dea160575346b59b5c31
+    - path: "resources/views/pages/system-status.php"
+      category: CONTROLLED_EXTENSION_POINT
+      sha256: 37066a53fe9d965ca6b732bd0a832c6c28085eaf25dd3511a0fac420530893c7
+    - path: "routes/web.php"
+      category: CONTROLLED_EXTENSION_POINT
+      sha256: f90262f644a782c5c92cfa622dc4b63a5405a53e01bb3c8ef1421dc2cc6449f9
+    - path: "scripts/check-javascript-syntax.js"
+      category: FROZEN_ENGINEERING_FOUNDATION
+      sha256: f76d7bbeafa7f6ab1e2281e1ab969c55a87ea16bd22f0c4d429b5d8f9056fb23
+    - path: "src/Bootstrap/Application.php"
+      category: FROZEN_ENGINEERING_FOUNDATION
+      sha256: 969803b7460bcb5e8fa9edab5df9e624b991679fd3c6fed9750fc374bfe1770d
+    - path: "src/Bootstrap/ApplicationFactory.php"
+      category: FROZEN_ENGINEERING_FOUNDATION
+      sha256: 8b51a180180048d4ede8b8527ab811276251d79bf9a27d004290faab5dd35a2f
+    - path: "src/Bootstrap/ApplicationMetadata.php"
+      category: FROZEN_ENGINEERING_FOUNDATION
+      sha256: f8ff4e65d461e3bc5331abc9e1ee4f308ab3444310943971517e2f370aea27c5
+    - path: "src/Bootstrap/Console/ConsoleApplication.php"
+      category: FROZEN_ENGINEERING_FOUNDATION
+      sha256: 7601ecef31d6b87f6bfa5fbcffbdab7e4ae6f7f0929bbb8950818ad1a643d889
+    - path: "src/Bootstrap/Console/ConsoleResult.php"
+      category: FROZEN_ENGINEERING_FOUNDATION
+      sha256: 275cee2f751d3171f3998211772b842186dd2ca3bf3db95406b7456ad8499b3d
+    - path: "src/Bootstrap/Error/BootstrapSupport.php"
+      category: FROZEN_ENGINEERING_FOUNDATION
+      sha256: b6fc96a8b88fe7aae5db84a418b1ed5055b2e63c0fdf2e3257a7634ac2d4ec52
+    - path: "src/Bootstrap/Http/HttpRuntime.php"
+      category: FROZEN_ENGINEERING_FOUNDATION
+      sha256: 4c5e0413b748d8117b01bc717fa57a3370838e62f4189daf2d9f08947e1d36da
+    - path: "src/Bootstrap/Module/ApplicationServicesFoundationModule.php"
+      category: CONTROLLED_EXTENSION_POINT
+      sha256: 7978111e4091aae34958daee1bb79ec53d79ef254a0aed3eaa66d35697b6373e
+    - path: "src/Bootstrap/Module/BackgroundExecutionFoundationModule.php"
+      category: CONTROLLED_EXTENSION_POINT
+      sha256: 37085d6e9a20e1d221700e7fb608cf35e5bf0eaeb53bceb21674b406ff565a0c
+    - path: "src/Bootstrap/Module/ConsoleFoundationModule.php"
+      category: CONTROLLED_EXTENSION_POINT
+      sha256: 18af01526f358591a897df7d3f30d04cd4b36ad7948b48213c8eaf1247895b70
+    - path: "src/Bootstrap/Module/CoreFoundationModule.php"
+      category: CONTROLLED_EXTENSION_POINT
+      sha256: 6231d95d0ed92125043b50b49c9620e280cb0bebefec00c0bac9deabae38ebdd
+    - path: "src/Bootstrap/Module/DatabaseFoundationModule.php"
+      category: CONTROLLED_EXTENSION_POINT
+      sha256: 165c959c395b3ce10c0d78b4d5738fe17eb12c054e96468f6a9f72f62b413133
+    - path: "src/Bootstrap/Module/HttpFoundationModule.php"
+      category: CONTROLLED_EXTENSION_POINT
+      sha256: 6bd9c6b62c819067ab0494d8bbd2c8cdae1078e4b1a73d33e83a0ddb2756f29f
+    - path: "src/Bootstrap/Module/ObservabilityFoundationModule.php"
+      category: CONTROLLED_EXTENSION_POINT
+      sha256: 7a0f50fafad48de1e723d479fde13e048f8ffc6829efffb3570812046dc5b94f
+    - path: "src/Bootstrap/Module/PresentationFoundationModule.php"
+      category: CONTROLLED_EXTENSION_POINT
+      sha256: dfb11d9833451e682462a6e3b4ce6f9b3327f7a323567e5872076159558bef20
+    - path: "src/Bootstrap/Module/SchemaFoundationModule.php"
+      category: CONTROLLED_EXTENSION_POINT
+      sha256: 5f601e55daca4e64610340b8720ccc8f4637948ee313ee61a5a330bc7d0c88dd
+    - path: "src/Bootstrap/RuntimeEnvironment.php"
+      category: FROZEN_ENGINEERING_FOUNDATION
+      sha256: e8db50fa5b56377be9c29f10a472cadfc6cef02d3c8415383e01c67f3bc9b6a7
+    - path: "src/Bootstrap/RuntimeRequirementResult.php"
+      category: FROZEN_ENGINEERING_FOUNDATION
+      sha256: 6ed080c94b846adad09203bd2126ec01902f821ba4f997d987bcf5cb0f5d9a08
+    - path: "src/Bootstrap/RuntimeRequirements.php"
+      category: FROZEN_ENGINEERING_FOUNDATION
+      sha256: 80a27f7bc7c8acbb6d4bbb99c98ee8f1ff42450114680840d3ab690d333a2993
+    - path: "src/Bootstrap/RuntimeViolation.php"
+      category: FROZEN_ENGINEERING_FOUNDATION
+      sha256: fb2863e453153dacbabd3b07533a40cb7d3ac67b9998d3407fcd2563bd61f248
+    - path: "src/Bootstrap/Shared/ExitCode.php"
+      category: FROZEN_ENGINEERING_FOUNDATION
+      sha256: b897c87b06cccf3cdab32a522d96f586c6118cd424a6837119101d101330f7f4
+    - path: "src/Shared/Application/Command/Command.php"
+      category: FROZEN_ENGINEERING_FOUNDATION
+      sha256: 5e9a8d44a8924d522d7721ffee8b5b148df75ca90e43bb3c1a5ecd3ad305b9b0
+    - path: "src/Shared/Application/Command/CommandBus.php"
+      category: FROZEN_ENGINEERING_FOUNDATION
+      sha256: 5d77ff7710daa3836e06f50d3eb1a75d430cf7715a72e02e6f5bd850967efed1
+    - path: "src/Shared/Application/Command/CommandHandler.php"
+      category: FROZEN_ENGINEERING_FOUNDATION
+      sha256: cc0201f2ff9a856fa7379c45cffec051df8e6746db8ed6a2c6a493482795d1be
+    - path: "src/Shared/Application/Command/CommandHandlerMap.php"
+      category: FROZEN_ENGINEERING_FOUNDATION
+      sha256: d23b9d4c4a7aa5c4d03a1c3192a48a7940a34f9bf343275606750d97c6465415
+    - path: "src/Shared/Application/Command/CommandHandlerRegistry.php"
+      category: FROZEN_ENGINEERING_FOUNDATION
+      sha256: afc6ea01263844a07221321a671ce9c325a2bc86820965a37fd11f398506cd15
+    - path: "src/Shared/Application/Command/CommandRegistration.php"
+      category: FROZEN_ENGINEERING_FOUNDATION
+      sha256: 481f7ddd6859255f5391189b980a4ae70ad2b47bede58ac372b5f3541ee7b95a
+    - path: "src/Shared/Application/Command/SynchronousCommandBus.php"
+      category: FROZEN_ENGINEERING_FOUNDATION
+      sha256: 8dac354ba94e18eecaa324164012b69e58e6cd39b3f06da78a7c4b09c2b2400a
+    - path: "src/Shared/Application/Event/DomainEventDispatcher.php"
+      category: FROZEN_ENGINEERING_FOUNDATION
+      sha256: 3204843f846e4fb47576a73ce316214ae3b520c1ec51eaf827ee7fab5122ab63
+    - path: "src/Shared/Application/Event/DomainEventHandler.php"
+      category: FROZEN_ENGINEERING_FOUNDATION
+      sha256: fbf026db225c001c74481c327a7f23eaa7e2b463a64eed079e82f59dbe653831
+    - path: "src/Shared/Application/Event/DomainEventSubscriberMap.php"
+      category: FROZEN_ENGINEERING_FOUNDATION
+      sha256: e7e01312c566f550e18f79e692a830ef786ec63dc89b720bf650275b0e599676
+    - path: "src/Shared/Application/Event/DomainEventSubscriberRegistration.php"
+      category: FROZEN_ENGINEERING_FOUNDATION
+      sha256: e871b565a785096d2ee0d0abec3f248973ef962cca1ffd3d615bb7f7e9880c37
+    - path: "src/Shared/Application/Event/DomainEventSubscriberRegistry.php"
+      category: FROZEN_ENGINEERING_FOUNDATION
+      sha256: 87f5734e5d84d4123ac6bbffc9fa27736226241e14623b0bad8480759c8cdf52
+    - path: "src/Shared/Application/Event/SynchronousDomainEventDispatcher.php"
+      category: FROZEN_ENGINEERING_FOUNDATION
+      sha256: fa5f58f881ea5f9eff29499a2abf30655992582b5849a4c79f9460c640e95bf7
+    - path: "src/Shared/Application/Exception/DuplicateHandlerRegistrationException.php"
+      category: FROZEN_ENGINEERING_FOUNDATION
+      sha256: 748649d82fa0b810b716f2b7335706ca0ee48ada53e893ee07570fb299c848a8
+    - path: "src/Shared/Application/Exception/InvalidMessageHandlerException.php"
+      category: FROZEN_ENGINEERING_FOUNDATION
+      sha256: 1ed46acc63c307f4a3e79cba2d9961003b7bedfce33ad2bfbbe6d630fb0b9c64
+    - path: "src/Shared/Application/Exception/UnhandledMessageException.php"
+      category: FROZEN_ENGINEERING_FOUNDATION
+      sha256: 3dc9a5b50b2962bece249769c665d11fbe484c9a3027681e9540d2b2b87beb1a
+    - path: "src/Shared/Application/Handler/HandlerResolver.php"
+      category: FROZEN_ENGINEERING_FOUNDATION
+      sha256: 591421acd4ea219909d8160ec08542a0fb51a75ce05d13aac342296627d256d9
+    - path: "src/Shared/Application/Handler/ServiceHandlerResolver.php"
+      category: FROZEN_ENGINEERING_FOUNDATION
+      sha256: 3b834e2e18d83933154ab37cf83efb7cf32ea39cb22d05cc1ee47b38080ea8c0
+    - path: "src/Shared/Application/Query/Query.php"
+      category: FROZEN_ENGINEERING_FOUNDATION
+      sha256: 1ec5defc8390c396a10295b6be56592520ed8fe1e3965927f27abc761aa5511c
+    - path: "src/Shared/Application/Query/QueryBus.php"
+      category: FROZEN_ENGINEERING_FOUNDATION
+      sha256: e1ef4b4c25bc396ded24e7fbecd8f18d7c3c784201b36ad1ed13674489753b14
+    - path: "src/Shared/Application/Query/QueryHandler.php"
+      category: FROZEN_ENGINEERING_FOUNDATION
+      sha256: 9ff501dd4060546f3ec4187e721a8b04af1e2c47777fa79a5fbbe07a6050aa34
+    - path: "src/Shared/Application/Query/QueryHandlerMap.php"
+      category: FROZEN_ENGINEERING_FOUNDATION
+      sha256: d8ef4dcc4fdf22aeb34cde9603b0ebab1d9e75a2f810318142bc834c0f97585c
+    - path: "src/Shared/Application/Query/QueryHandlerRegistry.php"
+      category: FROZEN_ENGINEERING_FOUNDATION
+      sha256: da13ccf2cde97a0e37da73ce728b842a430cb418c153253e677f5030ad354ede
+    - path: "src/Shared/Application/Query/QueryRegistration.php"
+      category: FROZEN_ENGINEERING_FOUNDATION
+      sha256: f79ce73e08efea499a8994bb946397e5ab9887e4202b29d942d023f01ddab1ad
+    - path: "src/Shared/Application/Query/SynchronousQueryBus.php"
+      category: FROZEN_ENGINEERING_FOUNDATION
+      sha256: f626ab4d288dd29a9ecf40d9b7320a8b47560628fa53851a6d8732d3fbba7ff6
+    - path: "src/Shared/Application/System/GetSystemInformation.php"
+      category: FROZEN_ENGINEERING_FOUNDATION
+      sha256: f50ea5d297674792fec6abdac30365bba50962e4507a58976347947362721aa0
+    - path: "src/Shared/Application/System/GetSystemInformationHandler.php"
+      category: FROZEN_ENGINEERING_FOUNDATION
+      sha256: 4e649c063b1700ac93878302cc3584c4aa0df1ea657dc07c2ecc8f4de6938f95
+    - path: "src/Shared/Application/System/SystemInformation.php"
+      category: FROZEN_ENGINEERING_FOUNDATION
+      sha256: ae36a66ddfd289fdae41fd25c2c01a449bcf313e960523744b0e02b7443cb1c4
+    - path: "src/Shared/Background/Configuration/BackgroundExecutionConfiguration.php"
+      category: FROZEN_ENGINEERING_FOUNDATION
+      sha256: 512f4971234027ad58c52856ae9f2c78d8793a689c7df8274ea97d41b2f424f7
+    - path: "src/Shared/Background/Configuration/BackgroundExecutionConfigurationFactory.php"
+      category: FROZEN_ENGINEERING_FOUNDATION
+      sha256: b9eb835b1b6d6360a9483fdd26635a58c9a4dbc268dac18157539a306c1979d2
+    - path: "src/Shared/Background/Console/ScheduleListConsoleCommand.php"
+      category: FROZEN_ENGINEERING_FOUNDATION
+      sha256: 991f614e41d74dc310ac96004987f472cbbce82337f6370f3d1ff855191b7199
+    - path: "src/Shared/Background/Console/ScheduleRunConsoleCommand.php"
+      category: FROZEN_ENGINEERING_FOUNDATION
+      sha256: cb02f85959e176962c821154fec0fdb97d6a14d44c5775281c4cd10b17d7a156
+    - path: "src/Shared/Background/Console/WorkerRunConsoleCommand.php"
+      category: FROZEN_ENGINEERING_FOUNDATION
+      sha256: 873e810e7bc5443674a6ee283f76b5b44595dcf4455a163846d725483052af2e
+    - path: "src/Shared/Background/Job/BackgroundJob.php"
+      category: FROZEN_ENGINEERING_FOUNDATION
+      sha256: 0d6905d7bfa93695e54a800030a97df6e6126c51dc9709f167a9a36f05852e1a
+    - path: "src/Shared/Background/Job/BackgroundJobEnvelope.php"
+      category: FROZEN_ENGINEERING_FOUNDATION
+      sha256: 42e0b58569577ee025c6f5661395c95d507363a50f645a9a52378c1038984e41
+    - path: "src/Shared/Background/Job/BackgroundJobExecutionContext.php"
+      category: FROZEN_ENGINEERING_FOUNDATION
+      sha256: 1caed1753a9a0fb09623484010211c7b8f179f72c6682cbf068579ab4b99fc91
+    - path: "src/Shared/Background/Job/BackgroundJobExecutionOutcome.php"
+      category: FROZEN_ENGINEERING_FOUNDATION
+      sha256: 455eba00c2720c1a807496bfb61a521e7075bef26fc1a8b0b3e525698b7f12bf
+    - path: "src/Shared/Background/Job/BackgroundJobExecutionResult.php"
+      category: FROZEN_ENGINEERING_FOUNDATION
+      sha256: 0ced1ecb6b50889df7a009f30bf2e1a8df6d2c2c609d237269106a6fcc7f831b
+    - path: "src/Shared/Background/Job/BackgroundJobExecutor.php"
+      category: FROZEN_ENGINEERING_FOUNDATION
+      sha256: 2f4507fcfa7f92dcf0078ffeb3c5108df2e6243536610481f13c2cc70618d697
+    - path: "src/Shared/Background/Job/BackgroundJobFailure.php"
+      category: FROZEN_ENGINEERING_FOUNDATION
+      sha256: ff58ed587269a79af72542747b54f534f1e4c93c2fe8b24e7d9d5afe3a16cb15
+    - path: "src/Shared/Background/Job/BackgroundJobFailureClassifier.php"
+      category: FROZEN_ENGINEERING_FOUNDATION
+      sha256: 3eb8c8bc96dd4e303b2cef59578f04a01c17c0193acf45fb93483801edaa3931
+    - path: "src/Shared/Background/Job/BackgroundJobFailureCode.php"
+      category: FROZEN_ENGINEERING_FOUNDATION
+      sha256: 1eaac1903165df8005828992346f16126f35d6b02c4360901d156005d028aedd
+    - path: "src/Shared/Background/Job/BackgroundJobHandler.php"
+      category: FROZEN_ENGINEERING_FOUNDATION
+      sha256: 2878c28541f834f4e34eb94c6e47e0ea85482022e4f9931f23989fab86beb31c
+    - path: "src/Shared/Background/Job/BackgroundJobHandlerMap.php"
+      category: FROZEN_ENGINEERING_FOUNDATION
+      sha256: 82efbe3442874a85ab004eeebcb54194ddc5e64fdf96e8847dd815d9a5fc0716
+    - path: "src/Shared/Background/Job/BackgroundJobHandlerRegistry.php"
+      category: FROZEN_ENGINEERING_FOUNDATION
+      sha256: dbb08fb6acf1f6935d251d5cec114d4e2087e7a4496520f2ff9f2c2aa390c0ec
+    - path: "src/Shared/Background/Job/BackgroundJobId.php"
+      category: FROZEN_ENGINEERING_FOUNDATION
+      sha256: 08b4dcc65a145d3f5a3f29eb87558a987158a4a348ecc63aabb63ef00bbbf193
+    - path: "src/Shared/Background/Job/BackgroundJobIdGenerator.php"
+      category: FROZEN_ENGINEERING_FOUNDATION
+      sha256: 771a9fb25740fbaa747d8d9e5337ddb1f64f75d49d48b7c89172190c5a590fd8
+    - path: "src/Shared/Background/Job/BackgroundJobName.php"
+      category: FROZEN_ENGINEERING_FOUNDATION
+      sha256: 34e54798fcacb10eb4e6f1cc04ea4a6c9052b04d1e05aede3d970b9353133a3f
+    - path: "src/Shared/Background/Job/ConservativeBackgroundJobFailureClassifier.php"
+      category: FROZEN_ENGINEERING_FOUNDATION
+      sha256: 6099e1d7ddf8e16e2c4bdcb18866a3bd6ed0564d49b55d0e2bde198b8fdc77aa
+    - path: "src/Shared/Background/Job/JobReservationToken.php"
+      category: FROZEN_ENGINEERING_FOUNDATION
+      sha256: e2a8b3fa56fe03a068fd407af6903ef75c1e4adb9be5d182bed92374c4badcdf
+    - path: "src/Shared/Background/Job/PermanentBackgroundJobFailure.php"
+      category: FROZEN_ENGINEERING_FOUNDATION
+      sha256: f16d02e41e8ea4ef3a9182f51c94d613331d3632f5c017407bf573f2eceecbd0
+    - path: "src/Shared/Background/Job/ReservedBackgroundJob.php"
+      category: FROZEN_ENGINEERING_FOUNDATION
+      sha256: 6195fd27277dce6a93a962d75779a8b4a1e85286b48f11123250021a57a91347
+    - path: "src/Shared/Background/Job/RetryableBackgroundJobFailure.php"
+      category: FROZEN_ENGINEERING_FOUNDATION
+      sha256: 890e8c6f271b794d739c40d8ed30a91d1ea7ab9d9f0acb3ebac4dec53cd62f86
+    - path: "src/Shared/Background/Scheduler/FixedIntervalSchedule.php"
+      category: FROZEN_ENGINEERING_FOUNDATION
+      sha256: c4eb8f12e671ad76601f6aba01eefd6f2ded9e99507ace07c1d89c101649019b
+    - path: "src/Shared/Background/Scheduler/Infrastructure/MySqlScheduledTaskRunRepository.php"
+      category: FROZEN_ENGINEERING_FOUNDATION
+      sha256: a2bff7cd3486ee9887e69495d25155ac7b5646e3bb88dd0227cb44b75b64dcf3
+    - path: "src/Shared/Background/Scheduler/Migration/CreateScheduledTaskRunsMigration.php"
+      category: FROZEN_ENGINEERING_FOUNDATION
+      sha256: 54dbb4d3e716bae56d7132dbb479e2fc60ab2826192d21be8e02ed43fb15906b
+    - path: "src/Shared/Background/Scheduler/Schedule.php"
+      category: FROZEN_ENGINEERING_FOUNDATION
+      sha256: 1342f9504cd47e111e5d1f3b5f523dd1d5f975f0304e56cf5367cafd719f300e
+    - path: "src/Shared/Background/Scheduler/ScheduledExecutionSlot.php"
+      category: FROZEN_ENGINEERING_FOUNDATION
+      sha256: 1e3da4e22c511ddfef9e8007717eb2b8cf9e829424ad0f7df32cab14e6139468
+    - path: "src/Shared/Background/Scheduler/ScheduledTask.php"
+      category: FROZEN_ENGINEERING_FOUNDATION
+      sha256: 056c7a4b0a0fbdcd2cab6cd921c5adc229aa500f33639a9ce75b85ae28d89398
+    - path: "src/Shared/Background/Scheduler/ScheduledTaskClaimDisposition.php"
+      category: FROZEN_ENGINEERING_FOUNDATION
+      sha256: acce0604dc3ef7e5c654ab004db123e537b22622a03d1aa33c05e77852507683
+    - path: "src/Shared/Background/Scheduler/ScheduledTaskExecutionContext.php"
+      category: FROZEN_ENGINEERING_FOUNDATION
+      sha256: ca712654fd68ae84cf8ff54ad5e91e2cf8a37bde120f4eaa006f39df5ea90244
+    - path: "src/Shared/Background/Scheduler/ScheduledTaskExecutionOutcome.php"
+      category: FROZEN_ENGINEERING_FOUNDATION
+      sha256: b856c994f61259a44f41cecc9f576aef8742fbc4cc96d7fe5882379414c0d665
+    - path: "src/Shared/Background/Scheduler/ScheduledTaskExecutionResult.php"
+      category: FROZEN_ENGINEERING_FOUNDATION
+      sha256: 6d49de69a031b0607ebe1420ffc418cf40563415d87206321621d8fc012ef9aa
+    - path: "src/Shared/Background/Scheduler/ScheduledTaskHandler.php"
+      category: FROZEN_ENGINEERING_FOUNDATION
+      sha256: a7f0397fffd096f94ad912defaefbec02fff513eea9f4d50eceb2ada07727b59
+    - path: "src/Shared/Background/Scheduler/ScheduledTaskId.php"
+      category: FROZEN_ENGINEERING_FOUNDATION
+      sha256: 7b62baaf634a8013b355d4c0a78fdad4e262dfb6fb71c85846d3a78a60c4f6d1
+    - path: "src/Shared/Background/Scheduler/ScheduledTaskMap.php"
+      category: FROZEN_ENGINEERING_FOUNDATION
+      sha256: 215027799afc76dccec1db00ba71751ec59d927b3e0d67b0845d4620bd789a05
+    - path: "src/Shared/Background/Scheduler/ScheduledTaskRegistry.php"
+      category: FROZEN_ENGINEERING_FOUNDATION
+      sha256: 046916ba2bbc5d74b52dc696837e17d8362e707513b7a57ac844f6eca4b55cfc
+    - path: "src/Shared/Background/Scheduler/ScheduledTaskRunClaim.php"
+      category: FROZEN_ENGINEERING_FOUNDATION
+      sha256: 502ce3f95f7b678010b07f388331f4cc77cbd9e29197140dc2edf5f8ec3bf226
+    - path: "src/Shared/Background/Scheduler/ScheduledTaskRunRecord.php"
+      category: FROZEN_ENGINEERING_FOUNDATION
+      sha256: d348a479055b0481ae557d28c088fd08827dc899ffaabdabaab4f75e59c770d2
+    - path: "src/Shared/Background/Scheduler/ScheduledTaskRunRepository.php"
+      category: FROZEN_ENGINEERING_FOUNDATION
+      sha256: 21a7e089a3ec42fb0e4b7a169939e8de4d113710fda0564be12f9080a9881c67
+    - path: "src/Shared/Background/Scheduler/ScheduledTaskRunStatus.php"
+      category: FROZEN_ENGINEERING_FOUNDATION
+      sha256: 54fedea73bea5996a52160a98e28fbab4d8882a03cc34c1274093274a62a44eb
+    - path: "src/Shared/Background/Scheduler/Scheduler.php"
+      category: FROZEN_ENGINEERING_FOUNDATION
+      sha256: 87e4440b427398c19da88d874c678950a1d4d2e40ca735c1da732cd77c0de433
+    - path: "src/Shared/Background/Scheduler/SchedulerExecutionId.php"
+      category: FROZEN_ENGINEERING_FOUNDATION
+      sha256: b0956cacd01e09b9a2796d11768ca5ff923026b37ea057f91e7abb928c52d618
+    - path: "src/Shared/Background/Scheduler/SchedulerRunResult.php"
+      category: FROZEN_ENGINEERING_FOUNDATION
+      sha256: 75e17b3ca41a16733825e85aae9ee95afa00b06b2b1928a07be5335be6d4b994
+    - path: "src/Shared/Background/Source/BackgroundJobSource.php"
+      category: FROZEN_ENGINEERING_FOUNDATION
+      sha256: 3788bdd8b134ca617eba9ea0f251677b4777a984d5e5817f4770cad7bb4d1cb0
+    - path: "src/Shared/Background/Source/NullBackgroundJobSource.php"
+      category: FROZEN_ENGINEERING_FOUNDATION
+      sha256: 4291e061c3cda84cc928975935297b2bf864988ab547206004fb525e4dd957a2
+    - path: "src/Shared/Background/Worker/BackgroundWorker.php"
+      category: FROZEN_ENGINEERING_FOUNDATION
+      sha256: a402b245448f173b47bc6371aaf36643cf1db1ec47b20d4660fe1a0f08809c2e
+    - path: "src/Shared/Background/Worker/BackgroundWorkerIdentity.php"
+      category: FROZEN_ENGINEERING_FOUNDATION
+      sha256: 2946e297cf412043fa06592b7ea6fc551294302cacb98cdcab066f9e3dd30404
+    - path: "src/Shared/Background/Worker/BackgroundWorkerIdentityGenerator.php"
+      category: FROZEN_ENGINEERING_FOUNDATION
+      sha256: 34a64c691bc50caf6b3e2f530b25b8c9cce46866c99788d391130f610e5e3308
+    - path: "src/Shared/Background/Worker/BackgroundWorkerOptions.php"
+      category: FROZEN_ENGINEERING_FOUNDATION
+      sha256: ed64ab626df18671e694d274c8976b51029bf5732cb767de26f69945b7bc575a
+    - path: "src/Shared/Background/Worker/BackgroundWorkerResult.php"
+      category: FROZEN_ENGINEERING_FOUNDATION
+      sha256: 3346423ef25508a3fa44a3ab07c6f0a3988b348b14454e205f20371c7b0b0ece
+    - path: "src/Shared/Background/Worker/BackgroundWorkerStopReason.php"
+      category: FROZEN_ENGINEERING_FOUNDATION
+      sha256: 030440f2c381cd1cdfb1cc6ac09e37670da55484e23a3c4130962b37a8b90e7f
+    - path: "src/Shared/Background/Worker/MemoryUsageProvider.php"
+      category: FROZEN_ENGINEERING_FOUNDATION
+      sha256: 4b134ac8869a3bb93200e9bd6a5d12d4007924364847526e5c92051d6ae00016
+    - path: "src/Shared/Background/Worker/NativeMemoryUsageProvider.php"
+      category: FROZEN_ENGINEERING_FOUNDATION
+      sha256: 3e00a0515897a30dc1fb985911ee6f8e3641ddf86c85b8794bb8fae642d812eb
+    - path: "src/Shared/Background/Worker/NullWorkerSignalController.php"
+      category: FROZEN_ENGINEERING_FOUNDATION
+      sha256: d10e59acce052b6b938f6fbbd55b387d3efada38b5dc441b2978dac3de82f6c6
+    - path: "src/Shared/Background/Worker/PcntlWorkerSignalController.php"
+      category: FROZEN_ENGINEERING_FOUNDATION
+      sha256: 83b4af99399aff9f1c8ab5b97305a13ff8c9096ea0497a23b10185d79f5edbb1
+    - path: "src/Shared/Background/Worker/WorkerSignalController.php"
+      category: FROZEN_ENGINEERING_FOUNDATION
+      sha256: e20b843a89131e6422167fed6f15dba25b0160e00f80dba39176e63f0071c895
+    - path: "src/Shared/Background/Worker/WorkerStopController.php"
+      category: FROZEN_ENGINEERING_FOUNDATION
+      sha256: 9636ac281832168a9aea196d02317bee03dbf7bf0d9d21b0f5894fa487c6deed
+    - path: "src/Shared/Configuration/ApplicationConfiguration.php"
+      category: FROZEN_ENGINEERING_FOUNDATION
+      sha256: 5ffe73a30ca0f0a366791c68c492c21cf8e29266fd815d9dd6650bdd5c55be5a
+    - path: "src/Shared/Configuration/ApplicationConfigurationFactory.php"
+      category: FROZEN_ENGINEERING_FOUNDATION
+      sha256: 1bab71f5717deb4e4bde146256155ebc9b1cc75ee0371838fdf7a13fe37a4797
+    - path: "src/Shared/Configuration/ApplicationEnvironment.php"
+      category: FROZEN_ENGINEERING_FOUNDATION
+      sha256: fc3d2b1782cafb3015cc7cdea7959c775670e302f1953b3c3f6bf79164875c48
+    - path: "src/Shared/Configuration/ConfigurationException.php"
+      category: FROZEN_ENGINEERING_FOUNDATION
+      sha256: 866d40664792f4dfb956e9ba4d496bf38fa7e6f8cda5e52cd9b6f141ad9bed06
+    - path: "src/Shared/Configuration/ConfigurationSource.php"
+      category: FROZEN_ENGINEERING_FOUNDATION
+      sha256: c306a39acf890ad46fabca9f8e2f163a9d730dd9fe032eff2c6187e3350d1df4
+    - path: "src/Shared/Configuration/ConfigurationViolation.php"
+      category: FROZEN_ENGINEERING_FOUNDATION
+      sha256: d77b5df2a509bbfa32965866519196d0fe031a0c6f4883439e5293b360ec4ab0
+    - path: "src/Shared/Configuration/Database/DatabaseConfiguration.php"
+      category: FROZEN_ENGINEERING_FOUNDATION
+      sha256: 395404f71655682720240c48b6a85f1950d99c73c8784a2755afa17e97405564
+    - path: "src/Shared/Configuration/Database/DatabaseConfigurationException.php"
+      category: FROZEN_ENGINEERING_FOUNDATION
+      sha256: 4f6c0493d91bd9b1c1882aa03431ae15439744acd813fdb43681bc9558af10d1
+    - path: "src/Shared/Configuration/Database/DatabaseConfigurationFactory.php"
+      category: FROZEN_ENGINEERING_FOUNDATION
+      sha256: d4f20aa436f92fa38cf84e6a9bdc4e2889fc7c521dc446481e9f960257307354
+    - path: "src/Shared/Configuration/Database/DatabaseTlsMode.php"
+      category: FROZEN_ENGINEERING_FOUNDATION
+      sha256: c82b9b81b7d8a9d8256f1c23bb1a6cac1278acf8e3ed5a887fc0338d99415af3
+    - path: "src/Shared/Configuration/Database/MySqlDsnBuilder.php"
+      category: FROZEN_ENGINEERING_FOUNDATION
+      sha256: 0ac958ef33ac5c20af7905562e723e8125746d71aa626bf959e288bb0a280da5
+    - path: "src/Shared/Configuration/EnvironmentLoader.php"
+      category: FROZEN_ENGINEERING_FOUNDATION
+      sha256: bf7ec615cab0219ea2c5c19d333e727803cdd771776d903f4478710e99bb4f4d
+    - path: "src/Shared/Configuration/EnvironmentVariables.php"
+      category: FROZEN_ENGINEERING_FOUNDATION
+      sha256: fb1881dba6e1e484c9dcd964b783742c2a90b4d57ccdaa921c45521967732a8c
+    - path: "src/Shared/Configuration/Infrastructure/DotenvEnvironmentLoader.php"
+      category: FROZEN_ENGINEERING_FOUNDATION
+      sha256: 5d44da49c390b8be676b5de4ad8ca3ff6dfc3a821d8e81cf8fefc440df05c4f2
+    - path: "src/Shared/Configuration/LoadedEnvironment.php"
+      category: FROZEN_ENGINEERING_FOUNDATION
+      sha256: bc95b96597474f33eb1816c81764e226464321549624d4b2c5a7c9e85bf5fd2b
+    - path: "src/Shared/Configuration/Logging/LogLevel.php"
+      category: FROZEN_ENGINEERING_FOUNDATION
+      sha256: 1e7a47063517a1cfffb50759e31e4366e11031fc224315832fe810e6ceb76cfb
+    - path: "src/Shared/Configuration/Logging/LoggingConfiguration.php"
+      category: FROZEN_ENGINEERING_FOUNDATION
+      sha256: 4cea8bbdea7116bb7428b0e3b3c8e5dc04e26a70f6e707e2441df0f6ffc9454f
+    - path: "src/Shared/Configuration/Logging/LoggingConfigurationFactory.php"
+      category: FROZEN_ENGINEERING_FOUNDATION
+      sha256: 202f3c36fa0138ea2e93180efcbf2798c83d998c9c61d8d859ffb6d4eb043751
+    - path: "src/Shared/Console/Command/AppAboutConsoleCommand.php"
+      category: FROZEN_ENGINEERING_FOUNDATION
+      sha256: ba24c41542cbfeba20fcfb8532d2244703419dc5eede19d69b19d20827e278e2
+    - path: "src/Shared/Console/Command/ConsoleCommand.php"
+      category: FROZEN_ENGINEERING_FOUNDATION
+      sha256: 5aef831f0d38a9990890befbcac79476e9e0bf2aa404ee3b0aed8c59ba94cb9c
+    - path: "src/Shared/Console/Command/ConsoleCommandDispatcher.php"
+      category: FROZEN_ENGINEERING_FOUNDATION
+      sha256: 6316e1e91515bd6807343bd1bbaea2cdb5023470ed260cd7faaa03c8db4536fa
+    - path: "src/Shared/Console/Command/ConsoleCommandMap.php"
+      category: FROZEN_ENGINEERING_FOUNDATION
+      sha256: 26a7ab9c949927bf1a18309f3e07676cfdcf21b0cbb506308b08c8757583a6de
+    - path: "src/Shared/Console/Command/ConsoleCommandName.php"
+      category: FROZEN_ENGINEERING_FOUNDATION
+      sha256: 077832d1c91a1c4511723717b866c5445945257d429070e049eb431fd7501a29
+    - path: "src/Shared/Console/Command/ConsoleCommandRegistry.php"
+      category: FROZEN_ENGINEERING_FOUNDATION
+      sha256: 287f6f89fbd0d6cdf7966835fde3598b7496ab461baf4930354f1a6aea2b0c49
+    - path: "src/Shared/Console/Command/SchemaConsoleCommand.php"
+      category: FROZEN_ENGINEERING_FOUNDATION
+      sha256: 56a77786e3f9690f9616dd4b58818e90b7b07cb1c9b3c3598ee523f33ade7516
+    - path: "src/Shared/Console/Input/ConsoleInput.php"
+      category: FROZEN_ENGINEERING_FOUNDATION
+      sha256: 2112fde7d0ef97788201b4921c065c44b2ee68458918d09caa7a54e59027f010
+    - path: "src/Shared/Console/Input/ConsoleInputParser.php"
+      category: FROZEN_ENGINEERING_FOUNDATION
+      sha256: 5512685815e55dbd73a99495e2acff44ee52f94d6b74c40ad7660480f48f3d7c
+    - path: "src/Shared/Console/Input/ConsoleOption.php"
+      category: FROZEN_ENGINEERING_FOUNDATION
+      sha256: 9964d8b208c647defb497ea8bede807d4dd72f2b301a2992a73bc469ee2e34a6
+    - path: "src/Shared/Console/Input/ConsoleOptionName.php"
+      category: FROZEN_ENGINEERING_FOUNDATION
+      sha256: cb6a2a7129f44d6e729038a501adbe217543e59044a9099e6c8f602ccaa6d2a0
+    - path: "src/Shared/Console/Observability/ConsoleExecutionContext.php"
+      category: FROZEN_ENGINEERING_FOUNDATION
+      sha256: 210dbb0334214fe37ae67f61ee49724f79cdb1d4b15144566ed9e8134ac316fa
+    - path: "src/Shared/Console/Observability/ConsoleExecutionObserver.php"
+      category: FROZEN_ENGINEERING_FOUNDATION
+      sha256: a63b9a6441dfa9c15a4dbd5835278b986491a89b5c9f6c8d01043c133822e9e5
+    - path: "src/Shared/Console/Output/BufferedConsoleOutput.php"
+      category: FROZEN_ENGINEERING_FOUNDATION
+      sha256: 5328118f2aa1c5e0d9c347912b91050a34f5215e7fc9b6f7e23e49d208e9635f
+    - path: "src/Shared/Console/Output/ConsoleOutput.php"
+      category: FROZEN_ENGINEERING_FOUNDATION
+      sha256: 4bf7942c8a65539ef8c0fda5cb13b756b408c7e13b50f57d568e1003b1def3bb
+    - path: "src/Shared/Console/Output/StreamConsoleOutput.php"
+      category: FROZEN_ENGINEERING_FOUNDATION
+      sha256: 054cd084d25e6e752a8f6de35159c0392424b927dc724981ef5ac1b22241c6d3
+    - path: "src/Shared/Database/Connection/DatabaseConnectionProvider.php"
+      category: FROZEN_ENGINEERING_FOUNDATION
+      sha256: 341994412308fb54452f71dbd2c13183f48a013cca9292bd21f15ede77d14bd6
+    - path: "src/Shared/Database/Health/DatabaseHealthCheck.php"
+      category: FROZEN_ENGINEERING_FOUNDATION
+      sha256: 58a63227fcd68307367b3dad739a027719fab9f312c0cad93185ee13fcf74862
+    - path: "src/Shared/Database/Health/DatabaseHealthReport.php"
+      category: FROZEN_ENGINEERING_FOUNDATION
+      sha256: 6fe1e5d8a234935cc41c72f5e60d1962f22470b310f24468a60935a95575c33b
+    - path: "src/Shared/Database/Health/DatabaseHealthStatus.php"
+      category: FROZEN_ENGINEERING_FOUNDATION
+      sha256: 3d6f98072f1e2c1fb6cbefc0728cfd4dcc078370500e81d6ec837bd118806cf4
+    - path: "src/Shared/Database/Transaction/RetryDelayStrategy.php"
+      category: FROZEN_ENGINEERING_FOUNDATION
+      sha256: 47be9f56e4324dd9e4febf35eede484e7003f99b2c11a0ebe0fbd5409bc05a26
+    - path: "src/Shared/Database/Transaction/Sleeper.php"
+      category: FROZEN_ENGINEERING_FOUNDATION
+      sha256: 6751b7d843fbbe1a93386833e7a205a5189a74755956ecf72c94525ceac88f52
+    - path: "src/Shared/Database/Transaction/TransactionIsolation.php"
+      category: FROZEN_ENGINEERING_FOUNDATION
+      sha256: e02ac93477bc4502bf8c532897f92dfdd9ece60cfdb406dccd0d305fe7d94d75
+    - path: "src/Shared/Database/Transaction/TransactionManager.php"
+      category: FROZEN_ENGINEERING_FOUNDATION
+      sha256: 35e48d62a5581c40837cccf49915d51dc10a8f77a25e3082b9712005f31b9bd8
+    - path: "src/Shared/Database/Transaction/TransactionOptions.php"
+      category: FROZEN_ENGINEERING_FOUNDATION
+      sha256: 292442f3fd9830f70e6c1e4da9ca777fd96fb6e8ad40893cde6afb2f9ff012bc
+    - path: "src/Shared/Database/Transaction/TransactionRetryPolicy.php"
+      category: FROZEN_ENGINEERING_FOUNDATION
+      sha256: ac4dfd3edba79b6dfa875d41207cdbfbb5645bc545ce441e36e5d4a34cb103b2
+    - path: "src/Shared/DependencyInjection/ClosureServiceFactory.php"
+      category: FROZEN_ENGINEERING_FOUNDATION
+      sha256: 2f294ad9460daea87e4e81d65392ff9e9ce8a47ddfe50d6eb4dd9623a7bf25c8
+    - path: "src/Shared/DependencyInjection/CompiledContainer.php"
+      category: FROZEN_ENGINEERING_FOUNDATION
+      sha256: 4e88a9986afe96b566ac74294115618ce25796f3d80621f2308d66608bd37dc8
+    - path: "src/Shared/DependencyInjection/ContainerBuilder.php"
+      category: FROZEN_ENGINEERING_FOUNDATION
+      sha256: 44061978733cbdc0102169c96561a3677ca10bf880ab9e080c56d81fbf8be46c
+    - path: "src/Shared/DependencyInjection/ContainerCyclicDependencyException.php"
+      category: FROZEN_ENGINEERING_FOUNDATION
+      sha256: 8aeeb0584a29cc33644575b5ccbadc28a80c5ede71923e7f532d50872a95c9b2
+    - path: "src/Shared/DependencyInjection/DependencyInjectionException.php"
+      category: FROZEN_ENGINEERING_FOUNDATION
+      sha256: 2b54c81050ae6b2fd13ddf4f81ff3637bf9223384337e2c9fd1f36c2c01c6783
+    - path: "src/Shared/DependencyInjection/DependencyResolver.php"
+      category: FROZEN_ENGINEERING_FOUNDATION
+      sha256: 5763e706948aae3cb049874d7aaef085dc4a0a4ef7752ea76dd23f141b579d2a
+    - path: "src/Shared/DependencyInjection/InvalidServiceException.php"
+      category: FROZEN_ENGINEERING_FOUNDATION
+      sha256: 89873bd4a8aba44c7064b65b5a5687385b5e9515dbc4df53b1fe5e1a8c36bfdf
+    - path: "src/Shared/DependencyInjection/RestrictedDependencyResolver.php"
+      category: FROZEN_ENGINEERING_FOUNDATION
+      sha256: cc57374e87a460fb6896017e1bcec943c2a1c4447c199395f78656432d604b29
+    - path: "src/Shared/DependencyInjection/ServiceAlias.php"
+      category: FROZEN_ENGINEERING_FOUNDATION
+      sha256: dadefbe898bf05249964afb874eeb2855c7e24098f94fcee42c8669bb8b85f1f
+    - path: "src/Shared/DependencyInjection/ServiceDefinition.php"
+      category: FROZEN_ENGINEERING_FOUNDATION
+      sha256: 094e609543c2bd1d5fe666bc73ce45b82162752e21ce6c304b67275360690595
+    - path: "src/Shared/DependencyInjection/ServiceDefinitionRegistry.php"
+      category: FROZEN_ENGINEERING_FOUNDATION
+      sha256: c2ce91a8eaef04ecab752d790bf13b89ade4292b7300b10cd2d9cc9f9f9c5944
+    - path: "src/Shared/DependencyInjection/ServiceFactory.php"
+      category: FROZEN_ENGINEERING_FOUNDATION
+      sha256: 1600c32635017cf9ca4742944e56b01335ac2b1b0d020e116320fe323acd92e9
+    - path: "src/Shared/DependencyInjection/ServiceNotFoundException.php"
+      category: FROZEN_ENGINEERING_FOUNDATION
+      sha256: cd310c4dbc3663adbbaac681f5554dadba5f021fe9d338d78c5f11ba067b9f5b
+    - path: "src/Shared/DependencyInjection/ServiceReference.php"
+      category: FROZEN_ENGINEERING_FOUNDATION
+      sha256: 8b52e0328325392603a98633ef776e531ce84c2fb3e247b57b264bb6c6dba276
+    - path: "src/Shared/DependencyInjection/UndeclaredDependencyException.php"
+      category: FROZEN_ENGINEERING_FOUNDATION
+      sha256: c8fc0c5bc68d8187795240628876ea24c2539ac4ef863f74123e42056efc7f34
+    - path: "src/Shared/Domain/Event/DomainEvent.php"
+      category: FROZEN_ENGINEERING_FOUNDATION
+      sha256: a08053db2eedc51717e1af83c1d7ed6dd5332e8b9ef4f375c33ba893b2e6ce86
+    - path: "src/Shared/Domain/Event/DomainEventName.php"
+      category: FROZEN_ENGINEERING_FOUNDATION
+      sha256: 49bfc1afb7c62e47ff0b5ecbf7b44a59be17ebe0bd41ab0a09705b4fa3eee83d
+    - path: "src/Shared/Http/Contract/Controller.php"
+      category: FROZEN_ENGINEERING_FOUNDATION
+      sha256: 7d99a16d0b4245af534c274a78f121f578f6ab1867e104c94d939d2618ed94b8
+    - path: "src/Shared/Http/Controller/ControllerDispatcher.php"
+      category: FROZEN_ENGINEERING_FOUNDATION
+      sha256: 4428e905a759b6ab3ba6126326bc256d07d2b59cbeed5739bfbad7910efd0698
+    - path: "src/Shared/Http/Controller/LivenessController.php"
+      category: FROZEN_ENGINEERING_FOUNDATION
+      sha256: 0f836ef1d4b1e7b76fd51e603629b2b84d5a13dd753f9c4a391a770390e8815a
+    - path: "src/Shared/Http/Controller/ReadinessController.php"
+      category: FROZEN_ENGINEERING_FOUNDATION
+      sha256: a7b51881483ff90c629a87f64f06f4540e5ebe20752b89550690ee6c58cb8c3d
+    - path: "src/Shared/Http/Controller/SystemAboutApiController.php"
+      category: FROZEN_ENGINEERING_FOUNDATION
+      sha256: a0f972d4c54af64a2136193051470c5dae58ee1b19043a82f5d08a3e2dd0e1cc
+    - path: "src/Shared/Http/Controller/SystemAboutController.php"
+      category: FROZEN_ENGINEERING_FOUNDATION
+      sha256: 70a36a914a137225f0f0857d90701635d655dd3626ed85e978732b7d0cb42213
+    - path: "src/Shared/Http/Controller/SystemAboutPageController.php"
+      category: FROZEN_ENGINEERING_FOUNDATION
+      sha256: b8eea9519a30678b289694827cdbee3939a560e00c8f64316612fbd0369718f3
+    - path: "src/Shared/Http/Controller/SystemHomeController.php"
+      category: FROZEN_ENGINEERING_FOUNDATION
+      sha256: 01e49321e0731facba54ae665fbff5940314b5a3d4da603b453859384f44838c
+    - path: "src/Shared/Http/Controller/SystemPresentationDataProvider.php"
+      category: FROZEN_ENGINEERING_FOUNDATION
+      sha256: 90be4c7f09971c460633eb77c05d743b0a10726f2612a3ee7ec0d6b1e1a35d57
+    - path: "src/Shared/Http/Controller/SystemStatusPageController.php"
+      category: FROZEN_ENGINEERING_FOUNDATION
+      sha256: 6889d88db21ae9af3f65caa8f20c15a92a847cc48ecabc389683fc98e8e7b7b8
+    - path: "src/Shared/Http/Kernel/HttpKernel.php"
+      category: FROZEN_ENGINEERING_FOUNDATION
+      sha256: a40eb37ca00294c071da9571f0cbff8558cdd891bec443b6bb3bf988b9287977
+    - path: "src/Shared/Http/Message/JsonResponseFactory.php"
+      category: FROZEN_ENGINEERING_FOUNDATION
+      sha256: f5467db429950e05514a5b997d73142369ac3f10d0b90cf8b3b72527733c0acc
+    - path: "src/Shared/Http/Message/ProblemDetails.php"
+      category: FROZEN_ENGINEERING_FOUNDATION
+      sha256: 8f422d0bd0647f26507cb45ed8863ffb01d2b8572a2796af96df18b46b3e7fa0
+    - path: "src/Shared/Http/Message/ProblemDetailsResponseFactory.php"
+      category: FROZEN_ENGINEERING_FOUNDATION
+      sha256: 679373cf8e3970ec74df5f19996cf2ff532e61325d59d0280b4f18cfa8f2aa5b
+    - path: "src/Shared/Http/Middleware/CorrelationIdMiddleware.php"
+      category: FROZEN_ENGINEERING_FOUNDATION
+      sha256: 26c6800409255e15c69a254c4194e891c4943bedd5630169f2de062305c32a4b
+    - path: "src/Shared/Http/Middleware/CspNonceMiddleware.php"
+      category: FROZEN_ENGINEERING_FOUNDATION
+      sha256: 3be8c4d4347acfcbd3acb7d106a9f51d25dcec24832fd35d7d7311aabf236431
+    - path: "src/Shared/Http/Middleware/ExceptionHandlingMiddleware.php"
+      category: FROZEN_ENGINEERING_FOUNDATION
+      sha256: 95996e90a72f621c33931e4c292385bcfb9e7e9af41aa739a88e9990ec4ff624
+    - path: "src/Shared/Http/Middleware/HttpRequestLoggingMiddleware.php"
+      category: FROZEN_ENGINEERING_FOUNDATION
+      sha256: ca0c6147c0845870695235f9dea2e42d4dae762cce8872a5af4f40c7ea548209
+    - path: "src/Shared/Http/Middleware/LocaleMiddleware.php"
+      category: FROZEN_ENGINEERING_FOUNDATION
+      sha256: 547c75f6872091446ae0aaa0c671a74edacd6ccd4548c1f30b87f2791a2f29db
+    - path: "src/Shared/Http/Middleware/MiddlewarePipeline.php"
+      category: FROZEN_ENGINEERING_FOUNDATION
+      sha256: b41a8b6d9f3cb4a2002aa354f0a491aae4d815576f361785ee65b1b1a6f4c59c
+    - path: "src/Shared/Http/Middleware/MiddlewareRequestHandler.php"
+      category: FROZEN_ENGINEERING_FOUNDATION
+      sha256: 29d8ccf538b8ba862a67c580a69161308e00bd6949f004a54585429ad37aac49
+    - path: "src/Shared/Http/Middleware/RequestTargetValidationMiddleware.php"
+      category: FROZEN_ENGINEERING_FOUNDATION
+      sha256: 6cfb42b66dcb4c8aa77196499f57200c9dd9a92e4b71642472f5a7ad486613f6
+    - path: "src/Shared/Http/Middleware/SecurityHeadersMiddleware.php"
+      category: FROZEN_ENGINEERING_FOUNDATION
+      sha256: 9333ef8f30d4a061988b259b2973e657ec23274fc5b6322a02072e9a59744ff6
+    - path: "src/Shared/Http/Request/NativeServerRequestFactory.php"
+      category: FROZEN_ENGINEERING_FOUNDATION
+      sha256: d17e746114330e78ff32a91f27173b5888c8becf9f8e5b87fbd25ca9ff4075c4
+    - path: "src/Shared/Http/Request/RequestContextAttributes.php"
+      category: FROZEN_ENGINEERING_FOUNDATION
+      sha256: 545b84e82d4f659b656dfb766cb15c8c39543c905751dc35b1067161357456c0
+    - path: "src/Shared/Http/Request/RequestTargetValidationResult.php"
+      category: FROZEN_ENGINEERING_FOUNDATION
+      sha256: dd32f8773564fd61fb06f34bf65b7b32007f67c4513a2f20b95f167eb643bffe
+    - path: "src/Shared/Http/Request/RequestTargetValidator.php"
+      category: FROZEN_ENGINEERING_FOUNDATION
+      sha256: 00c60476ba470e92994a7a127351fc913baf4e8daec5675a0176508f2d6d4b89
+    - path: "src/Shared/Http/Response/ResponseEmissionException.php"
+      category: FROZEN_ENGINEERING_FOUNDATION
+      sha256: 5bb31e201781b3e24efa9d4751334c5e0b4a79eec8e8a6167dc57dd162a6a363
+    - path: "src/Shared/Http/Response/ResponseEmissionPlan.php"
+      category: FROZEN_ENGINEERING_FOUNDATION
+      sha256: fe80db7474baab4bb74ca6c1d00268d87cb5d4ec080de2ce8dfa6f6019a5460e
+    - path: "src/Shared/Http/Response/ResponseEmitter.php"
+      category: FROZEN_ENGINEERING_FOUNDATION
+      sha256: 7372bb51e045f1314058185e2c6b18c6357b6dd6e71e835789783bda14a66d7b
+    - path: "src/Shared/Http/Response/SapiResponseEmitter.php"
+      category: FROZEN_ENGINEERING_FOUNDATION
+      sha256: fbde4b48bb18aa39843998188326256dd3b2c2a1c7667380764185535c14c0f9
+    - path: "src/Shared/Http/Routing/AutomaticOptions.php"
+      category: FROZEN_ENGINEERING_FOUNDATION
+      sha256: 9b5dc14fd643eac34847f19081359ce249e09e21fa383cbe314346c615650153
+    - path: "src/Shared/Http/Routing/HttpMethod.php"
+      category: FROZEN_ENGINEERING_FOUNDATION
+      sha256: 04981f475dfe27434fc6067bc45905aed30d5764d6deabe2bf7935703841b327
+    - path: "src/Shared/Http/Routing/MatchedRoute.php"
+      category: FROZEN_ENGINEERING_FOUNDATION
+      sha256: 5eb6860c1e6c21bff26d91b5e889db8e3c7833e199cb6ce2c943b913a5df676e
+    - path: "src/Shared/Http/Routing/MethodNotAllowed.php"
+      category: FROZEN_ENGINEERING_FOUNDATION
+      sha256: b249160207bb0b34cae1b1bae7f65fda551c2b9e4bd39e8a2e9d01182762fe20
+    - path: "src/Shared/Http/Routing/Route.php"
+      category: FROZEN_ENGINEERING_FOUNDATION
+      sha256: a3aaa6c484252e18d7725b92132b715d5badf8c9e505ed258bdd4953f64d1abb
+    - path: "src/Shared/Http/Routing/RouteAttributes.php"
+      category: FROZEN_ENGINEERING_FOUNDATION
+      sha256: 316b5aed418d76414e9ce3574fef6b3e0567f852a4c333b51fcda857c6f246b2
+    - path: "src/Shared/Http/Routing/RouteCollection.php"
+      category: FROZEN_ENGINEERING_FOUNDATION
+      sha256: 715a0a5a256408707df848068fab6da355e1999f98df2803f91528d9f319d356
+    - path: "src/Shared/Http/Routing/RouteCollectionException.php"
+      category: FROZEN_ENGINEERING_FOUNDATION
+      sha256: a4249d5b00548abed0b1c42b8b84ce27495478267ad5ca680924015194356f11
+    - path: "src/Shared/Http/Routing/RouteMatchResult.php"
+      category: FROZEN_ENGINEERING_FOUNDATION
+      sha256: dbfc01930831dd4a71c271887190dedc39c73831c1180c89cee54aae7e0db24b
+    - path: "src/Shared/Http/Routing/RouteNotFound.php"
+      category: FROZEN_ENGINEERING_FOUNDATION
+      sha256: fd7648c8b2a597c0525c8af4480d8b585d4985f4a7288070d9ea2c10312e36fb
+    - path: "src/Shared/Http/Routing/RouteParameter.php"
+      category: FROZEN_ENGINEERING_FOUNDATION
+      sha256: 86a84a2c7373c15d36b9da18dee344645d880812b5d0ec9816ee1ee6c031ab50
+    - path: "src/Shared/Http/Routing/RoutePattern.php"
+      category: FROZEN_ENGINEERING_FOUNDATION
+      sha256: 8ed0bb18fe7d86ac0375ba91b3e9eb08fb84bfc58bea5e18165216833796a33e
+    - path: "src/Shared/Http/Routing/Router.php"
+      category: FROZEN_ENGINEERING_FOUNDATION
+      sha256: 621b5bb669a9489a2edc42fd2382d6c1d788b37b8d405299d7044d5c53aec0ea
+    - path: "src/Shared/Http/Routing/RoutingRequestHandler.php"
+      category: FROZEN_ENGINEERING_FOUNDATION
+      sha256: 760dae2fcb313dbb8f484ecac052258e08a9f9bc7a427cbd8b0fbca833d6bf87
+    - path: "src/Shared/Identifier/RuntimeIdentifier.php"
+      category: FROZEN_ENGINEERING_FOUNDATION
+      sha256: 2abf7049bb06b878807464ac5d1a8b256003cf53922bc3f379166a629a73ef00
+    - path: "src/Shared/Identifier/RuntimeIdentifierGenerator.php"
+      category: FROZEN_ENGINEERING_FOUNDATION
+      sha256: ef6764c68b9a01b93d23acd7c28378994f7a6b790a50393a5fb88c2ea610121a
+    - path: "src/Shared/Identifier/SecureRandomRuntimeIdentifierGenerator.php"
+      category: FROZEN_ENGINEERING_FOUNDATION
+      sha256: db318df5be468bf24ad912d950a2698715ecc75a80431ef73bbfecc9bff8a4ec
+    - path: "src/Shared/Infrastructure/Persistence/MySql/Connection/MySqlConnectionFactory.php"
+      category: FROZEN_ENGINEERING_FOUNDATION
+      sha256: 83ea561d5c4b2efddf7de9dad402a29062c069d8f092f457e302ccf391d22363
+    - path: "src/Shared/Infrastructure/Persistence/MySql/Connection/MySqlConnectionProvider.php"
+      category: FROZEN_ENGINEERING_FOUNDATION
+      sha256: 4625c2a2ff161c8d81124c44267204ba717b296e58c27e78283f245c409f11ab
+    - path: "src/Shared/Infrastructure/Persistence/MySql/Connection/MySqlServerVerifier.php"
+      category: FROZEN_ENGINEERING_FOUNDATION
+      sha256: 2db89c9273be5e7fc99d4726483838305ffa90035e24df229bdb66a3db512238
+    - path: "src/Shared/Infrastructure/Persistence/MySql/Connection/MySqlSessionInitializer.php"
+      category: FROZEN_ENGINEERING_FOUNDATION
+      sha256: a5f9dd8f20a1ae7b5f4b54dc2f7a2b00cf31e26ca94be914cdd7d37824ab474c
+    - path: "src/Shared/Infrastructure/Persistence/MySql/Connection/MySqlSessionVerifier.php"
+      category: FROZEN_ENGINEERING_FOUNDATION
+      sha256: d84179b02c3197924808c967e5c7739449956b568796becf23610fec7973473b
+    - path: "src/Shared/Infrastructure/Persistence/MySql/Connection/MySqlVerificationReport.php"
+      category: FROZEN_ENGINEERING_FOUNDATION
+      sha256: aab00ed4069d4302a6f33f48bc3a7def3382f957f690cd91990f223c696bcd9d
+    - path: "src/Shared/Infrastructure/Persistence/MySql/Connection/NativePdoConnector.php"
+      category: FROZEN_ENGINEERING_FOUNDATION
+      sha256: 0c3b40ed7d3b9b44f8f7e4bbcd9b8fea86f893f62142c525fbd278df62cf6dc7
+    - path: "src/Shared/Infrastructure/Persistence/MySql/Connection/PdoConnector.php"
+      category: FROZEN_ENGINEERING_FOUNDATION
+      sha256: 6a51cb0a6c36f0d7c1580ef4deee4c5882dfeeaed7699d61dbbc027dd2c47221
+    - path: "src/Shared/Infrastructure/Persistence/MySql/Exception/DatabaseConnectionException.php"
+      category: FROZEN_ENGINEERING_FOUNDATION
+      sha256: 050c2f5e5819a0a6dd1eca813caf23161a4ccaf36fc4f4b8865c869ccf11f9a7
+    - path: "src/Shared/Infrastructure/Persistence/MySql/Exception/DatabaseVerificationException.php"
+      category: FROZEN_ENGINEERING_FOUNDATION
+      sha256: a74519fbc21669c25e8aef8e874c007c104c636166655b4ea958744f4c5656c4
+    - path: "src/Shared/Infrastructure/Persistence/MySql/Exception/DeadlockRetryExhaustedException.php"
+      category: FROZEN_ENGINEERING_FOUNDATION
+      sha256: 47edd1b9232224115f8409841e49eb39fc716c0b3f201f0b32fb78618839608f
+    - path: "src/Shared/Infrastructure/Persistence/MySql/Exception/TransactionException.php"
+      category: FROZEN_ENGINEERING_FOUNDATION
+      sha256: c107f21772afc2a8285d146bdd96cbbdc759bc71d6e7cbad8b8aa2099d2f0acb
+    - path: "src/Shared/Infrastructure/Persistence/MySql/Exception/TransactionStateException.php"
+      category: FROZEN_ENGINEERING_FOUNDATION
+      sha256: b55775dbb46da23cf8564f7a3d24e57ad6f4fe9b7cbc54c70c81a127b66f2e15
+    - path: "src/Shared/Infrastructure/Persistence/MySql/Health/MySqlDatabaseHealthCheck.php"
+      category: FROZEN_ENGINEERING_FOUNDATION
+      sha256: af37e6735999f6043325238a63504b1c814ae5e57f325d03efc61b3b24a8192f
+    - path: "src/Shared/Infrastructure/Persistence/MySql/Transaction/ExponentialJitterRetryDelayStrategy.php"
+      category: FROZEN_ENGINEERING_FOUNDATION
+      sha256: a6bda127119a7b09a746c7e71b800c8b1d68a351db6e969bc2df7c0880dd2d0b
+    - path: "src/Shared/Infrastructure/Persistence/MySql/Transaction/MySqlRetryableTransactionFailureClassifier.php"
+      category: FROZEN_ENGINEERING_FOUNDATION
+      sha256: 94985b2e12ca50586a8b79f0c066ddb5449a05981c9cafb06c6c73b03ffe0570
+    - path: "src/Shared/Infrastructure/Persistence/MySql/Transaction/MySqlTransactionDriver.php"
+      category: FROZEN_ENGINEERING_FOUNDATION
+      sha256: c2275040aae3fe5f4e6c6915c1c39711f6f4d4c286a4e8c17a069dddf6e5f86b
+    - path: "src/Shared/Infrastructure/Persistence/MySql/Transaction/MySqlTransactionManager.php"
+      category: FROZEN_ENGINEERING_FOUNDATION
+      sha256: 93d0378aeff8144dde47e6ee26ac8b4a84fd27374b5cba1e5ad46ac055461eb4
+    - path: "src/Shared/Infrastructure/Persistence/MySql/Transaction/NativeSleeper.php"
+      category: FROZEN_ENGINEERING_FOUNDATION
+      sha256: 3b026e45fe695d8ff5da7975d1dd07c4482a4899820b53fdf9f428cd6b655584
+    - path: "src/Shared/Infrastructure/Persistence/MySql/Transaction/PdoMySqlTransactionDriver.php"
+      category: FROZEN_ENGINEERING_FOUNDATION
+      sha256: 2fc600df0ab59c2db6a291f7ba5c3189ccc292155928c85362b93258aa8dde3c
+    - path: "src/Shared/Localization/Locale.php"
+      category: FROZEN_ENGINEERING_FOUNDATION
+      sha256: db6bf9b8a82813f82d847dbed8e1ed206a52d407a91082c085eab1166273bbb0
+    - path: "src/Shared/Localization/LocaleContext.php"
+      category: FROZEN_ENGINEERING_FOUNDATION
+      sha256: 675647c4f3bd0ef38037ee3cae840339a5b23d42a968595968415252ac779ae9
+    - path: "src/Shared/Localization/LocaleResolver.php"
+      category: FROZEN_ENGINEERING_FOUNDATION
+      sha256: 5a645a4ef96f702339d12b395de2409519b5ac481115b65ef337fae589154786
+    - path: "src/Shared/Localization/SupportedLocales.php"
+      category: FROZEN_ENGINEERING_FOUNDATION
+      sha256: bc944243782bbf966e532f6ea9cb8378239bf777db008715440931c20a5300ce
+    - path: "src/Shared/Localization/TextDirection.php"
+      category: FROZEN_ENGINEERING_FOUNDATION
+      sha256: 6ef7d837234318ca0e89d345772f611a53af53a8d33cbbb2dda395ee7c802839
+    - path: "src/Shared/Localization/TranslationCatalog.php"
+      category: FROZEN_ENGINEERING_FOUNDATION
+      sha256: ae5085483ebde5385da209ad3168cca57239658588aad4107afe47cca8d7be93
+    - path: "src/Shared/Localization/TranslationKey.php"
+      category: FROZEN_ENGINEERING_FOUNDATION
+      sha256: e35d2f2c9af0b017312bff393bca67ba2a9103a4ecda7ac433c01f78ddab9491
+    - path: "src/Shared/Localization/Translator.php"
+      category: FROZEN_ENGINEERING_FOUNDATION
+      sha256: 72f1e530f8f3fde478e6c2235a5c170e42c73c1173b8ad656dc920f64b929a42
+    - path: "src/Shared/Module/Module.php"
+      category: FROZEN_ENGINEERING_FOUNDATION
+      sha256: 81d903c23455e91f1456106d131125a6153da7f9473ffae3f1d64143d38e36ab
+    - path: "src/Shared/Module/ModuleCompilation.php"
+      category: FROZEN_ENGINEERING_FOUNDATION
+      sha256: 8ec69507a92f60da07bba24a86565c6aabfccc163f039cbe4d93390c3996d099
+    - path: "src/Shared/Module/ModuleDependencyException.php"
+      category: FROZEN_ENGINEERING_FOUNDATION
+      sha256: b78f57dcb712f9f63236ec3f5e24b1bbfd0dc3261f6ba2af677da4ffecd545f5
+    - path: "src/Shared/Module/ModuleId.php"
+      category: FROZEN_ENGINEERING_FOUNDATION
+      sha256: 72fc7ede16cf6eba176795a5e13ed0759b5a5ca28c5a4f63dcedfeca1f8c1217
+    - path: "src/Shared/Module/ModuleRegistrationContext.php"
+      category: FROZEN_ENGINEERING_FOUNDATION
+      sha256: 38a1beffe847a6ec66619aab8b2a3e0e84ac8ab7a8f4271963c1415cae12a3e4
+    - path: "src/Shared/Module/ModuleRegistry.php"
+      category: FROZEN_ENGINEERING_FOUNDATION
+      sha256: e45d5396203dc67fb7b74890f3df6f0d11111861df2fb8dabfb0da0f2aef337b
+    - path: "src/Shared/Observability/Correlation/CorrelationId.php"
+      category: FROZEN_ENGINEERING_FOUNDATION
+      sha256: 6c68d1bfc77c29e93fcc5e2d34d52907d7489e1868ba173327ad1c0aff2cc0db
+    - path: "src/Shared/Observability/Correlation/CorrelationIdGenerator.php"
+      category: FROZEN_ENGINEERING_FOUNDATION
+      sha256: 175d277b8fe440319887554a9e96157e778022deba5eff361a43b9cb28efc5be
+    - path: "src/Shared/Observability/Correlation/SecureCorrelationIdGenerator.php"
+      category: FROZEN_ENGINEERING_FOUNDATION
+      sha256: efc7b7da054e07e17b385dd1ce9af686288c412b04dece6ba90a6fbba7d178ed
+    - path: "src/Shared/Observability/Error/BootstrapFailureReporter.php"
+      category: FROZEN_ENGINEERING_FOUNDATION
+      sha256: b5460f2c68a95a2c97553d434b4f04f45817defa18e1916a9e0054b44e9800cf
+    - path: "src/Shared/Observability/Error/BootstrapFailureResponder.php"
+      category: FROZEN_ENGINEERING_FOUNDATION
+      sha256: d9fe07930257651984afd02dc863ae23a30d06db79e7cf62761199d515e841ec
+    - path: "src/Shared/Observability/Error/BootstrapFailureResponse.php"
+      category: FROZEN_ENGINEERING_FOUNDATION
+      sha256: c9d8f9ee864336e650ecabab7641e6732c489192d46612178560329f76859006
+    - path: "src/Shared/Observability/Error/ErrorHandlingRuntime.php"
+      category: FROZEN_ENGINEERING_FOUNDATION
+      sha256: ce278a31659fe665fc54bf1481f6da6b1caddd607a13f275dc7e94b5a02e442c
+    - path: "src/Shared/Observability/Error/ExceptionFingerprint.php"
+      category: FROZEN_ENGINEERING_FOUNDATION
+      sha256: eb405eddef4ea7bae9347f2a444d28ac923e6a90d1ba28c52ff1665bc486704b
+    - path: "src/Shared/Observability/Error/FatalErrorShutdownReporter.php"
+      category: FROZEN_ENGINEERING_FOUNDATION
+      sha256: 3e69d496a394874b10aebb6f76b288669a8bc894dcbb255e399910387c3c0688
+    - path: "src/Shared/Observability/Error/InternalErrorChannel.php"
+      category: FROZEN_ENGINEERING_FOUNDATION
+      sha256: 7324038a0ce32e3385df3cdc48a78d50c8e377fcefce6cb455e815ced786ccf0
+    - path: "src/Shared/Observability/Error/LastErrorProvider.php"
+      category: FROZEN_ENGINEERING_FOUNDATION
+      sha256: 69b23d5b43c5c5af93522809cd6351c823f5a0140f5522f37457c8a194dbb580
+    - path: "src/Shared/Observability/Error/NativeLastErrorProvider.php"
+      category: FROZEN_ENGINEERING_FOUNDATION
+      sha256: 1034c989ba709a7d28c2320f611299a579a3781ff9ab9c8d4e29b1dff5f2d391
+    - path: "src/Shared/Observability/Error/PhpErrorHandler.php"
+      category: FROZEN_ENGINEERING_FOUNDATION
+      sha256: 1e3188b16898a1118d9a1fd713ddf9bf1cafee5fee1a9c6513b2c9a8423c79ac
+    - path: "src/Shared/Observability/Error/SafeLogContextProvider.php"
+      category: FROZEN_ENGINEERING_FOUNDATION
+      sha256: d3683a79d20020455ce05a4c0cc1fac1901bec2f0e9b63fc0260cd993253b74e
+    - path: "src/Shared/Observability/Error/StructuredThrowableReporter.php"
+      category: FROZEN_ENGINEERING_FOUNDATION
+      sha256: 588aace0484c4c182835be7b35197bc538f175fcda91a57744e1b03ae2c252d4
+    - path: "src/Shared/Observability/Error/ThrowableReporter.php"
+      category: FROZEN_ENGINEERING_FOUNDATION
+      sha256: 6f8029112364a54daaa0378176ed9205d5f9a96ce8269edf6171e8465493bad1
+    - path: "src/Shared/Observability/Logging/EventLogger.php"
+      category: FROZEN_ENGINEERING_FOUNDATION
+      sha256: 822395081170108d504214e4177d7ea4e1fa37099dad6cb9b014c2c9440a202a
+    - path: "src/Shared/Observability/Logging/LogContextSanitizer.php"
+      category: FROZEN_ENGINEERING_FOUNDATION
+      sha256: 1c1ed35d87b40040489a9b716b84f0d60bd5af2a471898652257530c006f460c
+    - path: "src/Shared/Observability/Logging/LogEventName.php"
+      category: FROZEN_ENGINEERING_FOUNDATION
+      sha256: 0259205c549d0cb360e80cf14061fbd9cd3af512636ca2878ca9b2a9a51a5f91
+    - path: "src/Shared/Observability/Logging/MonologStructuredLoggerFactory.php"
+      category: FROZEN_ENGINEERING_FOUNDATION
+      sha256: bc741d7f8628de9fab0dbce4d2d0d7ace00aaffdcb3da0f1d2e54229cbe4a9ca
+    - path: "src/Shared/Observability/Logging/PsrEventLogger.php"
+      category: FROZEN_ENGINEERING_FOUNDATION
+      sha256: de0a79a2c669648cc2fb6e3a9c9907d9650e3b39852683ee2e5fb7e15e844bfa
+    - path: "src/Shared/Observability/Logging/ResilientLogger.php"
+      category: FROZEN_ENGINEERING_FOUNDATION
+      sha256: bd815cf71bf8f3acecbbd51cc02254d1549e005bbd0eba91e2a909e2142393b5
+    - path: "src/Shared/Observability/Logging/SensitiveKeyMatcher.php"
+      category: FROZEN_ENGINEERING_FOUNDATION
+      sha256: f6072884edbda4a08015a1c5468f13f38d70ce6a0d4e463b18275fc9d55997b9
+    - path: "src/Shared/Observability/Logging/SensitiveValueRedactor.php"
+      category: FROZEN_ENGINEERING_FOUNDATION
+      sha256: efb8f51030ca6b3c3493ee73f4952308f525d13bcf1f67d5d58f856e174e9586
+    - path: "src/Shared/Observability/Logging/StaticApplicationContextProcessor.php"
+      category: FROZEN_ENGINEERING_FOUNDATION
+      sha256: a5d1aea387e5fcd37c0e07853ac5888c21ef91c5d08d16a22901ba3c8d52c4d6
+    - path: "src/Shared/Observability/Logging/StructuredLoggerFactory.php"
+      category: FROZEN_ENGINEERING_FOUNDATION
+      sha256: eb547e479c32feb5c89a8a027ec5af9ef04a4e2ec0e8aceeea49f7b4a37192a6
+    - path: "src/Shared/Presentation/Asset/AssetUrlGenerator.php"
+      category: FROZEN_ENGINEERING_FOUNDATION
+      sha256: aee6d1f08a636ad0de03cc20aa0ae8924406bbf481eca18c4d2a6de5f095e33d
+    - path: "src/Shared/Presentation/Html/HtmlEscaper.php"
+      category: FROZEN_ENGINEERING_FOUNDATION
+      sha256: 6737c4c28552c7954627b5e58e731165e6e052e98e33724adbfbc193dbbd12cd
+    - path: "src/Shared/Presentation/Html/SafeHtml.php"
+      category: FROZEN_ENGINEERING_FOUNDATION
+      sha256: b74dfa670a86cf753f67091f1ca94e275caf9147fb552b2adcf63efea85033d9
+    - path: "src/Shared/Presentation/Html/SafeUrl.php"
+      category: FROZEN_ENGINEERING_FOUNDATION
+      sha256: b36e4104df5e9f9bff0e4f7e2365fbbf581e80d766a351e781ddcf8286ac2348
+    - path: "src/Shared/Presentation/Response/FragmentRequestDetector.php"
+      category: FROZEN_ENGINEERING_FOUNDATION
+      sha256: 9232900328378e49be3fc08ed7ef35c265d04c2b4886e06f4eae57a8f012577b
+    - path: "src/Shared/Presentation/Response/FragmentResponseFactory.php"
+      category: FROZEN_ENGINEERING_FOUNDATION
+      sha256: fcbdf93691eb49579967cee4ecaf303898b86175b5f2725d2ac933fc27f9a053
+    - path: "src/Shared/Presentation/Response/HtmlResponseFactory.php"
+      category: FROZEN_ENGINEERING_FOUNDATION
+      sha256: 95d1e758c87008283a374ec86d0042b70c4e4edb67ff725ddcef25846285fd16
+    - path: "src/Shared/Presentation/Response/PageOrFragmentResponseFactory.php"
+      category: FROZEN_ENGINEERING_FOUNDATION
+      sha256: 4bb459b18864a3cdb823cb23ea7db31ed0d0a7efa7a396cfd7778d7024c35cb0
+    - path: "src/Shared/Presentation/Security/CspNonce.php"
+      category: FROZEN_ENGINEERING_FOUNDATION
+      sha256: 8a73cf14b4b82a0d5235cd1b16268719dcc4e9d49f67c64775fae354768f346e
+    - path: "src/Shared/Presentation/Security/CspNonceGenerator.php"
+      category: FROZEN_ENGINEERING_FOUNDATION
+      sha256: 875e544cce1ac4bbd6a83a97d8b70ab1351a8c0be8665e82a611d3433244c224
+    - path: "src/Shared/Presentation/Security/SecureCspNonceGenerator.php"
+      category: FROZEN_ENGINEERING_FOUNDATION
+      sha256: 733e56d39f5bd9a03de0bcdba8a775286196542f16eb546c0a6dbbeda5cc4f70
+    - path: "src/Shared/Presentation/View/PageRenderer.php"
+      category: FROZEN_ENGINEERING_FOUNDATION
+      sha256: 44e847242400a49ff3ca7e5a2111325838d2100d0d26fb41f5b22855b64cbffc
+    - path: "src/Shared/Presentation/View/PhpViewRenderer.php"
+      category: FROZEN_ENGINEERING_FOUNDATION
+      sha256: 5bd2544ccce3137a647158c2cd3dd3f1771e34946f4ecd42ea7f745f92c63871
+    - path: "src/Shared/Presentation/View/PresentationRequestContext.php"
+      category: FROZEN_ENGINEERING_FOUNDATION
+      sha256: 6766efec1ebc8124a3e670d9baf3f431a000efec9581f8e8da98e7001759f6ca
+    - path: "src/Shared/Presentation/View/ViewData.php"
+      category: FROZEN_ENGINEERING_FOUNDATION
+      sha256: 6ba74585f2d1993df82683944748b09402048e1103583c55499fd895f1d2c113
+    - path: "src/Shared/Presentation/View/ViewName.php"
+      category: FROZEN_ENGINEERING_FOUNDATION
+      sha256: b273e19539bae81ff6f42e3d6f5e6d617046ef3532e2cdcf70bd10dbed3286c7
+    - path: "src/Shared/Presentation/View/ViewRegistry.php"
+      category: FROZEN_ENGINEERING_FOUNDATION
+      sha256: a390a867ce17fcad16e879392ff32278fdf440a70ebc28504682ef446c42f447
+    - path: "src/Shared/Schema/Checksum/CanonicalChecksum.php"
+      category: FROZEN_ENGINEERING_FOUNDATION
+      sha256: 846d7450b13a464b97ef3f3fc9c36edcb208f31236fa7541b2a441e20bf36d35
+    - path: "src/Shared/Schema/Configuration/SchemaConfiguration.php"
+      category: FROZEN_ENGINEERING_FOUNDATION
+      sha256: f3995fc8f022f84ca1dfd772cd4eb3d702957d505b480a293ccb74985fafe2ee
+    - path: "src/Shared/Schema/Configuration/SchemaConfigurationFactory.php"
+      category: FROZEN_ENGINEERING_FOUNDATION
+      sha256: 7796e3bef7cf3d45a12f91dd0152c579e8ca93bfbaf4ceda0ad67425d66914a0
+    - path: "src/Shared/Schema/Connection/MySqlSchemaConnectionProvider.php"
+      category: FROZEN_ENGINEERING_FOUNDATION
+      sha256: 6d4ba2b6a525342ccb3f57c26519971e15284a60162622012169849ebf504610
+    - path: "src/Shared/Schema/Connection/RuntimeSchemaConnectionProvider.php"
+      category: FROZEN_ENGINEERING_FOUNDATION
+      sha256: ec83f76a4425e7c25699cfb1cb4efe29a823c667eb349a0d6680b5a3aa208844
+    - path: "src/Shared/Schema/Connection/SchemaConnectionProvider.php"
+      category: FROZEN_ENGINEERING_FOUNDATION
+      sha256: a446027a3c99ac892f65b4e3a82635b5d0d761b2b8ea59adb14c8f1291f18616
+    - path: "src/Shared/Schema/Console/SchemaConsoleApplication.php"
+      category: FROZEN_ENGINEERING_FOUNDATION
+      sha256: 05114670c2aeed0d7fb01d519ac00ebde6a1a9db1ade4b3a1fcc141879124d2c
+    - path: "src/Shared/Schema/Exception/SchemaException.php"
+      category: FROZEN_ENGINEERING_FOUNDATION
+      sha256: 33dbb87a2814d74170eaf40127df7dff02f14ff45933322414b6db415b8fb41e
+    - path: "src/Shared/Schema/Health/SchemaHealthCheck.php"
+      category: FROZEN_ENGINEERING_FOUNDATION
+      sha256: 35570226f6783b6c8791fd223ce0243be5b5e2befac357fe057dcdac75d0f2d0
+    - path: "src/Shared/Schema/Health/SchemaHealthReport.php"
+      category: FROZEN_ENGINEERING_FOUNDATION
+      sha256: fb773f1d1f5c915c4fd993e4f5e4519320b1b3c399546280203ca319bd3b962c
+    - path: "src/Shared/Schema/Health/SchemaHealthStatus.php"
+      category: FROZEN_ENGINEERING_FOUNDATION
+      sha256: 493f03108c2a897bc2b045e9264521c9ef1d88d35b8f754cca8a06ccf7727d70
+    - path: "src/Shared/Schema/Lock/SchemaLockHandle.php"
+      category: FROZEN_ENGINEERING_FOUNDATION
+      sha256: 3c6c1bd3a3932841849de54c2b1826b8793c4b79a3238f910bcacab4a348bf40
+    - path: "src/Shared/Schema/Lock/SchemaLockManager.php"
+      category: FROZEN_ENGINEERING_FOUNDATION
+      sha256: 96c689eae71a83abfb10b695257889da6d2aa492c0c3be588ca1f2eef5530e4b
+    - path: "src/Shared/Schema/Lock/SchemaMutationLock.php"
+      category: FROZEN_ENGINEERING_FOUNDATION
+      sha256: 46e30b823d7638a0ed0d3286d571cbe1cadca7c44ee6fa52f1f82a32a769ff87
+    - path: "src/Shared/Schema/Metadata/RuntimeSchemaMetadataVerifier.php"
+      category: FROZEN_ENGINEERING_FOUNDATION
+      sha256: 3845c0c1065fee9bae4837c9653836efa867a9e4f759a52c7b6b008d7c2a55c8
+    - path: "src/Shared/Schema/Metadata/SchemaMetadataDefinition.php"
+      category: FROZEN_ENGINEERING_FOUNDATION
+      sha256: 65e13bb8d924457bb5d354e7847942075fe2705199ed7271121fbac4eb589243
+    - path: "src/Shared/Schema/Metadata/SchemaMetadataInspection.php"
+      category: FROZEN_ENGINEERING_FOUNDATION
+      sha256: 18ef71c7784bf39a7f9ee946d8dab79d2d6dd2a1a32fda82d9a6014685fae761
+    - path: "src/Shared/Schema/Metadata/SchemaMetadataInstallation.php"
+      category: FROZEN_ENGINEERING_FOUNDATION
+      sha256: 604cde60802440e6357c01fe56d41ec0d4ba40f860b5a9cd8cc1f28ad68268cc
+    - path: "src/Shared/Schema/Metadata/SchemaMetadataInstaller.php"
+      category: FROZEN_ENGINEERING_FOUNDATION
+      sha256: 239d47a84296088e81219bad5164c7c9085e21701274d15ae3706e63ba6ea449
+    - path: "src/Shared/Schema/Metadata/SchemaMetadataReport.php"
+      category: FROZEN_ENGINEERING_FOUNDATION
+      sha256: 372869cd6367552d28880d1a81461c8077845b9a25cc1e6fe304fde57437d563
+    - path: "src/Shared/Schema/Metadata/SchemaMetadataStatus.php"
+      category: FROZEN_ENGINEERING_FOUNDATION
+      sha256: 9ff2378bbee5513408689170dabbdcfa7af7c3bb69f2e91fab428c60114ca23e
+    - path: "src/Shared/Schema/Metadata/SchemaMetadataVerifier.php"
+      category: FROZEN_ENGINEERING_FOUNDATION
+      sha256: 7ba96c5aa9e7f05029a5b1f60e3afd87539f9fd43dea25536925862b120e6b08
+    - path: "src/Shared/Schema/Migration/Migration.php"
+      category: FROZEN_ENGINEERING_FOUNDATION
+      sha256: 19e3831e6c9b54198a70e7220272e9724e046ab905a770ab9c372ef16bf141fb
+    - path: "src/Shared/Schema/Migration/MigrationChecksum.php"
+      category: FROZEN_ENGINEERING_FOUNDATION
+      sha256: 7937256500aa5bb862e0826d184f78b9c1ec7e55058f3fe73cc704a4ed887ae2
+    - path: "src/Shared/Schema/Migration/MigrationEventType.php"
+      category: FROZEN_ENGINEERING_FOUNDATION
+      sha256: 263c34f3d205e40965a2ee8f81ee856dfd552f9c62605c615fce81f9ed711317
+    - path: "src/Shared/Schema/Migration/MigrationId.php"
+      category: FROZEN_ENGINEERING_FOUNDATION
+      sha256: aac285137a0ed419c72c2c1cbf683cbbbfe7224ef91ab098fc2631eb6042c4c1
+    - path: "src/Shared/Schema/Migration/MigrationPlan.php"
+      category: FROZEN_ENGINEERING_FOUNDATION
+      sha256: 6d493e761fe21e362cc91e1882abf5ba2f22dc25c1b367b63deeefa6304a862b
+    - path: "src/Shared/Schema/Migration/MigrationPlanItem.php"
+      category: FROZEN_ENGINEERING_FOUNDATION
+      sha256: 1880dce08d5819885e1f1f5ba9f310746671fa7aadeca10fa1338bb95c007cf0
+    - path: "src/Shared/Schema/Migration/MigrationPlanStatus.php"
+      category: FROZEN_ENGINEERING_FOUNDATION
+      sha256: f9d7e7a6ba7850b54a27e6278570603428d0b984f794bfc15e5eedc7d1082dcb
+    - path: "src/Shared/Schema/Migration/MigrationPlanner.php"
+      category: FROZEN_ENGINEERING_FOUNDATION
+      sha256: ccfce134e89b206c4b495bf783de327cf93817836213ced4898e7da3d41afeec
+    - path: "src/Shared/Schema/Migration/MigrationRecord.php"
+      category: FROZEN_ENGINEERING_FOUNDATION
+      sha256: 6b4582028c1ae6636fe1418134daa3bbbe7a4a18da5419c49dbcc0ea6e594766
+    - path: "src/Shared/Schema/Migration/MigrationRegistry.php"
+      category: FROZEN_ENGINEERING_FOUNDATION
+      sha256: 036176efc84fc0b213b6235bd4d06ec3cb7fe8541195bccd8076b8978b934954
+    - path: "src/Shared/Schema/Migration/MigrationRegistryBuilder.php"
+      category: FROZEN_ENGINEERING_FOUNDATION
+      sha256: ad16e866bb152305a8dbed82fe90233e5aab4fcb09e681aa59e9eee280883691
+    - path: "src/Shared/Schema/Migration/MigrationStatus.php"
+      category: FROZEN_ENGINEERING_FOUNDATION
+      sha256: 7947c32cbc522e5d4e2cbb00b0d889a8eea5220d67417fde18a725938e9cc734
+    - path: "src/Shared/Schema/Migration/MigrationStepId.php"
+      category: FROZEN_ENGINEERING_FOUNDATION
+      sha256: 3f3ea4b0d376fd8bacbc6daa6d1677677f7314e03580eca8921a59d9ab5078aa
+    - path: "src/Shared/Schema/Migration/SqlMigrationStep.php"
+      category: FROZEN_ENGINEERING_FOUNDATION
+      sha256: 3465e2740c9e91d8706424489691c6419058e9bd44f74f01635abc4c5ea309f4
+    - path: "src/Shared/Schema/Migration/SqlStatementPolicy.php"
+      category: FROZEN_ENGINEERING_FOUNDATION
+      sha256: 7434167e1cddb5e348990cfefeb4edcaf0f9402e922a24aadfa8dbce10b9de7e
+    - path: "src/Shared/Schema/Runner/MigrationRollbackService.php"
+      category: FROZEN_ENGINEERING_FOUNDATION
+      sha256: f3cf5e354bdfcfe89dcabcd0ef9839aaa4432a1afe3a0162d3e74c0a656b123b
+    - path: "src/Shared/Schema/Runner/MigrationRunner.php"
+      category: FROZEN_ENGINEERING_FOUNDATION
+      sha256: 00e914b97fdc67de4ddfed584571c7d0460ad09aa05e3803f682b229ad1a2e1d
+    - path: "src/Shared/Schema/Runner/SchemaRunSummary.php"
+      category: FROZEN_ENGINEERING_FOUNDATION
+      sha256: 1eba2998fda729fef1406b1ed002b6b16ccc478cc93d58cc5a222b8b850efaaa
+    - path: "src/Shared/Schema/Runner/SeedRunner.php"
+      category: FROZEN_ENGINEERING_FOUNDATION
+      sha256: 6c4736e60b9bc0a0dd3c42502480b7da3ab412d0e50f14acf0c04e5a92338b3a
+    - path: "src/Shared/Schema/Seed/Seed.php"
+      category: FROZEN_ENGINEERING_FOUNDATION
+      sha256: 7aae98833aecf970cf7d9a6217ea1ff64b78c9dd30d0fa8f02e448eb323a6656
+    - path: "src/Shared/Schema/Seed/SeedChecksum.php"
+      category: FROZEN_ENGINEERING_FOUNDATION
+      sha256: b35942b9efb301044f4d88fc7e91c4073e5d4fed10b75c2c2d3b9a52b34591ba
+    - path: "src/Shared/Schema/Seed/SeedEventType.php"
+      category: FROZEN_ENGINEERING_FOUNDATION
+      sha256: 2b3476e1c7cb063da63e9f20e396427f1cdbfbd287366bf361cf1d9ed2d8d250
+    - path: "src/Shared/Schema/Seed/SeedId.php"
+      category: FROZEN_ENGINEERING_FOUNDATION
+      sha256: 258cefcf10ba3226655723eec91fa7cb86ca3ed5916a37e1ecabfdf34764b084
+    - path: "src/Shared/Schema/Seed/SeedPlan.php"
+      category: FROZEN_ENGINEERING_FOUNDATION
+      sha256: 6c84ff76b3ad870903946b7481c8cbf4daff232ee68c653ee3d603d7b2c35294
+    - path: "src/Shared/Schema/Seed/SeedPlanner.php"
+      category: FROZEN_ENGINEERING_FOUNDATION
+      sha256: 0375d66375a4aef400d2dfdc00ec7b75b50bdd8de61d2d3743ee4619ac41df0f
+    - path: "src/Shared/Schema/Seed/SeedRecord.php"
+      category: FROZEN_ENGINEERING_FOUNDATION
+      sha256: 3138145ec68f0e7856ce13d519913823e283d11505480678cb57f4dbf0f617ef
+    - path: "src/Shared/Schema/Seed/SeedRegistry.php"
+      category: FROZEN_ENGINEERING_FOUNDATION
+      sha256: aa8339abda85a41ff478be6f3b69533d7417e0651ee286bf9a23653c0a08c296
+    - path: "src/Shared/Schema/Seed/SeedRegistryBuilder.php"
+      category: FROZEN_ENGINEERING_FOUNDATION
+      sha256: 424988a6edf2ac83cd78d1defdc86569a88c660ec9c0691187eb634df639a5b4
+    - path: "src/Shared/Schema/Seed/SeedStatus.php"
+      category: FROZEN_ENGINEERING_FOUNDATION
+      sha256: 3ed6d9f885d7a73a440f40e30f6ad92a026f50d33fb7c0ba9db711dcb1e084b1
+    - path: "src/Shared/Schema/Seed/SeedStepId.php"
+      category: FROZEN_ENGINEERING_FOUNDATION
+      sha256: df75ece904c261023c5b2744babbc9e0857007e7de3f0e5275b67bf5820db819
+    - path: "src/Shared/Schema/Seed/SqlSeedStep.php"
+      category: FROZEN_ENGINEERING_FOUNDATION
+      sha256: fa46f763f48bcbc768297d5ea94f2ec20525cdc189509a1e41bf23c703aaf95b
+    - path: "src/Shared/Schema/State/MySqlRuntimeSchemaStateReader.php"
+      category: FROZEN_ENGINEERING_FOUNDATION
+      sha256: 514674801421437679bc118a0db7e17e968c00ccc1deb3d7c91cb47014f85f78
+    - path: "src/Shared/Schema/State/MySqlSchemaStateRepository.php"
+      category: FROZEN_ENGINEERING_FOUNDATION
+      sha256: 8d886e9333ae3108f09fe3924508a36f6990de55b9242b4b2062be7aa4d32980
+    - path: "src/Shared/Schema/State/PdoResultReader.php"
+      category: FROZEN_ENGINEERING_FOUNDATION
+      sha256: 936dd28cac4460c1196fed3ec9aaccafb1d0f3e7cbff52cc1c41aa4cceba6d74
+    - path: "src/Shared/Schema/State/SchemaStateReader.php"
+      category: FROZEN_ENGINEERING_FOUNDATION
+      sha256: c438d9df7f27184fb1cc840a93236dbac5272a8b8efecf4f41d7b424a17a2d2c
+    - path: "src/Shared/Schema/State/SchemaStateRepository.php"
+      category: FROZEN_ENGINEERING_FOUNDATION
+      sha256: bc6891e0eb9eb84dec268186c3b39af1ba2135679382fe03d065443ff18a2021
+    - path: "src/Shared/Schema/Status/SchemaStatusService.php"
+      category: FROZEN_ENGINEERING_FOUNDATION
+      sha256: 970cbf4780e279e2709e0deecf92d4aa4534d7ce29256c495e0d4729c1743844
+    - path: "src/Shared/Security/Secrets/EnvironmentSecretsProvider.php"
+      category: FROZEN_ENGINEERING_FOUNDATION
+      sha256: a7faac9bc0cd5b6a49fd91f5379a7c10cd338f5b24ea56b44922a19bba52d36a
+    - path: "src/Shared/Security/Secrets/SecretName.php"
+      category: FROZEN_ENGINEERING_FOUNDATION
+      sha256: 503add3e3766e20a9f265bf72e3ce4ebd6f5879228c731e6bf5382644056a0a3
+    - path: "src/Shared/Security/Secrets/SecretUnavailableException.php"
+      category: FROZEN_ENGINEERING_FOUNDATION
+      sha256: 9d5b4d7bea6fac7d68cf00b4df36777d76787aaf2535713b00fb4d954aeef5bf
+    - path: "src/Shared/Security/Secrets/SecretValue.php"
+      category: FROZEN_ENGINEERING_FOUNDATION
+      sha256: b078816bc23840784cf79bc05ceddae8d8b6073e4b01fd6e292223d95c0b3301
+    - path: "src/Shared/Security/Secrets/SecretsProvider.php"
+      category: FROZEN_ENGINEERING_FOUNDATION
+      sha256: 9582ab9871fb46f4bde048cf115ba709941b652b4e5445d3ea13895d5dab640c
+    - path: "src/Shared/Time/Clock.php"
+      category: FROZEN_ENGINEERING_FOUNDATION
+      sha256: 93dcf0abaaef76c64cec84e4071759036933e06bcec0753f129aeaa5fdf5e53d
+    - path: "src/Shared/Time/MonotonicClock.php"
+      category: FROZEN_ENGINEERING_FOUNDATION
+      sha256: 74f50e6e679dcb5e22dea612dc6e3d23f21d7ffd46eb62b8db6c40eb7ef9190b
+    - path: "src/Shared/Time/SystemClock.php"
+      category: FROZEN_ENGINEERING_FOUNDATION
+      sha256: 48f0430d24293921d720ba8cdda5a3e48aefbc04c2a6a531baa9a05cbd20161f
+    - path: "src/Shared/Time/SystemMonotonicClock.php"
+      category: FROZEN_ENGINEERING_FOUNDATION
+      sha256: b6aad16b2835cbbfbc54002f4a44f15d26e7b19892a00c6c5e5a21af449ea3c7
+    - path: "src/Shared/Time/UtcDateTime.php"
+      category: FROZEN_ENGINEERING_FOUNDATION
+      sha256: ada971819476e5f7e77a9fa7ecbf8dfac8dc83b6b52c4e361e946a8649c5f45b
+    - path: "tests/Architecture/ApplicationFoundationSecurityTest.php"
+      category: FROZEN_ENGINEERING_FOUNDATION
+      sha256: 948decbc5fa0d89e2b05ce20151656eeb08f0a7e2ef25554ed34e2d910d5d5ec
+    - path: "tests/Architecture/ApplicationServicesArchitectureTest.php"
+      category: FROZEN_ENGINEERING_FOUNDATION
+      sha256: abba8514a766e1adb9377cabd873ffd06bf1b09332f52eb82226d0ee033e93ec
+    - path: "tests/Architecture/BackgroundExecutionArchitectureTest.php"
+      category: FROZEN_ENGINEERING_FOUNDATION
+      sha256: 2d1b0100eabf51414eaecffe8373848c056a0d16020f8c8eec40674029afd6e3
+    - path: "tests/Architecture/ConfigurationArchitectureTest.php"
+      category: FROZEN_ENGINEERING_FOUNDATION
+      sha256: 756247eeae35939e068a60021ed7f30b4fa8a54696d564a22fb3394203264599
+    - path: "tests/Architecture/DatabaseArchitectureTest.php"
+      category: FROZEN_ENGINEERING_FOUNDATION
+      sha256: ae41f401a868ae0a44126e46798d1f400db4175d9a1d6af6215616aae89c8c2b
+    - path: "tests/Architecture/DatabaseSecurityTest.php"
+      category: FROZEN_ENGINEERING_FOUNDATION
+      sha256: 04b86fc1def47c403b1c698257ee5dfe5b02149c19859c39de6e0ac5e36900d6
+    - path: "tests/Architecture/HttpArchitectureTest.php"
+      category: FROZEN_ENGINEERING_FOUNDATION
+      sha256: 7ee16a79e5d89dcc21191a104c603110824fd6f3aa169a279ef1be5b0bb2f0a4
+    - path: "tests/Architecture/ObservabilityArchitectureTest.php"
+      category: FROZEN_ENGINEERING_FOUNDATION
+      sha256: 0b55009b8c47874577dc816e4cedeb1d8d948f921701a4317581910409319725
+    - path: "tests/Architecture/PresentationArchitectureTest.php"
+      category: FROZEN_ENGINEERING_FOUNDATION
+      sha256: 01635b93c708be941b9aaad436be5fc788588e2767f2675d1482d7f7e00c4f7f
+    - path: "tests/Architecture/SchemaFoundationArchitectureTest.php"
+      category: FROZEN_ENGINEERING_FOUNDATION
+      sha256: 418be89755bde30105b9ada31252d4373054326416ae60c4cc763cf50603ea10
+    - path: "tests/Architecture/SourceArchitectureTest.php"
+      category: FROZEN_ENGINEERING_FOUNDATION
+      sha256: a792e82cb88ab32fe0dce60f00bacb9939a5b762d4ff048953c94c5d395bbe8c
+    - path: "tests/Architecture/SupplyChainArchitectureTest.php"
+      category: FROZEN_ENGINEERING_FOUNDATION
+      sha256: d1faacc8df386aeed1d292fd1afa056135f4edff3b92bdebd9c0b1dbea24c62d
+    - path: "tests/Frontend/fetch-client.test.js"
+      category: FROZEN_ENGINEERING_FOUNDATION
+      sha256: 287d1ef774c011194ddf318535bbce34ab2dc4f296383d1d9215345d5d634dec
+    - path: "tests/Frontend/fragment-policy.test.js"
+      category: FROZEN_ENGINEERING_FOUNDATION
+      sha256: 735f4a73cc241c7d45226f71052643102b71837d9fac1ec4030e32ce2f5c5fe3
+    - path: "tests/Frontend/modal-controller.test.js"
+      category: FROZEN_ENGINEERING_FOUNDATION
+      sha256: 3477f69cf4d5a00714a0b5e0ac6dd1251cf3d421ba0b01aafc5031f778ab6015
+    - path: "tests/Frontend/partial-refresh-controller.test.js"
+      category: FROZEN_ENGINEERING_FOUNDATION
+      sha256: d86a4d52f13ff2b59feb761a78865eb1187bbf3018d321765adba74beca09c8f
+    - path: "tests/Frontend/request-coordinator.test.js"
+      category: FROZEN_ENGINEERING_FOUNDATION
+      sha256: 90fd5837a395c27bde180d678a6f0e5cf33ad329964566df7e93d186d20cfbef
+    - path: "tests/Frontend/test-dom.js"
+      category: FROZEN_ENGINEERING_FOUNDATION
+      sha256: c4281063b7a95b28ac502bdde3525db282ce6349744cc82d2ceeb1cd87f02fa4
+    - path: "tests/Frontend/theme-controller.test.js"
+      category: FROZEN_ENGINEERING_FOUNDATION
+      sha256: 7560f102a53e59d723def2eefba704ca80c5e03fdb03e4f26f416b14c7823970
+    - path: "tests/Integration/Bootstrap/ApplicationFactoryTest.php"
+      category: FROZEN_ENGINEERING_FOUNDATION
+      sha256: 4cbb9841d82424dcefcb62c8f15605dbbd7079b11dd30808bd2ae9d82f15e8e3
+    - path: "tests/Integration/Bootstrap/FoundationCompilationTest.php"
+      category: FROZEN_ENGINEERING_FOUNDATION
+      sha256: 2643b540d27a180271664a35ccdc46e7b3742980950d07c035b9acfb4ac7b760
+    - path: "tests/Integration/Configuration/DotenvEnvironmentLoaderTest.php"
+      category: FROZEN_ENGINEERING_FOUNDATION
+      sha256: e41bee1cac94757fd9466c39b5999fa146f2228b22fbe32003dae0b614a791eb
+    - path: "tests/Integration/Console/BackgroundConsoleIntegrationTest.php"
+      category: FROZEN_ENGINEERING_FOUNDATION
+      sha256: adc2fe970d5520f7765d797cfc7335cfc38bb5ab568a118e004d68b780e48824
+    - path: "tests/Integration/Console/Observability/ConsoleObservabilityIntegrationTest.php"
+      category: FROZEN_ENGINEERING_FOUNDATION
+      sha256: 3862ef88094551fac3c791c324648036b986150182ef5cb8bafd35aceb7373a3
+    - path: "tests/Integration/ConsoleApplicationTest.php"
+      category: FROZEN_ENGINEERING_FOUNDATION
+      sha256: ed98ed6905ee27f9a3a439923af779587210e5f0997cfd604f6a644498e36af7
+    - path: "tests/Integration/Http/ApplicationFactoryHttpRuntimeTest.php"
+      category: FROZEN_ENGINEERING_FOUNDATION
+      sha256: 383b51a86c1d7d1d74ccc694016c7aaf13abfeda98df0442ef6eb4ae433a23ea
+    - path: "tests/Integration/Http/HttpKernelTest.php"
+      category: FROZEN_ENGINEERING_FOUNDATION
+      sha256: 444e042623f21761b2b4de5fd759c024ad71fd0afcb0affacf36688b9ce4b14d
+    - path: "tests/Integration/Http/HttpRoutesTest.php"
+      category: FROZEN_ENGINEERING_FOUNDATION
+      sha256: a1aa4dcadede8d75c36ed1e9df798aea08ceef745d589965d683c4067c88d3a4
+    - path: "tests/Integration/Http/NativeServerRequestFactoryTest.php"
+      category: FROZEN_ENGINEERING_FOUNDATION
+      sha256: 7519e7694fbfcfccbb5beed9542bc4d2134bbe70ba6bf9e5f8a9cf099cbc95c1
+    - path: "tests/Integration/Http/Observability/HttpObservabilityIntegrationTest.php"
+      category: FROZEN_ENGINEERING_FOUNDATION
+      sha256: f011b830ac1e1e543da09d4312dcdaa6df216a26760dd21e7d44dd4a47a4ea90
+    - path: "tests/Integration/Http/ParameterizedRoutingTest.php"
+      category: FROZEN_ENGINEERING_FOUNDATION
+      sha256: cecf60d2ab0bdfb0e98def48e0c2cbc5182d29125b0abd8281243f4528aa467c
+    - path: "tests/Integration/Http/PresentationHttpTest.php"
+      category: FROZEN_ENGINEERING_FOUNDATION
+      sha256: 79706b0cf2b5894fa982a21c9628a2f922ff830a32c15cee71ed749d4060f7a6
+    - path: "tests/Integration/Http/SapiResponseEmitterTest.php"
+      category: FROZEN_ENGINEERING_FOUNDATION
+      sha256: f883d292dac9a263cb5010e9bde6db527b9c63f15f91748d08c0c8e324ac2856
+    - path: "tests/Integration/MySql/MySqlConnectionIntegrationTest.php"
+      category: FROZEN_ENGINEERING_FOUNDATION
+      sha256: 83302351c8eb11e083712b3f976ccc87a6fbbbfe5fb39cad005253c5a03763d1
+    - path: "tests/Integration/MySql/MySqlNestedTransactionIntegrationTest.php"
+      category: FROZEN_ENGINEERING_FOUNDATION
+      sha256: 43be3ec224b0f946054300b7d4e402d2c738c0133d4ec3a3a18efaf73fb85c2a
+    - path: "tests/Integration/MySql/MySqlReadOnlyTransactionIntegrationTest.php"
+      category: FROZEN_ENGINEERING_FOUNDATION
+      sha256: 8d2f61e181446ce7634d565f3d204fdf125ce0e8af8709b0eb73ca0caf85d2ed
+    - path: "tests/Integration/MySql/MySqlReadinessIntegrationTest.php"
+      category: FROZEN_ENGINEERING_FOUNDATION
+      sha256: a48df0669f849ff4a04ba2435334e85dc152f3875b0c47322cb571b3147d343f
+    - path: "tests/Integration/MySql/MySqlSessionIntegrationTest.php"
+      category: FROZEN_ENGINEERING_FOUNDATION
+      sha256: e0283526fd714d27e33d066bf40d10eba9e82e9720a2016f35039a6f502206b2
+    - path: "tests/Integration/MySql/MySqlTransactionIntegrationTest.php"
+      category: FROZEN_ENGINEERING_FOUNDATION
+      sha256: f7b37653a97fed5b72e8849e7fce01bcacaadb3900a41070412aa58c0e353a1d
+    - path: "tests/Integration/MySql/SchedulerClaimIntegrationTest.php"
+      category: FROZEN_ENGINEERING_FOUNDATION
+      sha256: 37e1bdbd145ddcc66e6c29984e360011008261dc839b2289195cea4b447a1ad2
+    - path: "tests/Integration/MySql/SchedulerLedgerIntegrationTest.php"
+      category: FROZEN_ENGINEERING_FOUNDATION
+      sha256: 3d15e75e66795bc110588edc453dff78290888a681aa5a51c4b1f40fa89001a3
+    - path: "tests/Integration/MySql/SchemaMetadataAndLockIntegrationTest.php"
+      category: FROZEN_ENGINEERING_FOUNDATION
+      sha256: 1ea5ebdd6e3a1167745fdfa2f1863a5228b50984b3a1c28d565718b479ff4aaf
+    - path: "tests/Support/Application/ArrayHandlerResolver.php"
+      category: FROZEN_ENGINEERING_FOUNDATION
+      sha256: 368e607186fbdfed3aeae72a96e5e62295a5e6e9feb69973f56e2101fb730c07
+    - path: "tests/Support/Application/BaseCommand.php"
+      category: FROZEN_ENGINEERING_FOUNDATION
+      sha256: d54f8140c9cb7719d1f5f0e178bbe7ac8727fd3550a5f398e6c303e80603e115
+    - path: "tests/Support/Application/BaseCommandHandler.php"
+      category: FROZEN_ENGINEERING_FOUNDATION
+      sha256: 12a452cfa0106b20439b8719296f332ee5cd2979334173280baae96c1b7ccad0
+    - path: "tests/Support/Application/DerivedCommand.php"
+      category: FROZEN_ENGINEERING_FOUNDATION
+      sha256: cb3f495afb0bdf94f3ef58c5989ca635e56ad923a403816dd8a113ceb0ca5740
+    - path: "tests/Support/Application/EventState.php"
+      category: FROZEN_ENGINEERING_FOUNDATION
+      sha256: a765260d248fe728aad6e6e586ccb51ba5c066dd474a569987ff83170c665e6e
+    - path: "tests/Support/Application/FailingCommandHandler.php"
+      category: FROZEN_ENGINEERING_FOUNDATION
+      sha256: c1f8d7d6cad543dd1a40e1f4efe4129a396ed009abf64c98cfe68ea433415864
+    - path: "tests/Support/Application/FailingEventHandler.php"
+      category: FROZEN_ENGINEERING_FOUNDATION
+      sha256: 96946160f9f428c1e3f3965866c0a251ecfc2bf86f57b36ff611bde71a56a0f8
+    - path: "tests/Support/Application/NonCallableCommandHandler.php"
+      category: FROZEN_ENGINEERING_FOUNDATION
+      sha256: 9db9ce179aee0565ee097c72f4d618fb7c6935a6594c8c676f07c10c66091532
+    - path: "tests/Support/Application/NonCallableEventHandler.php"
+      category: FROZEN_ENGINEERING_FOUNDATION
+      sha256: 5a8ba1892004bc5d05ccaea8219e369da62affe90bb07f46e90a619e62039063
+    - path: "tests/Support/Application/NonCallableQueryHandler.php"
+      category: FROZEN_ENGINEERING_FOUNDATION
+      sha256: ebafb64b5ccdcf6187b3f5c9d3e898cbb79d6aa3cdd4da02720dd88a0e8df4d8
+    - path: "tests/Support/Application/RecordingCommandHandler.php"
+      category: FROZEN_ENGINEERING_FOUNDATION
+      sha256: 60561fdbf194de8a1826b7efee86e54cd5cb0888c7df66bb157171bacfb9a721
+    - path: "tests/Support/Application/RecordingEventHandler.php"
+      category: FROZEN_ENGINEERING_FOUNDATION
+      sha256: 5208955f86ef11ee51372da0057a27e54ffb2558a2c7197bdbaeb78104399ad9
+    - path: "tests/Support/Application/RecordingQueryHandler.php"
+      category: FROZEN_ENGINEERING_FOUNDATION
+      sha256: 3cfbfbc6070359a0d1fd5821462bdaf3a90e8222eb58d31211e98c56821bd3f6
+    - path: "tests/Support/Application/ReturningCommandHandler.php"
+      category: FROZEN_ENGINEERING_FOUNDATION
+      sha256: bbc1d924292e49920595a61334c5ed0bb517d64c52d48b262a12d9d165e15496
+    - path: "tests/Support/Application/ReturningEventHandler.php"
+      category: FROZEN_ENGINEERING_FOUNDATION
+      sha256: 8c40774443abf7c8575c90977a03e1c7e7b1372e4b35da3fb43990e67a2a7e79
+    - path: "tests/Support/Application/TestCommand.php"
+      category: FROZEN_ENGINEERING_FOUNDATION
+      sha256: d10a0331d345b56920d236911231f3911b6fe047ff9d65bb6cf8be825b286b18
+    - path: "tests/Support/Application/TestDomainEvent.php"
+      category: FROZEN_ENGINEERING_FOUNDATION
+      sha256: cb01d65b389e54454cd40fba0cf5aefdeb20cf85f510796d23b186ccb824246e
+    - path: "tests/Support/Application/TestQuery.php"
+      category: FROZEN_ENGINEERING_FOUNDATION
+      sha256: b5a89514e431c3f0f5b9f1bbe238e0e88dafc537dae1dcbe2269810697f5e6f1
+    - path: "tests/Support/ApplicationTestFactory.php"
+      category: FROZEN_ENGINEERING_FOUNDATION
+      sha256: 52ab3a25d251987241173557885b6cb7dfd0bbd71251a600a2d7f908656d7c57
+    - path: "tests/Support/Background/ChildBackgroundJob.php"
+      category: FROZEN_ENGINEERING_FOUNDATION
+      sha256: 1c5528176a8a3590e2e91506b754a30f289b74dbc955129addca860d087b5263
+    - path: "tests/Support/Background/FakeMemoryUsageProvider.php"
+      category: FROZEN_ENGINEERING_FOUNDATION
+      sha256: 896f29b189593b5b8edeac5bb12cca8ea5c3f46dd90a635d3e2489e8b48d7109
+    - path: "tests/Support/Background/FakeSignalController.php"
+      category: FROZEN_ENGINEERING_FOUNDATION
+      sha256: af81d851e590c78d0a3e2caeb7fb01cfb5b778d86257b8167de28f41f0751630
+    - path: "tests/Support/Background/InMemoryBackgroundJobSource.php"
+      category: FROZEN_ENGINEERING_FOUNDATION
+      sha256: fabd89c5f9f7103bc2edc10473e7bb23797140e6ae2ca5aa32d441b09a75a8eb
+    - path: "tests/Support/Background/InMemoryScheduledTaskRunRepository.php"
+      category: FROZEN_ENGINEERING_FOUNDATION
+      sha256: 5b783635b3741def311fe22b645e50e65a79d868b7b4dd6ac9162d9b40461907
+    - path: "tests/Support/Background/ParentBackgroundJob.php"
+      category: FROZEN_ENGINEERING_FOUNDATION
+      sha256: bf978afa35e04c16c53a957c1d5fdbba61fb741760cf3d49a8180108a18f6569
+    - path: "tests/Support/Background/RecordingSleeper.php"
+      category: FROZEN_ENGINEERING_FOUNDATION
+      sha256: ff68f26f2e593fe4a6c3def1b214a0dc9f13367d8516850855a2b2d0db15bd08
+    - path: "tests/Support/Background/SecondaryBackgroundJob.php"
+      category: FROZEN_ENGINEERING_FOUNDATION
+      sha256: 819dccce0efde37cd3fc33b73813ad867413c442b93b0f44d3a2b85d29a16765
+    - path: "tests/Support/Background/SequenceClock.php"
+      category: FROZEN_ENGINEERING_FOUNDATION
+      sha256: cfe2b360e597f6942b06105abd1aaeee8a4ed0c76120ae2f057b564635de112b
+    - path: "tests/Support/Background/SequenceRuntimeIdentifierGenerator.php"
+      category: FROZEN_ENGINEERING_FOUNDATION
+      sha256: fcfbcce1cae2c9b414b987e372456f0fc26e72580e2f9680baf308a992c93723
+    - path: "tests/Support/Background/TestBackgroundJob.php"
+      category: FROZEN_ENGINEERING_FOUNDATION
+      sha256: fd452299ce696fad8fb54aec032f9cd5cd6cf79f447664ebf6e3b9e017116b0b
+    - path: "tests/Support/Background/TestBackgroundJobHandler.php"
+      category: FROZEN_ENGINEERING_FOUNDATION
+      sha256: 17483fdcb0cf18afe58b235a3acf31dd3935ec7bd7b0bf0127167187f6cc949a
+    - path: "tests/Support/Background/TestScheduledTaskHandler.php"
+      category: FROZEN_ENGINEERING_FOUNDATION
+      sha256: 2bf9adca6dfb221325d2b9084c0fb2c3c1c46139fd2152f02c2ede2c04fdef53
+    - path: "tests/Support/DependencyInjection/FactoryState.php"
+      category: FROZEN_ENGINEERING_FOUNDATION
+      sha256: 92f6aaaf794ff45d8b876105e665a8ea64894d865d2ef623352195272fdbe404
+    - path: "tests/Support/DependencyInjection/TypedService.php"
+      category: FROZEN_ENGINEERING_FOUNDATION
+      sha256: c00f05671d9de9a8634e8d2a3b81c93d9d0a1015b71bb22ddcaf4afeaa86f774
+    - path: "tests/Support/Http/CallableController.php"
+      category: FROZEN_ENGINEERING_FOUNDATION
+      sha256: 4b4b176cad812c97cc31ce202d6c66afde2645af0fc9f54cca9eba2ab5d91f58
+    - path: "tests/Support/Http/CallableMiddleware.php"
+      category: FROZEN_ENGINEERING_FOUNDATION
+      sha256: 7f1772d5d5c9a850465fd2ed6a81609b7c466cb0d5203e64fda3621bb843676b
+    - path: "tests/Support/Http/CallableRequestHandler.php"
+      category: FROZEN_ENGINEERING_FOUNDATION
+      sha256: b9d308ae4d9886f3cfd61cbe1696b39bc37942b83a4d9605cf5a036a68c11bae
+    - path: "tests/Support/Http/HttpTestFactory.php"
+      category: FROZEN_ENGINEERING_FOUNDATION
+      sha256: 750eaff28cb04d15bc89197b7b2bcf1e138107cae9a83fabeb222640d2ffc611
+    - path: "tests/Support/Http/ProductionHttpRuntimeFactory.php"
+      category: FROZEN_ENGINEERING_FOUNDATION
+      sha256: bb0dd0f557dbf468aa6c36046a748530a35b3bb18a60939726cc841ac29fd9eb
+    - path: "tests/Support/Http/compatibility-server-router.php"
+      category: FROZEN_ENGINEERING_FOUNDATION
+      sha256: edd0b2072830fa4984ed4607bc7fc245d6c7b18a8797e0d19f181ae76903b6ed
+    - path: "tests/Support/Module/AlphaTestModule.php"
+      category: FROZEN_ENGINEERING_FOUNDATION
+      sha256: c049c8a92b8354a7c3b2193f9091af1119b7ee71fc00ba55167e9f144c324ad0
+    - path: "tests/Support/Module/ApplicationTestModule.php"
+      category: FROZEN_ENGINEERING_FOUNDATION
+      sha256: a98d4320a7b465bacbccb0d643e0b733156b425ef2a66e810f85182b6c317cfa
+    - path: "tests/Support/Module/BetaTestModule.php"
+      category: FROZEN_ENGINEERING_FOUNDATION
+      sha256: f3545a14ba9dd8a21d979633de1e4690cc680d2582cae92fe9eb6530b3bb297d
+    - path: "tests/Support/Module/ConfigurableTestModule.php"
+      category: FROZEN_ENGINEERING_FOUNDATION
+      sha256: 0b24cdc7e02af61b1edd2bb3a25db7b3e71ee59654dc0ee67445c09e335dda55
+    - path: "tests/Support/Module/CoreTestModule.php"
+      category: FROZEN_ENGINEERING_FOUNDATION
+      sha256: 8816f814b9f3d7fa5f21c8aeca9e5c4191ee6eb0574118924edffe0ca342dedc
+    - path: "tests/Support/Module/GammaTestModule.php"
+      category: FROZEN_ENGINEERING_FOUNDATION
+      sha256: 7dd98a19da927a008ecc2ed2e57f70d4ae515474f9570173393ddd5989aa3f94
+    - path: "tests/Support/Module/ModuleState.php"
+      category: FROZEN_ENGINEERING_FOUNDATION
+      sha256: 0d03b8c847ed2edee71a7ab5fc6048e4798470abd20d3100ca3150a2f434cf37
+    - path: "tests/Support/Module/TestQuery.php"
+      category: FROZEN_ENGINEERING_FOUNDATION
+      sha256: 3c801b0bf7d91905ccc1113b679184569041a57da4eb7e57eee340ddcee06361
+    - path: "tests/Support/Module/ZetaTestModule.php"
+      category: FROZEN_ENGINEERING_FOUNDATION
+      sha256: 81671d02977a2686438a26af07d4378b73c722801caa215c6b87c2c241c46edd
+    - path: "tests/Support/MySql/DeterministicRetryDelayStrategy.php"
+      category: FROZEN_ENGINEERING_FOUNDATION
+      sha256: 9db01251c54956c10476fd17be0535bf7cd6e934dacc60367460b1cac5e41e4c
+    - path: "tests/Support/MySql/MySqlIntegrationTestCase.php"
+      category: FROZEN_ENGINEERING_FOUNDATION
+      sha256: e8e991210fb5451da3e02623c4f8b8f8f384217bdbe895d05130583dc98479e6
+    - path: "tests/Support/MySql/RecordingPdoConnector.php"
+      category: FROZEN_ENGINEERING_FOUNDATION
+      sha256: 53796b178cfaeb62551cc731460bdeb65a202c7f91cdc9697b6533508ce45807
+    - path: "tests/Support/MySql/RecordingSleeper.php"
+      category: FROZEN_ENGINEERING_FOUNDATION
+      sha256: fe5bf3cab36ad87277dd2af8fe343f6ca36169b9b67399654c2221c33ea90a00
+    - path: "tests/Support/MySql/RecordingTransactionDriver.php"
+      category: FROZEN_ENGINEERING_FOUNDATION
+      sha256: cbf424dbc41016414080b18b98773d15bb0a22ec2e6fc23977bd6b2943266190
+    - path: "tests/Support/MySql/SchemaMySqlIntegrationTestCase.php"
+      category: FROZEN_ENGINEERING_FOUNDATION
+      sha256: 5701229e39483a77c7b641288bc778d39589d5f723889b723624e2daa797aa92
+    - path: "tests/Support/Observability/ExplosiveJsonSerializable.php"
+      category: FROZEN_ENGINEERING_FOUNDATION
+      sha256: ec917885443548f01eea6a2c3a876456a3bd88487fc19113cce25d3d529c7c66
+    - path: "tests/Support/Observability/ExplosiveStringable.php"
+      category: FROZEN_ENGINEERING_FOUNDATION
+      sha256: b85a0cfdce2081344f38b00c608966a3e0b18d6b8a9fc85b10545dbb42e7ed61
+    - path: "tests/Support/Observability/FailingPsrLogger.php"
+      category: FROZEN_ENGINEERING_FOUNDATION
+      sha256: 11c877047dec4dcb19747ab4844e893ad4deac7273bc99904dab6a120839cdd0
+    - path: "tests/Support/Observability/FakeMonotonicClock.php"
+      category: FROZEN_ENGINEERING_FOUNDATION
+      sha256: ee93cec39b8fedde2acb50243eca8cc1782dba4092e7a24756e545632b6ff757
+    - path: "tests/Support/Observability/FixedLastErrorProvider.php"
+      category: FROZEN_ENGINEERING_FOUNDATION
+      sha256: c7155db0ded57d18f8d6c609bdb1fa1814e97ce73684d3af22bfb3543f2443e0
+    - path: "tests/Support/Observability/InMemoryEventLogger.php"
+      category: FROZEN_ENGINEERING_FOUNDATION
+      sha256: 07daef46b32fd6987ba9b696ab7422fee6f62b67d6798fa2480ab810a526817d
+    - path: "tests/Support/Observability/RecordingPsrLogger.php"
+      category: FROZEN_ENGINEERING_FOUNDATION
+      sha256: f880b575f6ad0560834f0cdd396f9513af09a2958fdcc68ddf8ac876d414a367
+    - path: "tests/Support/Observability/RecordingThrowableReporter.php"
+      category: FROZEN_ENGINEERING_FOUNDATION
+      sha256: 808979e587b12500607afd921711d034b99ec0a2979dabfabefe599722bc6116
+    - path: "tests/Support/Observability/SafeTestException.php"
+      category: FROZEN_ENGINEERING_FOUNDATION
+      sha256: 2615840fcd02f846cb5872ce2d1ef97022e7c9143ec76ba92d28e07a1765821b
+    - path: "tests/Support/Observability/SequenceCorrelationIdGenerator.php"
+      category: FROZEN_ENGINEERING_FOUNDATION
+      sha256: 882c2375fed928feab4ad16ada195aba09abaf059de7a227283238bc22e90467
+    - path: "tests/Support/Schema/InMemorySchemaStateRepository.php"
+      category: FROZEN_ENGINEERING_FOUNDATION
+      sha256: 2af0ae1e0177925ef35a72c365c93296850cd4f156be779bfbc4276a8079f79d
+    - path: "tests/Support/Schema/NoOpSchemaMetadataInstallation.php"
+      category: FROZEN_ENGINEERING_FOUNDATION
+      sha256: 62841425351fb97895749ba5c8f53cd7e5064814be3e6ee0f2a4abdd303d2dec
+    - path: "tests/Support/Schema/PdoSchemaConnectionProvider.php"
+      category: FROZEN_ENGINEERING_FOUNDATION
+      sha256: de06931ff3dd9948b7b65d7b36f79e809fc3d5b85255b4859e872fbfc635adb7
+    - path: "tests/Support/Schema/RecordingSchemaMutationLock.php"
+      category: FROZEN_ENGINEERING_FOUNDATION
+      sha256: 54608b3b4669ccc205c81f90648c2d9f9eb0ac340c0b4cbf7a4ddf0c5eb77207
+    - path: "tests/Support/Schema/TestMigration.php"
+      category: FROZEN_ENGINEERING_FOUNDATION
+      sha256: 3bf9881154b09c50ab73e0c2579c0a3c55e0fddc65102786b3215ab57252660d
+    - path: "tests/Support/Schema/TestSeed.php"
+      category: FROZEN_ENGINEERING_FOUNDATION
+      sha256: e96ab9b481853abf76a3d35c216bd90491c42ec82cb19e6c6e16b8737213ea1b
+    - path: "tests/Tools/Build/ReleaseArchiveTest.php"
+      category: FROZEN_ENGINEERING_FOUNDATION
+      sha256: 98c06668953a2b1b7792f57d0dc91b6cbeda4cd5f2bc763c17a026dd722691bd
+    - path: "tests/Tools/Build/ReleaseFilePolicyTest.php"
+      category: FROZEN_ENGINEERING_FOUNDATION
+      sha256: 118def5254f2115cdd46ec280e5f0ae222b05e1378692cd50b581792a0722546
+    - path: "tests/Tools/Build/ReleaseManifestTest.php"
+      category: FROZEN_ENGINEERING_FOUNDATION
+      sha256: fddbe7924d281021b55759cdcd4d8cb99023498012040f4bba8e595ac880aee8
+    - path: "tests/Tools/Ci/FrozenBaselineVerifierTest.php"
+      category: FROZEN_ENGINEERING_FOUNDATION
+      sha256: c7aed0cbc32cd49754b32580a6e7a42d9c0c7eca8d8361fca34d5e6d23e33666
+    - path: "tests/Tools/Ci/MarkdownLinkVerifierTest.php"
+      category: FROZEN_ENGINEERING_FOUNDATION
+      sha256: 670a88467b49675a353645ae9d03d4c19a01845b28b463b7c81f44147333847c
+    - path: "tests/Tools/Ci/RepositoryPolicyVerifierTest.php"
+      category: FROZEN_ENGINEERING_FOUNDATION
+      sha256: 8a813df5f930115dac166746e49923832bfdb9082d39c0aa10437187295855bf
+    - path: "tests/Tools/Ci/WorkflowPolicyVerifierTest.php"
+      category: FROZEN_ENGINEERING_FOUNDATION
+      sha256: a52c238f90fc9d08de72e6dfb3fd0e2e893a0e5adbb533136b5f85156ff48a4e
+    - path: "tests/Tools/Closeout/EngineeringFreezeTest.php"
+      category: FROZEN_ENGINEERING_FOUNDATION
+      sha256: 4e04031da7116f7b33d3ed392bcdf033652debe03046103ecc8b15ad4789762d
+    - path: "tests/Tools/Sbom/ProductionSbomTest.php"
+      category: FROZEN_ENGINEERING_FOUNDATION
+      sha256: 8a67a0cedbbf8f2c6004bcfb8373f5dcd7eb051e4663b4acd8825e68cc456477
+    - path: "tests/Tools/Security/SensitiveContentScannerTest.php"
+      category: FROZEN_ENGINEERING_FOUNDATION
+      sha256: ad51ff32a47c608251dd338f7443b0e2780c75571ddfe8f3222ce877dea6778a
+    - path: "tests/Unit/ApplicationMetadataTest.php"
+      category: FROZEN_ENGINEERING_FOUNDATION
+      sha256: 4a86b83284d04d56a5da29ddeb5a339c6e50ed68b239a47c1ababe05cfc439b3
+    - path: "tests/Unit/RuntimeRequirementsTest.php"
+      category: FROZEN_ENGINEERING_FOUNDATION
+      sha256: d8f00f9563882342162d8091a5332b29849670cf5b424cc22ec02cb2337f1594
+    - path: "tests/Unit/Shared/Application/MessagingTest.php"
+      category: FROZEN_ENGINEERING_FOUNDATION
+      sha256: fa4fc2979d1ea40eaf0b55d9434956f4a206671fdcd577539fdd52287ed02ea5
+    - path: "tests/Unit/Shared/Application/SystemInformationTest.php"
+      category: FROZEN_ENGINEERING_FOUNDATION
+      sha256: ba82afe37ef5565445d29c264d440761777607badca96b4d8dbeb7551251c9af
+    - path: "tests/Unit/Shared/Background/BackgroundConfigurationTest.php"
+      category: FROZEN_ENGINEERING_FOUNDATION
+      sha256: d607924fdddc469ba6bab2ddf81ebe60135c7fe70a768919a2fd790198b2295b
+    - path: "tests/Unit/Shared/Background/BackgroundJobContractTest.php"
+      category: FROZEN_ENGINEERING_FOUNDATION
+      sha256: df83026a9b01e9ac4c3c7e29122f39dc74d16dbf01e793bfd5673bbd7d487435
+    - path: "tests/Unit/Shared/Background/BackgroundJobExecutionTest.php"
+      category: FROZEN_ENGINEERING_FOUNDATION
+      sha256: 433a2b72d558df556ce80488a6745068c3d3786e5e5ca2a02c1a56f18c4f6ec7
+    - path: "tests/Unit/Shared/Background/BackgroundWorkerTest.php"
+      category: FROZEN_ENGINEERING_FOUNDATION
+      sha256: fd57067c2c2d8fba321c718cdf6744251b3d31221c9d63d307ede692bee84018
+    - path: "tests/Unit/Shared/Background/ScheduledTaskContractTest.php"
+      category: FROZEN_ENGINEERING_FOUNDATION
+      sha256: 7833430d4071eb163b9301acaea3176ec2e63f34a925958d7e85d36174d0f6a2
+    - path: "tests/Unit/Shared/Background/SchedulerTest.php"
+      category: FROZEN_ENGINEERING_FOUNDATION
+      sha256: e33683bf1f41ec07207287bc8ae99ad38b5b0a217e9c2f8fc7222fbbdce7b147
+    - path: "tests/Unit/Shared/Configuration/ApplicationConfigurationFactoryTest.php"
+      category: FROZEN_ENGINEERING_FOUNDATION
+      sha256: 180dcd091babc171e235285b892e040e6a5442aa0577a7d64c5cd85284d95cc8
+    - path: "tests/Unit/Shared/Configuration/ApplicationEnvironmentTest.php"
+      category: FROZEN_ENGINEERING_FOUNDATION
+      sha256: cb84a723396449f33d28e5b75cfb66c8045295fccec65d31553e434a8dcf9253
+    - path: "tests/Unit/Shared/Configuration/ConfigurationExceptionTest.php"
+      category: FROZEN_ENGINEERING_FOUNDATION
+      sha256: 41981ee4b545b4fa5958264d0003e0a99746412db9db7a5bfcf5b9fb56185edc
+    - path: "tests/Unit/Shared/Configuration/Database/DatabaseConfigurationTest.php"
+      category: FROZEN_ENGINEERING_FOUNDATION
+      sha256: bb48254e59e0c6d75ff0ff3fa1baa86c1f72e62905373d969995dd8df3530f40
+    - path: "tests/Unit/Shared/Configuration/EnvironmentVariablesTest.php"
+      category: FROZEN_ENGINEERING_FOUNDATION
+      sha256: 6b7992d0642b2877070b1f2b16758cd1cb3cfb02129d6ab06ca65eb8e4cc0bdd
+    - path: "tests/Unit/Shared/Configuration/Logging/LoggingConfigurationTest.php"
+      category: FROZEN_ENGINEERING_FOUNDATION
+      sha256: 083fbb3371c6845b10ebd9211608bce888507673edf4ed089b0f54c73ce6f4a5
+    - path: "tests/Unit/Shared/Console/FormalConsoleFoundationTest.php"
+      category: FROZEN_ENGINEERING_FOUNDATION
+      sha256: a412f6ef4a7d0f221b4afe68de43d78d5d4a974113aea60071cedff0b7bda05c
+    - path: "tests/Unit/Shared/Database/Transaction/TransactionFoundationTest.php"
+      category: FROZEN_ENGINEERING_FOUNDATION
+      sha256: 1533efddb97e71b5b69b53a04eb94ddf92ad360d4b65148e3bb945c6cbbf0e60
+    - path: "tests/Unit/Shared/DependencyInjection/ContainerTest.php"
+      category: FROZEN_ENGINEERING_FOUNDATION
+      sha256: a8a9b9af31c036d0d99fdaac68eb5f7b6d50ecfbf0cf01f4a2f35a537a36ff1e
+    - path: "tests/Unit/Shared/Http/Controller/ControllerDispatcherTest.php"
+      category: FROZEN_ENGINEERING_FOUNDATION
+      sha256: 2c23ea35d77e7e204265f806a5c883ea7382f92daa27b6250f5e9be552a2615e
+    - path: "tests/Unit/Shared/Http/Controller/ReadinessControllerTest.php"
+      category: FROZEN_ENGINEERING_FOUNDATION
+      sha256: 48d4b3dfa1740d0487c48382abb9352eb5f39a5323bae6cc2e951c0a3526f94f
+    - path: "tests/Unit/Shared/Http/Message/JsonResponseFactoryTest.php"
+      category: FROZEN_ENGINEERING_FOUNDATION
+      sha256: 88b708777645fd4b6b8a26e10a09efa7f2aec3677d68d03e02be8413bf85fde7
+    - path: "tests/Unit/Shared/Http/Message/ProblemDetailsResponseFactoryTest.php"
+      category: FROZEN_ENGINEERING_FOUNDATION
+      sha256: a7902de41f718909beefe5029f646838e4ae30b03f5f4181f110e153c2b7994b
+    - path: "tests/Unit/Shared/Http/Middleware/ExceptionHandlingMiddlewareTest.php"
+      category: FROZEN_ENGINEERING_FOUNDATION
+      sha256: b2bf0c665a1fce1da97ced5d5bba2941bcbe713bb818e3ef91818a90a6cdd29d
+    - path: "tests/Unit/Shared/Http/Middleware/HttpObservabilityMiddlewareTest.php"
+      category: FROZEN_ENGINEERING_FOUNDATION
+      sha256: db6d2ab6948d4181a28e51126219779be28e5a1bbc114f899abb92813631c4f5
+    - path: "tests/Unit/Shared/Http/Middleware/MiddlewarePipelineTest.php"
+      category: FROZEN_ENGINEERING_FOUNDATION
+      sha256: 0b39fd9972da592a9d3f8d2d60b47134802cd04fc2a9b26cb5290eea5a3ec763
+    - path: "tests/Unit/Shared/Http/Request/RequestTargetValidatorTest.php"
+      category: FROZEN_ENGINEERING_FOUNDATION
+      sha256: ac8d9115a5df959e9d33a39dafdd20b9d8c169b16004ea7338fd29ebdbfb8b5f
+    - path: "tests/Unit/Shared/Http/Response/SapiResponseEmitterTest.php"
+      category: FROZEN_ENGINEERING_FOUNDATION
+      sha256: 019ca69af9fccfd43b48f2516a97f238d738cb9bf3d5eb8ce3499a9fdcfc8fc4
+    - path: "tests/Unit/Shared/Http/Routing/HttpMethodTest.php"
+      category: FROZEN_ENGINEERING_FOUNDATION
+      sha256: be3420ee3ae94c884a50f875611e9d1bd6021777b45750d0d7cad02e711fe2b1
+    - path: "tests/Unit/Shared/Http/Routing/RouteCollectionTest.php"
+      category: FROZEN_ENGINEERING_FOUNDATION
+      sha256: f388056a4752fa7f4c186b0972a1c3dda5dd5c1bbe4d052e6dff5dc3a9efde79
+    - path: "tests/Unit/Shared/Http/Routing/RoutePatternTest.php"
+      category: FROZEN_ENGINEERING_FOUNDATION
+      sha256: b107b2dc09c49d837a60073b49b250a4cf4ecaf372cc0705d27248dc47df92ad
+    - path: "tests/Unit/Shared/Http/Routing/RouterTest.php"
+      category: FROZEN_ENGINEERING_FOUNDATION
+      sha256: 67e43325844994a3ae1165ff4f77ded4dc9aa1aad4b382e254da15897ffa0b23
+    - path: "tests/Unit/Shared/Identifier/RuntimeIdentifierTest.php"
+      category: FROZEN_ENGINEERING_FOUNDATION
+      sha256: fa1038ea5cc00af36301d92492a802248f3411fe71d7d1ffbeb46e2f3e8a0612
+    - path: "tests/Unit/Shared/Infrastructure/Persistence/MySql/MySqlConnectionFactoryTest.php"
+      category: FROZEN_ENGINEERING_FOUNDATION
+      sha256: fa250f957026e00460f7796177181c5c11c8fdd6b3910c98208d368cebd5cf45
+    - path: "tests/Unit/Shared/Localization/LocalizationFoundationTest.php"
+      category: FROZEN_ENGINEERING_FOUNDATION
+      sha256: d2db280a922fbb409d584cb957a41d9824ad0225da23420fbf2031352af52dfd
+    - path: "tests/Unit/Shared/Module/ModuleRegistryTest.php"
+      category: FROZEN_ENGINEERING_FOUNDATION
+      sha256: 26c595c19aba418a2deea6ad8bef5c961fd56fdf4fa2a4e834c6a76f799a6e60
+    - path: "tests/Unit/Shared/Observability/Correlation/CorrelationAndEventNameTest.php"
+      category: FROZEN_ENGINEERING_FOUNDATION
+      sha256: f4dc55e3f3eecacebe30263c041bc2aaa5bf42bde540b9194dd3f195acdc6de3
+    - path: "tests/Unit/Shared/Observability/Error/ErrorHandlingTest.php"
+      category: FROZEN_ENGINEERING_FOUNDATION
+      sha256: fd9eeae6f68c10d9cfeb870c3412eddc99bd710573d718fd21dc633d64ae4362
+    - path: "tests/Unit/Shared/Observability/Logging/ContextSanitizationTest.php"
+      category: FROZEN_ENGINEERING_FOUNDATION
+      sha256: dc0a8dfdece5a4fd19ed056db3f93016da17af16e6069b045b22a1dcff88ee2f
+    - path: "tests/Unit/Shared/Observability/Logging/StructuredLoggerTest.php"
+      category: FROZEN_ENGINEERING_FOUNDATION
+      sha256: 97694cfd1c7951e6313a69fdc683c780db4020a925cbef5dedcd35abcdbb7973
+    - path: "tests/Unit/Shared/Presentation/PresentationFoundationTest.php"
+      category: FROZEN_ENGINEERING_FOUNDATION
+      sha256: f97d65f74a9f4f1e82322397c48aae109233cf54db14199cd3f71f07c55dbd91
+    - path: "tests/Unit/Shared/Schema/IdentifierAndSqlPolicyTest.php"
+      category: FROZEN_ENGINEERING_FOUNDATION
+      sha256: f05960eb6e7ca6086b010a3bb4812b0bbe2f3986f71572d1aea0695fb9ecd977
+    - path: "tests/Unit/Shared/Schema/RegistryChecksumPlannerTest.php"
+      category: FROZEN_ENGINEERING_FOUNDATION
+      sha256: a4f9c1310c705206a8b0a29a165423fc9fb3e375dbc5865557ace115de1e010c
+    - path: "tests/Unit/Shared/Schema/RunnerOrchestrationTest.php"
+      category: FROZEN_ENGINEERING_FOUNDATION
+      sha256: eecfe34dab0a425128fa9ce7cc751c2cd14a2c6bc1fcf0321f92a71849e06af2
+    - path: "tests/Unit/Shared/Schema/SchemaConfigurationAndConsoleTest.php"
+      category: FROZEN_ENGINEERING_FOUNDATION
+      sha256: 35e2e1b3dab224eb1b8af9e570a5a97d58a91e5c1041e0bf5ddd0c8ae9851db4
+    - path: "tests/Unit/Shared/Schema/SchemaHealthCheckTest.php"
+      category: FROZEN_ENGINEERING_FOUNDATION
+      sha256: fb7f6480d4a21e7468032cc4e765f1484e58bcd1c2862f1dd942be8db917e53b
+    - path: "tests/Unit/Shared/Security/Secrets/EnvironmentSecretsProviderTest.php"
+      category: FROZEN_ENGINEERING_FOUNDATION
+      sha256: 0b48ddffc9306ec3fb96697a838f5dff261563617ec65986e9232b0bb7cf9a35
+    - path: "tests/Unit/Shared/Security/Secrets/SecretNameTest.php"
+      category: FROZEN_ENGINEERING_FOUNDATION
+      sha256: c6b5d73da0ee6f03ab2a335d7f0b6c731fc05b452d0fae6e6631389078df7791
+    - path: "tests/Unit/Shared/Security/Secrets/SecretValueTest.php"
+      category: FROZEN_ENGINEERING_FOUNDATION
+      sha256: e73ca2cab4717b94345cf7bae9e7bf0c5b759a61f15cbafd2453a67257b2193d
+    - path: "tests/Unit/Shared/Time/SystemClockTest.php"
+      category: FROZEN_ENGINEERING_FOUNDATION
+      sha256: 87ec446c0731be3a1b71ca9ce7d2bbc69900b633f57f82926271bf4fe65eb0be
+    - path: "tests/bootstrap.php"
+      category: FROZEN_ENGINEERING_FOUNDATION
+      sha256: 196093369b8738ce88bf65b2e0c869a7b71d7588592160a5f2043b0bf793b746
+    - path: "tests/compat-bootstrap.php"
+      category: FROZEN_ENGINEERING_FOUNDATION
+      sha256: e20970888ffe25d47fbb0bfab7ea9dc7cfd8266e78216be4c7d5111d83618096
+    - path: "tools/Build/ReleaseArchiveBuilder.php"
+      category: FROZEN_ENGINEERING_FOUNDATION
+      sha256: cfc7f81b08f8628a3ca87fc1e2ed60292f2f732d4446559cc2929bbbf319e52a
+    - path: "tools/Build/ReleaseArtifactVerifier.php"
+      category: FROZEN_ENGINEERING_FOUNDATION
+      sha256: f20ad672e6eb6c68e39ed52b23cbde323b746279b788b90c8a3de7dfd8fba009
+    - path: "tools/Build/ReleaseBuilder.php"
+      category: FROZEN_ENGINEERING_FOUNDATION
+      sha256: 3fd225bd018e722c916a29f4c786cd7678554ddc35c92e8f739b09c4749689fa
+    - path: "tools/Build/ReleaseFilePolicy.php"
+      category: FROZEN_ENGINEERING_FOUNDATION
+      sha256: 1ba3657f39fdbcedf5a4630d4eacb3693f425c610792e34ff0a1ddb7e7f5be62
+    - path: "tools/Build/ReleaseManifest.php"
+      category: FROZEN_ENGINEERING_FOUNDATION
+      sha256: 9e70356222e165e0ee96e8f176bc89a169726e8605b8acdd25fddcbefd2f37a8
+    - path: "tools/Build/ReleaseManifestGenerator.php"
+      category: FROZEN_ENGINEERING_FOUNDATION
+      sha256: dddd013197da46f4638b05772c2f70299262a38edd29d6a874ce92264aeb76c7
+    - path: "tools/Build/TarArchiveReader.php"
+      category: FROZEN_ENGINEERING_FOUNDATION
+      sha256: 5a28ca3cf61c7d722583ac05d7ce5440d399bcf4113b67ae9566fcbb78fd15d5
+    - path: "tools/Build/build-release.php"
+      category: FROZEN_ENGINEERING_FOUNDATION
+      sha256: 28304856e5a580e21d2a6aae84cfe5213f7bec3b8d721d6844806ddcc04f7b92
+    - path: "tools/Build/release-files.php"
+      category: FROZEN_ENGINEERING_FOUNDATION
+      sha256: 4af46dd248827607d9b7bef48384b9126abd25fbd770e2f1838e2783b5a90569
+    - path: "tools/Build/verify-release.php"
+      category: FROZEN_ENGINEERING_FOUNDATION
+      sha256: 11415f9bf3d577806177b50644c551952ca001d71c2db8084a62ba22a00fbeba
+    - path: "tools/Ci/FrozenBaselineVerifier.php"
+      category: FROZEN_ENGINEERING_FOUNDATION
+      sha256: b885b9aefa785dcece7595181fbf9ecee3e3221d9b82f35e24530e5499d7ef87
+    - path: "tools/Ci/LocalCiRunner.php"
+      category: FROZEN_ENGINEERING_FOUNDATION
+      sha256: edf37b21366faad4c59137b33dbc1c49eb6bcc01da2388baa2b04cbad1f6792b
+    - path: "tools/Ci/LockfileVerifier.php"
+      category: FROZEN_ENGINEERING_FOUNDATION
+      sha256: a229af80fc62a059f5cfeec17776e3ae9a252fccfa74cf032dbedf2ad96c81b1
+    - path: "tools/Ci/MarkdownLinkVerifier.php"
+      category: FROZEN_ENGINEERING_FOUNDATION
+      sha256: 4f78d23f1b521286cde210ab767568962a4165d93638616a05522ea35eb4b87f
+    - path: "tools/Ci/RepositoryPolicyVerifier.php"
+      category: FROZEN_ENGINEERING_FOUNDATION
+      sha256: f7dcbe239af13da82add9b8d49687242e24e23a0b94d9a6377b8bf9f9993262f
+    - path: "tools/Ci/VerificationReport.php"
+      category: FROZEN_ENGINEERING_FOUNDATION
+      sha256: 4e326295a3f229c704e555163a71a0dd002e4658bab7c5344cf0ac2e5747cfb4
+    - path: "tools/Ci/WorkflowPolicyVerifier.php"
+      category: FROZEN_ENGINEERING_FOUNDATION
+      sha256: e522494472a15888e92cf246b2dbbf6472eff922cf23d95496c623e741b47667
+    - path: "tools/Ci/run-local-ci.php"
+      category: FROZEN_ENGINEERING_FOUNDATION
+      sha256: 37c7d3ace62d0d5f6e0ceb9788c07a64faa05a29e710c87c13d4e1e93921e2c9
+    - path: "tools/Ci/verify-frozen-baseline.php"
+      category: FROZEN_ENGINEERING_FOUNDATION
+      sha256: ab2face17fc0da3f61efee02dddab7119a652ef949a4948e07945c738d5fd169
+    - path: "tools/Ci/verify-lockfiles.php"
+      category: FROZEN_ENGINEERING_FOUNDATION
+      sha256: efb9c1ea93dd6182fbac07014a483e5dc67f657fa84fbffdc63c0052641886e3
+    - path: "tools/Ci/verify-markdown-links.php"
+      category: FROZEN_ENGINEERING_FOUNDATION
+      sha256: bd549e4427c86df36095da52416be96baaa6c8830750dee0565bc52c10874467
+    - path: "tools/Ci/verify-php-syntax.php"
+      category: FROZEN_ENGINEERING_FOUNDATION
+      sha256: d15b2242f7af7308c5ab39ee86507a58678bfb4b1dff1ad4543f0f9cbb27ac40
+    - path: "tools/Ci/verify-repository.php"
+      category: FROZEN_ENGINEERING_FOUNDATION
+      sha256: 63543e8037b134542bd0670d50a42405b227aa77c61d46d271e7930358ef5d22
+    - path: "tools/Ci/verify-workflows.php"
+      category: FROZEN_ENGINEERING_FOUNDATION
+      sha256: 72c72b9e11852d9549aceefe768e43a1d8fbd94cbad540790d6c23aec0acf1cf
+    - path: "tools/Closeout/EngineeringFreezeGenerator.php"
+      category: FROZEN_ENGINEERING_FOUNDATION
+      sha256: 3e1e437f8be7cfd94b4b220ce3eedab16073b9c7275e41eab448bc3c50d0f4df
+    - path: "tools/Closeout/EngineeringFreezePolicy.php"
+      category: FROZEN_ENGINEERING_FOUNDATION
+      sha256: 894eb8a6fd45f316d109d9f0290017562a125b84ffc80a9378a767df5ac04d89
+    - path: "tools/Closeout/EngineeringFreezeVerifier.php"
+      category: FROZEN_ENGINEERING_FOUNDATION
+      sha256: 2e2b1d74ffbcfd9ce5a3b0af088882ee9d142b09dde434105f62d6c7add15757
+    - path: "tools/Closeout/generate-engineering-freeze.php"
+      category: FROZEN_ENGINEERING_FOUNDATION
+      sha256: 16ef5fb46b3da8841b81b551b5c447fa276c307caaa4bbf2838040b1e593185f
+    - path: "tools/Closeout/verify-engineering-freeze.php"
+      category: FROZEN_ENGINEERING_FOUNDATION
+      sha256: 29a95da21c9b1e80267a21ba569fe19142bfbb01dd243cb725c982404bc5ee2b
+    - path: "tools/Policy/PathPolicy.php"
+      category: FROZEN_ENGINEERING_FOUNDATION
+      sha256: 28bdc0358110c01ff5f25109bfbdf07f19f15a34d3f0295a68c7cd2fc85b8d01
+    - path: "tools/Sbom/ComposerInventory.php"
+      category: FROZEN_ENGINEERING_FOUNDATION
+      sha256: dc88e899c8714bdfa0066057d1eded82712f41d573113e4ecaa92e43ab7f4b4f
+    - path: "tools/Sbom/ProductionSbomGenerator.php"
+      category: FROZEN_ENGINEERING_FOUNDATION
+      sha256: 445f2d2421aa1607feb8e9006d3b91dd2c5969a74dfd434c7e4a85de3cf67fc6
+    - path: "tools/Sbom/RuntimeLicenceGenerator.php"
+      category: FROZEN_ENGINEERING_FOUNDATION
+      sha256: 9e51c7b46bc05ec44ada7f834c5384bd761711baa1b1faeba4ccc8706d6c0fa6
+    - path: "tools/Sbom/SbomValidator.php"
+      category: FROZEN_ENGINEERING_FOUNDATION
+      sha256: 27c31cceeffa40d14a96176afc7fe192f4cd4ce42b662536ad953aa428383d7c
+    - path: "tools/Sbom/generate-production-sbom.php"
+      category: FROZEN_ENGINEERING_FOUNDATION
+      sha256: f01077f181a1fe8e33f1d840bdcb11978306d6eaebdc7b461bc61e0aa1ea0daf
+    - path: "tools/Sbom/generate-runtime-licences.php"
+      category: FROZEN_ENGINEERING_FOUNDATION
+      sha256: bb4503af0cf236e91668deed3878f8c88a7c3c106b4881d5105e92b0a4f5f396
+    - path: "tools/Sbom/validate-sbom.php"
+      category: FROZEN_ENGINEERING_FOUNDATION
+      sha256: 6f73df37a93de0300268060913b2ce82d358bb26d12e210573b01467bbfaf859
+    - path: "tools/Security/SensitiveContentScanner.php"
+      category: FROZEN_ENGINEERING_FOUNDATION
+      sha256: 6f25375bf81aa854bd1601359e424d779822d4aa95de04f0d5ee2a2279dae96c
+    - path: "tools/Security/gitleaks.toml"
+      category: FROZEN_ENGINEERING_FOUNDATION
+      sha256: 832b7795992b4f6e4ba68930bf96a74517ed6c831a5dc763203459ebfbc080ae
+    - path: "tools/Security/install-tools.sh"
+      category: FROZEN_ENGINEERING_FOUNDATION
+      sha256: 8b4bc2c5c170d864d363bd829dc913d4007fb469444e01350005b5155079d0ba
+    - path: "tools/Security/run-filesystem-scan.sh"
+      category: FROZEN_ENGINEERING_FOUNDATION
+      sha256: 8237acf3e75932e6c12ff6508e92202c8be8b89cd36a8405f6afbb3a25300420
+    - path: "tools/Security/run-secret-scan.sh"
+      category: FROZEN_ENGINEERING_FOUNDATION
+      sha256: 8b33ecb99cddc8773f8d9f1a2b9c09d04be70ebd1434b4d8355d38a87219a6b5
+    - path: "tools/Security/tool-versions.json"
+      category: FROZEN_ENGINEERING_FOUNDATION
+      sha256: 9e4a35eb677603215f6b8684f8a098ecb926b1b85cb3dfd6f852b59003009004
+    - path: "tools/Support/FileSystem.php"
+      category: FROZEN_ENGINEERING_FOUNDATION
+      sha256: 82e56a18e39200c78f428d34316f069c23a6e8da996a5b7efced15eecf3d4a07
+    - path: "tools/Support/GitMetadata.php"
+      category: FROZEN_ENGINEERING_FOUNDATION
+      sha256: 104833b7d74838a6367569ad3c43711653e4e4e1159d1792664dd948bec9c2af
+    - path: "tools/Support/JsonFile.php"
+      category: FROZEN_ENGINEERING_FOUNDATION
+      sha256: 648f48918dbd5462d78ffc2337ef9f7f52dac7f83761052c08c7e2bb44b5c6f0
+    - path: "tools/Support/ProcessResult.php"
+      category: FROZEN_ENGINEERING_FOUNDATION
+      sha256: d05e5878339db0f0179a0c6a9e3661a96e99824993a805e3bb53e11d28c3b7f8
+    - path: "tools/Support/ProcessRunner.php"
+      category: FROZEN_ENGINEERING_FOUNDATION
+      sha256: fb9e3b71975ad50fa85dca51fa2113022eb1fef0b50c3caba57f2ffce26b1f0c
+    - path: "tools/bootstrap.php"
+      category: FROZEN_ENGINEERING_FOUNDATION
+      sha256: 3dbb6c9b4150112bfd74cc063988b9c689c30a1bd31232def88c68d4b9f6e508
+  excluded_dynamic_files:
+    - docs/closeout/p1/
+    - docs/implementation/P2-identity-security-and-tenancy-roadmap.md
+    - docs/implementation/P2-requirements-to-batches.md
+    - docs/implementation/prompts/
+    - docs/implementation/reports/
+    - docs/project/open-decisions.md
+    - docs/project/project-state.md
+    - docs/project/risk-register.md
+  excluded_generated_files:
+    - .git/
+    - .phpstan.cache/
+    - build/
+    - coverage/
+    - node_modules/
+    - vendor/
+  p1_blockers: []
+  deferred_release_evidence:
+    - HOSTED_CI_EXECUTION
+    - MANUAL_ACCESSIBILITY_BROWSER_MATRIX
+    - LINUX_PCNTL_SIGNAL_REHEARSAL
+  p2_blockers:
+    - OD-051
+    - OD-052
+  next_phase:
+    phase: P2
+    title: "Identity, Security, and Tenant Isolation"
+    batch: QMDB-P2-B01
+    status: BLOCKED_BY_OD_051_OD_052
+    prompt_path: docs/implementation/prompts/QMDB-P2-B01-workspace-account-credential-and-tenant-boundary-schema-foundation.md
