@@ -23,6 +23,16 @@ use UnexpectedValueException;
 
 final readonly class MySqlAccountRepository implements AccountRepository
 {
+    private const string INSERT_EMAIL = 'INSERT INTO account_email_addresses '
+        . '(public_id, user_account_id, email_ciphertext, encryption_key_id, lookup_hash, status_code, '
+        . 'version, created_at, updated_at) VALUES '
+        . '(:public_id, :account_id, :ciphertext, :key_id, :lookup_hash, :status_code, 1, :created_at, :updated_at)';
+
+    private const string INSERT_PHONE = 'INSERT INTO account_phone_numbers '
+        . '(public_id, user_account_id, phone_ciphertext, encryption_key_id, lookup_hash, status_code, '
+        . 'version, created_at, updated_at) VALUES '
+        . '(:public_id, :account_id, :ciphertext, :key_id, :lookup_hash, :status_code, 1, :created_at, :updated_at)';
+
     public function __construct(private DatabaseConnectionProvider $provider)
     {
     }
@@ -56,8 +66,7 @@ final readonly class MySqlAccountRepository implements AccountRepository
         DateTimeImmutable $createdAt,
     ): int {
         return $this->insertContact(
-            'account_email_addresses',
-            'email_ciphertext',
+            self::INSERT_EMAIL,
             $accountInternalId,
             $emailId->toBinary(),
             $ciphertext,
@@ -78,8 +87,7 @@ final readonly class MySqlAccountRepository implements AccountRepository
         DateTimeImmutable $createdAt,
     ): int {
         return $this->insertContact(
-            'account_phone_numbers',
-            'phone_ciphertext',
+            self::INSERT_PHONE,
             $accountInternalId,
             $phoneId->toBinary(),
             $ciphertext,
@@ -131,8 +139,8 @@ final readonly class MySqlAccountRepository implements AccountRepository
         );
         $statement->bindValue(':lookup_hash', $lookupHash->toBinary(), PDO::PARAM_LOB);
         $statement->execute();
-        $row = $statement->fetch(PDO::FETCH_ASSOC);
-        if (!is_array($row)) {
+        $row = self::associativeRow($statement->fetch(PDO::FETCH_ASSOC));
+        if ($row === null) {
             return null;
         }
         return new AccountAuthenticationRecord(
@@ -207,8 +215,7 @@ final readonly class MySqlAccountRepository implements AccountRepository
     }
 
     private function insertContact(
-        string $table,
-        string $ciphertextColumn,
+        string $sql,
         int $accountInternalId,
         string $publicId,
         string $ciphertext,
@@ -217,13 +224,6 @@ final readonly class MySqlAccountRepository implements AccountRepository
         AccountContactStatus $status,
         DateTimeImmutable $createdAt,
     ): int {
-        if (!in_array($table, ['account_email_addresses', 'account_phone_numbers'], true)) {
-            throw new \LogicException('Unsupported contact repository table.');
-        }
-        $sql = 'INSERT INTO ' . $table . ' (public_id, user_account_id, ' . $ciphertextColumn
-            . ', encryption_key_id, lookup_hash, status_code, version, created_at, updated_at) '
-            . 'VALUES (:public_id, :account_id, :ciphertext, :key_id, :lookup_hash, '
-            . ':status_code, 1, :created_at, :updated_at)';
         $statement = $this->provider->connection()->prepare($sql);
         $statement->bindValue(':public_id', $publicId, PDO::PARAM_LOB);
         $statement->bindValue(':account_id', $accountInternalId, PDO::PARAM_INT);
@@ -241,6 +241,23 @@ final readonly class MySqlAccountRepository implements AccountRepository
     private static function format(DateTimeImmutable $value): string
     {
         return $value->setTimezone(new DateTimeZone('UTC'))->format('Y-m-d H:i:s.u');
+    }
+
+    /** @return array<string, mixed>|null */
+    private static function associativeRow(mixed $value): ?array
+    {
+        if (!is_array($value)) {
+            return null;
+        }
+        $row = [];
+        foreach ($value as $column => $field) {
+            if (!is_string($column)) {
+                throw new UnexpectedValueException('Authentication persistence row has an invalid shape.');
+            }
+            $row[$column] = $field;
+        }
+
+        return $row;
     }
 
     /** @param array<string, mixed> $row */

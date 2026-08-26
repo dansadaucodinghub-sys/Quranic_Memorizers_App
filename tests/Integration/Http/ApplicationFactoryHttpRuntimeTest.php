@@ -32,10 +32,9 @@ final class ApplicationFactoryHttpRuntimeTest extends TestCase
         self::assertTrue($reflection->isReadOnly());
     }
 
-    public function testNoDatabaseOrDomainModuleIsConstructed(): void
+    public function testLegacyDatabaseAndFlatDomainRootsRemainAbsent(): void
     {
         self::assertDirectoryDoesNotExist(dirname(__DIR__, 3) . '/src/Database');
         self::assertDirectoryDoesNotExist(dirname(__DIR__, 3) . '/src/Domain');
-        self::assertDirectoryDoesNotExist(dirname(__DIR__, 3) . '/src/Modules');
     }
 }

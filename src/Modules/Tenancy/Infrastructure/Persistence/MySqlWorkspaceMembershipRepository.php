@@ -56,8 +56,9 @@ final readonly class MySqlWorkspaceMembershipRepository implements WorkspaceMemb
         $statement->bindValue(':row_limit', $limit, PDO::PARAM_INT);
         $statement->execute();
         $memberships = [];
-        foreach ($statement->fetchAll(PDO::FETCH_ASSOC) as $row) {
-            if (!is_array($row)) {
+        foreach ($statement->fetchAll(PDO::FETCH_ASSOC) as $value) {
+            $row = self::associativeRow($value);
+            if ($row === null) {
                 throw new UnexpectedValueException('Membership persistence row is invalid.');
             }
             $memberships[] = new WorkspaceMembership(
@@ -78,6 +79,23 @@ final readonly class MySqlWorkspaceMembershipRepository implements WorkspaceMemb
     private static function format(DateTimeImmutable $value): string
     {
         return $value->setTimezone(new DateTimeZone('UTC'))->format('Y-m-d H:i:s.u');
+    }
+
+    /** @return array<string, mixed>|null */
+    private static function associativeRow(mixed $value): ?array
+    {
+        if (!is_array($value)) {
+            return null;
+        }
+        $row = [];
+        foreach ($value as $column => $field) {
+            if (!is_string($column)) {
+                throw new UnexpectedValueException('Membership persistence row is invalid.');
+            }
+            $row[$column] = $field;
+        }
+
+        return $row;
     }
 
     /** @param array<string, mixed> $row */

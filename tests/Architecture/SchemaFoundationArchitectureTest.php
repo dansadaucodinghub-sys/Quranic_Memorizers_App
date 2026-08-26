@@ -5,14 +5,19 @@ declare(strict_types=1);
 namespace Qmdb\Tests\Architecture;
 
 use PHPUnit\Framework\TestCase;
+use Qmdb\Modules\Identity\Infrastructure\Migration\CreateAccountSecurityFoundationMigration;
+use Qmdb\Modules\Identity\Infrastructure\Migration\CreateUserAccountsMigration;
+use Qmdb\Modules\Tenancy\Infrastructure\Migration\CreateWorkspaceMembershipsMigration;
+use Qmdb\Modules\Tenancy\Infrastructure\Migration\CreateWorkspacesMigration;
 use Qmdb\Shared\Background\Scheduler\Migration\CreateScheduledTaskRunsMigration;
+use Qmdb\Shared\Schema\Migration\Migration;
 use Qmdb\Shared\Schema\Migration\MigrationRegistry;
 use Qmdb\Shared\Schema\Seed\SeedRegistry;
 use SplFileInfo;
 
 final class SchemaFoundationArchitectureTest extends TestCase
 {
-    public function testProductionManifestsContainOnlyTheSchedulerOperationalMigration(): void
+    public function testProductionManifestsContainOnlyAuthorizedP1AndP2B01Migrations(): void
     {
         $migrationFactory = require dirname(__DIR__, 2) . '/database/migrations.php';
         $seedFactory = require dirname(__DIR__, 2) . '/database/seeds.php';
@@ -26,11 +31,27 @@ final class SchemaFoundationArchitectureTest extends TestCase
             self::fail('Production schema manifests returned invalid registries.');
         }
 
-        self::assertCount(1, $migrations->ordered());
-        self::assertInstanceOf(CreateScheduledTaskRunsMigration::class, $migrations->ordered()[0]);
+        $ordered = $migrations->ordered();
+        self::assertCount(5, $ordered);
         self::assertSame(
-            '20260825000100_create_scheduled_task_runs',
-            $migrations->ordered()[0]->id()->value(),
+            [
+                CreateScheduledTaskRunsMigration::class,
+                CreateWorkspacesMigration::class,
+                CreateUserAccountsMigration::class,
+                CreateAccountSecurityFoundationMigration::class,
+                CreateWorkspaceMembershipsMigration::class,
+            ],
+            array_map(static fn (Migration $migration): string => $migration::class, $ordered),
+        );
+        self::assertSame(
+            [
+                '20260825000100_create_scheduled_task_runs',
+                '20260826010100_create_workspaces',
+                '20260826010200_create_user_accounts',
+                '20260826010300_create_account_security_foundation',
+                '20260826010400_create_workspace_memberships',
+            ],
+            array_map(static fn (Migration $migration): string => $migration->id()->value(), $ordered),
         );
         self::assertSame([], $seeds->ordered());
     }
