@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace Qmdb\Modules\IdentityAccess\Infrastructure\Persistence;
 
+use DateTimeImmutable;
 use PDO;
 use Qmdb\Modules\Identity\Domain\AccountContactStatus;
 use Qmdb\Modules\Identity\Domain\AccountStatus;
@@ -13,6 +14,7 @@ use Qmdb\Modules\Identity\Domain\Value\LookupHash;
 use Qmdb\Modules\Identity\Domain\Value\SensitivePasswordHash;
 use Qmdb\Modules\IdentityAccess\Application\Authentication\PasswordAuthenticationRecord;
 use Qmdb\Modules\IdentityAccess\Application\Authentication\PasswordAuthenticationRepository;
+use Qmdb\Modules\IdentityAccess\Security\Password\PasswordHashResult;
 use Qmdb\Shared\Database\Connection\DatabaseConnectionProvider;
 use UnexpectedValueException;
 
@@ -56,6 +58,28 @@ final readonly class MySqlPasswordAuthenticationRepository implements PasswordAu
             self::requiredString($row, 'algorithm'),
             self::requiredInteger($row, 'metadata_version'),
         );
+    }
+
+    public function replacePasswordHash(
+        int $accountInternalId,
+        PasswordHashResult $hash,
+        DateTimeImmutable $updatedAt,
+    ): bool {
+        $statement = $this->provider->connection()->prepare(
+            'UPDATE account_credentials SET password_hash = :password_hash, algorithm = :algorithm, '
+            . 'metadata_version = :metadata_version, updated_at = :updated_at, version = version + 1 '
+            . "WHERE user_account_id = :account_id AND credential_type = 'PASSWORD' "
+            . "AND credential_status = 'ACTIVE'",
+        );
+        $statement->execute([
+            ':password_hash' => $hash->hash->revealForPersistence(),
+            ':algorithm' => $hash->algorithm,
+            ':metadata_version' => $hash->metadataVersion,
+            ':updated_at' => $updatedAt->format('Y-m-d H:i:s.u'),
+            ':account_id' => $accountInternalId,
+        ]);
+
+        return $statement->rowCount() === 1;
     }
 
     /** @param array<string, mixed> $row */

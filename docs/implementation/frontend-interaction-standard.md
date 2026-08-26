@@ -53,6 +53,19 @@ and announces a validated request reference when supplied. Ordinary form POST re
 
 The browser is never authoritative for scores, deductions, results, certificates, registration eligibility, guardian authority, consent, organization verification, permissions, workspace scope, conflicts of interest, official corrections, canonical Qur’an text, or moderation decisions. Problem-details responses remain generic at public trust boundaries and detailed only in protected operational telemetry.
 
+## P2-B03 authenticated mutation protocol
+
+Login extends the approved same-origin progressive POST client with one validated `X-QMDB-Navigate` value. The client
+accepts only an origin-relative path, rejects protocol-relative, control-character, and cross-origin values, and retains
+ordinary POST/redirect behavior without JavaScript.
+
+Session and device revocation use the single global dialog and ordinary confirmation-page links as fallback. A returned
+revocation form must include action-bound CSRF and `expected_version`; the fragment policy rejects a revocation mutation
+without either control. Successful enhanced revocation may replace only `#account-security-session-panel`, closes the
+dialog only after that replacement succeeds, restores focus to the account-security heading, and announces completion.
+Failure leaves the dialog open and exposes only a bounded request reference. Logout remains a POST form and may navigate
+only after authoritative success. No authentication value is written to browser storage and no mutation is retried.
+
 ## Correlated failure handling
 
 Every same-origin Fetch client reads `X-Request-ID` and, for `application/problem+json`, the `request_id` extension. When an unexpected operation fails, the client displays that value as a support reference and associates it with the accessible error summary. Header and body values are expected to match; a missing or malformed reference is handled as an unavailable support reference and is never synthesized from user data.

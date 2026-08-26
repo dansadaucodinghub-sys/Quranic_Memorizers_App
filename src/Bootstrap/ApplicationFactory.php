@@ -16,6 +16,7 @@ use Qmdb\Bootstrap\Module\DatabaseFoundationModule;
 use Qmdb\Bootstrap\Module\HttpFoundationModule;
 use Qmdb\Bootstrap\Module\IdentityFoundationModule;
 use Qmdb\Bootstrap\Module\IdentityAccessModule;
+use Qmdb\Bootstrap\Module\IdentitySessionsModule;
 use Qmdb\Bootstrap\Module\ObservabilityFoundationModule;
 use Qmdb\Bootstrap\Module\PresentationFoundationModule;
 use Qmdb\Bootstrap\Module\SchemaFoundationModule;
@@ -28,6 +29,7 @@ use Qmdb\Shared\Configuration\EnvironmentLoader;
 use Qmdb\Shared\Configuration\Infrastructure\DotenvEnvironmentLoader;
 use Qmdb\Shared\Configuration\Logging\LoggingConfigurationFactory;
 use Qmdb\Modules\IdentityAccess\Configuration\IdentityAccessConfigurationFactory;
+use Qmdb\Modules\IdentitySessions\Configuration\IdentitySessionConfigurationFactory;
 use Qmdb\Shared\DependencyInjection\CompiledContainer;
 use Qmdb\Shared\DependencyInjection\ContainerBuilder;
 use Qmdb\Shared\Module\ModuleRegistry;
@@ -124,6 +126,10 @@ final readonly class ApplicationFactory
             $loadedEnvironment->variables(),
             $configuration,
         );
+        $identitySessionConfiguration = (new IdentitySessionConfigurationFactory())->create(
+            $loadedEnvironment->variables(),
+            $configuration,
+        );
 
         $registry = new ModuleRegistry([
             new CoreFoundationModule($configuration, $loadedEnvironment->variables(), $runtimeEnvironment),
@@ -138,6 +144,7 @@ final readonly class ApplicationFactory
             new HttpFoundationModule($this->projectRoot),
             new SecurityWebModule($identityAccessConfiguration),
             new IdentityAccessModule($identityAccessConfiguration),
+            new IdentitySessionsModule($identitySessionConfiguration),
             new ApplicationHttpModule($this->projectRoot),
             new ConsoleFoundationModule(),
         ]);

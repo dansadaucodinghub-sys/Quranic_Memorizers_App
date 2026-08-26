@@ -1,0 +1,17 @@
+<?php
+
+declare(strict_types=1);
+
+namespace Qmdb\Modules\IdentitySessions\Domain;
+
+enum SessionRevocationReason: string
+{
+    case USER_LOGOUT = 'USER_LOGOUT';
+    case REMOTE_SESSION_REVOCATION = 'REMOTE_SESSION_REVOCATION';
+    case DEVICE_REVOCATION = 'DEVICE_REVOCATION';
+    case SESSION_LIMIT = 'SESSION_LIMIT';
+    case REAUTHENTICATION = 'REAUTHENTICATION';
+    case ACCOUNT_NOT_ACTIVE = 'ACCOUNT_NOT_ACTIVE';
+    case DEVICE_NOT_ACTIVE = 'DEVICE_NOT_ACTIVE';
+    case TOKEN_COMPROMISE = 'TOKEN_COMPROMISE';
+}

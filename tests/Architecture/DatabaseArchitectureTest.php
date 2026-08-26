@@ -21,6 +21,7 @@ final class DatabaseArchitectureTest extends TestCase
                 str_contains($normalized, '/Shared/Infrastructure/Persistence/MySql/')
                 || str_contains($normalized, '/Modules/Identity/Infrastructure/Persistence/')
                 || str_contains($normalized, '/Modules/IdentityAccess/Infrastructure/Persistence/')
+                || str_contains($normalized, '/Modules/IdentitySessions/Infrastructure/Persistence/')
                 || str_contains($normalized, '/Modules/Tenancy/Infrastructure/Persistence/')
                 || str_ends_with($normalized, '/Shared/Database/Connection/DatabaseConnectionProvider.php')
                 || str_contains($normalized, '/Shared/Schema/')

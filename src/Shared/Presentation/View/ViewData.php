@@ -53,6 +53,27 @@ final readonly class ViewData
         return $value;
     }
 
+    public function integer(string $key): int
+    {
+        $value = $this->value($key);
+        if (!is_int($value)) {
+            throw new RuntimeException('Required view value is not an integer: ' . $key);
+        }
+
+        return $value;
+    }
+
+    /** @return list<mixed> */
+    public function list(string $key): array
+    {
+        $value = $this->value($key);
+        if (!is_array($value) || !array_is_list($value)) {
+            throw new RuntimeException('Required view value is not a list: ' . $key);
+        }
+
+        return $value;
+    }
+
     /** @return array<string, mixed> */
     public function array(string $key): array
     {

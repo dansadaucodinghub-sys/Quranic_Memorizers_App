@@ -3,7 +3,7 @@
 declare(strict_types=1);
 
 use Qmdb\Shared\Http\Controller\LivenessController;
-use Qmdb\Modules\IdentityAccess\Interface\Http\ApplicationReadinessController;
+use Qmdb\Modules\IdentitySessions\Interface\Http\ApplicationReadinessController;
 use Qmdb\Shared\Http\Controller\SystemAboutApiController;
 use Qmdb\Shared\Http\Controller\SystemAboutPageController;
 use Qmdb\Shared\Http\Controller\SystemHomeController;
@@ -16,6 +16,12 @@ use Qmdb\Modules\IdentityAccess\Interface\Http\EmailVerificationFormController;
 use Qmdb\Modules\IdentityAccess\Interface\Http\EmailVerificationResendFormController;
 use Qmdb\Modules\IdentityAccess\Interface\Http\EmailVerificationResendSubmitController;
 use Qmdb\Modules\IdentityAccess\Interface\Http\EmailVerificationSubmitController;
+use Qmdb\Modules\IdentitySessions\Interface\Http\AccountSecurityController;
+use Qmdb\Modules\IdentitySessions\Interface\Http\DeviceRevocationController;
+use Qmdb\Modules\IdentitySessions\Interface\Http\LoginFormController;
+use Qmdb\Modules\IdentitySessions\Interface\Http\LoginSubmitController;
+use Qmdb\Modules\IdentitySessions\Interface\Http\LogoutController;
+use Qmdb\Modules\IdentitySessions\Interface\Http\SessionRevocationController;
 use Qmdb\Shared\Http\Routing\HttpMethod;
 use Qmdb\Shared\Http\Routing\Route;
 use Qmdb\Shared\Http\Routing\RouteCollection;
@@ -36,6 +42,12 @@ return static function (
     EmailVerificationFormController $verificationForm,
     EmailVerificationSubmitController $verificationSubmit,
     EmailVerificationCompletedController $verificationCompleted,
+    LoginFormController $loginForm,
+    LoginSubmitController $loginSubmit,
+    LogoutController $logout,
+    AccountSecurityController $accountSecurity,
+    SessionRevocationController $sessionRevocation,
+    DeviceRevocationController $deviceRevocation,
 ): RouteCollection {
     return new RouteCollection(
         new Route('system.home', [HttpMethod::GET], new RoutePattern('/'), $homeController),
@@ -101,6 +113,39 @@ return static function (
             [HttpMethod::POST],
             new RoutePattern('/verify-email/{challengeId}'),
             $verificationSubmit,
+        ),
+        new Route('account.login.form', [HttpMethod::GET], new RoutePattern('/login'), $loginForm),
+        new Route('account.login.submit', [HttpMethod::POST], new RoutePattern('/login'), $loginSubmit),
+        new Route('account.logout', [HttpMethod::POST], new RoutePattern('/logout'), $logout),
+        new Route(
+            'account.security.sessions',
+            [HttpMethod::GET],
+            new RoutePattern('/account/security/sessions'),
+            $accountSecurity,
+        ),
+        new Route(
+            'account.security.session_revoke.form',
+            [HttpMethod::GET],
+            new RoutePattern('/account/security/sessions/{sessionId}/revoke'),
+            $sessionRevocation,
+        ),
+        new Route(
+            'account.security.session_revoke.submit',
+            [HttpMethod::POST],
+            new RoutePattern('/account/security/sessions/{sessionId}/revoke'),
+            $sessionRevocation,
+        ),
+        new Route(
+            'account.security.device_revoke.form',
+            [HttpMethod::GET],
+            new RoutePattern('/account/security/devices/{deviceId}/revoke'),
+            $deviceRevocation,
+        ),
+        new Route(
+            'account.security.device_revoke.submit',
+            [HttpMethod::POST],
+            new RoutePattern('/account/security/devices/{deviceId}/revoke'),
+            $deviceRevocation,
         ),
     );
 };

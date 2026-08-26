@@ -31,7 +31,7 @@ final class BackgroundConsoleIntegrationTest extends TestCase
     public static function successfulCommands(): iterable
     {
         yield 'help' => [['help'], 'schedule:list'];
-        yield 'about' => [['app:about'], 'QMDB-P2-B02'];
+        yield 'about' => [['app:about'], 'QMDB-P2-B03'];
         yield 'schedule list' => [['schedule:list'], 'No scheduled tasks are registered.'];
         yield 'schedule run' => [['schedule:run'], 'Due: 0'];
         yield 'worker once' => [['worker:run', '--once'], 'NO_WORK_ONCE'];

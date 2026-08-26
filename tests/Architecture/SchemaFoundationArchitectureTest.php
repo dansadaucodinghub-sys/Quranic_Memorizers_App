@@ -9,6 +9,8 @@ use Qmdb\Modules\Identity\Infrastructure\Migration\CreateAccountSecurityFoundati
 use Qmdb\Modules\Identity\Infrastructure\Migration\CreateUserAccountsMigration;
 use Qmdb\Modules\IdentityAccess\Infrastructure\Migration\CreateIdentityRateLimitFoundationMigration;
 use Qmdb\Modules\IdentityAccess\Infrastructure\Migration\CreateIdentityVerificationFoundationMigration;
+use Qmdb\Modules\IdentitySessions\Infrastructure\Migration\CreateUserDevicesMigration;
+use Qmdb\Modules\IdentitySessions\Infrastructure\Migration\CreateUserSessionsMigration;
 use Qmdb\Modules\Tenancy\Infrastructure\Migration\CreateWorkspaceMembershipsMigration;
 use Qmdb\Modules\Tenancy\Infrastructure\Migration\CreateWorkspacesMigration;
 use Qmdb\Shared\Background\Scheduler\Migration\CreateScheduledTaskRunsMigration;
@@ -19,7 +21,7 @@ use SplFileInfo;
 
 final class SchemaFoundationArchitectureTest extends TestCase
 {
-    public function testProductionManifestsContainOnlyAuthorizedP1ThroughP2B02Migrations(): void
+    public function testProductionManifestsContainOnlyAuthorizedP1ThroughP2B03Migrations(): void
     {
         $migrationFactory = require dirname(__DIR__, 2) . '/database/migrations.php';
         $seedFactory = require dirname(__DIR__, 2) . '/database/seeds.php';
@@ -34,7 +36,7 @@ final class SchemaFoundationArchitectureTest extends TestCase
         }
 
         $ordered = $migrations->ordered();
-        self::assertCount(7, $ordered);
+        self::assertCount(9, $ordered);
         self::assertSame(
             [
                 CreateScheduledTaskRunsMigration::class,
@@ -44,6 +46,8 @@ final class SchemaFoundationArchitectureTest extends TestCase
                 CreateWorkspaceMembershipsMigration::class,
                 CreateIdentityVerificationFoundationMigration::class,
                 CreateIdentityRateLimitFoundationMigration::class,
+                CreateUserDevicesMigration::class,
+                CreateUserSessionsMigration::class,
             ],
             array_map(static fn (Migration $migration): string => $migration::class, $ordered),
         );
@@ -56,6 +60,8 @@ final class SchemaFoundationArchitectureTest extends TestCase
                 '20260826010400_create_workspace_memberships',
                 '20260826010500_create_identity_verification_foundation',
                 '20260826010600_create_identity_rate_limit_foundation',
+                '20260826010700_create_user_devices',
+                '20260826010800_create_user_sessions',
             ],
             array_map(static fn (Migration $migration): string => $migration->id()->value(), $ordered),
         );

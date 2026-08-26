@@ -43,3 +43,40 @@ test('rejects cross-origin form action before fetch', async () => {
     await assert.rejects(submitMutationForm(form, { fetchImpl: async () => { calls += 1; } }));
     assert.equal(calls, 0);
 });
+
+test('accepts a safe same-origin enhanced navigation instruction', async () => {
+    const form = document.querySelector('form');
+    form.action = '/login';
+    const result = await submitMutationForm(form, { fetchImpl: async () => new Response(
+        '<section data-qmdb-fragment-root>Signed in</section>',
+        {
+            status: 200,
+            headers: {
+                'Content-Type': 'text/vnd.qmdb.fragment+html; charset=utf-8',
+                'X-QMDB-Fragment': '1',
+                'X-QMDB-Navigate': '/account/security/sessions',
+            },
+        },
+    ) });
+
+    assert.equal(result.navigate, '/account/security/sessions');
+});
+
+test('rejects an unsafe enhanced navigation instruction', async () => {
+    const form = document.querySelector('form');
+    form.action = '/login';
+    await assert.rejects(
+        submitMutationForm(form, { fetchImpl: async () => new Response(
+            '<section data-qmdb-fragment-root>Signed in</section>',
+            {
+                status: 200,
+                headers: {
+                    'Content-Type': 'text/vnd.qmdb.fragment+html; charset=utf-8',
+                    'X-QMDB-Fragment': '1',
+                    'X-QMDB-Navigate': '//evil.example/session',
+                },
+            },
+        ) }),
+        (error) => error?.code === 'UNSAFE_NAVIGATION_REJECTED',
+    );
+});

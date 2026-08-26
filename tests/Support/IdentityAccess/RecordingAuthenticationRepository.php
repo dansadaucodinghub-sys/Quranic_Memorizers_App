@@ -4,9 +4,11 @@ declare(strict_types=1);
 
 namespace Qmdb\Tests\Support\IdentityAccess;
 
+use DateTimeImmutable;
 use Qmdb\Modules\Identity\Domain\Value\LookupHash;
 use Qmdb\Modules\IdentityAccess\Application\Authentication\PasswordAuthenticationRecord;
 use Qmdb\Modules\IdentityAccess\Application\Authentication\PasswordAuthenticationRepository;
+use Qmdb\Modules\IdentityAccess\Security\Password\PasswordHashResult;
 
 final class RecordingAuthenticationRepository implements PasswordAuthenticationRepository
 {
@@ -20,5 +22,13 @@ final class RecordingAuthenticationRepository implements PasswordAuthenticationR
     {
         $this->calls++;
         return $this->record;
+    }
+
+    public function replacePasswordHash(
+        int $accountInternalId,
+        PasswordHashResult $hash,
+        DateTimeImmutable $updatedAt,
+    ): bool {
+        return true;
     }
 }

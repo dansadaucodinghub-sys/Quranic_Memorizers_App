@@ -26,6 +26,24 @@ export class ProgressiveFormController {
         }
         try {
             const result = await submitMutationForm(form);
+            if (result.navigate) {
+                globalThis.location.assign(result.navigate);
+                this.liveRegion.announce('Request completed.');
+                return;
+            }
+            const successTarget = form.dataset.qmdbSuccessTarget ?? '';
+            if (result.ok && successTarget) {
+                if (successTarget !== '#account-security-session-panel' || !result.fragment.matches(successTarget)) {
+                    throw new TypeError('Approved success target is invalid.');
+                }
+                const existing = this.documentRoot.querySelector(successTarget);
+                if (!existing) throw new TypeError('Approved success target is missing.');
+                existing.replaceWith(result.fragment);
+                if (form.dataset.qmdbCloseModalOnSuccess === 'true') form.closest('dialog')?.close();
+                this.focusManager.focus(this.documentRoot.querySelector('#account-security-heading'));
+                this.liveRegion.announce('Request completed.');
+                return;
+            }
             const region = form.closest('[data-qmdb-form-region]');
             if (!region) throw new TypeError('Approved form region is missing.');
             region.replaceWith(result.fragment);

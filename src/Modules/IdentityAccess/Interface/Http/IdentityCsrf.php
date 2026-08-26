@@ -33,6 +33,22 @@ final readonly class IdentityCsrf
         ];
     }
 
+    /** @return array{cookie: CsrfCookie, token: string} */
+    public function rotate(CsrfAction $action): array
+    {
+        $cookie = $this->cookies->fresh();
+
+        return [
+            'cookie' => $cookie,
+            'token' => $this->tokens->issue($action, $cookie->nonce, $this->clock->now())->value(),
+        ];
+    }
+
+    public function issueForCookie(CsrfCookie $cookie, CsrfAction $action): string
+    {
+        return $this->tokens->issue($action, $cookie->nonce, $this->clock->now())->value();
+    }
+
     public function validates(
         ServerRequestInterface $request,
         CsrfAction $action,

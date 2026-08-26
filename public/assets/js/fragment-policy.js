@@ -42,9 +42,13 @@ export function parseSafeFragment(markup, baseUrl = globalThis.location?.href ??
         if (!approved) {
             throw new TypeError('Fragment contains a mutation form.');
         }
-        if ((action === '/register' || action === '/verify-email/resend')
+        if ((action === '/register' || action === '/verify-email/resend' || action === '/login')
             && !form.querySelector('[data-qmdb-idempotency-key]')) {
             throw new TypeError('Fragment mutation form lacks idempotency protection.');
+        }
+        if (/^\/account\/security\/(?:sessions|devices)\/[^/]+\/revoke$/.test(action)
+            && !form.querySelector('input[type="hidden"][name="expected_version"]')) {
+            throw new TypeError('Fragment revocation form lacks optimistic concurrency protection.');
         }
     }
     return roots[0];

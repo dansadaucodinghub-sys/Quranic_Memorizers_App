@@ -25,6 +25,11 @@ final readonly class CsrfCookieFactory
             } catch (\InvalidArgumentException) {
             }
         }
+        return $this->fresh();
+    }
+
+    public function fresh(): CsrfCookie
+    {
         $nonce = CsrfCookieNonce::generate();
         $header = $this->name . '=' . $nonce->value() . '; Path=/; Max-Age=' . $this->ttlSeconds
             . '; HttpOnly; SameSite=Strict' . ($this->productionLike ? '; Secure' : '');

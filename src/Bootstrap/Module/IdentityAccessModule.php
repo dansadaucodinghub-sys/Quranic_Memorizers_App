@@ -27,7 +27,6 @@ use Qmdb\Modules\IdentityAccess\Infrastructure\Security\SecureEmailVerificationT
 use Qmdb\Modules\IdentityAccess\Interface\Http\AccountRegistrationAcceptedController;
 use Qmdb\Modules\IdentityAccess\Interface\Http\AccountRegistrationFormController;
 use Qmdb\Modules\IdentityAccess\Interface\Http\AccountRegistrationSubmitController;
-use Qmdb\Modules\IdentityAccess\Interface\Http\ApplicationReadinessController;
 use Qmdb\Modules\IdentityAccess\Interface\Http\EmailVerificationCompletedController;
 use Qmdb\Modules\IdentityAccess\Interface\Http\EmailVerificationFormController;
 use Qmdb\Modules\IdentityAccess\Interface\Http\EmailVerificationResendFormController;
@@ -53,14 +52,12 @@ use Qmdb\Modules\SecurityWeb\Csrf\CsrfCookieFactory;
 use Qmdb\Modules\SecurityWeb\Csrf\CsrfTokenManager;
 use Qmdb\Modules\SecurityWeb\Csrf\SameOriginMutationValidator;
 use Qmdb\Shared\Database\Connection\DatabaseConnectionProvider;
-use Qmdb\Shared\Database\Health\DatabaseHealthCheck;
 use Qmdb\Shared\Database\Transaction\TransactionManager;
 use Qmdb\Shared\DependencyInjection\ClosureServiceFactory;
 use Qmdb\Shared\DependencyInjection\DependencyResolver;
 use Qmdb\Shared\DependencyInjection\ServiceDefinition;
 use Qmdb\Shared\DependencyInjection\ServiceReference;
 use Qmdb\Shared\Localization\TranslationCatalog;
-use Qmdb\Shared\Http\Message\JsonResponseFactory;
 use Qmdb\Shared\Module\Module;
 use Qmdb\Shared\Module\ModuleId;
 use Qmdb\Shared\Module\ModuleRegistrationContext;
@@ -500,19 +497,6 @@ final readonly class IdentityAccessModule implements Module
             [IdentityAccessView::class],
             static fn (DependencyResolver $r): EmailVerificationCompletedController =>
             new EmailVerificationCompletedController(ServiceReference::get($r, IdentityAccessView::class))
-        );
-        $this->controller(
-            $context,
-            ApplicationReadinessController::class,
-            [JsonResponseFactory::class, DatabaseHealthCheck::class, SchemaHealthCheck::class,
-                IdentityAccessReadinessCheck::class],
-            static fn (DependencyResolver $r): ApplicationReadinessController =>
-                new ApplicationReadinessController(
-                    ServiceReference::get($r, JsonResponseFactory::class),
-                    ServiceReference::get($r, DatabaseHealthCheck::class),
-                    ServiceReference::get($r, SchemaHealthCheck::class),
-                    ServiceReference::get($r, IdentityAccessReadinessCheck::class),
-                )
         );
     }
 

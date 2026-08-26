@@ -207,6 +207,8 @@ final class IdentityTenancyFoundationIntegrationTest extends MySqlIntegrationTes
     {
         foreach (
             [
+                'user_sessions',
+                'user_devices',
                 'identity_rate_limit_buckets',
                 'account_email_verification_challenges',
                 'identity_idempotency_records',

@@ -329,6 +329,18 @@ These dynamic implementation decisions remain open and do not alter the frozen P
 These dispositions do not change the unrelated earlier OD-101/OD-105 identifiers used by background-execution records.
 No email provider, secret store, production threshold or session policy is inferred by B02.
 
+## QMDB-P2-B03 decision disposition
+
+| Reference | Disposition | Executable boundary | Remaining decision |
+| --- | --- | --- | --- |
+| B03-OD-001 | OPEN | Session idle/absolute/rotation/grace/touch defaults are typed and tested | Final production values require security, usability, and load approval |
+| B03-OD-002 | OPEN | Maximum 10 active sessions is transactionally enforced | Final support/security limit requires production device-use evidence |
+| B03-OD-003 | OPEN | Device cookie is opaque, host-only, revocable, and valid for one year by default | Final lifetime and trusted-device semantics require privacy/security approval |
+| B03-OD-004 | OPEN | Operational event names and safe bounded context are governed | Authoritative security-audit persistence, retention, and access remain later scope |
+| B03-OD-005 | OPEN | Automated RTL, focus, fragment, modal, and fallback tests pass | Manual screen-reader, keyboard, zoom, forced-colour, and browser matrix is a publication gate |
+
+No recovery, notification, MFA, passkey, role, permission, tenant-selection, or bearer-token policy is inferred by B03.
+
 ## QMDB-P1-B10 CI and release open decisions
 
 | ID | Decision | Owner | Required resolution phase | Status |

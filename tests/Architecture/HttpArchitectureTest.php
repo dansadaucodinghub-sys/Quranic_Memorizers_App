@@ -139,12 +139,13 @@ final class HttpArchitectureTest extends TestCase
             'account.email_verification.resend.form', 'account.email_verification.resend.submit',
             'account.email_verification.form', 'account.email_verification.submit',
             'account.email_verification.completed',
+            'account.login.form', 'account.login.submit', 'account.logout',
+            'account.security.sessions', 'account.security.session_revoke.form',
+            'account.security.session_revoke.submit', 'account.security.device_revoke.form',
+            'account.security.device_revoke.submit',
         ];
         foreach ($routeNames as $name) {
             self::assertStringContainsString($name, $source);
-        }
-        foreach (['/login', '/logout', '/account', '/sessions'] as $deferredPath) {
-            self::assertStringNotContainsString("new RoutePattern('" . $deferredPath, $source);
         }
     }
 

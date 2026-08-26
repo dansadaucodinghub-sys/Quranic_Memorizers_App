@@ -17,12 +17,16 @@ $fields = $payload['fields'] ?? null;
 $cookies = $payload['cookies'] ?? null;
 $headers = $payload['headers'] ?? null;
 $peer = $payload['peer'] ?? null;
+$method = $payload['method'] ?? 'POST';
 if (!is_string($path) || !is_array($fields) || !is_array($cookies) || !is_array($headers) || !is_string($peer)) {
     throw new RuntimeException('Mutation worker payload shape is invalid.');
 }
+if (!is_string($method) || !in_array($method, ['GET', 'POST'], true)) {
+    throw new RuntimeException('Mutation worker method is invalid.');
+}
 
 $request = new ServerRequest(
-    'POST',
+    $method,
     $path,
     $headers,
     http_build_query($fields, '', '&', PHP_QUERY_RFC3986),
@@ -36,4 +40,5 @@ $response = ApplicationFactory::fromCurrentProcess()
 echo json_encode([
     'status' => $response->getStatusCode(),
     'location' => $response->getHeaderLine('Location'),
+    'set_cookies' => $response->getHeader('Set-Cookie'),
 ], JSON_THROW_ON_ERROR);

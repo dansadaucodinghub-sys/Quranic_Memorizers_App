@@ -10,12 +10,19 @@ use Qmdb\Bootstrap\Http\HttpRuntime;
 use Qmdb\Modules\IdentityAccess\Interface\Http\AccountRegistrationAcceptedController;
 use Qmdb\Modules\IdentityAccess\Interface\Http\AccountRegistrationFormController;
 use Qmdb\Modules\IdentityAccess\Interface\Http\AccountRegistrationSubmitController;
-use Qmdb\Modules\IdentityAccess\Interface\Http\ApplicationReadinessController;
 use Qmdb\Modules\IdentityAccess\Interface\Http\EmailVerificationCompletedController;
 use Qmdb\Modules\IdentityAccess\Interface\Http\EmailVerificationFormController;
 use Qmdb\Modules\IdentityAccess\Interface\Http\EmailVerificationResendFormController;
 use Qmdb\Modules\IdentityAccess\Interface\Http\EmailVerificationResendSubmitController;
 use Qmdb\Modules\IdentityAccess\Interface\Http\EmailVerificationSubmitController;
+use Qmdb\Modules\IdentitySessions\Interface\Http\AccountSecurityController;
+use Qmdb\Modules\IdentitySessions\Interface\Http\ApplicationReadinessController;
+use Qmdb\Modules\IdentitySessions\Interface\Http\DeviceRevocationController;
+use Qmdb\Modules\IdentitySessions\Interface\Http\LoginFormController;
+use Qmdb\Modules\IdentitySessions\Interface\Http\LoginSubmitController;
+use Qmdb\Modules\IdentitySessions\Interface\Http\LogoutController;
+use Qmdb\Modules\IdentitySessions\Interface\Http\SessionAuthenticationMiddleware;
+use Qmdb\Modules\IdentitySessions\Interface\Http\SessionRevocationController;
 use Qmdb\Shared\DependencyInjection\ClosureServiceFactory;
 use Qmdb\Shared\DependencyInjection\DependencyResolver;
 use Qmdb\Shared\DependencyInjection\ServiceDefinition;
@@ -61,7 +68,7 @@ final readonly class ApplicationHttpModule implements Module
 
     public function dependencies(): array
     {
-        return [new ModuleId('foundation.http'), new ModuleId('identity.access')];
+        return [new ModuleId('foundation.http'), new ModuleId('identity.access'), new ModuleId('identity.sessions')];
     }
 
     public function register(ModuleRegistrationContext $context): void
@@ -81,6 +88,12 @@ final readonly class ApplicationHttpModule implements Module
             EmailVerificationFormController::class,
             EmailVerificationSubmitController::class,
             EmailVerificationCompletedController::class,
+            LoginFormController::class,
+            LoginSubmitController::class,
+            LogoutController::class,
+            AccountSecurityController::class,
+            SessionRevocationController::class,
+            DeviceRevocationController::class,
         ];
         $context->service(ServiceDefinition::factory(
             RouteCollection::class,
@@ -127,7 +140,8 @@ final readonly class ApplicationHttpModule implements Module
             self::ID,
             [CorrelationIdMiddleware::class, CspNonceMiddleware::class, SecurityHeadersMiddleware::class,
                 HttpRequestLoggingMiddleware::class, ExceptionHandlingMiddleware::class,
-                RequestTargetValidationMiddleware::class, LocaleMiddleware::class, RoutingRequestHandler::class],
+                RequestTargetValidationMiddleware::class, LocaleMiddleware::class,
+                SessionAuthenticationMiddleware::class, RoutingRequestHandler::class],
             new ClosureServiceFactory(static fn (DependencyResolver $resolver): HttpKernel => new HttpKernel(
                 [
                     ServiceReference::get($resolver, CorrelationIdMiddleware::class),
@@ -137,6 +151,7 @@ final readonly class ApplicationHttpModule implements Module
                     ServiceReference::get($resolver, ExceptionHandlingMiddleware::class),
                     ServiceReference::get($resolver, RequestTargetValidationMiddleware::class),
                     ServiceReference::get($resolver, LocaleMiddleware::class),
+                    ServiceReference::get($resolver, SessionAuthenticationMiddleware::class),
                 ],
                 ServiceReference::get($resolver, RoutingRequestHandler::class),
             )),

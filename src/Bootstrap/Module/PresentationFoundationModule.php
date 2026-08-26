@@ -92,6 +92,13 @@ final readonly class PresentationFoundationModule implements Module
                         $root . '/resources/views/pages/email-verification-completed.php',
                     'pages.email-verification-resend' =>
                         $root . '/resources/views/pages/email-verification-resend.php',
+                    'pages.login' => $root . '/resources/views/pages/login.php',
+                    'pages.account-security-sessions' =>
+                        $root . '/resources/views/pages/account-security-sessions.php',
+                    'pages.session-revoke-confirm' =>
+                        $root . '/resources/views/pages/session-revoke-confirm.php',
+                    'pages.device-revoke-confirm' =>
+                        $root . '/resources/views/pages/device-revoke-confirm.php',
                     'fragments.system-about-dialog' => $root . '/resources/views/fragments/system-about-dialog.php',
                     'fragments.system-status-card' => $root . '/resources/views/fragments/system-status-card.php',
                     'fragments.account-register-form' =>
@@ -106,6 +113,14 @@ final readonly class PresentationFoundationModule implements Module
                         $root . '/resources/views/fragments/email-verification-resend-form.php',
                     'fragments.email-verification-resend-accepted' =>
                         $root . '/resources/views/fragments/email-verification-resend-accepted.php',
+                    'fragments.login-form' => $root . '/resources/views/fragments/login-form.php',
+                    'fragments.login-success' => $root . '/resources/views/fragments/login-success.php',
+                    'fragments.account-security-session-panel' =>
+                        $root . '/resources/views/fragments/account-security-session-panel.php',
+                    'fragments.session-revoke-dialog' =>
+                        $root . '/resources/views/fragments/session-revoke-dialog.php',
+                    'fragments.device-revoke-dialog' =>
+                        $root . '/resources/views/fragments/device-revoke-dialog.php',
                     'emails.email-verification-html' => $root . '/resources/views/emails/email-verification.html.php',
                     'emails.email-verification-text' => $root . '/resources/views/emails/email-verification.txt.php',
                     'components.application-header' => $root . '/resources/views/components/application-header.php',

@@ -51,3 +51,20 @@ change control.
 - **Security impact:** Mitigates token-database disclosure, scanner activation, brute force and double activation.
 - **Future review conditions:** Token format, expiry, attempt limits or delivery-channel changes require threat, privacy,
   concurrency, migration and operational evidence.
+
+## P2-ADR-004 — Opaque rotating server-side browser sessions
+
+- **Status:** Approved and implemented by QMDB-P2-B03.
+- **Context:** Password verification must become browser authentication without exposing bearer/JWT authority or allowing
+  parallel Fetch requests to invalidate one another during rotation.
+- **Decision:** Store account/device-owned server sessions with UUIDv7 selectors and SHA-256 hashes of 256-bit secrets;
+  use idle and absolute TTLs, throttled touch, optimistic rotation, one bounded previous-token grace window, and an
+  account-row lock for active-session-limit enforcement.
+- **Rationale:** Server-side lifecycle control permits immediate account/device/session revocation and keeps raw secrets
+  outside persistence while preserving concurrent browser request safety.
+- **Consequences:** The current session uses logout; remote session/device revocation is account-scoped and versioned;
+  B04 recovery mutations must revoke relevant sessions after successful password reset.
+- **Security impact:** Mitigates fixation, database token disclosure, stale-session reuse, cross-account revocation, and
+  parallel-token overwrite.
+- **Future review conditions:** Production TTL, limit, device semantics, anomaly policy, or cookie changes require load,
+  threat, privacy, browser, migration, and rollback evidence.

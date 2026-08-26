@@ -17,6 +17,7 @@ use Qmdb\Bootstrap\Module\DatabaseFoundationModule;
 use Qmdb\Bootstrap\Module\HttpFoundationModule;
 use Qmdb\Bootstrap\Module\IdentityAccessModule;
 use Qmdb\Bootstrap\Module\IdentityFoundationModule;
+use Qmdb\Bootstrap\Module\IdentitySessionsModule;
 use Qmdb\Bootstrap\Module\ObservabilityFoundationModule;
 use Qmdb\Bootstrap\Module\PresentationFoundationModule;
 use Qmdb\Bootstrap\Module\SchemaFoundationModule;
@@ -33,6 +34,7 @@ use Qmdb\Shared\Configuration\Database\DatabaseConfigurationFactory;
 use Qmdb\Shared\Configuration\EnvironmentVariables;
 use Qmdb\Shared\Configuration\Logging\LoggingConfigurationFactory;
 use Qmdb\Modules\IdentityAccess\Configuration\IdentityAccessConfigurationFactory;
+use Qmdb\Modules\IdentitySessions\Configuration\IdentitySessionConfigurationFactory;
 use Qmdb\Shared\DependencyInjection\CompiledContainer;
 use Qmdb\Shared\DependencyInjection\ContainerBuilder;
 use Qmdb\Shared\Module\ModuleRegistry;
@@ -54,6 +56,7 @@ final class FoundationCompilationTest extends TestCase
             'identity.accounts',
             'security.web',
             'identity.access',
+            'identity.sessions',
             'application.http',
             'foundation.background',
             'foundation.console',
@@ -79,7 +82,7 @@ final class FoundationCompilationTest extends TestCase
         $result = $queryBus->ask(new GetSystemInformation());
 
         self::assertInstanceOf(SystemInformation::class, $result);
-        self::assertSame('QMDB-P2-B02', $result->currentBatch());
+        self::assertSame('QMDB-P2-B03', $result->currentBatch());
     }
 
     public function testFoundationContainsNoDeferredInfrastructureService(): void
@@ -112,6 +115,7 @@ final class FoundationCompilationTest extends TestCase
             ConfigurationSource::PROCESS,
         );
         $identityAccess = (new IdentityAccessConfigurationFactory())->create($variables, $configuration);
+        $identitySessions = (new IdentitySessionConfigurationFactory())->create($variables, $configuration);
         $registry = new ModuleRegistry([
             new CoreFoundationModule(
                 $configuration,
@@ -135,6 +139,7 @@ final class FoundationCompilationTest extends TestCase
             new HttpFoundationModule(dirname(__DIR__, 3)),
             new SecurityWebModule($identityAccess),
             new IdentityAccessModule($identityAccess),
+            new IdentitySessionsModule($identitySessions),
             new ApplicationHttpModule(dirname(__DIR__, 3)),
             new ConsoleFoundationModule(),
         ]);

@@ -23,6 +23,11 @@ final readonly class SensitivePasswordHash implements JsonSerializable
         return $this->value;
     }
 
+    public function revealForPersistence(): string
+    {
+        return $this->value;
+    }
+
     public function jsonSerialize(): string
     {
         return '[REDACTED]';

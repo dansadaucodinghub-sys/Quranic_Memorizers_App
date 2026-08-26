@@ -337,3 +337,17 @@ recovery-authorized B01 normalization contract.
 | Host-header link poisoning | Configured canonical public base URL; production HTTPS required | MITIGATED in configuration/unit tests; deployment value approval OPEN |
 | Progressive duplicate or blind retry | Busy-form guard, one Fetch call, redirect error, no automatic retry, safe fragment policy and password clearing | MITIGATED in frontend tests; manual browser/AT review OPEN |
 | Session boundary crossed early | Password-authentication service only; route and architecture allowlists prohibit login/logout/session surfaces | MITIGATED by architecture and HTTP regression; B03 owns sessions |
+
+## QMDB-P2-B03 session and device risk treatment
+
+| Risk area | Executable mitigation | Residual state |
+| --- | --- | --- |
+| Session-token disclosure | Opaque selector plus 256-bit secret; only binary SHA-256 hashes persist; redacted/non-serializable values and output scans | MITIGATED in unit/MySQL/security tests; endpoint telemetry review remains continuous |
+| Session fixation | Every successful login creates a new session; successful reauthentication revokes the former current session | MITIGATED by HTTP/MySQL fixation tests |
+| Parallel rotation logout or stale-cookie overwrite | Optimistic rotation plus bounded previous-token grace; losing request receives no replacement cookie | MITIGATED by independent-process concurrency tests |
+| Idle/absolute expiry drift | Server UTC, immutable absolute expiry, throttled optimistic touch capped at absolute expiry | MITIGATED in source/MySQL tests; production threshold approval remains OPEN |
+| Concurrent session-limit bypass | Account row lock, expiry sweep, oldest-session revocation, history preservation, unique login submission | MITIGATED by multi-process login-limit test |
+| Cross-account or current-resource revocation | Account-scoped repository predicates, UUID parsing, optimistic versions, explicit current-session/device conflicts | MITIGATED by HTTP/MySQL ownership tests |
+| Revoked device reuse | Device status checked per request; revoked/invalid cookie creates a new record only after valid login | MITIGATED in authentication and repository behavior; device-notification policy belongs to B04 |
+| Browser mutation confusion | Same-origin navigation allowlist, controlled modal, expected version, panel-only refresh, no retry/storage | MITIGATED by jsdom tests; manual browser/AT matrix remains OPEN |
+| Authentication telemetry becoming an audit ledger | Only bounded event vocabulary is permitted; operational logs remain non-authoritative | GOVERNED; authoritative security-audit persistence remains in its owning batch |

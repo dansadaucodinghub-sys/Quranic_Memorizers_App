@@ -6,13 +6,13 @@
 | Project Code | QMDB |
 | Source Baseline | QMDB-BL-001 |
 | Freeze ID | QMDB-P0-FRZ-001 |
-| Batch ID | QMDB-P2-B02 |
+| Batch ID | QMDB-P2-B03 |
 | Document Title | Implementation Entry Point |
 | Document Version | 1.0.0 |
-| Document Status | P1 COMPLETE; P2-B01 AND P2-B02 COMPLETE |
+| Document Status | P1 COMPLETE; P2-B01 THROUGH P2-B03 COMPLETE |
 | Document Owner Role | Product, Architecture and Engineering Governance |
 | Last Updated | 2026-08-26 |
-| Approval Status | Recovery-authorized B01/B02 accepted after complete executable gates; B03 is next |
+| Approval Status | Recovery-authorized B01 through B03 accepted after complete executable gates; B04 is next |
 | Related Documents | [Closeout entry point](../closeout/README.md); [freeze manifest](../closeout/qmdb-p0-baseline-freeze.yaml); [project state](../project/project-state.md) |
 
 ## Purpose
@@ -35,18 +35,23 @@ The artifacts cover phased implementation routing, readiness/completion policy, 
 8. [P2-B01 implementation report](reports/QMDB-P2-B01-implementation-report.md) — workspace, account, credential and tenant-boundary evidence.
 9. [Registration, verification and password-authentication standard](account-registration-email-verification-and-password-authentication-standard.md) — implemented P2-B02 security and workflow contract.
 10. [P2-B02 implementation report](reports/QMDB-P2-B02-implementation-report.md) — executable B02 evidence and corrections.
-11. [P2 implementation decisions](../project/p2-implementation-decisions.md) — controlled post-freeze technical decisions.
+11. [Secure session, cookie and device standard](secure-session-cookie-and-device-standard.md) — implemented B03
+    lifecycle, cookie, concurrency, and revocation contract.
+12. [P2-B03 implementation report](reports/QMDB-P2-B03-implementation-report.md) — executable B03 evidence and corrections.
+13. [P2 implementation parameter register](../operations/p2-implementation-parameter-register.md) — executable defaults
+    and unresolved production approvals without modifying the frozen P0 register.
+14. [P2 implementation decisions](../project/p2-implementation-decisions.md) — controlled post-freeze technical decisions.
 
 ## Current authorization
 
 P0 remains complete and frozen. P1-B01 through P1-B10 are complete and P1 is closed/frozen. The project-owner recovery
-authorization established conservative executable OD-051/OD-052 contracts, after which P2-B01 and P2-B02 passed their
+authorization established conservative executable OD-051/OD-052 contracts, after which P2-B01 through P2-B03 passed their
 mandatory schema, security, MySQL, frontend, scanner, release and engineering-freeze gates.
 
 ## Exact next action
 
-Execute `QMDB-P2-B03 — Secure Sessions, Cookies, Devices, Login, and Logout` without changing the completed B02 public
-registration/verification and password-authentication contracts except through governed compatibility corrections.
+Execute `QMDB-P2-B04 — Account Recovery and Security Notifications` without weakening the completed B02 identity-access
+or B03 session, cookie, device, login, logout, and revocation contracts.
 
 ## Governance
 

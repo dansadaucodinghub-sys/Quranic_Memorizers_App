@@ -3,6 +3,19 @@ import { QmdbFetchError } from './fetch-client.js';
 
 const FRAGMENT_MEDIA_TYPE = 'text/vnd.qmdb.fragment+html';
 
+function safeNavigation(response, base) {
+    const value = (response.headers.get('X-QMDB-Navigate') ?? '').trim();
+    if (!value) return '';
+    if (!value.startsWith('/') || value.startsWith('//') || /[\u0000-\u001f\u007f]/.test(value)) {
+        throw new QmdbFetchError({ code: 'UNSAFE_NAVIGATION_REJECTED', title: 'Unsafe navigation rejected' });
+    }
+    const resolved = new URL(value, base);
+    if (resolved.origin !== new URL(base).origin) {
+        throw new QmdbFetchError({ code: 'UNSAFE_NAVIGATION_REJECTED', title: 'Unsafe navigation rejected' });
+    }
+    return `${resolved.pathname}${resolved.search}${resolved.hash}`;
+}
+
 export async function submitMutationForm(form, { signal, fetchImpl = globalThis.fetch } = {}) {
     if (!(form instanceof HTMLFormElement) || form.method.toLowerCase() !== 'post') {
         throw new TypeError('Only POST forms can be progressively submitted.');
@@ -36,10 +49,11 @@ export async function submitMutationForm(form, { signal, fetchImpl = globalThis.
         throw new QmdbFetchError();
     }
     const requestId = response.headers.get('X-Request-ID') ?? '';
+    const navigate = response.ok ? safeNavigation(response, base) : '';
     const contentType = (response.headers.get('Content-Type') ?? '').toLowerCase();
     if (contentType.startsWith(FRAGMENT_MEDIA_TYPE) && response.headers.get('X-QMDB-Fragment') === '1') {
         const fragment = parseSafeFragment(await response.text(), base);
-        return { fragment, requestId, status: response.status, ok: response.ok };
+        return { fragment, requestId, status: response.status, ok: response.ok, navigate };
     }
     let problem = {};
     if (contentType.startsWith('application/problem+json')) {

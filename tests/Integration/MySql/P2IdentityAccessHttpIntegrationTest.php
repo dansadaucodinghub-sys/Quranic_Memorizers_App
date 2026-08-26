@@ -24,6 +24,8 @@ use Qmdb\Modules\IdentityAccess\Domain\EmailVerificationChallengeId;
 use Qmdb\Modules\IdentityAccess\Domain\EmailVerificationTokenHash;
 use Qmdb\Modules\IdentityAccess\Infrastructure\Migration\CreateIdentityRateLimitFoundationMigration;
 use Qmdb\Modules\IdentityAccess\Infrastructure\Migration\CreateIdentityVerificationFoundationMigration;
+use Qmdb\Modules\IdentitySessions\Infrastructure\Migration\CreateUserDevicesMigration;
+use Qmdb\Modules\IdentitySessions\Infrastructure\Migration\CreateUserSessionsMigration;
 use Qmdb\Modules\IdentityAccess\Infrastructure\Persistence\MySqlIdentityAccessRepository;
 use Qmdb\Modules\IdentityAccess\Infrastructure\Security\SecureEmailVerificationTokenGenerator;
 use Qmdb\Modules\Tenancy\Infrastructure\Migration\CreateWorkspaceMembershipsMigration;
@@ -427,6 +429,8 @@ final class P2IdentityAccessHttpIntegrationTest extends MySqlIntegrationTestCase
     {
         foreach (
             [
+                'user_sessions',
+                'user_devices',
                 'account_email_verification_challenges',
                 'identity_rate_limit_buckets',
                 'identity_idempotency_records',
@@ -452,6 +456,8 @@ final class P2IdentityAccessHttpIntegrationTest extends MySqlIntegrationTestCase
     {
         foreach (
             [
+                'user_sessions',
+                'user_devices',
                 'account_email_verification_challenges',
                 'identity_rate_limit_buckets',
                 'identity_idempotency_records',
@@ -511,6 +517,8 @@ final class P2IdentityAccessHttpIntegrationTest extends MySqlIntegrationTestCase
             new CreateWorkspaceMembershipsMigration(),
             new CreateIdentityVerificationFoundationMigration(),
             new CreateIdentityRateLimitFoundationMigration(),
+            new CreateUserDevicesMigration(),
+            new CreateUserSessionsMigration(),
         ];
     }
 }

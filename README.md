@@ -1,8 +1,9 @@
 # Qur’an Memorizer DB
 
 QMDB is the governed Qur’an Memorizer Database platform. This repository contains the frozen P1 Core PHP engineering
-foundation and the active P2 identity and tenancy implementation. `QMDB-P2-B01` and `QMDB-P2-B02` are complete under
-the authorized recovery run; sessions, login, logout, devices, recovery and MFA remain owned by their later batches.
+foundation and the active P2 identity and tenancy implementation. `QMDB-P2-B01` through `QMDB-P2-B03` are complete
+under the authorized recovery run; account recovery, security notifications, MFA and passkeys remain owned by their
+later batches.
 
 ## Project identity
 
@@ -11,8 +12,8 @@ the authorized recovery run; sessions, login, logout, devices, recovery and MFA 
 - Source baseline: QMDB-BL-001
 - Frozen baseline: QMDB-P0-FRZ-001
 - Phase: P2 — Identity, Security, and Tenant Isolation
-- Completed batch: QMDB-P2-B02
-- Next batch: QMDB-P2-B03 — Secure Sessions, Cookies, Devices, Login, and Logout
+- Completed batch: QMDB-P2-B03
+- Next batch: QMDB-P2-B04 — Account Recovery and Security Notifications
 - Readiness: READY_FOR_NEXT_BATCH
 - Engineering freeze: QMDB-P1-FRZ-001
 - Development version: 0.1.0-dev
@@ -97,6 +98,10 @@ base URL; and a Symfony Mailer DSN. Production requires HTTPS for the public bas
 `__Host-` CSRF cookie, and a non-null mail transport. The safe `.env.example` documents names and non-secret defaults
 without supplying deployable secret values.
 
+P2-B03 adds typed idle, absolute, rotation, previous-token grace, touch, active-session-limit, and device-cookie lifetime
+configuration. Local/test cookies are `qmdb_session` and `qmdb_device`; staging/production cookies use the `__Host-`
+prefix plus `Secure`. All are host-only, `Path=/`, `HttpOnly`, and `SameSite=Lax`; no cookie `Domain` is emitted.
+
 ## Quality commands
 
 ```powershell
@@ -147,6 +152,11 @@ GET /register/accepted     generic registration completion
 GET|POST /verify-email/resend
 GET|POST /verify-email/{challengeId}
 GET /verify-email/completed
+GET|POST /login
+POST /logout
+GET /account/security/sessions
+GET|POST /account/security/sessions/{sessionId}/revoke
+GET|POST /account/security/devices/{deviceId}/revoke
 ```
 
 Every `GET` route supports automatic `HEAD`, and every known path supports automatic `OPTIONS`. Unknown paths return `404`; unsupported methods return `405` with `Allow`; unsafe request targets return `400`; unexpected handler failures return a generic `500`. JSON and problem responses use `no-store` and `nosniff`, and public output excludes environment, debug, PHP-version, path, dependency, and secret details. Stop the development server after verification.
@@ -157,8 +167,8 @@ Every `GET` route supports automatic `HEAD`, and every known path supports autom
 - Factories receive a restricted resolver that rejects undeclared dependencies; registrations freeze at compilation.
 - Service and alias graphs are validated for missing targets, cycles, ownership, and forbidden cross-module edges before a runtime is returned.
 - Modules are registered explicitly and ordered deterministically; there is no reflection autowiring, class scanning, filesystem discovery, or runtime plugin loading.
-- Current modules also include `identity.accounts`, `tenancy.workspaces`, `security.web`, `identity.access`, and
-  `application.http` as explicit controlled extensions to the frozen foundation.
+- Current modules also include `identity.accounts`, `tenancy.workspaces`, `security.web`, `identity.access`,
+  `identity.sessions`, and `application.http` as explicit controlled extensions to the frozen foundation.
 - `foundation.presentation` explicitly owns locale, translation, view, escaping, response, asset, and CSP-nonce services.
 - The unrestricted compiled container remains inside `ApplicationFactory`; controllers, handlers, domain objects, and entry points do not receive it.
 
@@ -169,15 +179,18 @@ QMDB-P1-B04 provides exact-class synchronous command and query buses plus a sync
 The current application includes typed configuration, secret-value protection, UTC time, the validated HTTP kernel,
 dependency injection, module compilation, CLI/background execution, MySQL transactions, workspace/account/credential
 persistence, encrypted contact values, tenant-scoped memberships, Argon2id password services, stateless action-bound
-CSRF, database-backed identity throttling and idempotency, email-verification challenges, and provider-neutral mail.
+CSRF, database-backed identity throttling and idempotency, email-verification challenges, provider-neutral mail,
+server-side sessions, rotating opaque cookies, account-owned device records, authenticated request context, logout, and
+account-security revocation.
 
-P2-B02 password authentication deliberately creates no session and exposes no login route. Authorization, Redis, a
-durable job queue, transactional outbox, SSE, account recovery and MFA are not part of the completed B02 boundary.
+P2-B03 consumes B02 password authentication but creates no Tenant Context, authorization, role, permission, recovery,
+MFA, passkey, Redis, durable queue, transactional outbox, SSE, bearer token, or JWT capability.
 
 ## Current implementation status
 
 P1 — Engineering and Repository Foundation is complete and frozen. P2-B01 supplies the workspace, account, credential
 and tenant schema foundation. P2-B02 supplies registration, email verification and password-authentication services.
+P2-B03 supplies secure login/logout, server-side sessions, device lifecycle, rotation, expiry, inventory, and revocation.
 The locked PHP 8.5 suite, isolated MySQL 8.4 LTS matrix, Node.js 24 frontend gates, pinned security scanners,
 SBOM/licence controls, deterministic release verification, P0 freeze and controlled-extension P1 freeze are mandatory
 completion evidence. Consult `docs/project/project-state.md` and the batch reports under
@@ -209,6 +222,11 @@ idempotency headers, blocks duplicate submission, validates returned fragments, 
 focus to completion/error content, and never retries mutations automatically. Normal form submission remains the
 no-JavaScript fallback. There is no nested modal, polling, SSE, client router, service worker, frontend framework, CSS
 framework, bundler, external CDN, or external font host.
+
+Successful enhanced login accepts one validated same-origin navigation instruction. Session/device revocation uses an
+ordinary confirmation page or the single controlled modal, requires optimistic `expected_version`, refreshes only the
+account-security panel, and closes the modal only after authoritative success. Authentication values never enter browser
+storage, and invalid or expired session state clears only the session cookie.
 
 ## MySQL prerequisites and local configuration
 
