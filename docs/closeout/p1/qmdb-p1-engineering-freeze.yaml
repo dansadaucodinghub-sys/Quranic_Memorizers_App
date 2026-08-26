@@ -9,8 +9,8 @@ engineering_freeze:
   closeout_batch: QMDB-P1-CLOSE
   freeze_status: APPROVED
   readiness: P1_COMPLETE
-  generated_at_utc: "2026-08-26T06:45:11Z"
-  source_revision: "3c40b811e655d90589bd01c7c6344d4993e00494"
+  generated_at_utc: "2026-08-26T06:57:47Z"
+  source_revision: "dc3574b50ebdb3282025f243efa3f6c66921e14c"
   source_state: governed_clean
   completed_batches:
     - QMDB-P1-B01
@@ -1464,10 +1464,10 @@ engineering_freeze:
       sha256: f7b37653a97fed5b72e8849e7fce01bcacaadb3900a41070412aa58c0e353a1d
     - path: "tests/Integration/MySql/SchedulerClaimIntegrationTest.php"
       category: FROZEN_ENGINEERING_FOUNDATION
-      sha256: 37e1bdbd145ddcc66e6c29984e360011008261dc839b2289195cea4b447a1ad2
+      sha256: 43e0b9a80ab49edc8251dd3a91b37ee5f8f8ac19fb76bd52ab2c5466f5fdb751
     - path: "tests/Integration/MySql/SchedulerLedgerIntegrationTest.php"
       category: FROZEN_ENGINEERING_FOUNDATION
-      sha256: 3d15e75e66795bc110588edc453dff78290888a681aa5a51c4b1f40fa89001a3
+      sha256: b06c0664fc4b389effc9bdf020c79d30a961596a83d967303d53398372d22f1e
     - path: "tests/Integration/MySql/SchemaMetadataAndLockIntegrationTest.php"
       category: FROZEN_ENGINEERING_FOUNDATION
       sha256: 1ea5ebdd6e3a1167745fdfa2f1863a5228b50984b3a1c28d565718b479ff4aaf
