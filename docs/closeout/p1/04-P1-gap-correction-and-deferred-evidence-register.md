@@ -21,6 +21,7 @@
 | QMDB-P1-GAP-017 invalid actionlint flag | High | replaced with `-no-color`; actionlint and regression test pass | RESOLVED | No | No |
 | QMDB-P1-GAP-018 secret scan included generated roots | High | bounded generated-root exclusion plus repository policy | RESOLVED | No | No |
 | QMDB-P1-GAP-019 Composer PHAR dependency deprecations on PHP 8.5 | Low | commands pass; track Composer PHAR update without changing application runtime policy | DEFERRED_MAINTENANCE | No | No |
+| QMDB-P1-GAP-020 Windows npm launcher resolution | High | resolve the real npm CLI across all PATH entries and execute it through Node without shell interpolation; regression test added | RESOLVED | No | No |
 
 There are no open P1 blockers. Deferred operational evidence is explicit and cannot be promoted to a pass without its
 own execution record.

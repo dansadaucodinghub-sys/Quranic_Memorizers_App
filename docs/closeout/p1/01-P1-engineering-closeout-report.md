@@ -35,6 +35,8 @@ normalization rules.
 5. Documented one intentional ShellCheck `SC2016` cross-language quoting exception at the exact line.
 6. Bounded Gitleaks generated-directory exclusions and added exact false-positive rules for synthetic test markers and
    frozen ER relationship identifiers.
+7. Corrected Windows npm resolution in the shell-free process runner so a wrapper earlier on PATH cannot hide the real
+   Node installation's npm CLI; added an executable regression test.
 
 ## Scope integrity
 

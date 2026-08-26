@@ -78,9 +78,8 @@ final class ProcessRunner
             }
         }
         if ($executable === 'npm') {
-            $launcher = $this->findOnPath('npm.cmd');
             $node = $this->findOnPath('node.exe');
-            $cli = $launcher === null ? null : dirname($launcher) . '/node_modules/npm/bin/npm-cli.js';
+            $cli = $this->findNpmCliOnPath();
             if ($node !== null && $cli !== null && is_file($cli)) {
                 return array_merge([$node, $cli], array_slice($command, 1));
             }
@@ -95,7 +94,28 @@ final class ProcessRunner
             return null;
         }
         foreach (explode(PATH_SEPARATOR, $path) as $directory) {
+            if (trim($directory) === '') {
+                continue;
+            }
             $candidate = rtrim($directory, "\\/") . '/' . $filename;
+            if (is_file($candidate)) {
+                return str_replace('\\', '/', $candidate);
+            }
+        }
+        return null;
+    }
+
+    private function findNpmCliOnPath(): ?string
+    {
+        $path = getenv('PATH');
+        if (!is_string($path)) {
+            return null;
+        }
+        foreach (explode(PATH_SEPARATOR, $path) as $directory) {
+            if (trim($directory) === '') {
+                continue;
+            }
+            $candidate = rtrim($directory, "\\/") . '/node_modules/npm/bin/npm-cli.js';
             if (is_file($candidate)) {
                 return str_replace('\\', '/', $candidate);
             }
