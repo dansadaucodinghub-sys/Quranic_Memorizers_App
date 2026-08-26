@@ -15,7 +15,7 @@ $extractionRoot = Join-Path $projectRoot '.runtime\security-tools\extracted'
 $binaryRoot = Join-Path $projectRoot '.build\security-tools\bin'
 New-Item -ItemType Directory -Force -Path $downloadRoot, $extractionRoot, $binaryRoot | Out-Null
 
-foreach ($toolName in @('gitleaks', 'trivy')) {
+foreach ($toolName in @('actionlint', 'gitleaks', 'trivy')) {
     $definition = $toolDefinitions.$toolName
     if ($null -eq $definition) {
         throw "Missing security-tool definition: $toolName"

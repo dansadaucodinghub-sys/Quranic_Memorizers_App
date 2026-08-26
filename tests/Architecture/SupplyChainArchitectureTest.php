@@ -78,7 +78,7 @@ final class SupplyChainArchitectureTest extends TestCase
         self::assertIsArray($manifest);
         $windows = $manifest['windows_x86_64'] ?? null;
         self::assertIsArray($windows);
-        foreach (['gitleaks', 'trivy'] as $tool) {
+        foreach (['actionlint', 'gitleaks', 'trivy'] as $tool) {
             $definition = $windows[$tool] ?? null;
             self::assertIsArray($definition);
             $url = $definition['url'] ?? null;
