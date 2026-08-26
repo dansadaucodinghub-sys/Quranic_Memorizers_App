@@ -9,8 +9,8 @@ engineering_freeze:
   closeout_batch: QMDB-P1-CLOSE
   freeze_status: APPROVED
   readiness: P1_COMPLETE
-  generated_at_utc: "2026-08-26T06:57:47Z"
-  source_revision: "dc3574b50ebdb3282025f243efa3f6c66921e14c"
+  generated_at_utc: "2026-08-26T10:53:03Z"
+  source_revision: "891802911bd3fe6578df5580f6fd3dcfc40919ba"
   source_state: governed_clean
   completed_batches:
     - QMDB-P1-B01
@@ -75,7 +75,7 @@ engineering_freeze:
       sha256: 103273ddb3c2881fc4156a428724818ad98d6a3c9de83b020cefeecc1f7a9d9e
     - path: ".gitignore"
       category: CONTROLLED_EXTENSION_POINT
-      sha256: c0a0f56d9b9e720edcf30a0260b5067f9ad23cc55767a24d463a95c016cad11a
+      sha256: 66aaa483518946e3179538ef773d8fe36e3c319ffdeab9e8cd0bd8c80c8e8734
     - path: ".npmrc"
       category: CONTROLLED_EXTENSION_POINT
       sha256: c17fc696faf4477ca21e0c08f876cd73b890b9348aee8bd55f57babfeaa78f19
@@ -1377,10 +1377,10 @@ engineering_freeze:
       sha256: 418be89755bde30105b9ada31252d4373054326416ae60c4cc763cf50603ea10
     - path: "tests/Architecture/SourceArchitectureTest.php"
       category: FROZEN_ENGINEERING_FOUNDATION
-      sha256: a792e82cb88ab32fe0dce60f00bacb9939a5b762d4ff048953c94c5d395bbe8c
+      sha256: b0ba8d65cc585b54a77cb3238110ff0593b085dc849aa0f1f33b8d717069e429
     - path: "tests/Architecture/SupplyChainArchitectureTest.php"
       category: FROZEN_ENGINEERING_FOUNDATION
-      sha256: d1faacc8df386aeed1d292fd1afa056135f4edff3b92bdebd9c0b1dbea24c62d
+      sha256: 89144b705c10cd1e60176c713fb21de21652b14a00b31d5f385dc75d699cc1e3
     - path: "tests/Frontend/fetch-client.test.js"
       category: FROZEN_ENGINEERING_FOUNDATION
       sha256: 287d1ef774c011194ddf318535bbce34ab2dc4f296383d1d9215345d5d634dec
@@ -1701,19 +1701,19 @@ engineering_freeze:
       sha256: 670a88467b49675a353645ae9d03d4c19a01845b28b463b7c81f44147333847c
     - path: "tests/Tools/Ci/RepositoryPolicyVerifierTest.php"
       category: FROZEN_ENGINEERING_FOUNDATION
-      sha256: 8a813df5f930115dac166746e49923832bfdb9082d39c0aa10437187295855bf
+      sha256: 4c02e367889e92ac118258e8e0142b4019b664de2a05bf8473c5ce13366d5cfe
     - path: "tests/Tools/Ci/WorkflowPolicyVerifierTest.php"
       category: FROZEN_ENGINEERING_FOUNDATION
       sha256: a52c238f90fc9d08de72e6dfb3fd0e2e893a0e5adbb533136b5f85156ff48a4e
     - path: "tests/Tools/Closeout/EngineeringFreezeTest.php"
       category: FROZEN_ENGINEERING_FOUNDATION
-      sha256: 4e04031da7116f7b33d3ed392bcdf033652debe03046103ecc8b15ad4789762d
+      sha256: c5c5143661c7c9d5279fd617198a5bafe58c7ec1cee4d06983ded0a78e5746f5
     - path: "tests/Tools/Sbom/ProductionSbomTest.php"
       category: FROZEN_ENGINEERING_FOUNDATION
       sha256: 8a67a0cedbbf8f2c6004bcfb8373f5dcd7eb051e4663b4acd8825e68cc456477
     - path: "tests/Tools/Security/SensitiveContentScannerTest.php"
       category: FROZEN_ENGINEERING_FOUNDATION
-      sha256: ad51ff32a47c608251dd338f7443b0e2780c75571ddfe8f3222ce877dea6778a
+      sha256: da0090f0ddbae1b0ef6193d580b9dba3813f785014f3cfccebd956f7d0b27903
     - path: "tests/Tools/Support/ProcessRunnerTest.php"
       category: FROZEN_ENGINEERING_FOUNDATION
       sha256: 02d82d1d25ce2093681851240f6f62352ef586e219570a6043d76b878eaa18da
@@ -1914,7 +1914,7 @@ engineering_freeze:
       sha256: a229af80fc62a059f5cfeec17776e3ae9a252fccfa74cf032dbedf2ad96c81b1
     - path: "tools/Ci/MarkdownLinkVerifier.php"
       category: FROZEN_ENGINEERING_FOUNDATION
-      sha256: 4f78d23f1b521286cde210ab767568962a4165d93638616a05522ea35eb4b87f
+      sha256: 0e98fb3a3fe835ad79ac8ad89aa207b4c2565061426c4699cf68806734aadd2f
     - path: "tools/Ci/RepositoryPolicyVerifier.php"
       category: FROZEN_ENGINEERING_FOUNDATION
       sha256: f7dcbe239af13da82add9b8d49687242e24e23a0b94d9a6377b8bf9f9993262f
@@ -1938,7 +1938,7 @@ engineering_freeze:
       sha256: bd549e4427c86df36095da52416be96baaa6c8830750dee0565bc52c10874467
     - path: "tools/Ci/verify-php-syntax.php"
       category: FROZEN_ENGINEERING_FOUNDATION
-      sha256: d15b2242f7af7308c5ab39ee86507a58678bfb4b1dff1ad4543f0f9cbb27ac40
+      sha256: cf570664f7cfc1a9c7c27cf0d7384904a3ed6617f7ef4abb9cefd5907eb01e36
     - path: "tools/Ci/verify-repository.php"
       category: FROZEN_ENGINEERING_FOUNDATION
       sha256: 63543e8037b134542bd0670d50a42405b227aa77c61d46d271e7930358ef5d22
@@ -1947,10 +1947,10 @@ engineering_freeze:
       sha256: 72c72b9e11852d9549aceefe768e43a1d8fbd94cbad540790d6c23aec0acf1cf
     - path: "tools/Closeout/EngineeringFreezeGenerator.php"
       category: FROZEN_ENGINEERING_FOUNDATION
-      sha256: 3e1e437f8be7cfd94b4b220ce3eedab16073b9c7275e41eab448bc3c50d0f4df
+      sha256: eabbaed9432b65c6ca5fb7263245dfe7b056be55637258c0568f863adc839160
     - path: "tools/Closeout/EngineeringFreezePolicy.php"
       category: FROZEN_ENGINEERING_FOUNDATION
-      sha256: 894eb8a6fd45f316d109d9f0290017562a125b84ffc80a9378a767df5ac04d89
+      sha256: a50e4ba92857ac5de795bf126f3bce8f4d08d56a488f8767339bd8effd1ab295
     - path: "tools/Closeout/EngineeringFreezeVerifier.php"
       category: FROZEN_ENGINEERING_FOUNDATION
       sha256: 2e2b1d74ffbcfd9ce5a3b0af088882ee9d142b09dde434105f62d6c7add15757
@@ -1962,7 +1962,7 @@ engineering_freeze:
       sha256: 29a95da21c9b1e80267a21ba569fe19142bfbb01dd243cb725c982404bc5ee2b
     - path: "tools/Policy/PathPolicy.php"
       category: FROZEN_ENGINEERING_FOUNDATION
-      sha256: 28bdc0358110c01ff5f25109bfbdf07f19f15a34d3f0295a68c7cd2fc85b8d01
+      sha256: d0ac1ec0d29f90161c41f758d53be5e567cda8484922e570dd4f4d812145da51
     - path: "tools/Sbom/ComposerInventory.php"
       category: FROZEN_ENGINEERING_FOUNDATION
       sha256: dc88e899c8714bdfa0066057d1eded82712f41d573113e4ecaa92e43ab7f4b4f
@@ -1986,16 +1986,16 @@ engineering_freeze:
       sha256: 6f73df37a93de0300268060913b2ce82d358bb26d12e210573b01467bbfaf859
     - path: "tools/Security/SensitiveContentScanner.php"
       category: FROZEN_ENGINEERING_FOUNDATION
-      sha256: 6f25375bf81aa854bd1601359e424d779822d4aa95de04f0d5ee2a2279dae96c
+      sha256: 2acde077c28b2a7e11bc054b7b03dbe3dccf372cee87a8ece589a8dcdc4f9c78
     - path: "tools/Security/gitleaks.toml"
       category: FROZEN_ENGINEERING_FOUNDATION
-      sha256: 832b7795992b4f6e4ba68930bf96a74517ed6c831a5dc763203459ebfbc080ae
+      sha256: 025cda0510f800602a07677531c18b8d4a9fb81c92fee2a37fbff6b02a526b1b
     - path: "tools/Security/install-tools.sh"
       category: FROZEN_ENGINEERING_FOUNDATION
       sha256: 8b4bc2c5c170d864d363bd829dc913d4007fb469444e01350005b5155079d0ba
     - path: "tools/Security/run-filesystem-scan.sh"
       category: FROZEN_ENGINEERING_FOUNDATION
-      sha256: 8237acf3e75932e6c12ff6508e92202c8be8b89cd36a8405f6afbb3a25300420
+      sha256: 666900f3f11b66fd8f230a3d1ff17348d2d2599faf85337c610379fc66ef3ae6
     - path: "tools/Security/run-secret-scan.sh"
       category: FROZEN_ENGINEERING_FOUNDATION
       sha256: 8b33ecb99cddc8773f8d9f1a2b9c09d04be70ebd1434b4d8355d38a87219a6b5
@@ -2020,6 +2020,33 @@ engineering_freeze:
     - path: "tools/bootstrap.php"
       category: FROZEN_ENGINEERING_FOUNDATION
       sha256: 3dbb6c9b4150112bfd74cc063988b9c689c30a1bd31232def88c68d4b9f6e508
+    - path: "tools/runtime/toolchain.lock.json"
+      category: FROZEN_ENGINEERING_FOUNDATION
+      sha256: bb13697a0352137904e72f58543043d3b2f1ae3247dd9e68906a5ede75d16dd2
+    - path: "tools/windows/bootstrap-qmdb-toolchain.ps1"
+      category: FROZEN_ENGINEERING_FOUNDATION
+      sha256: b2a176695bc382c0f3a603b52239a12082b7d428a92af0b1751323a889614ba6
+    - path: "tools/windows/qmdb-toolchain-common.ps1"
+      category: FROZEN_ENGINEERING_FOUNDATION
+      sha256: bb5b0e1e31443733d82337e0201023150911f118eb12a393a994266e6a1967fe
+    - path: "tools/windows/reset-qmdb-mysql-test.ps1"
+      category: FROZEN_ENGINEERING_FOUNDATION
+      sha256: 18b4c50885afd4ea3e77ef05c5230ed2c200dad8d1849aee29f950f02fa57a5f
+    - path: "tools/windows/run-qmdb-command.ps1"
+      category: FROZEN_ENGINEERING_FOUNDATION
+      sha256: 078505ef9bf801a6ca84e3a9f21b60cb77985d1c465e2d32a0375183ea30bd73
+    - path: "tools/windows/start-qmdb-mysql-test.ps1"
+      category: FROZEN_ENGINEERING_FOUNDATION
+      sha256: 3a326b46b9f7efe5cc90f9feb5d52aa746b90ddd0d162e8c5d3e502cc66ab217
+    - path: "tools/windows/stop-qmdb-mysql-test.ps1"
+      category: FROZEN_ENGINEERING_FOUNDATION
+      sha256: a9ffc8c6f48eec0ad20d79dc727caa62e0430fbaee889e5f29e05f06ef1ad5a0
+    - path: "tools/windows/use-qmdb-toolchain.ps1"
+      category: FROZEN_ENGINEERING_FOUNDATION
+      sha256: 7e7270f73e84ddbdeb292c6198f41bc4ecaeb8d07e7f492b39a714983e045aa7
+    - path: "tools/windows/verify-qmdb-toolchain.ps1"
+      category: FROZEN_ENGINEERING_FOUNDATION
+      sha256: ed497517f27b46b0088fdf2695087b9061ae6f9f636b65a7c58fe60a149b8500
   excluded_dynamic_files:
     - docs/closeout/p1/
     - docs/implementation/P2-identity-security-and-tenancy-roadmap.md
@@ -2031,6 +2058,7 @@ engineering_freeze:
     - docs/project/risk-register.md
   excluded_generated_files:
     - .git/
+    - .runtime/
     - .phpstan.cache/
     - build/
     - coverage/
