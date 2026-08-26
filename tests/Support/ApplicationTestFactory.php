@@ -5,11 +5,9 @@ declare(strict_types=1);
 namespace Qmdb\Tests\Support;
 
 use Qmdb\Bootstrap\Application;
-use Qmdb\Bootstrap\ApplicationMetadata;
-use Qmdb\Bootstrap\RuntimeRequirements;
+use Qmdb\Bootstrap\ApplicationFactory;
 use Qmdb\Shared\Configuration\ApplicationConfigurationFactory;
-use Qmdb\Shared\Configuration\ConfigurationSource;
-use Qmdb\Shared\Configuration\EnvironmentVariables;
+use Qmdb\Shared\Configuration\Infrastructure\DotenvEnvironmentLoader;
 
 final readonly class ApplicationTestFactory
 {
@@ -24,15 +22,10 @@ final readonly class ApplicationTestFactory
             ],
             $variables,
         );
-        $configuration = (new ApplicationConfigurationFactory())->create(
-            new EnvironmentVariables($variables),
-            ConfigurationSource::PROCESS,
-        );
-
-        return new Application(
-            metadata: ApplicationMetadata::current(),
-            runtimeRequirements: new RuntimeRequirements(),
-            configuration: $configuration,
-        );
+        return (new ApplicationFactory(
+            projectRoot: dirname(__DIR__, 3),
+            environmentLoader: new DotenvEnvironmentLoader($variables),
+            configurationFactory: new ApplicationConfigurationFactory(),
+        ))->create('8.5.0', ['json', 'mbstring']);
     }
 }

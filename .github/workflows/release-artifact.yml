@@ -1,0 +1,151 @@
+name: QMDB Release Artifact
+
+on:
+  workflow_dispatch:
+  push:
+    tags:
+      - "v*"
+
+permissions:
+  contents: read
+
+concurrency:
+  group: qmdb-release-artifact-${{ github.ref }}
+  cancel-in-progress: false
+
+defaults:
+  run:
+    shell: bash
+
+env:
+  CI: "true"
+  COMPOSER_NO_INTERACTION: "1"
+  COMPOSER_PREFER_DIST: "1"
+  QMDB_TEST_DB_HOST: 127.0.0.1
+  QMDB_TEST_DB_PORT: "3306"
+  QMDB_TEST_DB_NAME: qmdb_release_ci
+  QMDB_TEST_DB_USERNAME: qmdb_runtime
+  QMDB_TEST_DB_PASSWORD: qmdb-test-only-runtime
+  QMDB_TEST_DB_SCHEMA_USERNAME: qmdb_schema
+  QMDB_TEST_DB_SCHEMA_PASSWORD: qmdb-test-only-schema
+  QMDB_TEST_DB_TLS_MODE: disabled
+  QMDB_TEST_DB_TLS_CA_FILE: ""
+
+jobs:
+  release-artifact:
+    name: Release Artifact Verification
+    runs-on: ubuntu-24.04
+    services:
+      mysql:
+        image: mysql:8.4.11
+        env:
+          MYSQL_ROOT_PASSWORD: qmdb-test-only-root
+          MYSQL_DATABASE: qmdb_release_ci
+          MYSQL_USER: qmdb_runtime
+          MYSQL_PASSWORD: qmdb-test-only-runtime
+        ports:
+          - 3306:3306
+        options: >-
+          --health-cmd="mysqladmin ping --host=127.0.0.1 --user=qmdb_runtime --password=qmdb-test-only-runtime --silent"
+          --health-interval=3s
+          --health-timeout=3s
+          --health-retries=30
+    steps:
+      - name: Check out clean full history
+        uses: actions/checkout@de0fac2e4500dabe0009e67214ff5f5447ce83dd # v6.0.2
+        with:
+          fetch-depth: 0
+          persist-credentials: false
+      - name: Validate requested tag
+        env:
+          QMDB_REF_TYPE: ${{ github.ref_type }}
+          QMDB_REF_NAME: ${{ github.ref_name }}
+        run: |
+          set -euo pipefail
+          if [[ "$QMDB_REF_TYPE" == "tag" && ! "$QMDB_REF_NAME" =~ ^v(0|[1-9][0-9]*)\.(0|[1-9][0-9]*)\.(0|[1-9][0-9]*)(-[0-9A-Za-z.-]+)?$ ]]; then
+            echo "Invalid release-artifact tag syntax." >&2
+            exit 64
+          fi
+      - name: Set up PHP 8.5
+        uses: shivammathur/setup-php@bf6b4fbd49ca58e4608c9c89fba0b8d90bd2a39f # 2.35.5
+        with:
+          php-version: "8.5"
+          extensions: json, mbstring, pdo, pdo_mysql
+          coverage: none
+      - name: Set up Node.js 24 LTS
+        uses: actions/setup-node@820762786026740c76f36085b0efc47a31fe5020 # v7.0.0
+        with:
+          node-version: "24"
+          cache: npm
+      - name: Install locked dependencies and verified tools
+        run: |
+          set -euo pipefail
+          composer install --no-interaction --prefer-dist --no-progress
+          npm ci --ignore-scripts
+          bash tools/security/install-tools.sh
+          echo "$PWD/.build/security-tools/bin" >> "$GITHUB_PATH"
+      - name: Create non-root schema identity
+        env:
+          MYSQL_CONTAINER_ID: ${{ job.services.mysql.id }}
+          MYSQL_ROOT_PASSWORD: qmdb-test-only-root
+        run: |
+          set -euo pipefail
+          docker exec -e MYSQL_PWD="$MYSQL_ROOT_PASSWORD" "$MYSQL_CONTAINER_ID" mysql --user=root --execute="CREATE USER IF NOT EXISTS 'qmdb_schema'@'%' IDENTIFIED BY 'qmdb-test-only-schema'; GRANT SELECT, INSERT, UPDATE, DELETE, CREATE, ALTER, DROP, INDEX, REFERENCES ON qmdb_release_ci.* TO 'qmdb_schema'@'%'; FLUSH PRIVILEGES;"
+      - name: Run complete quality and security gates
+        env:
+          APP_ENV: test
+          APP_DEBUG: "false"
+          APP_TIMEZONE: UTC
+          APP_LOG_LEVEL: emergency
+          DB_HOST: 127.0.0.1
+          DB_PORT: "3306"
+          DB_NAME: qmdb_release_ci
+          DB_USERNAME: qmdb_runtime
+          DB_PASSWORD: qmdb-test-only-runtime
+          DB_SCHEMA_USERNAME: qmdb_schema
+          DB_SCHEMA_PASSWORD: qmdb-test-only-schema
+          DB_TLS_MODE: disabled
+        run: |
+          set -euo pipefail
+          composer quality
+          composer test:mysql
+          php tools/ci/verify-repository.php
+          php tools/ci/verify-frozen-baseline.php
+          php tools/ci/verify-workflows.php
+          php tools/ci/verify-markdown-links.php
+          php tools/ci/verify-lockfiles.php
+          bash tools/security/run-secret-scan.sh repository
+          bash tools/security/run-filesystem-scan.sh repository
+          php bin/console db:schema:install
+          php bin/console db:migrate
+      - name: Build and verify only
+        env:
+          APP_ENV: test
+          APP_DEBUG: "false"
+          APP_TIMEZONE: UTC
+          APP_LOG_LEVEL: emergency
+          DB_HOST: 127.0.0.1
+          DB_PORT: "3306"
+          DB_NAME: qmdb_release_ci
+          DB_USERNAME: qmdb_runtime
+          DB_PASSWORD: qmdb-test-only-runtime
+          DB_SCHEMA_USERNAME: qmdb_schema
+          DB_SCHEMA_PASSWORD: qmdb-test-only-schema
+          DB_TLS_MODE: disabled
+        run: |
+          set -euo pipefail
+          php tools/sbom/generate-production-sbom.php
+          php tools/sbom/validate-sbom.php
+          php tools/sbom/generate-runtime-licences.php
+          php tools/build/build-release.php
+          php tools/build/verify-release.php
+      - name: Upload verified artifact and evidence
+        uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a # v7.0.1
+        with:
+          name: qmdb-verified-release-${{ github.sha }}
+          path: |
+            build/release/
+            build/reports/release-build.json
+            build/reports/release-verification.json
+          if-no-files-found: error
+          retention-days: 14

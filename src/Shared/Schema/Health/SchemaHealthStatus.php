@@ -1,0 +1,19 @@
+<?php
+
+declare(strict_types=1);
+
+namespace Qmdb\Shared\Schema\Health;
+
+enum SchemaHealthStatus: string
+{
+    case READY = 'READY';
+    case NOT_INSTALLED = 'NOT_INSTALLED';
+    case PENDING_MIGRATIONS = 'PENDING_MIGRATIONS';
+    case PARTIAL_MIGRATION = 'PARTIAL_MIGRATION';
+    case FAILED_MIGRATION = 'FAILED_MIGRATION';
+    case ROLLBACK_FAILED = 'ROLLBACK_FAILED';
+    case DRIFT_DETECTED = 'DRIFT_DETECTED';
+    case ORPHANED_APPLIED_MIGRATION = 'ORPHANED_APPLIED_MIGRATION';
+    case INCOMPATIBLE_LEDGER = 'INCOMPATIBLE_LEDGER';
+    case UNAVAILABLE = 'UNAVAILABLE';
+}

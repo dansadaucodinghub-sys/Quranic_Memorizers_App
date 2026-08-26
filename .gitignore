@@ -1,8 +1,15 @@
 /vendor/
+/node_modules/
 /.phpunit.cache/
 /.phpunit.result.cache
 /.phpstan.cache/
 /coverage/
+/build/
+/reports/
+/.build/
+*.tar
+*.tar.gz
+SHA256SUMS
 
 .env
 .env.*

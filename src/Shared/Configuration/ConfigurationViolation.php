@@ -13,6 +13,8 @@ final readonly class ConfigurationViolation
     public const DEBUG_PROHIBITED = 'CONFIG_DEBUG_PROHIBITED';
     public const DOTENV_PROHIBITED = 'CONFIG_DOTENV_PROHIBITED';
     public const DOTENV_PARSE_FAILED = 'CONFIG_DOTENV_PARSE_FAILED';
+    public const INVALID_LOG_LEVEL = 'CONFIG_INVALID_LOG_LEVEL';
+    public const INVALID_BACKGROUND_CONFIGURATION = 'CONFIG_INVALID_BACKGROUND_CONFIGURATION';
 
     public function __construct(
         private string $code,

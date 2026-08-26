@@ -1,0 +1,41 @@
+name: qmdb-mysql-test
+
+services:
+  mysql-test:
+    image: mysql:8.4.11
+    environment:
+      MYSQL_ROOT_PASSWORD: ${QMDB_TEST_DB_ROOT_PASSWORD:?Set a disposable test root password}
+      MYSQL_DATABASE: ${QMDB_TEST_DB_NAME:?Set the dedicated test database name}
+      MYSQL_USER: ${QMDB_TEST_DB_USERNAME:?Set the non-root test username}
+      MYSQL_PASSWORD: ${QMDB_TEST_DB_PASSWORD:?Set the disposable test user password}
+    command:
+      - --character-set-server=utf8mb4
+      - --collation-server=utf8mb4_unicode_ci
+      - --default-storage-engine=InnoDB
+    ports:
+      - "127.0.0.1:${QMDB_TEST_DB_PORT:-33060}:3306"
+    healthcheck:
+      test: ["CMD-SHELL", "mysqladmin ping -h 127.0.0.1 -u$$MYSQL_USER -p$$MYSQL_PASSWORD --silent"]
+      interval: 3s
+      timeout: 3s
+      retries: 30
+    tmpfs:
+      - /var/lib/mysql
+
+  mysql-schema-init:
+    image: mysql:8.4.11
+    depends_on:
+      mysql-test:
+        condition: service_healthy
+    environment:
+      MYSQL_PWD: ${QMDB_TEST_DB_ROOT_PASSWORD:?Set a disposable test root password}
+      QMDB_TEST_DB_NAME: ${QMDB_TEST_DB_NAME:?Set the dedicated test database name}
+      QMDB_TEST_DB_SCHEMA_USERNAME: ${QMDB_TEST_DB_SCHEMA_USERNAME:?Set a non-root schema test username}
+      QMDB_TEST_DB_SCHEMA_PASSWORD: ${QMDB_TEST_DB_SCHEMA_PASSWORD:?Set a disposable schema test password}
+    entrypoint: ["/bin/sh", "-ec"]
+    command:
+      - |
+        case "$$QMDB_TEST_DB_NAME:$$QMDB_TEST_DB_SCHEMA_USERNAME" in
+          *[!A-Za-z0-9_]*|:*) exit 64 ;;
+        esac
+        mysql --host=mysql-test --user=root --execute="CREATE USER IF NOT EXISTS '$$QMDB_TEST_DB_SCHEMA_USERNAME'@'%' IDENTIFIED BY '$$QMDB_TEST_DB_SCHEMA_PASSWORD'; GRANT SELECT, INSERT, UPDATE, DELETE, CREATE, ALTER, DROP, INDEX, REFERENCES ON \`$$QMDB_TEST_DB_NAME\`.* TO '$$QMDB_TEST_DB_SCHEMA_USERNAME'@'%'; FLUSH PRIVILEGES;"

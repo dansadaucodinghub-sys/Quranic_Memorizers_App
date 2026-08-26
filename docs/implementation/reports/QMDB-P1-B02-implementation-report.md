@@ -6,7 +6,7 @@
 | Frozen Baseline | QMDB-P0-FRZ-001 |
 | Phase | P1 — Engineering and Repository Foundation |
 | Batch | QMDB-P1-B02 — Configuration, Environment, and Secrets Abstractions |
-| Status | INCOMPLETE — BLOCKED |
+| Status | COMPLETE — accepted by QMDB-P1-CLOSE on 2026-08-26 |
 | Execution Date | 2026-08-24 |
 | Prerequisite Verification | P0 freeze passed with 82 entries and zero mismatches; B01 source exists but B01 remains incomplete because PHP 8.5 validation is unavailable |
 | Prerequisite Corrections | None; no B01 source defect was changed merely to bypass its environment blocker |
@@ -222,10 +222,17 @@ Neither risk is accepted or marked mitigated.
 QMDB-P1-B03 — HTTP Kernel, Routing, Request, Response, and Middleware is not ready and is not authorized. Provision or select an approved PHP 8.5 environment with required extensions, rerun normal installation, every quality/test suite, all CLI/HTTP smokes, Git checks and the freeze check, and repair any executable defect found. Only after B01 and B02 satisfy their mandatory gates may the state transition proceed.
 
 Batch Status:
-INCOMPLETE
+COMPLETE
 
 Implementation Status:
-BLOCKED
+ACCEPTED BY QMDB-P1-CLOSE
 
 Next Action:
-Resolve the listed QMDB-P1-B02 blockers
+Refer to the final P1 closeout and P2 readiness assessment
+
+## Final acceptance addendum — 2026-08-26
+
+The original blocked execution record is retained above for traceability. It is superseded by the conforming PHP 8.5
+configuration, secrets, CLI, HTTP, quality, and frozen-baseline evidence in
+[the P1 verification report](../../closeout/p1/02-P1-executable-verification-report.md). Batch status is `COMPLETE`;
+the historical `INCOMPLETE` block is not the current project state.

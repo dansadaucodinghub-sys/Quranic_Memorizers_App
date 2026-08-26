@@ -6,7 +6,7 @@
 | Frozen Baseline | QMDB-P0-FRZ-001 |
 | Phase | P1 — Engineering and Repository Foundation |
 | Batch | QMDB-P1-B01 — Core PHP Repository and Runtime Foundation |
-| Status | INCOMPLETE — BLOCKED |
+| Status | COMPLETE — accepted by QMDB-P1-CLOSE on 2026-08-26 |
 | Execution Date | 2026-08-24 |
 | Files Created | 27, including this report |
 | Files Updated | 2 dynamic governance files |
@@ -14,12 +14,12 @@
 | Runtime Features | Immutable metadata; pure/current runtime validation; CLI result and commands; immutable HTTP response and smoke application; thin guarded entry points |
 | Tests Added | 5 files defining 41 test cases: 9 unit, 20 integration and 12 architecture |
 | Commands Run | Preflight, dependency resolution, Composer gates, syntax, PHPCS, PHPStan, PHPUnit attempt, CLI/object/real-HTTP smokes and freeze verification |
-| Command Results | Source diagnostics pass; mandatory PHP 8.5 execution is blocked because the only active runtime is PHP 8.2.12 |
+| Command Results | Final acceptance passed on isolated official PHP 8.5.10; the original PHP 8.2.12 blocker is retained below as historical execution evidence |
 | Security Controls | Generic public failures; no secrets/config loading; no superglobals in `src/`; no shell/deserialization/database/runtime framework; Composer platform enforcement |
 | Architecture Boundaries | `Qmdb\` to `src/`; `Qmdb\Tests\` to `tests/`; bootstrap-only source; no modules, database, router, container or later-batch implementation |
-| Known Limitations | No PHP 8.5 runtime; no Git repository metadata; PHPUnit and complete quality suite cannot run to completion |
-| Open Risks | QMDB-RSK-064 blocks B01 completion until a conforming execution environment passes all mandatory gates |
-| Next Batch | QMDB-P1-B02 remains NOT READY while QMDB-P1-B01 is incomplete |
+| Known Limitations | Hosted CI and deployment-host evidence remain deferred operational gates; they do not invalidate local engineering acceptance |
+| Open Risks | No open risk blocks B01 completion; see the final P1 closeout risk disposition |
+| Next Batch | QMDB-P1-B02 through QMDB-P1-B10 are complete; P1 is closed |
 
 ## Preflight evidence
 
@@ -160,3 +160,10 @@ php bin/console app:about
 ```
 
 The successful HTTP object and real built-in-server smokes, final frozen-manifest check, and Git diff/status checks must then pass before B01 can transition to COMPLETE. QMDB-P1-B02 remains unauthorized.
+
+## Final acceptance addendum — 2026-08-26
+
+This addendum supersedes the historical blocker and next-action statements above. B01 passed the locked PHP 8.5
+quality suite, CLI and real-socket HTTP smokes, architecture/security policies, and frozen-baseline verification during
+QMDB-P1-CLOSE. The executable evidence is recorded in
+[the P1 verification report](../../closeout/p1/02-P1-executable-verification-report.md). Batch status is `COMPLETE`.

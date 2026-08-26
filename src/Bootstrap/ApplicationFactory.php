@@ -4,9 +4,27 @@ declare(strict_types=1);
 
 namespace Qmdb\Bootstrap;
 
+use InvalidArgumentException;
+use Qmdb\Bootstrap\Console\ConsoleApplication;
+use Qmdb\Bootstrap\Http\HttpRuntime;
+use Qmdb\Bootstrap\Module\ApplicationServicesFoundationModule;
+use Qmdb\Bootstrap\Module\BackgroundExecutionFoundationModule;
+use Qmdb\Bootstrap\Module\ConsoleFoundationModule;
+use Qmdb\Bootstrap\Module\CoreFoundationModule;
+use Qmdb\Bootstrap\Module\DatabaseFoundationModule;
+use Qmdb\Bootstrap\Module\HttpFoundationModule;
+use Qmdb\Bootstrap\Module\ObservabilityFoundationModule;
+use Qmdb\Bootstrap\Module\PresentationFoundationModule;
+use Qmdb\Bootstrap\Module\SchemaFoundationModule;
+use Qmdb\Shared\Background\Configuration\BackgroundExecutionConfigurationFactory;
 use Qmdb\Shared\Configuration\ApplicationConfigurationFactory;
+use Qmdb\Shared\Configuration\Database\DatabaseConfigurationFactory;
 use Qmdb\Shared\Configuration\EnvironmentLoader;
 use Qmdb\Shared\Configuration\Infrastructure\DotenvEnvironmentLoader;
+use Qmdb\Shared\Configuration\Logging\LoggingConfigurationFactory;
+use Qmdb\Shared\DependencyInjection\CompiledContainer;
+use Qmdb\Shared\DependencyInjection\ContainerBuilder;
+use Qmdb\Shared\Module\ModuleRegistry;
 use RuntimeException;
 
 final readonly class ApplicationFactory
@@ -27,29 +45,90 @@ final readonly class ApplicationFactory
         );
     }
 
-    /**
-     * @param list<string>|null $loadedExtensions
-     */
-    public function create(
+    /** @param list<string>|null $loadedExtensions */
+    public function create(?string $phpVersion = null, ?array $loadedExtensions = null): Application
+    {
+        $application = $this->compose($phpVersion, $loadedExtensions)->get(Application::class);
+        if (!$application instanceof Application) {
+            throw new RuntimeException('Application root service is invalid.');
+        }
+
+        return $application;
+    }
+
+    /** @param list<string>|null $loadedExtensions */
+    public function createHttpRuntime(?string $phpVersion = null, ?array $loadedExtensions = null): HttpRuntime
+    {
+        $runtime = $this->compose($phpVersion, $loadedExtensions)->get(HttpRuntime::class);
+        if (!$runtime instanceof HttpRuntime) {
+            throw new RuntimeException('HTTP root service is invalid.');
+        }
+
+        return $runtime;
+    }
+
+    /** @param list<string>|null $loadedExtensions */
+    public function createConsoleApplication(
         ?string $phpVersion = null,
         ?array $loadedExtensions = null,
-    ): Application {
+    ): ConsoleApplication {
+        $console = $this->compose($phpVersion, $loadedExtensions)->get(ConsoleApplication::class);
+        if (!$console instanceof ConsoleApplication) {
+            throw new RuntimeException('Console root service is invalid.');
+        }
+
+        return $console;
+    }
+
+    /** @param list<string>|null $loadedExtensions */
+    private function compose(?string $phpVersion, ?array $loadedExtensions): CompiledContainer
+    {
+        if (($phpVersion === null) !== ($loadedExtensions === null)) {
+            throw new InvalidArgumentException(
+                'A supplied runtime version and extension list must be provided together.',
+            );
+        }
+
+        $effectivePhpVersion = $phpVersion ?? PHP_VERSION;
+        $effectiveExtensions = $loadedExtensions ?? get_loaded_extensions();
+        $runtimeRequirements = new RuntimeRequirements();
+        $runtimeResult = $runtimeRequirements->evaluate($effectivePhpVersion, $effectiveExtensions);
+        if (!$runtimeResult->isSatisfied()) {
+            throw new RuntimeException($runtimeResult->toCliString());
+        }
+
         $loadedEnvironment = $this->environmentLoader->load($this->projectRoot);
         $configuration = $this->configurationFactory->create(
             $loadedEnvironment->variables(),
             $loadedEnvironment->source(),
         );
-        $application = new Application(
-            metadata: ApplicationMetadata::current(),
-            runtimeRequirements: new RuntimeRequirements(),
-            configuration: $configuration,
+        $runtimeEnvironment = new RuntimeEnvironment($effectivePhpVersion, $effectiveExtensions);
+        $loggingConfiguration = (new LoggingConfigurationFactory())->create(
+            $loadedEnvironment->variables(),
+            $configuration->environment(),
         );
-        $runtimeResult = $application->validateRuntime($phpVersion, $loadedExtensions);
+        $databaseConfiguration = (new DatabaseConfigurationFactory())->create(
+            $loadedEnvironment->variables(),
+            $configuration->environment(),
+        );
+        $backgroundConfiguration = (new BackgroundExecutionConfigurationFactory())->create(
+            $loadedEnvironment->variables(),
+        );
 
-        if (!$runtimeResult->isSatisfied()) {
-            throw new RuntimeException($runtimeResult->toCliString());
-        }
+        $registry = new ModuleRegistry([
+            new CoreFoundationModule($configuration, $loadedEnvironment->variables(), $runtimeEnvironment),
+            new ApplicationServicesFoundationModule(),
+            new ObservabilityFoundationModule($loggingConfiguration),
+            new DatabaseFoundationModule($databaseConfiguration),
+            new SchemaFoundationModule($this->projectRoot),
+            new BackgroundExecutionFoundationModule($backgroundConfiguration),
+            new PresentationFoundationModule($this->projectRoot),
+            new HttpFoundationModule($this->projectRoot),
+            new ConsoleFoundationModule(),
+        ]);
+        $builder = new ContainerBuilder();
+        $compilation = $registry->compile($builder);
 
-        return $application;
+        return $builder->build($compilation->moduleDependencies);
     }
 }

@@ -1,0 +1,31 @@
+title = "QMDB secret scanning policy"
+
+[extend]
+useDefault = true
+
+[[allowlists]]
+description = "Generated and dependency roots are governed by repository policy and lockfile scanning"
+paths = ['''^(?:vendor|node_modules|\.phpstan\.cache|\.build|build|coverage)/''']
+
+# These are exact, non-production credentials used only by the isolated MySQL CI service.
+[[allowlists]]
+description = "Exact QMDB CI-only MySQL values"
+condition = "AND"
+paths = ['''^\.github/workflows/(?:ci|release-artifact)\.yml$''']
+regexes = [
+  '''qmdb-test-only-root''',
+  '''qmdb-test-only-runtime''',
+  '''qmdb-test-only-schema'''
+]
+
+[[allowlists]]
+description = "Bounded synthetic secret markers used by redaction tests"
+condition = "AND"
+paths = ['''^tests/Unit/Shared/(?:Configuration/EnvironmentVariablesTest|Http/Middleware/ExceptionHandlingMiddlewareTest|Observability/Error/ErrorHandlingTest)\.php$''']
+regexes = ['''QMDB_(?:TEST|EXCEPTION|FATAL)_SECRET_[a-f0-9]{4,8}''']
+
+[[allowlists]]
+description = "Frozen ER relationship identifiers are not credentials"
+condition = "AND"
+paths = ['''^docs/data/04-entity-relationship-model\.md$''']
+regexes = ['''QMDB-REL-[0-9]{4}''']

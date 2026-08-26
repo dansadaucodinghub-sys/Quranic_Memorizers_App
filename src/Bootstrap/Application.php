@@ -5,6 +5,9 @@ declare(strict_types=1);
 namespace Qmdb\Bootstrap;
 
 use InvalidArgumentException;
+use Qmdb\Shared\Application\Command\CommandBus;
+use Qmdb\Shared\Application\Event\DomainEventDispatcher;
+use Qmdb\Shared\Application\Query\QueryBus;
 use Qmdb\Shared\Configuration\ApplicationConfiguration;
 
 final readonly class Application
@@ -13,6 +16,9 @@ final readonly class Application
         private ApplicationMetadata $metadata,
         private RuntimeRequirements $runtimeRequirements,
         private ApplicationConfiguration $configuration,
+        private QueryBus $queryBus,
+        private CommandBus $commandBus,
+        private DomainEventDispatcher $eventDispatcher,
     ) {
     }
 
@@ -29,6 +35,21 @@ final readonly class Application
     public function configuration(): ApplicationConfiguration
     {
         return $this->configuration;
+    }
+
+    public function queryBus(): QueryBus
+    {
+        return $this->queryBus;
+    }
+
+    public function commandBus(): CommandBus
+    {
+        return $this->commandBus;
+    }
+
+    public function eventDispatcher(): DomainEventDispatcher
+    {
+        return $this->eventDispatcher;
     }
 
     /**

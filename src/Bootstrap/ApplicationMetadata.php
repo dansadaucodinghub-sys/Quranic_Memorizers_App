@@ -23,7 +23,7 @@ final readonly class ApplicationMetadata
             applicationCode: 'QMDB',
             frozenBaseline: 'QMDB-P0-FRZ-001',
             currentPhase: 'P1',
-            currentBatch: 'QMDB-P1-B02',
+            currentBatch: 'QMDB-P1-CLOSE',
             developmentVersion: '0.1.0-dev',
         );
     }

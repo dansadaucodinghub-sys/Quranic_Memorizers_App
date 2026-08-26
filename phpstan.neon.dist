@@ -1,8 +1,13 @@
 parameters:
   level: max
+  bootstrapFiles:
+    - tools/bootstrap.php
   paths:
     - src
     - tests
+    - routes
+    - database
+    - tools
   tmpDir: .phpstan.cache
   treatPhpDocTypesAsCertain: true
   reportUnmatchedIgnoredErrors: true

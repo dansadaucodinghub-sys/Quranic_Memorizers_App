@@ -3,54 +3,37 @@
 declare(strict_types=1);
 
 use Qmdb\Bootstrap\ApplicationFactory;
-use Qmdb\Bootstrap\Http\BootstrapHttpApplication;
-use Qmdb\Bootstrap\Http\BootstrapHttpResponse;
+use Qmdb\Bootstrap\Error\BootstrapSupport;
 use Qmdb\Bootstrap\RuntimeRequirements;
 use Qmdb\Shared\Configuration\ConfigurationException;
-use Qmdb\Shared\Configuration\ConfigurationViolation;
 
-$statusCode = 500;
-$headers = [
-    'Content-Type' => 'application/json; charset=utf-8',
-    'Cache-Control' => 'no-store',
-    'X-Content-Type-Options' => 'nosniff',
-];
-$body = '{"application":"QMDB","status":"error","code":"BOOTSTRAP_FAILURE"}';
+$root = dirname(__DIR__);
+require_once $root . '/src/Bootstrap/Error/BootstrapSupport.php';
+$fallback = BootstrapSupport::failureResponder();
+$failure = null;
+$emitted = false;
 
 try {
-    require_once dirname(__DIR__) . '/src/Bootstrap/RuntimeViolation.php';
-    require_once dirname(__DIR__) . '/src/Bootstrap/RuntimeRequirementResult.php';
-    require_once dirname(__DIR__) . '/src/Bootstrap/RuntimeRequirements.php';
-
     if (!(new RuntimeRequirements())->evaluateCurrentRuntime()->isSatisfied()) {
-        error_log('QMDB bootstrap failure [runtime requirements].');
+        $failure = $fallback->create('runtime_requirements');
     } else {
-        require_once dirname(__DIR__) . '/vendor/autoload.php';
-
-        $application = ApplicationFactory::fromCurrentProcess()->create();
-        $response = (new BootstrapHttpApplication($application))->handle();
-        $statusCode = $response->statusCode();
-        $headers = $response->headers();
-        $body = $response->body();
+        require_once $root . '/vendor/autoload.php';
+        ApplicationFactory::fromCurrentProcess($root)->createHttpRuntime()->run();
+        $emitted = true;
     }
-} catch (ConfigurationException $exception) {
-    $codes = array_map(
-        static fn (ConfigurationViolation $violation): string => $violation->code(),
-        $exception->violations(),
-    );
-    error_log(sprintf('QMDB configuration failure [%s].', implode(',', $codes)));
-    $response = BootstrapHttpResponse::configurationFailure();
-    $statusCode = $response->statusCode();
-    $headers = $response->headers();
-    $body = $response->body();
-} catch (Throwable $throwable) {
-    error_log(sprintf('QMDB bootstrap failure [%s].', get_debug_type($throwable)));
+} catch (ConfigurationException) {
+    $failure = $fallback->create('configuration');
+} catch (Throwable) {
+    $failure = $fallback->create('unexpected_throwable');
 }
 
-http_response_code($statusCode);
+if (!$emitted && $failure !== null && !headers_sent()) {
+    header_remove('X-Powered-By');
+    http_response_code($failure->status());
 
-foreach ($headers as $name => $value) {
-    header(sprintf('%s: %s', $name, $value));
+    foreach ($failure->headers() as $name => $value) {
+        header(sprintf('%s: %s', $name, $value), true);
+    }
+
+    echo $failure->body();
 }
-
-echo $body;

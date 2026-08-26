@@ -5,13 +5,13 @@
 | Project | Qur’an Memorizer DB |
 | Project Code | QMDB |
 | Baseline ID | QMDB-BL-001 |
-| Batch ID | QMDB-P1-B02 |
+| Batch ID | QMDB-P1-B08 |
 | Document Title | Risk Register |
-| Document Version | 2.2.0 |
-| Document Status | Controlled open-risk ledger; 65 risks classified for implementation and release gates |
+| Document Version | 2.8.0 |
+| Document Status | Controlled risk ledger; P1 final dispositions approved, P2 entry risks remain open |
 | Document Owner Role | Product, Data, Security, Privacy, Business Continuity and Release Governance |
-| Last Updated | 2026-08-24 |
-| Approval Status | P0 closeout classifications remain approved under QMDB-P0-FRZ-001; QMDB-RSK-064 and QMDB-RSK-065 record the active P1 foundation validation blockers; every risk remains OPEN and is not accepted by recording it |
+| Last Updated | 2026-08-26 |
+| Approval Status | P0 classifications remain approved; B08 controls have compatibility evidence but acceptance remains OPEN pending PHP 8.5, complete prerequisites, and approved MySQL evidence |
 | Related Documents | [Threat model](../security/threat-model.md); [Control catalog](../security/security-control-catalog.md); [B04 data requirements](../requirements/P0-B04-data-requirements.md); [schema readiness](../data/13-schema-review-and-implementation-readiness.md) |
 
 ## Purpose
@@ -56,8 +56,10 @@ Likelihood: Low, Medium or High. Impact: Low, Medium, High or Critical. Current 
 | QMDB-RSK-030 | Arabic/RTL rendering error | Localization/Domain Integrity | Direction, mixed text or rendering changes name, score or Qur’an meaning/order. | Arabic content and transactions | Presentation, Search, Certificates | Poor bidi/layout/linguistic review | Misrepresentation and inaccessible operation | Medium | Critical | High | QMDB-CTL-025; QMDB-CTL-028 | Moderate | Accessibility and Qur’an Governance | P12 | UI/font/content/search/print change | Open | QMDB-NFAS-037 |
 | QMDB-RSK-031 | Incomplete incident response | Security/Operations | Alerts lack ownership, evidence, authority, communication or verified closure. | All impacted assets | Security, Privacy, Safety, Operations | Untested lifecycle/runbooks/thresholds | Prolonged harm and evidence loss | Medium | Critical | Critical | QMDB-CTL-020; QMDB-CTL-026; QMDB-CTL-001 | High pending exercises | Incident Response Governance | P12 | Incident/exercise/organization change | Open | QMDB-NFAS-018; QMDB-NFAS-056; QMDB-NFAS-062 |
 | QMDB-RSK-032 | External provider outage | Availability/Privacy | Notification, object, CDN or other processor becomes unavailable or unsafe. | Dependent data/services | Integrations, Media, Live, Notifications | Provider/network/region failure | Delayed service, disclosure or cascading failure | High | High | High | QMDB-CTL-018; QMDB-CTL-022; QMDB-CTL-026 | Moderate pending topology | Platform and Vendor Governance | P12 | Provider/contract/region/service change | Open | QMDB-NFAS-049 |
-| QMDB-RSK-064 | PHP 8.5 validation environment unavailable | Engineering/Release | The active runtime is PHP 8.2.12 and no already-available PHP 8.5 execution path was found, so the frozen P1 runtime gate cannot be executed. | P1-B01 and P1-B02 executable evidence and repository foundation | Bootstrap, configuration and engineering quality | Development runtime drift from ADR-003 and unavailable conforming execution service | Composer installation, PHPUnit, combined quality, successful CLI smoke and successful HTTP smoke cannot produce valid completion evidence | High | High | High | ADR-003; Composer `^8.5` requirement and platform check; application runtime guard; provision an approved PHP 8.5 environment and rerun every mandatory gate | Low after a clean PHP 8.5 quality and smoke run | Engineering Environment and Release Governance | P1-B01 and P1-B02 | PHP runtime, PATH, Docker service or approved execution environment changes | Open | QMDB-P1-B01 and QMDB-P1-B02 completion acceptance gates |
+| QMDB-RSK-064 | PHP 8.5 validation environment unavailable | Engineering/Release | The active runtime is PHP 8.2.12 and no already-available PHP 8.5 execution path was found, so the frozen P1 runtime gate cannot be executed. | P1-B01 through P1-B03 executable evidence and repository foundation | Bootstrap, configuration, HTTP and engineering quality | Development runtime drift from ADR-003 and unavailable conforming execution service | Composer installation, PHPUnit, combined quality, successful CLI smoke and successful HTTP smoke cannot produce valid completion evidence | High | High | High | ADR-003; Composer `^8.5` requirement and platform check; application runtime guard; provision an approved PHP 8.5 environment and rerun every mandatory gate | Low after a clean PHP 8.5 quality and smoke run | Engineering Environment and Release Governance | P1-B01 through P1-B03 | PHP runtime, PATH, Docker service or approved execution environment changes | Open | QMDB-P1-B01 through QMDB-P1-B03 completion acceptance gates |
 | QMDB-RSK-065 | Configuration and secret-boundary controls lack conforming-suite evidence | Security/Engineering | B02 implements centralized environment access, production dotenv restrictions, typed configuration, redacted secret values, UTC time and secure identifiers, but the locked PHPUnit suite cannot execute on PHP 8.2.12. | Bootstrap configuration, environment values, secret material and operational identifiers | Configuration and shared security foundation | Conforming PHP 8.5 validation environment is unavailable | A regression in redaction, precedence, production restrictions, UTC enforcement or identifier generation could remain undetected by the mandatory suite | Medium | High | High | Explicit typed boundaries; process precedence; production-like dotenv prohibition; generic HTTP failure; safe CLI violations; explicit reveal-only secret values; `random_bytes(16)`; architecture tests; targeted object smoke; rerun all locked tests on PHP 8.5 | Low after all B02 unit, integration, architecture and security tests pass on PHP 8.5 | Security and Engineering Governance | P1-B02 | Configuration schema, dotenv library, secret abstraction, runtime or test evidence changes | Open | QMDB-P1-B02 security and completion acceptance gates |
+| QMDB-RSK-066 | HTTP boundary controls lack conforming-suite and real-success evidence | Security/Engineering | B03 implements request-target validation, deterministic routing, safe problem responses, request-local middleware and bounded SAPI emission, but the locked PHPUnit suite and PHP 8.5 real-server success paths cannot execute on PHP 8.2.12. | Public HTTP boundary, route metadata, middleware state and emitted responses | HTTP foundation | Conforming PHP 8.5 validation environment is unavailable and prerequisite batches remain incomplete | A routing, parsing, state-isolation or response-emission regression could remain undetected by mandatory acceptance evidence | Medium | High | High | PSR-7/15 boundaries; conservative route grammar; encoded-separator and dot-segment rejection; generic problem responses; deterministic Allow; stateless pipeline; single SAPI boundary; maximum-level static analysis; object smoke; rerun locked tests and real HTTP matrix on PHP 8.5 | Low after every B03 suite and real HTTP verification passes on approved PHP 8.5 | Security and Engineering Governance | P1-B03 | HTTP dependency, router grammar, middleware, emitter, runtime or test evidence changes | Open | QMDB-P1-B03 security and completion acceptance gates |
+| QMDB-RSK-067 | Dependency and module foundation lacks conforming PHP 8.5 acceptance evidence | Security/Engineering | B04 implements explicit PSR-11 composition, restricted factory resolution, deterministic module compilation and synchronous message handling, but the locked PHPUnit 13 suite and real PHP 8.5 entry-point matrix cannot execute on the available PHP 8.2.12 runtime. | Service graph, module graph, handler maps, CLI and HTTP composition roots | Core, Application, HTTP and Console foundation modules | The approved PHP 8.5 execution environment is unavailable | A PHP 8.5-specific integration or entry-point regression could remain undetected despite passing compatible diagnostics | Medium | High | High | Build-time graph validation; restricted dependency resolver; exact message maps; architecture/security tests; maximum-level static analysis; passing PHPUnit 11 compatibility suite; rerun locked PHPUnit 13 and real entry points on PHP 8.5 | Low after every B04 gate and real CLI/HTTP verification passes on approved PHP 8.5 | Security and Engineering Governance | P1-B04 | Container, module, handler, dependency, runtime or validation-environment change | Open | QMDB-P1-B04 security and completion acceptance gates |
 
 ## QMDB-P0-B04 data risks
 
@@ -165,8 +167,156 @@ This keyed table supplies the closeout fields required for every open risk. It d
 | QMDB-RSK-061 | HIGH | QMDB-CTL-021; QMDB-CTL-024; QMDB-CTL-026 | Moderate-to-high until the listed constraints and controls are implemented and verified. | Every production migration | Before the affected capability or migration passes its production release gate. | Database Architecture and Platform Operations | Schema, workload, policy, provider or production-evidence change; anomaly or incident. | NO | YES_AFFECTED_SCOPE | CONDITIONAL | OPEN |
 | QMDB-RSK-062 | HIGH | QMDB-CTL-014; QMDB-CTL-021; QMDB-CTL-028 | Moderate-to-high until the listed constraints and controls are implemented and verified. | P1-P6 | Before the affected capability or migration passes its production release gate. | Data and Domain Governance | Schema, workload, policy, provider or production-evidence change; anomaly or incident. | NO | YES_AFFECTED_SCOPE | CONDITIONAL | OPEN |
 | QMDB-RSK-063 | CRITICAL | QMDB-CTL-027; QMDB-CTL-010; QMDB-CTL-020 | High until the listed constraints and controls are implemented and independently verified. | P13 | Before the affected capability or migration passes its production release gate. | Offline Competition and Security Governance | Schema, workload, policy, provider or production-evidence change; anomaly or incident. | NO | YES_AFFECTED_SCOPE | YES_IF_IN_ROLLOUT_SCOPE | OPEN |
-| QMDB-RSK-064 | HIGH | ADR-003; Composer `^8.5` and platform check; QMDB-P1 runtime and completion gates | Low after the full Composer quality suite and successful CLI/HTTP smokes pass on approved PHP 8.5 | P1-B01 and P1-B02 | Before QMDB-P1-B01 or QMDB-P1-B02 completion and any QMDB-P1-B03 readiness transition | Engineering Environment and Release Governance | PHP runtime, PATH, Docker service or approved execution environment changes | YES | YES_FOUNDATION | YES_IF_IN_ROLLOUT_SCOPE | OPEN |
-| QMDB-RSK-065 | HIGH | Typed configuration; centralized environment adapter; production dotenv prohibition; redaction; generic HTTP/CLI failures; `random_bytes(16)`; UTC clock; architecture tests; targeted object smoke | Low after the locked B02 suites and real entry-point smokes pass on approved PHP 8.5 | P1-B02 | Before QMDB-P1-B02 completion or QMDB-P1-B03 readiness | Security and Engineering Governance | Configuration schema, dotenv library, secret abstraction, runtime or test evidence changes | YES | YES_FOUNDATION | YES_IF_IN_ROLLOUT_SCOPE | OPEN |
+| QMDB-RSK-064 | LOW | ADR-003; Composer `^8.5`; complete locked quality suite; successful CLI/HTTP smokes on PHP 8.5.10 | Low with runtime guard and repeatable acceptance environment | P1-B01 through P1-B03 | Passed at QMDB-P1-CLOSE | Engineering Environment and Release Governance | PHP runtime, PATH or approved execution environment changes | NO | YES_FOUNDATION | YES_IF_IN_ROLLOUT_SCOPE | RESOLVED_FOR_P1 |
+| QMDB-RSK-065 | LOW | Typed configuration; centralized environment adapter; production dotenv prohibition; redaction; locked PHP 8.5 tests and entry-point smokes | Low with continuous regression gates | P1-B02 | Passed at QMDB-P1-CLOSE | Security and Engineering Governance | Configuration schema, dotenv library, secret abstraction, runtime or test evidence changes | NO | YES_FOUNDATION | YES_IF_IN_ROLLOUT_SCOPE | RESOLVED_FOR_P1 |
+| QMDB-RSK-066 | LOW | PSR-7/15 contracts; strict request-target validator; generic problems; security headers; locked tests and real PHP 8.5 HTTP matrix | Low with continuous regression gates | P1-B03 | Passed at QMDB-P1-CLOSE | Security and Engineering Governance | HTTP dependencies, route grammar, middleware, emission boundary, runtime or test evidence changes | NO | YES_FOUNDATION | YES_IF_IN_ROLLOUT_SCOPE | RESOLVED_FOR_P1 |
+| QMDB-RSK-067 | LOW | Explicit PSR-11 definitions; build-time graph validation; exact synchronous handler maps; locked tests and real entry points | Low with continuous regression gates | P1-B04 | Passed at QMDB-P1-CLOSE | Security and Engineering Governance | Container, module, messaging, dependency, runtime or test evidence changes | NO | YES_FOUNDATION | YES_IF_IN_ROLLOUT_SCOPE | RESOLVED_FOR_P1 |
+## QMDB-P1-B05 risk treatment additions
+
+| Risk area | Executable or governed mitigation | Residual state |
+| --- | --- | --- |
+| Credential/DSN leakage | Password remains a `SecretValue`, is revealed only to the PDO connector, is absent from configuration/DSN/public readiness, and safe exceptions preserve details only as previous causes | OPEN pending production logging review and PHP 8.5 acceptance |
+| DSN injection and root use | Host/database/username validation rejects separators, controls and root identities; arbitrary DSNs are not accepted | OPEN pending approved MySQL integration evidence |
+| TLS downgrade | Staging/production reject disabled TLS; verified mode requires a readable CA and encrypted session evidence | OPEN pending provider/certificate decision |
+| SQL mode, UTC, charset and engine drift | Session initializer changes only session state; session/server verifiers require UTC, `utf8mb4`, strict modes, MySQL and InnoDB | OPEN pending real MySQL LTS evidence |
+| Persistent, emulated or multi-statement PDO behavior | Factory fixes all three modes off and uses exception mode/native prepares | OPEN pending driver integration evidence |
+| Deadlock duplication and retry exhaustion | Only SQLSTATE `40001`/MySQL 1213 retry, outermost only, bounded attempts/delay; external side effects prohibited in callbacks | OPEN pending workload/idempotency verification |
+| Long or user-interaction transaction | QMDB-CR-001 and frontend standard prohibit transactions across modals, think time, uploads, external calls and SSE | OPEN until owning application/UI batches enforce it |
+| Nested/savepoint corruption | Deterministic application-owned names, compatible options, rollback-to/release and state cleanup are unit tested | OPEN pending real MySQL nested integration evidence |
+| Database outage/readiness disclosure | Liveness is connection-free; readiness maps all dependency failure to `not_ready`/503 with no dependency details | OPEN pending real healthy/unavailable/invalid-credential HTTP matrix |
+| AJAX duplicate/stale update | Server authority, idempotency/version/precondition requirements and controlled conflict behavior are approved; disabled buttons are insufficient | OPEN until owning domain batches implement storage and commands |
+| JavaScript-only critical workflow and inaccessible/nested modal | Practical server-rendered fallback, accessible modal lifecycle and nested-modal prohibition are mandatory | OPEN until P9/P12 implementation and accessibility evidence |
+| Aggressive polling/social load affecting competition | SSE preferred, polling bounded fallback, competition operations retain priority | OPEN until P7/P10/P12 capacity verification |
+
+## QMDB-P1-B06 schema-ledger risk treatment
+
+| Risk area | Executable or governed mitigation | Residual state |
+| --- | --- | --- |
+| Concurrent migration or seed execution | Database-scoped hashed MySQL named lock with bounded wait and `finally` release | OPEN pending real two-connection MySQL evidence |
+| Migration or seed checksum drift | Immutable stored SHA-256 checksums; drift state/event; execution stops without auto-repair | OPEN pending real MySQL drift evidence |
+| Partial DDL migration | Per-step ledger records reflect MySQL implicit commits; unchanged completed steps resume without rerun | OPEN pending failure/resume integration evidence |
+| Failed migration or rollback | Safe failure states and events block later work; history is preserved | OPEN pending real MySQL failure and rollback evidence |
+| Long-running or unreleased schema lock | Timeout is bounded; handles reject double release; runners release in `finally` | OPEN pending production timeout decision and connection-loss tests |
+| Dependency cycle or missing registry entry | Explicit immutable registries validate duplicates, dependencies and cycles; orphaned ledger state blocks | MITIGATED in source and compatibility tests; production evidence remains open |
+| Modified applied migration or seed | Aggregate and step checksum comparisons block execution and readiness without overwriting stored checksums | OPEN pending real ledger evidence |
+| Schema credentials exposed or runtime account granted DDL | Separate lazy non-root schema identity and `SecretValue`; safe CLI/HTTP output omits connection details | OPEN pending grants review and approved MySQL evidence |
+| Migration using root or prohibited SQL | Configuration rejects root; SQL boundary rejects user management, global/FK settings, transaction control and multi-statements | MITIGATED in source and unit tests; operator process review remains open |
+| Implicit DDL commit misunderstood | Migration documentation and runner use per-step truth; no false all-or-nothing claim | MITIGATED by design; operator training remains open |
+| Destructive production rollback | No bypass; rollback accepts only local/test plus exact confirmation and latest eligible migration | MITIGATED in source; integration evidence remains open |
+| Automatic HTTP/readiness/AJAX schema mutation | Routes expose no schema command; readiness is read-only; all mutation services remain console-only | MITIGATED by architecture tests; real HTTP matrix remains open |
+| Seed external side effects | Seed contract contains only immutable DML steps and runner owns one local database transaction | MITIGATED by structure; owning-seed review remains mandatory |
+| Metadata incompatibility or accidental foundation business table | Static six-table definition, version verification, structure checks, explicit empty manifests, and no auto-repair | OPEN pending real MySQL installation evidence |
+| Modal, user think time, or SSE spans a transaction | QMDB-CR-001 and implementation standard prohibit these boundaries | OPEN until owning frontend/application batches enforce them |
+
+## QMDB-P1-B07 observability and secure-HTTP risk treatment
+
+| Risk area | Executable or governed mitigation | Residual state |
+| --- | --- | --- |
+| Credential, token, cookie, or identity data leakage | Recursive sensitive-key redaction, bounded context, safe object/resource markers, and architecture scans; HTTP logs accept no bodies, query, cookies, authorization, or arbitrary headers | MITIGATED in source and compatibility tests; production log review remains OPEN |
+| Attacker-controlled log correlation | A cryptographically random 16-byte ID is generated per HTTP/CLI execution; inbound IDs are ignored and IDs provide no authorization or idempotency | MITIGATED in source and tests; operational collision monitoring remains OPEN |
+| Public exception, SQL, path, or trace disclosure | Central reporter logs classification/fingerprint only; problem and CLI output use generic text plus reference; bootstrap fallback is similarly bounded | MITIGATED in source, integration tests, and PHP 8.2 fallback smoke; PHP 8.5 real matrix remains OPEN |
+| Logging outage breaks application execution | Resilient wrapper catches logger failures and uses one non-recursive minimal terminal fallback | MITIGATED in unit/integration tests; external stderr/platform behavior remains OPEN |
+| Recursive or unbounded context exhausts resources | Depth 5, 50 entries per array, 2,048-character strings, non-finite markers, and no object serialization | MITIGATED in unit tests; production volume budget remains OPEN |
+| Missing or inconsistent user support reference | Correlation middleware and problem factory own matching `X-Request-ID`/`request_id`; modal/fetch standard specifies accessible display | MITIGATED server-side; frontend implementation and browser evidence remain OPEN |
+| Response header weakening by controllers | Security middleware removes/overwrites governed values on success and failure responses; SAPI boundary removes `X-Powered-By` | MITIGATED in unit/integration tests and bootstrap smoke; edge verification remains OPEN |
+| HSTS sent on spoofed or plaintext traffic | HSTS requires staging/production and URI scheme `https`; forwarded protocol is ignored; no preload | MITIGATED in source/tests; trusted proxy and edge ownership remain OPEN |
+| CSP blocks future HTML or is weakened prematurely | Current API/problem policy is `default-src 'none'` with restrictive directives; final nonce/hash/reporting design is deferred | MITIGATED for current non-HTML surface; P9 HTML policy remains OPEN |
+| Operational logs mistaken for authoritative audit | Source contracts and documentation explicitly separate telemetry from the later business audit ledger | GOVERNED boundary recorded; authoritative audit controls remain OPEN in owning batch |
+| Full-page reload, blind mutation retry, or modal closure hides failure | QMDB-CR-001 extension requires correlated accessible summaries, open modal, preserved safe input, focus recovery, stale-response defense, and no blind mutation retry | GOVERNED only; production frontend evidence remains OPEN |
+| Nonconforming runtime invalidates acceptance evidence | Composer `^8.5`, runtime guard, locked PHPUnit 13, and truthful blocked project state prevent compatibility results from being promoted to acceptance | OPEN until PHP 8.5 and prerequisite gates pass |
+
+## QMDB-P1-B08 background-execution risk treatment
+
+| Risk area | Executable or governed mitigation | Residual state |
+| --- | --- | --- |
+| Infinite worker loop | Maximum jobs, monotonic runtime, memory bounds, controlled sleep, and typed stop reasons | MITIGATED in compatibility tests; production supervisor/load evidence OPEN |
+| Worker memory growth | Configured byte threshold checked before each reservation | MITIGATED in unit tests; workload threshold remains OPEN |
+| Worker cannot stop gracefully | PCNTL signal controller requests stop and restores handlers in `finally`; current job completes first | MITIGATED where PCNTL exists; this host lacks PCNTL and real signal evidence is OPEN |
+| Job payload leakage | Executor logs only canonical IDs/name/attempt and safe failure metadata | MITIGATED in unit/security tests; production log review OPEN |
+| Reservation-token leakage | Token redacts debug/serialization and never enters log context | MITIGATED in source/tests |
+| Blind permanent-failure retry | Unknown throwables are permanent; retry requires explicit marker | MITIGATED in unit tests |
+| Retry storm | Bounded exponential delay, maximum attempts, and no generic retry | MITIGATED in foundation tests; per-job retry matrix OPEN |
+| Busy polling or idle spin | Worker sleeps when no work exists; browser polling remains a bounded fallback | MITIGATED in worker tests; frontend implementation OPEN |
+| Worker duplicate processing | Source reservation/acknowledgement ownership contract exists; durable provider semantics unresolved | OPEN until durable adapter and concurrency tests |
+| Scheduler duplicate execution | Composite task/slot primary key plus transactional claim | MITIGATED in source/unit tests; real MySQL verification OPEN |
+| Scheduler stale lease | Expired leases can be reclaimed with new execution ID and attempt | MITIGATED in unit tests; real MySQL verification OPEN |
+| Scheduler stale owner update | Terminal updates match task, slot, execution ID, and optimistic version | MITIGATED in unit tests; real MySQL verification OPEN |
+| Non-idempotent scheduled task | Standard mandates idempotent handlers and documents at-least-once delivery | GOVERNED; owning-task review remains mandatory |
+| Process crash after side effect | No exactly-once claim; handler idempotency is explicit | OPEN by nature of at-least-once execution; owning controls required |
+| False exactly-once assumption | README, standard, and report state at-least-once semantics | GOVERNED; operator/developer training OPEN |
+| Browser-triggered worker or scheduler | HTTP module has no background dependency/routes; architecture tests enforce isolation | MITIGATED in source/tests; real HTTP regression OPEN |
+| Durable delivery incorrectly assumed | Production source is explicit no-work and no payload serialization exists | MITIGATED by fail-honest design |
+| No production queue adapter | Null source is intentional; no business job may register yet | ACCEPTED batch boundary; blocks production jobs |
+| PCNTL unavailable | Once mode remains supported; configured production continuous mode fails closed | OPEN environment/deployment limitation |
+| Scheduler migration not applied | Readiness/operations documentation requires governed migration before task registration | OPEN until approved MySQL migration evidence |
+| AJAX assumes immediate worker success | Future `202` boundary requires authoritative accepted state and later confirmation | GOVERNED; P1-B09/owning workflow implementation OPEN |
+| Modal waits on worker or spans transaction | Frontend standard prohibits both | GOVERNED; frontend implementation OPEN |
+| Aggressive job-status polling | Bounded fallback only; no status endpoint exists in B08 | GOVERNED; exact fallback interval OPEN |
+| SSE and worker responsibilities mixed | SSE projects state only; worker neither holds nor executes through SSE | GOVERNED; SSE implementation OPEN |
+
+## QMDB-P1-B10 CI, supply-chain, and release risk treatment
+
+| Risk area | Executable or governed mitigation | Residual state |
+| --- | --- | --- |
+| Mutable or over-privileged CI | Full-SHA actions, read-only contents permission, no persisted credentials, static workflow gate | MITIGATED in source; hosted execution OPEN |
+| `pull_request_target` or untrusted PR shell injection | Trigger prohibited; PR title/body/head interpolation rejected; no production secrets | MITIGATED by workflow policy tests |
+| Dependency confusion or lockfile drift | Committed lockfiles, HTTPS/local-path/branch checks, Composer validation, `npm ci` | MITIGATED; continuous registry monitoring OPEN |
+| Composer plugin or npm install-script execution | Empty Composer plugin allowlist; `npm ci --ignore-scripts` | MITIGATED for current dependencies |
+| Unverified tool download | Exact versions and official SHA-256 checks before extraction | MITIGATED in installer; local Linux execution OPEN |
+| Secret committed in history or working tree | Pinned Gitleaks history/tree/staging gates plus internal sensitive-content scan | OPEN until hosted Gitleaks execution |
+| Secret in release artifact | Internal extracted-tree scan and mandatory hosted artifact Gitleaks | PARTIALLY MITIGATED; external artifact scan OPEN |
+| Development dependency/test/tool/CI file in release | Production-only Composer install, vendor pruning, explicit allowlist/denylist, exact manifest | MITIGATED in build tests and artifact verification |
+| Symlink escape or archive traversal | Source symlinks rejected; custom reader rejects absolute, drive, backslash, `..`, duplicate, and non-file/directory entries | MITIGATED in source/tests |
+| Non-reproducible artifact | Commit epoch, sorted paths, normalized modes/ownership/timestamps, deterministic USTAR/gzip | MITIGATED in deterministic archive tests; clean hosted reproduction OPEN |
+| Dirty artifact mistaken for release | Git status recorded; dirty build sets `release_eligible=false` | MITIGATED; current artifact intentionally ineligible |
+| Checksum mistaken for signature | Documentation explicitly limits SHA-256 to integrity comparison | GOVERNED; signing remains open decision |
+| SBOM scope error | Lock-derived runtime-only inventory, development exclusion, deterministic validator | MITIGATED in 3 SBOM tests and 99 validation checks |
+| Unknown runtime licence | Build blocks unknown runtime licences and records review classifications | MITIGATED for current 15 runtime packages |
+| Vulnerability or misconfiguration bypass | Trivy HIGH/CRITICAL fail-closed gate; no broad ignore or continue-on-error | OPEN until hosted scan execution |
+| Broad secret-scanner allowlist | Narrow path-and-regex Gitleaks configuration only | MITIGATED in configuration; hosted behavior OPEN |
+| Artifact uploaded before verification | Workflow policy enforces verify step before SHA-pinned upload action | MITIGATED in source/tests; hosted execution OPEN |
+| Hosted CI not executed | Project state remains blocked and no hosted success is claimed | OPEN blocker |
+| Frontend/AJAX/RTL/accessibility/modal regression | Existing 23 frontend tests and architecture policy remain in the required pipeline | MITIGATED in Node.js 25 diagnostics; Node.js 24/browser evidence OPEN |
+
 ## Critical-risk gate
 
 Every Critical current risk maps preventive and detective/corrective/recovery controls plus one or more acceptance scenarios. Residual risk is reevaluated using implementation evidence; no entry is accepted by publication of this register.
+
+## QMDB-P1-B09 presentation and progressive-interaction risk treatment
+
+| Risk area | Executable or governed mitigation | Residual state |
+| --- | --- | --- |
+| Template path traversal | Explicit validated name-to-file registry; no request-selected path, glob, or discovery | MITIGATED in source and compatibility tests |
+| Unescaped text or attributes | Contextual UTF-8 escaper and restricted trusted-template output | MITIGATED in focused and architecture tests; manual review remains OPEN |
+| Translation injection or drift | Explicit plain-text catalogs, key validation, parity check, and no request logic | MITIGATED in bootstrap/unit tests |
+| Cross-origin or executable fragment injection | Same-origin URL guard, exact media type/marker, one-root policy, executable/event/URL/form rejection | MITIGATED in frontend/security tests |
+| CSP nonce reuse or weakening | Secure per-request 18-byte nonce and owned HTML policy without unsafe-inline/eval/wildcards | MITIGATED in integration/socket tests; edge review OPEN |
+| Sensitive browser storage | Only allowlisted `qmdb.theme`; no cookie, auth, locale, workspace, or identity access | MITIGATED in source/frontend tests |
+| Duplicate or stale asynchronous read | Per-key AbortController coordination, sequence/current checks, no blind retry | MITIGATED in frontend tests |
+| Partial failure destroys useful content | Existing region remains, busy state clears, fallback remains, safe reference announced | MITIGATED in frontend tests; interactive browser evidence OPEN |
+| Modal focus loss, nested dialog, or no fallback | One global dialog, feature detection, close/Escape, abort/reset/restore, nested prevention, full-page link | MITIGATED in source/tests; manual keyboard/screen-reader evidence OPEN |
+| JavaScript-only primary content | Complete server pages, normal language/navigation links, noscript notice, direct HTTP fallback verification | MITIGATED in socket tests; browser no-JS inspection OPEN |
+| RTL or high-zoom layout breakage | Arabic language/direction, logical CSS, fluid grids, no fixed content heights, responsive widths | PARTIALLY MITIGATED; interactive RTL/200%/400% evidence OPEN |
+| Color-only or insufficient-contrast status | Status text plus symbol, semantic classes, high-contrast tokens, forced-color rules | PARTIALLY MITIGATED; manual contrast/forced-color evidence OPEN |
+| Motion harms comprehension | No required animation and global reduced-motion override | MITIGATED in static tests; browser preference evidence OPEN |
+| Raw server error displayed | Fetch error model retains bounded safe fields; DOM text nodes only; request ID validation | MITIGATED in frontend tests |
+| AJAX mutation before owning controls | Production Fetch fixes GET and architecture scans reject mutation methods/forms | MITIGATED for B09; future mutation protocol remains OPEN |
+| External frontend supply-chain compromise | No runtime dependency, framework, CDN, font host, or bundler; jsdom is development-only | MITIGATED for production; development audit remains continuous |
+| Nonconforming runtime promoted as acceptance | PHP `^8.5`, locked PHPUnit 13, fail-closed entrypoint, and blocked ledger remain unchanged | OPEN until PHP 8.5 acceptance |
+
+## QMDB-P1-CLOSE risk finalization
+
+| Risk ID | Risk | Current controls | Residual risk | Owner role | Resolution phase | Release gate | P2-B01 blocker | Production blocker | National rollout blocker | Status |
+| --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- |
+| QMDB-RSK-068 | External security scans were previously unobserved | Exact checksum-verified Windows Actionlint 1.7.12, Gitleaks 8.30.1, ShellCheck 0.11.0 and Trivy 0.72.0 executed; history/tree, workflow/shell and HIGH/CRITICAL gates pass | Low; rerun in hosted CI at publication | Security Engineering | P1 closeout/hosted CI | Local P1 gate passed; hosted branch gate retained | No | Yes at publication | Yes | Resolved for P1 |
+| QMDB-RSK-069 | Frontend acceptance previously ran outside required Node.js 24 | Node.js 24.19.0, syntax, 23 tests and npm audit passed | Low; continue lockfile/engine enforcement | Frontend and Release Engineering | P1 closeout | P1 gate passed | No | Yes at release | Yes | Resolved for P1 |
+| QMDB-RSK-070 | Hosted CI execution is unobserved | Read-only permissions, pinned actions, fork-safe static policy, complete local CI-equivalent gates | Moderate operational evidence gap | DevSecOps | Before merge/release | Hosted branch gate | No | Yes | Yes | Deferred operational gate |
+| QMDB-RSK-071 | Manual accessibility/browser matrix is incomplete | Semantic HTML, RTL, reduced motion, focus/fallback automated tests | Moderate until keyboard, AT, zoom and forced-colour evidence | Accessibility Governance | P2 UI and P12 | UI/release gate | No | Yes for affected UI | Yes | Deferred operational gate |
+| QMDB-RSK-072 | PCNTL/POSIX signal behavior is unobserved on Windows | Bounded worker, once mode, injectable signal unit tests, production fail-closed policy | Medium on supported worker hosts | Platform Operations | Before continuous-worker deployment | Background-runtime deployment gate | No | Yes before workers | Yes | Deferred deployment gate |
+| QMDB-RSK-073 | Dirty source cannot be an approved engineering/release baseline | Controlled source revision, governed freeze manifest, Git cleanliness and deterministic hashes | Low after final freeze commit and clean release rebuild | Release Governance | P1 closeout | Freeze/release gate | No | Yes at release | Yes | Resolved for P1 |
+| QMDB-RSK-074 | Email and phone normalization contracts are unresolved | Encrypted-original/keyed-hash direction and nullable active-key uniqueness | High identity collision/takeover risk if invented | Identity, Security and Privacy Governance | Before P2-B01 | P2-B01 entry gate | Yes | Yes | Yes | Open — blocks P2-B01 |
+
+QMDB-RSK-064 through QMDB-RSK-067 are resolved for P1 by the locked PHP 8.5 quality suite, real CLI/HTTP execution,
+and the isolated MySQL 8.4 acceptance matrix. Their earlier entries remain historical discovery records. No high P1
+engineering risk is accepted. QMDB-RSK-070 through QMDB-RSK-072 remain explicit hosted, manual, or deployment-host
+evidence gates and do not reopen the portable P1 source foundation. QMDB-RSK-074 remains open and blocks P2-B01.

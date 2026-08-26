@@ -62,9 +62,13 @@ final class SourceArchitectureTest extends TestCase
         self::assertSame([], array_values(array_intersect($forbiddenPackages, $packages)));
     }
 
-    public function testSourceDoesNotReadSuperglobals(): void
+    public function testOnlyNativeRequestFactoryMayReadSapiSuperglobals(): void
     {
         foreach ($this->phpFilesUnder($this->projectRoot() . '/src') as $path) {
+            if (str_ends_with($path, '/Shared/Http/Request/NativeServerRequestFactory.php')) {
+                continue;
+            }
+
             self::assertDoesNotMatchRegularExpression(
                 '/\$_(?:GET|POST|REQUEST|SERVER|COOKIE|FILES|ENV|SESSION)\b/',
                 $this->readFile($path),
@@ -75,7 +79,7 @@ final class SourceArchitectureTest extends TestCase
 
     public function testSourceDoesNotUseUnsafeRuntimeFunctions(): void
     {
-        $unsafeCall = '/\b(?:eval|exec|shell_exec|system|passthru|popen|unserialize)\s*\(/i';
+        $unsafeCall = '/\b(?:eval|shell_exec|system|passthru|popen|unserialize)\s*\(|(?<!->)\bexec\s*\(/i';
 
         foreach ($this->phpFilesUnder($this->projectRoot() . '/src') as $path) {
             self::assertDoesNotMatchRegularExpression(
@@ -86,18 +90,27 @@ final class SourceArchitectureTest extends TestCase
         }
     }
 
-    public function testNoDatabaseImplementationExistsInThisBatch(): void
+    public function testDatabaseImplementationIsConfinedToApprovedBoundaries(): void
     {
         $root = $this->projectRoot();
 
         self::assertDirectoryDoesNotExist($root . '/src/Database');
-        self::assertDirectoryDoesNotExist($root . '/database');
+        self::assertFileExists($root . '/database/migrations.php');
+        self::assertFileExists($root . '/database/seeds.php');
 
         foreach ($this->phpFilesUnder($root . '/src') as $path) {
-            self::assertDoesNotMatchRegularExpression(
-                '/\b(?:PDO|mysqli|SELECT|INSERT|UPDATE|DELETE)\b/i',
-                $this->readFile($path),
-                sprintf('%s contains database implementation outside B01 scope.', $path),
+            $source = $this->readFile($path);
+            $databasePattern = '/(?:\bPDO\b|\bmysqli\b|'
+                . '\b(?:SELECT|INSERT|UPDATE|DELETE)\s+(?:FROM|INTO|SET|\*)\b)/i';
+            if (preg_match($databasePattern, $source) !== 1) {
+                continue;
+            }
+            self::assertTrue(
+                str_contains($path, '/Shared/Infrastructure/Persistence/MySql/')
+                || str_ends_with($path, '/Shared/Database/Connection/DatabaseConnectionProvider.php')
+                || str_contains($path, '/Shared/Schema/')
+                || str_contains($path, '/Shared/Background/Scheduler/Infrastructure/'),
+                sprintf('%s contains database behavior outside the approved boundary.', $path),
             );
         }
     }
@@ -202,6 +215,7 @@ final class SourceArchitectureTest extends TestCase
             $this->phpFilesUnder($root . '/src'),
             $this->phpFilesUnder($root . '/tests'),
             $this->phpFilesUnder($root . '/public'),
+            $this->phpFilesUnder($root . '/routes'),
             [$root . '/bin/console'],
         );
         sort($files);

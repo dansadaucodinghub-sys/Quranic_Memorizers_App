@@ -16,6 +16,8 @@ final class ConfigurationArchitectureTest extends TestCase
 {
     private const APPROVED_NATIVE_ENVIRONMENT_READER =
         'src/Shared/Configuration/Infrastructure/DotenvEnvironmentLoader.php';
+    private const APPROVED_SAPI_REQUEST_READER =
+        'src/Shared/Http/Request/NativeServerRequestFactory.php';
 
     public function testNativeEnvironmentAccessIsConfinedToOneApprovedAdapter(): void
     {
@@ -29,11 +31,13 @@ final class ConfigurationArchitectureTest extends TestCase
                 $getenvReaders[] = $relativePath;
             }
 
-            self::assertDoesNotMatchRegularExpression(
-                '/\$_(?:ENV|SERVER)\b/',
-                $source,
-                sprintf('%s reads native environment state outside the approved adapter.', $relativePath),
-            );
+            if ($relativePath !== self::APPROVED_SAPI_REQUEST_READER) {
+                self::assertDoesNotMatchRegularExpression(
+                    '/\$_(?:ENV|SERVER)\b/',
+                    $source,
+                    sprintf('%s reads native environment state outside the approved adapter.', $relativePath),
+                );
+            }
         }
 
         self::assertSame([self::APPROVED_NATIVE_ENVIRONMENT_READER], $getenvReaders);
@@ -86,13 +90,43 @@ final class ConfigurationArchitectureTest extends TestCase
             self::assertMatchesRegularExpression('/\A[A-Z][A-Z0-9_]*=/', $trimmed);
             [$name] = explode('=', $trimmed, 2);
             $assignments[] = $name;
-            self::assertDoesNotMatchRegularExpression(
-                '/(?:SECRET|PASSWORD|TOKEN|PRIVATE|CREDENTIAL|CERTIFICATE|KEY)/',
-                $name,
-            );
+            if (in_array($name, ['DB_PASSWORD', 'DB_SCHEMA_PASSWORD'], true)) {
+                self::assertSame($name . '=', $trimmed);
+            } else {
+                self::assertDoesNotMatchRegularExpression(
+                    '/(?:SECRET|PASSWORD|TOKEN|PRIVATE|CREDENTIAL|CERTIFICATE|KEY)/',
+                    $name,
+                );
+            }
         }
 
-        self::assertSame(['APP_ENV', 'APP_DEBUG', 'APP_TIMEZONE'], $assignments);
+        self::assertSame([
+            'APP_ENV',
+            'APP_DEBUG',
+            'APP_TIMEZONE',
+            'APP_LOG_LEVEL',
+            'WORKER_MAX_JOBS',
+            'WORKER_MAX_RUNTIME_SECONDS',
+            'WORKER_IDLE_SLEEP_MS',
+            'WORKER_MAX_MEMORY_MB',
+            'WORKER_REQUIRE_PCNTL_IN_PRODUCTION',
+            'SCHEDULER_RUN_LEASE_SECONDS',
+            'SCHEDULER_LOCK_TIMEOUT_SECONDS',
+            'DB_HOST',
+            'DB_PORT',
+            'DB_NAME',
+            'DB_USERNAME',
+            'DB_PASSWORD',
+            'DB_TLS_MODE',
+            'DB_TLS_CA_FILE',
+            'DB_CONNECT_TIMEOUT_SECONDS',
+            'DB_DEADLOCK_MAX_ATTEMPTS',
+            'DB_DEADLOCK_BASE_DELAY_MS',
+            'DB_DEADLOCK_MAX_DELAY_MS',
+            'DB_SCHEMA_USERNAME',
+            'DB_SCHEMA_PASSWORD',
+            'DB_SCHEMA_LOCK_TIMEOUT_SECONDS',
+        ], $assignments);
     }
 
     public function testSecretValueCannotBeImplicitlyRenderedOrSerializedInPlaintext(): void
@@ -128,7 +162,7 @@ final class ConfigurationArchitectureTest extends TestCase
     public function testPublicHttpPayloadSourceContainsNoConfigurationDetails(): void
     {
         $source = $this->readFile(
-            $this->projectRoot() . '/src/Bootstrap/Http/BootstrapHttpApplication.php',
+            $this->projectRoot() . '/src/Shared/Http/Controller/SystemAboutController.php',
         );
 
         foreach (['environment', 'debug', 'timezone', 'source', 'secret', 'php_version'] as $field) {
@@ -136,17 +170,18 @@ final class ConfigurationArchitectureTest extends TestCase
         }
     }
 
-    public function testNoDatabaseConfigurationOrImplementationWasIntroduced(): void
+    public function testDatabaseConfigurationIsConfinedToApprovedNamespaces(): void
     {
         self::assertDirectoryDoesNotExist($this->projectRoot() . '/src/Database');
-        self::assertDirectoryDoesNotExist($this->projectRoot() . '/database');
+        self::assertFileExists($this->projectRoot() . '/database/migrations.php');
+        self::assertFileExists($this->projectRoot() . '/database/seeds.php');
 
         foreach ($this->phpFilesUnder($this->projectRoot() . '/src/Shared/Configuration') as $path) {
-            self::assertDoesNotMatchRegularExpression(
-                '/\b(?:database|dsn|mysql|password|username|host|port)\b/i',
-                $this->readFile($path),
-                sprintf('%s contains database configuration outside this batch.', $this->relativePath($path)),
-            );
+            $source = $this->readFile($path);
+            if (preg_match('/\b(?:database|dsn|mysql|password|username|host|port)\b/i', $source) !== 1) {
+                continue;
+            }
+            self::assertStringContainsString('/Shared/Configuration/Database/', $path);
         }
     }
 
@@ -164,6 +199,10 @@ final class ConfigurationArchitectureTest extends TestCase
     public function testNoGenericServiceLocatorWasIntroduced(): void
     {
         foreach ($this->phpFilesUnder($this->projectRoot() . '/src') as $path) {
+            if (str_ends_with($path, '/Shared/DependencyInjection/CompiledContainer.php')) {
+                continue;
+            }
+
             self::assertDoesNotMatchRegularExpression(
                 '/function\s+get\s*\(\s*string\s+\$[a-zA-Z_][a-zA-Z0-9_]*\s*\)\s*:\s*mixed/',
                 $this->readFile($path),

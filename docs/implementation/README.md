@@ -6,13 +6,13 @@
 | Project Code | QMDB |
 | Source Baseline | QMDB-BL-001 |
 | Freeze ID | QMDB-P0-FRZ-001 |
-| Batch ID | QMDB-P0-CLOSE |
+| Batch ID | QMDB-P1-CLOSE |
 | Document Title | Implementation Entry Point |
 | Document Version | 1.0.0 |
-| Document Status | P1 READY WITH DEFERRED DECISIONS |
+| Document Status | P1 COMPLETE — P2-B01 BLOCKED BY OD-051 AND OD-052 |
 | Document Owner Role | Product, Architecture and Engineering Governance |
-| Last Updated | 2026-08-24 |
-| Approval Status | QMDB-P1-B01 authorized under explicit project-owner instruction and successful readiness validation |
+| Last Updated | 2026-08-26 |
+| Approval Status | QMDB-P1-CLOSE accepted after executable engineering verification; P2-B01 is not authorized |
 | Related Documents | [Closeout entry point](../closeout/README.md); [freeze manifest](../closeout/qmdb-p0-baseline-freeze.yaml); [project state](../project/project-state.md) |
 
 ## Purpose
@@ -29,16 +29,25 @@ The artifacts cover phased implementation routing, readiness/completion policy, 
 2. [Requirements-to-implementation map](requirements-to-implementation-map.md) — one implementation disposition for every approved P0 requirement.
 3. [Definition of Ready and Done](definition-of-ready-and-done.md) — mandatory entry, completion, evidence, and state-transition rules.
 4. [P1 engineering foundation backlog](P1-engineering-foundation-backlog.md) — executable ordering for QMDB-P1-B01 through QMDB-P1-CLOSE.
-5. [QMDB-P1-B01 implementation prompt](prompts/QMDB-P1-B01-core-php-repository-and-runtime-foundation.md) — the only implementation batch currently authorized.
+5. [QMDB-P1-B01 implementation prompt](prompts/QMDB-P1-B01-core-php-repository-and-runtime-foundation.md) — preserved executable batch specification.
+6. [CI, build, security, and release-artifact standard](ci-build-and-release-standard.md) — executable B10 pipeline and artifact contract.
+7. [P1 closeout evidence](../closeout/p1/README.md) — final batch ledger, executable evidence, risk disposition, freeze, and P2 readiness decision.
 
 ## Current authorization
 
-P0 is complete and frozen with status `READY_WITH_DEFERRED_DECISIONS`. There are no decisions that block QMDB-P1-B01. Deferred decisions remain binding release gates for their assigned phases and must not be resolved by undocumented implementation choices.
+P0 remains complete and frozen. P1-B01 through P1-B10 are complete and P1 is closed. Deferred operational evidence is
+listed in the P1 closeout package and remains binding at its assigned deployment or release gate. OD-051 and OD-052 are
+the explicit `BLOCKS_P2_B01` decisions; no P2 identity schema or authentication implementation is authorized until the
+qualified owners approve those normalization contracts.
 
 ## Exact next action
 
-Execute `QMDB-P1-B01 — Core PHP Repository and Runtime Foundation`. B01 may establish repository/runtime foundations only; it must not create QMDB domain migrations, implement business modules, or advance later batches.
+Resolve OD-051 and OD-052 through Identity, Security, and Privacy Governance, record approved email and phone
+normalization/test-vector decisions, then rerun the P2-B01 readiness gate. Do not invent those policy decisions in code.
 
 ## Governance
 
-All work must preserve the [baseline freeze and change-control contract](../closeout/05-baseline-freeze-and-change-control.md), cite the [freeze manifest](../closeout/qmdb-p0-baseline-freeze.yaml), and update [project state](../project/project-state.md) only after objective validation evidence exists.
+All work must preserve the [P0 baseline freeze and change-control contract](../closeout/05-baseline-freeze-and-change-control.md),
+cite the [P0 freeze manifest](../closeout/qmdb-p0-baseline-freeze.yaml), and respect the
+[P1 engineering freeze](../closeout/p1/06-P1-engineering-freeze-and-change-control.md). Project state changes require
+objective validation evidence.

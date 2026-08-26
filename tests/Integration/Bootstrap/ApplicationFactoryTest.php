@@ -23,7 +23,7 @@ final class ApplicationFactoryTest extends TestCase
         ])->create('8.5.0', ['json', 'mbstring']);
 
         self::assertSame(ApplicationEnvironment::TEST, $application->configuration()->environment());
-        self::assertSame('QMDB-P1-B02', $application->metadata()->currentBatch());
+        self::assertSame('QMDB-P1-CLOSE', $application->metadata()->currentBatch());
     }
 
     public function testInvalidEnvironmentFailsBeforeBootstrapExecution(): void
@@ -59,7 +59,7 @@ final class ApplicationFactoryTest extends TestCase
         }
     }
 
-    public function testFactoryDoesNotConstructDatabaseOrDomainModules(): void
+    public function testFactoryConstructsDatabaseFoundationButNoDomainModules(): void
     {
         $path = (new ReflectionClass(ApplicationFactory::class))->getFileName();
         self::assertIsString($path);
@@ -67,7 +67,7 @@ final class ApplicationFactoryTest extends TestCase
         self::assertIsString($source);
 
         self::assertDoesNotMatchRegularExpression(
-            '/\b(?:PDO|mysqli|Database|Redis|Modules|Controller|Router)\b/',
+            '/\b(?:mysqli|Redis|Modules)\b/',
             $source,
         );
     }

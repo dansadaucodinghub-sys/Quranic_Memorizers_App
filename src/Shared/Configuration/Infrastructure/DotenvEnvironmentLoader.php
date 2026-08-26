@@ -44,6 +44,7 @@ final readonly class DotenvEnvironmentLoader implements EnvironmentLoader
                 throw new InvalidArgumentException('Environment file is unreadable.');
             }
 
+            $this->assertQuotedAssignmentsAreClosed($contents);
             $fileVariables = $this->normalizeParsedVariables(Dotenv::parse($contents));
             $mergedVariables = array_replace($fileVariables, $processVariables);
             $variables = new EnvironmentVariables($mergedVariables);
@@ -79,6 +80,25 @@ final readonly class DotenvEnvironmentLoader implements EnvironmentLoader
         }
 
         return $variables;
+    }
+
+    private function assertQuotedAssignmentsAreClosed(string $contents): void
+    {
+        foreach (preg_split('/\R/', $contents) ?: [] as $line) {
+            $assignment = trim($line);
+            if ($assignment === '' || str_starts_with($assignment, '#')) {
+                continue;
+            }
+
+            if (preg_match('/\A[A-Z][A-Z0-9_]*\s*=\s*(["\'])/', $assignment, $matches) !== 1) {
+                continue;
+            }
+
+            $quote = $matches[1];
+            if (!str_ends_with($assignment, $quote)) {
+                throw new InvalidArgumentException('Environment file contains an unterminated quoted value.');
+            }
+        }
     }
 
     private function isExternallyProductionLike(EnvironmentVariables $variables): bool

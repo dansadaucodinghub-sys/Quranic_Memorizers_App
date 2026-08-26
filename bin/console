@@ -4,28 +4,28 @@
 declare(strict_types=1);
 
 use Qmdb\Bootstrap\ApplicationFactory;
-use Qmdb\Bootstrap\Console\ConsoleApplication;
+use Qmdb\Bootstrap\Error\BootstrapSupport;
 use Qmdb\Bootstrap\RuntimeRequirements;
 use Qmdb\Bootstrap\Shared\ExitCode;
 use Qmdb\Shared\Configuration\ConfigurationException;
 
-try {
-    require_once dirname(__DIR__) . '/src/Bootstrap/Shared/ExitCode.php';
-    require_once dirname(__DIR__) . '/src/Bootstrap/RuntimeViolation.php';
-    require_once dirname(__DIR__) . '/src/Bootstrap/RuntimeRequirementResult.php';
-    require_once dirname(__DIR__) . '/src/Bootstrap/RuntimeRequirements.php';
+$root = dirname(__DIR__);
+require_once $root . '/src/Bootstrap/Error/BootstrapSupport.php';
+$fallback = BootstrapSupport::failureResponder();
 
+try {
     $runtimeResult = (new RuntimeRequirements())->evaluateCurrentRuntime();
 
     if (!$runtimeResult->isSatisfied()) {
-        fwrite(STDERR, $runtimeResult->toCliString() . "\n");
+        $failure = $fallback->create('runtime_requirements');
+        fwrite(STDERR, $runtimeResult->toCliString() . "\nReference: " . $failure->requestId() . "\n");
         exit(ExitCode::FAILURE->value);
     }
 
-    require_once dirname(__DIR__) . '/vendor/autoload.php';
+    require_once $root . '/vendor/autoload.php';
 
-    $application = ApplicationFactory::fromCurrentProcess()->create();
-    $result = (new ConsoleApplication($application))->run(array_slice($argv, 1));
+    $console = ApplicationFactory::fromCurrentProcess($root)->createConsoleApplication();
+    $result = $console->run(array_slice($argv, 1));
 
     if ($result->standardOutput() !== '') {
         fwrite(STDOUT, $result->standardOutput());
@@ -37,9 +37,11 @@ try {
 
     exit($result->exitCode()->value);
 } catch (ConfigurationException $exception) {
-    fwrite(STDERR, $exception->toCliString() . "\n");
+    $failure = $fallback->create('configuration');
+    fwrite(STDERR, $exception->toCliString() . "\nReference: " . $failure->requestId() . "\n");
     exit(ExitCode::FAILURE->value);
 } catch (Throwable) {
-    fwrite(STDERR, "QMDB bootstrap failed.\n");
+    $failure = $fallback->create('unexpected_throwable');
+    fwrite(STDERR, "The operation could not be completed.\nReference: " . $failure->requestId() . "\n");
     exit(ExitCode::FAILURE->value);
 }

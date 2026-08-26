@@ -5,6 +5,9 @@
     <file>src</file>
     <file>tests</file>
     <file>public</file>
+    <file>routes</file>
+    <file>database</file>
+    <file>tools</file>
     <file>bin/console</file>
 
     <arg name="extensions" value="php"/>
@@ -14,4 +17,7 @@
     <exclude-pattern>vendor/*</exclude-pattern>
 
     <rule ref="PSR12"/>
+    <rule ref="PSR1.Files.SideEffects">
+        <exclude-pattern>tools/bootstrap.php</exclude-pattern>
+    </rule>
 </ruleset>

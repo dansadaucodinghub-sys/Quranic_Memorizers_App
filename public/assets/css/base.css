@@ -1,0 +1,13 @@
+*, *::before, *::after { box-sizing: border-box; }
+html { background: var(--color-bg); color: var(--color-text); font-family: var(--font-sans); line-height: 1.6; }
+body { margin: 0; min-inline-size: 0; }
+img, svg { max-inline-size: 100%; }
+a { color: var(--color-primary); text-underline-offset: .2em; }
+a:hover { text-decoration-thickness: .15em; }
+button, select { color: inherit; font: inherit; min-block-size: var(--touch-target); }
+:focus-visible { outline: .2rem solid var(--color-focus); outline-offset: .2rem; }
+h1, h2, h3 { line-height: 1.18; text-wrap: balance; }
+h1 { font-size: clamp(2.1rem, 6vw, 4.7rem); letter-spacing: -.035em; margin-block: var(--space-3) var(--space-6); max-inline-size: 14ch; }
+h2 { font-size: clamp(1.45rem, 3vw, 2.2rem); }
+p { max-inline-size: 68ch; }
+dl, dd { margin: 0; }

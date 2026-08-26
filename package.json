@@ -1,0 +1,19 @@
+{
+  "name": "qmdb-presentation-foundation",
+  "private": true,
+  "type": "module",
+  "packageManager": "npm@11.6.2",
+  "engines": {
+    "node": ">=24 <25",
+    "npm": ">=11 <12"
+  },
+  "scripts": {
+    "check:syntax": "node scripts/check-javascript-syntax.js",
+    "test": "node --test tests/Frontend/*.test.js",
+    "audit": "npm audit --audit-level=high",
+    "quality": "npm run check:syntax && npm test && npm run audit"
+  },
+  "devDependencies": {
+    "jsdom": "^29.1.1"
+  }
+}
