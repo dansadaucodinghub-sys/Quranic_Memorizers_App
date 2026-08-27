@@ -145,6 +145,11 @@ reported 52 packages, zero unknown and zero review-required. Deterministic relea
 and passed CLI, HTTP, MySQL readiness and artifact secret/security checks. The committed-source release, local CI and
 regenerated engineering-freeze results are retained by their generated reports and final project ledger.
 
+The first clean local-CI orchestration reached its separate MySQL repetition but the outer Composer wrapper terminated
+at the inherited 1,200-second process ceiling. No inner validation stage had failed. The governed ceiling was raised to
+7,200 seconds to cover the deliberately duplicated MySQL, scanner and release stages on the accepted Windows host; the
+complete orchestration was then rerun from the beginning.
+
 The delivered candidate adds or updates 105/28 production PHP files and adds or updates 5/2 production JavaScript
 files. It adds one module, four migrations, nine tables, 30 routes, 11 pages, 10 fragments, 75 English plus 75 Arabic
 translation entries, nine notification types and no new scheduled task or email-template path.

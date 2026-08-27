@@ -135,7 +135,7 @@ build reports.
 | Frontend suite | PASS — 28 files syntax-valid, 48 tests, zero npm vulnerabilities |
 | Migration lifecycle | PASS — 16 applied; B05 rollback/reapply, idempotent rerun and schema verification |
 | Security and supply chain | PASS — Gitleaks, Trivy, Composer audit/platform, 269 SBOM checks, 52 runtime licences with zero unknown/review |
-| Corrections made | Stale metadata assertions; frozen-document write removed; recovery alphabet; PDO placeholder; concurrency winners; server-authoritative grant UI; stale WebAuthn ceremony retry; OpenSSL fixture configuration; Gitleaks prose false positive; Trivy timeout handling |
+| Corrections made | Stale metadata assertions; frozen-document write removed; recovery alphabet; PDO placeholder; concurrency winners; server-authoritative grant UI; stale WebAuthn ceremony retry; OpenSSL fixture configuration; Gitleaks prose false positive; Trivy timeout handling; Composer CI process ceiling |
 | Remaining environment limitations | Hosted CI; production HTTPS RP/origin and key custody; physical authenticator/browser/AT matrix; production provider/scheduler; assisted/lost-factor process; Docker/WSL host repair |
 
 ## Deferred evidence that does not reopen P1
