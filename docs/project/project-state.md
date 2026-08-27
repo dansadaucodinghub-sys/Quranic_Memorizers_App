@@ -115,7 +115,7 @@ build reports.
 | B04 HTTP/scheduler scenarios | Generic EN/AR/fallback/progressive recovery; atomic reset; scheduled delivery and no-duplicate rerun |
 | Frontend tests | 41 total; 2 B04-specific additions |
 | Architecture tests | 6 B04-specific assertions groups plus updated foundation allowlists |
-| Validation failures resolved | Hydration typing, reset idempotency race, readiness ownership, scheduler dependency resolution, Sodium runtime, Composer process ceiling, scanner cache boundary |
+| Validation failures resolved | Hydration typing, reset idempotency race, readiness ownership, scheduler dependency resolution, Sodium runtime, Composer process ceiling, portable nested-tool resolution, scanner cache boundary |
 | Remaining environment limitations | Hosted CI, manual browser/AT matrix, production scheduler/provider configuration, and Docker/WSL host repair remain external gates |
 
 ## Deferred evidence that does not reopen P1

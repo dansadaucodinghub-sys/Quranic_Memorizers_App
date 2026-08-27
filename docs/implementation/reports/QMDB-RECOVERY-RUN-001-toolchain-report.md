@@ -41,6 +41,10 @@ release, syntax, link, freeze and sensitive-content inventories.
 The executable lock is `tools/runtime/toolchain.lock.json`. This report intentionally contains no password, token,
 complete environment map or private-user attachment path.
 
+Nested repository process execution receives explicit `QMDB_COMPOSER_PHAR`, `QMDB_NODE_BINARY`, and `QMDB_NPM_CLI`
+bindings from the portable activation script. Local CI, release, and verification subprocesses therefore use the same
+checksum-pinned Composer 2.8.8 and Node 24 toolchain instead of discovering machine-wide launchers from `PATH`.
+
 ## Lifecycle commands
 
 ```powershell

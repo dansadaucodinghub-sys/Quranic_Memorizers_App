@@ -71,20 +71,35 @@ final class ProcessRunner
         }
         $executable = strtolower($command[0]);
         if ($executable === 'composer') {
-            $launcher = $this->findOnPath('composer.bat');
-            $phar = $launcher === null ? null : dirname($launcher) . '/composer.phar';
+            $portablePhar = getenv('QMDB_COMPOSER_PHAR');
+            $phar = is_string($portablePhar) && is_file($portablePhar)
+                ? $portablePhar
+                : $this->composerPharOnPath();
             if ($phar !== null && is_file($phar)) {
                 return array_merge([PHP_BINARY, $phar], array_slice($command, 1));
             }
         }
         if ($executable === 'npm') {
-            $node = $this->findOnPath('node.exe');
-            $cli = $this->findNpmCliOnPath();
+            $portableNode = getenv('QMDB_NODE_BINARY');
+            $portableCli = getenv('QMDB_NPM_CLI');
+            $node = is_string($portableNode) && is_file($portableNode)
+                ? $portableNode
+                : $this->findOnPath('node.exe');
+            $cli = is_string($portableCli) && is_file($portableCli)
+                ? $portableCli
+                : $this->findNpmCliOnPath();
             if ($node !== null && $cli !== null && is_file($cli)) {
                 return array_merge([$node, $cli], array_slice($command, 1));
             }
         }
         return $command;
+    }
+
+    private function composerPharOnPath(): ?string
+    {
+        $launcher = $this->findOnPath('composer.bat');
+
+        return $launcher === null ? null : dirname($launcher) . '/composer.phar';
     }
 
     private function findOnPath(string $filename): ?string

@@ -55,6 +55,8 @@ recovery idempotency headers and retains no recovery secret in browser storage.
   resolves mail, encryption, or database dependencies, while task execution remains constrained to declared services.
 - Enabled Sodium in the recovered PHP 8.5 runtime because B04 scheduled-delivery composition exercised the existing
   encrypted-contact dependency in CLI integration tests.
+- Bound nested CI/release subprocesses to the checksum-pinned portable Composer and Node executables after a diagnostic
+  CI run revealed that Windows `PATH` discovery could select a machine-wide Composer PHAR.
 - Bounded Trivy scan inputs by excluding generated PHPStan cache data from repository filesystem scanning.
 
 ## Verification evidence

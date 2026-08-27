@@ -15,6 +15,9 @@ $env:PATH = "$phpDirectory;$nodeDirectory;$mysqlDirectory;$env:PATH"
 $env:PHPRC = $phpDirectory
 $env:COMPOSER_HOME = Join-Path (Get-QmdbRuntimeRoot) 'composer-home'
 $env:COMPOSER_CACHE_DIR = Join-Path (Get-QmdbRuntimeRoot) 'composer-cache'
+$env:QMDB_COMPOSER_PHAR = $paths.Composer
+$env:QMDB_NODE_BINARY = $paths.Node
+$env:QMDB_NPM_CLI = Join-Path $nodeDirectory 'node_modules\npm\bin\npm-cli.js'
 $env:npm_config_cache = Join-Path (Get-QmdbRuntimeRoot) 'npm-cache'
 $env:npm_config_engine_strict = 'true'
 
