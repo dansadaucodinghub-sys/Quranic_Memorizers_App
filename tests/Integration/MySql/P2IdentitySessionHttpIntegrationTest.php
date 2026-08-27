@@ -733,6 +733,10 @@ final class P2IdentitySessionHttpIntegrationTest extends MySqlIntegrationTestCas
     private function clearRows(bool $includeSessionTables = true): void
     {
         $tables = [
+            'account_security_notification_events',
+            'account_security_notifications',
+            'account_password_recovery_events',
+            'account_password_recovery_challenges',
             'account_email_verification_challenges',
             'identity_rate_limit_buckets',
             'identity_idempotency_records',

@@ -68,3 +68,24 @@ change control.
   parallel-token overwrite.
 - **Future review conditions:** Production TTL, limit, device semantics, anomaly policy, or cookie changes require load,
   threat, privacy, browser, migration, and rollback evidence.
+
+## P2-ADR-005 — Transactional account recovery and scheduled security notification
+
+- **Status:** Approved and implemented by QMDB-P2-B04.
+- **Context:** Recovery must resist account enumeration, database token disclosure, email-link scanning, replay,
+  concurrency, stale sessions, mail outages, and ambiguous SMTP outcomes.
+- **Decision:** Use generic recovery responses; server-generated idempotency; HMAC email/peer/request buckets; 256-bit
+  tokens with SHA-256-only persistence; one pending challenge/account; non-consuming GET; authoritative locked POST;
+  Argon2id hashing before the transaction; atomic credential replacement, challenge/event changes, all-session
+  revocation, and deduplicated notification intent; preserve devices, clear session, rotate CSRF, and do not auto-login.
+- **Delivery decision:** Deliver `PASSWORD_RESET_COMPLETED` intents through
+  `identity.security_notifications.deliver` using bounded batches, execution-owned leases, optimistic versions, capped
+  retry, and at-least-once semantics. Intent deduplication does not guarantee exactly-once SMTP.
+- **Presentation decision:** Recovery and reset remain full-page progressive workflows with no modal dependency and a
+  complete no-JavaScript fallback.
+- **Boundary:** Recovery and notification histories are append-oriented operational evidence, not the future tamper-
+  evident audit ledger.
+- **Consequences:** Mail delivery never holds the reset transaction; a provider may deliver a duplicate after an
+  ambiguous outcome; deployment must configure and monitor the CLI scheduler.
+- **Future review conditions:** MFA/passkey recovery, provider, retention, CAPTCHA/trusted-proxy, password history,
+  fraud review, and audit checkpoint decisions require their owning threat, privacy, operations, and test evidence.

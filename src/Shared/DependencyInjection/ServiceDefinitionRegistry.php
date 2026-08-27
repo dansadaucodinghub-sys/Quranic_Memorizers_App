@@ -28,7 +28,7 @@ final class ServiceDefinitionRegistry
         }
 
         $seen = [];
-        foreach ($definition->dependencies as $dependency) {
+        foreach (array_merge($definition->dependencies, $definition->extensionDependencies) as $dependency) {
             self::assertIdentifier($dependency, 'dependency');
             if ($dependency === $definition->id) {
                 throw new DependencyInjectionException(sprintf(
@@ -105,7 +105,7 @@ final class ServiceDefinitionRegistry
 
     private static function assertModuleIdentifier(string $moduleId): void
     {
-        if (preg_match('/\A[a-z][a-z0-9]*(?:\.[a-z][a-z0-9]*)*\z/', $moduleId) !== 1) {
+        if (preg_match('/\A[a-z][a-z0-9_]*(?:\.[a-z][a-z0-9_]*)*\z/', $moduleId) !== 1) {
             throw new DependencyInjectionException('Invalid owner module identifier.');
         }
     }

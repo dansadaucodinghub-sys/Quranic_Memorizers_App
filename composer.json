@@ -73,6 +73,7 @@
     "allow-plugins": {},
     "optimize-autoloader": true,
     "platform-check": true,
+    "process-timeout": 1200,
     "preferred-install": "dist",
     "sort-packages": true
   },

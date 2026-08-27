@@ -42,7 +42,12 @@ export function parseSafeFragment(markup, baseUrl = globalThis.location?.href ??
         if (!approved) {
             throw new TypeError('Fragment contains a mutation form.');
         }
-        if ((action === '/register' || action === '/verify-email/resend' || action === '/login')
+        const requiresIdempotency = action === '/register'
+            || action === '/verify-email/resend'
+            || action === '/login'
+            || action === '/forgot-password'
+            || /^\/reset-password\/[^/]+$/.test(action);
+        if (requiresIdempotency
             && !form.querySelector('[data-qmdb-idempotency-key]')) {
             throw new TypeError('Fragment mutation form lacks idempotency protection.');
         }

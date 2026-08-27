@@ -99,6 +99,13 @@ final readonly class PresentationFoundationModule implements Module
                         $root . '/resources/views/pages/session-revoke-confirm.php',
                     'pages.device-revoke-confirm' =>
                         $root . '/resources/views/pages/device-revoke-confirm.php',
+                    'pages.password-recovery-request' =>
+                        $root . '/resources/views/pages/password-recovery-request.php',
+                    'pages.password-recovery-request-accepted' =>
+                        $root . '/resources/views/pages/password-recovery-request-accepted.php',
+                    'pages.password-reset' => $root . '/resources/views/pages/password-reset.php',
+                    'pages.password-reset-completed' =>
+                        $root . '/resources/views/pages/password-reset-completed.php',
                     'fragments.system-about-dialog' => $root . '/resources/views/fragments/system-about-dialog.php',
                     'fragments.system-status-card' => $root . '/resources/views/fragments/system-status-card.php',
                     'fragments.account-register-form' =>
@@ -121,8 +128,24 @@ final readonly class PresentationFoundationModule implements Module
                         $root . '/resources/views/fragments/session-revoke-dialog.php',
                     'fragments.device-revoke-dialog' =>
                         $root . '/resources/views/fragments/device-revoke-dialog.php',
+                    'fragments.password-recovery-request-form' =>
+                        $root . '/resources/views/fragments/password-recovery-request-form.php',
+                    'fragments.password-recovery-request-accepted' =>
+                        $root . '/resources/views/fragments/password-recovery-request-accepted.php',
+                    'fragments.password-reset-form' =>
+                        $root . '/resources/views/fragments/password-reset-form.php',
+                    'fragments.password-reset-completed' =>
+                        $root . '/resources/views/fragments/password-reset-completed.php',
                     'emails.email-verification-html' => $root . '/resources/views/emails/email-verification.html.php',
                     'emails.email-verification-text' => $root . '/resources/views/emails/email-verification.txt.php',
+                    'emails.password-recovery-html' =>
+                        $root . '/resources/views/emails/password-recovery.html.php',
+                    'emails.password-recovery-text' =>
+                        $root . '/resources/views/emails/password-recovery.txt.php',
+                    'emails.password-reset-completed-html' =>
+                        $root . '/resources/views/emails/password-reset-completed.html.php',
+                    'emails.password-reset-completed-text' =>
+                        $root . '/resources/views/emails/password-reset-completed.txt.php',
                     'components.application-header' => $root . '/resources/views/components/application-header.php',
                     'components.application-footer' => $root . '/resources/views/components/application-footer.php',
                     'components.language-switcher' => $root . '/resources/views/components/language-switcher.php',

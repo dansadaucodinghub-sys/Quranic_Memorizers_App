@@ -22,6 +22,12 @@ use Qmdb\Modules\IdentitySessions\Interface\Http\LoginFormController;
 use Qmdb\Modules\IdentitySessions\Interface\Http\LoginSubmitController;
 use Qmdb\Modules\IdentitySessions\Interface\Http\LogoutController;
 use Qmdb\Modules\IdentitySessions\Interface\Http\SessionRevocationController;
+use Qmdb\Modules\IdentityRecovery\Interface\Http\PasswordRecoveryRequestAcceptedController;
+use Qmdb\Modules\IdentityRecovery\Interface\Http\PasswordRecoveryRequestFormController;
+use Qmdb\Modules\IdentityRecovery\Interface\Http\PasswordRecoveryRequestSubmitController;
+use Qmdb\Modules\IdentityRecovery\Interface\Http\PasswordResetCompletedController;
+use Qmdb\Modules\IdentityRecovery\Interface\Http\PasswordResetFormController;
+use Qmdb\Modules\IdentityRecovery\Interface\Http\PasswordResetSubmitController;
 use Qmdb\Shared\Http\Routing\HttpMethod;
 use Qmdb\Shared\Http\Routing\Route;
 use Qmdb\Shared\Http\Routing\RouteCollection;
@@ -48,6 +54,12 @@ return static function (
     AccountSecurityController $accountSecurity,
     SessionRevocationController $sessionRevocation,
     DeviceRevocationController $deviceRevocation,
+    PasswordRecoveryRequestFormController $recoveryRequestForm,
+    PasswordRecoveryRequestSubmitController $recoveryRequestSubmit,
+    PasswordRecoveryRequestAcceptedController $recoveryRequestAccepted,
+    PasswordResetFormController $passwordResetForm,
+    PasswordResetSubmitController $passwordResetSubmit,
+    PasswordResetCompletedController $passwordResetCompleted,
 ): RouteCollection {
     return new RouteCollection(
         new Route('system.home', [HttpMethod::GET], new RoutePattern('/'), $homeController),
@@ -146,6 +158,42 @@ return static function (
             [HttpMethod::POST],
             new RoutePattern('/account/security/devices/{deviceId}/revoke'),
             $deviceRevocation,
+        ),
+        new Route(
+            'account.password_recovery.request.form',
+            [HttpMethod::GET],
+            new RoutePattern('/forgot-password'),
+            $recoveryRequestForm,
+        ),
+        new Route(
+            'account.password_recovery.request.submit',
+            [HttpMethod::POST],
+            new RoutePattern('/forgot-password'),
+            $recoveryRequestSubmit,
+        ),
+        new Route(
+            'account.password_recovery.request.accepted',
+            [HttpMethod::GET],
+            new RoutePattern('/forgot-password/accepted'),
+            $recoveryRequestAccepted,
+        ),
+        new Route(
+            'account.password_recovery.reset.form',
+            [HttpMethod::GET],
+            new RoutePattern('/reset-password/{challengeId}'),
+            $passwordResetForm,
+        ),
+        new Route(
+            'account.password_recovery.reset.submit',
+            [HttpMethod::POST],
+            new RoutePattern('/reset-password/{challengeId}'),
+            $passwordResetSubmit,
+        ),
+        new Route(
+            'account.password_recovery.reset.completed',
+            [HttpMethod::GET],
+            new RoutePattern('/reset-password/completed'),
+            $passwordResetCompleted,
         ),
     );
 };

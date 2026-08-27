@@ -10,7 +10,7 @@ final readonly class ModuleId implements Stringable
 {
     public function __construct(private string $value)
     {
-        if (preg_match('/\A[a-z][a-z0-9]*(?:\.[a-z][a-z0-9]*)*\z/', $value) !== 1) {
+        if (preg_match('/\A[a-z][a-z0-9_]*(?:\.[a-z][a-z0-9_]*)*\z/', $value) !== 1) {
             throw new ModuleDependencyException('Module identifier is invalid.');
         }
     }

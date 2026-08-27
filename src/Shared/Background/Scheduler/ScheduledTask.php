@@ -22,7 +22,7 @@ final readonly class ScheduledTask
         if ($leaseSeconds < 1 || $leaseSeconds > 86_400) {
             throw new InvalidArgumentException('Scheduled task lease is invalid.');
         }
-        if (preg_match('/\A[a-z][a-z0-9]*(?:\.[a-z0-9]+)+\z/D', $owningModule) !== 1) {
+        if (preg_match('/\A[a-z][a-z0-9_]*(?:\.[a-z0-9_]+)+\z/D', $owningModule) !== 1) {
             throw new InvalidArgumentException('Scheduled task owning module is invalid.');
         }
     }

@@ -401,6 +401,26 @@ final readonly class MySqlIdentitySessionRepository implements UserDeviceReposit
         return $statement->rowCount();
     }
 
+    public function revokeAllForAccount(
+        int $accountInternalId,
+        SessionRevocationReason $reason,
+        DateTimeImmutable $now,
+    ): int {
+        $statement = $this->pdo()->prepare(
+            "UPDATE user_sessions SET status = 'REVOKED', revoked_at = :revoked_at, "
+            . 'revoke_reason_code = :reason, updated_at = :updated_at, version = version + 1 '
+            . "WHERE account_id = :account_id AND status = 'ACTIVE'",
+        );
+        $statement->execute([
+            ':revoked_at' => self::format($now),
+            ':reason' => $reason->value,
+            ':updated_at' => self::format($now),
+            ':account_id' => $accountInternalId,
+        ]);
+
+        return $statement->rowCount();
+    }
+
     public function listSessionsForAccount(int $accountInternalId, int $limit = 50): array
     {
         $limit = max(1, min(100, $limit));

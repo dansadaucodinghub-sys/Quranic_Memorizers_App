@@ -1,7 +1,8 @@
 # QMDB P2 Requirements-to-Batches Map
 
-This map routes the frozen P0 requirements into executable P2 ownership. It does not change requirement meaning or
-authorize P2 while [readiness](../closeout/p1/05-P2-readiness-assessment.md) remains `NOT_READY`.
+This map routes the frozen P0 requirements into executable P2 ownership. It does not change requirement meaning.
+`QMDB-RECOVERY-RUN-001` resolved the historical entry block conservatively and authorizes only sequential B01–B05
+execution; B01 through B04 are complete and B05 is next.
 
 | Capability | Requirement IDs | Batch | Owning module | Migration group | Security controls | Acceptance scenarios/invariants | Test type |
 | --- | --- | --- | --- | --- | --- | --- | --- |
@@ -27,8 +28,8 @@ authorize P2 while [readiness](../closeout/p1/05-P2-readiness-assessment.md) rem
 | Suspension/reactivation | QMDB-FR-IAM-006 | B09 | Identity | Account status events | QMDB-CTL-002/003/004 | QMDB-AS-001/002; INV-003/026 | Authorization, stale version, revocation and history |
 | Security hardening | All preceding P2 requirements | B10 | Cross-module | Bounded remediation only | QMDB-CTL-001–008/014/020–022/030 | All IAM/tenant scenarios | Abuse, concurrency, performance and penetration regression |
 
-## Unresolved preconditions
+## Historical preconditions and current disposition
 
-OD-051 and OD-052 block the B01 contact schema because exact normalization/test vectors are not approved. No migration
-may silently invent those contracts. Production providers, final retention periods, competition rules and national
-rollout authority are not B01 dependencies.
+OD-051 and OD-052 previously blocked B01. The recovery run authorized conservative ASCII-email and canonical E.164
+contracts with executable vectors; those decisions are now implemented. Production providers, retention periods,
+competition rules, and national rollout authority remain owned by their later governance gates.

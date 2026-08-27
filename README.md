@@ -1,9 +1,8 @@
 # Qur’an Memorizer DB
 
 QMDB is the governed Qur’an Memorizer Database platform. This repository contains the frozen P1 Core PHP engineering
-foundation and the active P2 identity and tenancy implementation. `QMDB-P2-B01` through `QMDB-P2-B03` are complete
-under the authorized recovery run; account recovery, security notifications, MFA and passkeys remain owned by their
-later batches.
+foundation and the active P2 identity and tenancy implementation. `QMDB-P2-B01` through `QMDB-P2-B04` are complete
+under the authorized recovery run; MFA, passkeys, recovery codes, and step-up authentication remain owned by B05.
 
 ## Project identity
 
@@ -12,8 +11,8 @@ later batches.
 - Source baseline: QMDB-BL-001
 - Frozen baseline: QMDB-P0-FRZ-001
 - Phase: P2 — Identity, Security, and Tenant Isolation
-- Completed batch: QMDB-P2-B03
-- Next batch: QMDB-P2-B04 — Account Recovery and Security Notifications
+- Completed batch: QMDB-P2-B04
+- Next batch: QMDB-P2-B05 — MFA, Passkeys, Recovery Codes, and Step-Up Authentication
 - Readiness: READY_FOR_NEXT_BATCH
 - Engineering freeze: QMDB-P1-FRZ-001
 - Development version: 0.1.0-dev
@@ -21,12 +20,30 @@ later batches.
 ## Prerequisites
 
 - PHP 8.5 or newer
-- PHP extensions: JSON, Mbstring, PDO, and PDO MySQL
+- PHP extensions: JSON, Mbstring, PDO, PDO MySQL, and Sodium
 - Composer 2
 - Node.js 24 LTS and npm 11 for frontend verification
 - Git for repository-state inspection
 
 The PHP 8.5 requirement is frozen by ADR-003 and is enforced by Composer and the application runtime validator. Do not bypass it for deployment or completion evidence.
+
+## Password recovery and security notifications
+
+P2-B04 provides ordinary full-page and progressively enhanced password recovery. Requests return the same response for
+eligible and ineligible accounts, require CSRF and server-issued idempotency, and use HMAC-protected email and peer rate
+limits. Recovery tokens contain 256 bits of secure randomness and only SHA-256 hashes are persisted. Reset is
+authoritative only on POST: it revalidates the locked challenge, replaces the active Argon2id credential while retaining
+revoked history, revokes every active account session with `PASSWORD_RESET`, preserves device records, clears the
+session cookie, rotates CSRF, and does not sign the account in.
+
+Password reset atomically creates a durable `PASSWORD_RESET_COMPLETED` notification intent. The production scheduled
+task `identity.security_notifications.deliver` claims bounded batches using leases and versions, applies bounded retry
+delays, and performs mail transport outside transactions. Delivery is at least once; deduplicated intent creation does
+not imply exactly-once SMTP delivery.
+
+Implemented: password recovery request, password reset, post-reset session invalidation, and password-reset-completed
+security notification. Not yet implemented: MFA, passkeys, recovery codes, authenticated password change, support-
+assisted recovery, security-notification inbox, roles, and permissions.
 
 ## Installation
 

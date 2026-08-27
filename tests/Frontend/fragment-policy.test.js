@@ -32,6 +32,15 @@ test('accepts only optimistic account-security revocation forms', () => {
     assert.throws(() => parseSafeFragment('<section data-qmdb-fragment-root><form method="post" action="/account/security/devices/01991f93-0b42-7abc-8abc-1234567890ab/revoke" data-qmdb-progressive-form><input type="hidden" name="csrf_token"></form></section>'), TypeError);
 });
 
+test('accepts recovery forms only with CSRF and idempotency controls', () => {
+    const request = parseSafeFragment('<section data-qmdb-fragment-root><form method="post" action="/forgot-password" data-qmdb-progressive-form><input type="hidden" name="csrf_token"><input type="hidden" name="recovery_request_submission_id" data-qmdb-idempotency-key></form></section>');
+    assert.equal(request.querySelector('form').action, 'http://localhost/forgot-password');
+    const reset = parseSafeFragment('<section data-qmdb-fragment-root><form method="post" action="/reset-password/01991f93-0b42-7abc-8abc-1234567890ab" data-qmdb-progressive-form><input type="hidden" name="csrf_token"><input type="hidden" name="password_reset_submission_id" data-qmdb-idempotency-key></form></section>');
+    assert.match(reset.querySelector('form').action, /\/reset-password\//);
+    assert.throws(() => parseSafeFragment('<section data-qmdb-fragment-root><form method="post" action="/forgot-password" data-qmdb-progressive-form><input type="hidden" name="csrf_token"></form></section>'), TypeError);
+    assert.throws(() => parseSafeFragment('<section data-qmdb-fragment-root><form method="post" action="/reset-password/id" data-qmdb-progressive-form><input type="hidden" name="csrf_token"></form></section>'), TypeError);
+});
+
 for (const [name, markup] of [
     ['cross-origin mutation', '<section data-qmdb-fragment-root><form method="post" action="https://evil.example" data-qmdb-progressive-form><input type="hidden" name="csrf_token"></form></section>'],
     ['file mutation', '<section data-qmdb-fragment-root><form method="post" action="/register" data-qmdb-progressive-form><input type="hidden" name="csrf_token"><input type="hidden" data-qmdb-idempotency-key><input type="file"></form></section>'],

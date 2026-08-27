@@ -24,6 +24,9 @@ use Qmdb\Modules\IdentityAccess\Domain\EmailVerificationChallengeId;
 use Qmdb\Modules\IdentityAccess\Domain\EmailVerificationTokenHash;
 use Qmdb\Modules\IdentityAccess\Infrastructure\Migration\CreateIdentityRateLimitFoundationMigration;
 use Qmdb\Modules\IdentityAccess\Infrastructure\Migration\CreateIdentityVerificationFoundationMigration;
+use Qmdb\Modules\IdentityRecovery\Infrastructure\Migration\CreatePasswordRecoveryFoundationMigration;
+use Qmdb\Modules\IdentityRecovery\Infrastructure\Migration\ExtendIdentityRecoveryConstraintsMigration;
+use Qmdb\Modules\IdentitySecurityNotifications\Infrastructure\Migration\CreateSecurityNotificationFoundationMigration;
 use Qmdb\Modules\IdentitySessions\Infrastructure\Migration\CreateUserDevicesMigration;
 use Qmdb\Modules\IdentitySessions\Infrastructure\Migration\CreateUserSessionsMigration;
 use Qmdb\Modules\IdentityAccess\Infrastructure\Persistence\MySqlIdentityAccessRepository;
@@ -429,6 +432,10 @@ final class P2IdentityAccessHttpIntegrationTest extends MySqlIntegrationTestCase
     {
         foreach (
             [
+                'account_security_notification_events',
+                'account_security_notifications',
+                'account_password_recovery_events',
+                'account_password_recovery_challenges',
                 'user_sessions',
                 'user_devices',
                 'account_email_verification_challenges',
@@ -456,6 +463,10 @@ final class P2IdentityAccessHttpIntegrationTest extends MySqlIntegrationTestCase
     {
         foreach (
             [
+                'account_security_notification_events',
+                'account_security_notifications',
+                'account_password_recovery_events',
+                'account_password_recovery_challenges',
                 'user_sessions',
                 'user_devices',
                 'account_email_verification_challenges',
@@ -519,6 +530,9 @@ final class P2IdentityAccessHttpIntegrationTest extends MySqlIntegrationTestCase
             new CreateIdentityRateLimitFoundationMigration(),
             new CreateUserDevicesMigration(),
             new CreateUserSessionsMigration(),
+            new ExtendIdentityRecoveryConstraintsMigration(),
+            new CreatePasswordRecoveryFoundationMigration(),
+            new CreateSecurityNotificationFoundationMigration(),
         ];
     }
 }

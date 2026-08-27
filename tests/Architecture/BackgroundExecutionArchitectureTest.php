@@ -12,13 +12,17 @@ use SplFileInfo;
 
 final class BackgroundExecutionArchitectureTest extends TestCase
 {
-    public function testBackgroundRegistriesAreExplicitAndProductionRegistrationsAreEmpty(): void
+    public function testBackgroundRegistriesAndProductionTaskRegistrationsAreExplicit(): void
     {
         $module = $this->read('src/Bootstrap/Module/BackgroundExecutionFoundationModule.php');
         $console = $this->read('src/Bootstrap/Module/ConsoleFoundationModule.php');
 
         self::assertStringContainsString('(new BackgroundJobHandlerRegistry())->build()', $module);
-        self::assertStringContainsString('(new ScheduledTaskRegistry())->build()', $module);
+        self::assertStringContainsString('ScheduledTaskMap::class', $module);
+        self::assertStringContainsString(
+            "new ScheduledTaskId('identity.security_notifications.deliver')",
+            $this->read('src/Bootstrap/Module/IdentitySecurityNotificationsModule.php'),
+        );
         self::assertStringContainsString('new WorkerRunConsoleCommand', $module);
         self::assertStringContainsString('new ScheduleListConsoleCommand', $module);
         self::assertStringContainsString('new ScheduleRunConsoleCommand', $module);

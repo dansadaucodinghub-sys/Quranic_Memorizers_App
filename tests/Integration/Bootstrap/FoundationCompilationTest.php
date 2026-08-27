@@ -17,6 +17,8 @@ use Qmdb\Bootstrap\Module\DatabaseFoundationModule;
 use Qmdb\Bootstrap\Module\HttpFoundationModule;
 use Qmdb\Bootstrap\Module\IdentityAccessModule;
 use Qmdb\Bootstrap\Module\IdentityFoundationModule;
+use Qmdb\Bootstrap\Module\IdentityRecoveryModule;
+use Qmdb\Bootstrap\Module\IdentitySecurityNotificationsModule;
 use Qmdb\Bootstrap\Module\IdentitySessionsModule;
 use Qmdb\Bootstrap\Module\ObservabilityFoundationModule;
 use Qmdb\Bootstrap\Module\PresentationFoundationModule;
@@ -34,6 +36,8 @@ use Qmdb\Shared\Configuration\Database\DatabaseConfigurationFactory;
 use Qmdb\Shared\Configuration\EnvironmentVariables;
 use Qmdb\Shared\Configuration\Logging\LoggingConfigurationFactory;
 use Qmdb\Modules\IdentityAccess\Configuration\IdentityAccessConfigurationFactory;
+use Qmdb\Modules\IdentityRecovery\Configuration\IdentityRecoveryConfigurationFactory;
+use Qmdb\Modules\IdentitySecurityNotifications\Configuration\SecurityNotificationConfigurationFactory;
 use Qmdb\Modules\IdentitySessions\Configuration\IdentitySessionConfigurationFactory;
 use Qmdb\Shared\DependencyInjection\CompiledContainer;
 use Qmdb\Shared\DependencyInjection\ContainerBuilder;
@@ -56,9 +60,11 @@ final class FoundationCompilationTest extends TestCase
             'identity.accounts',
             'security.web',
             'identity.access',
-            'identity.sessions',
-            'application.http',
             'foundation.background',
+            'identity.security_notifications',
+            'identity.sessions',
+            'identity.recovery',
+            'application.http',
             'foundation.console',
             'tenancy.workspaces',
         ], $registry->orderedModuleIds());
@@ -82,7 +88,7 @@ final class FoundationCompilationTest extends TestCase
         $result = $queryBus->ask(new GetSystemInformation());
 
         self::assertInstanceOf(SystemInformation::class, $result);
-        self::assertSame('QMDB-P2-B03', $result->currentBatch());
+        self::assertSame('QMDB-P2-B04', $result->currentBatch());
     }
 
     public function testFoundationContainsNoDeferredInfrastructureService(): void
@@ -116,6 +122,8 @@ final class FoundationCompilationTest extends TestCase
         );
         $identityAccess = (new IdentityAccessConfigurationFactory())->create($variables, $configuration);
         $identitySessions = (new IdentitySessionConfigurationFactory())->create($variables, $configuration);
+        $identityRecovery = (new IdentityRecoveryConfigurationFactory())->create($variables);
+        $securityNotifications = (new SecurityNotificationConfigurationFactory())->create($variables);
         $registry = new ModuleRegistry([
             new CoreFoundationModule(
                 $configuration,
@@ -140,6 +148,8 @@ final class FoundationCompilationTest extends TestCase
             new SecurityWebModule($identityAccess),
             new IdentityAccessModule($identityAccess),
             new IdentitySessionsModule($identitySessions),
+            new IdentitySecurityNotificationsModule($securityNotifications, $identityAccess),
+            new IdentityRecoveryModule($identityRecovery, $identityAccess),
             new ApplicationHttpModule(dirname(__DIR__, 3)),
             new ConsoleFoundationModule(),
         ]);

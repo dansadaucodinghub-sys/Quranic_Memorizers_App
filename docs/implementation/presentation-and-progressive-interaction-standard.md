@@ -79,3 +79,9 @@ Authenticated/authorized tenant mutations beyond B02 still require their owning 
 validation-fragment, audit and transaction decisions. SSE, bounded polling fallback, background-job progress,
 browser-history policy, asset hashing/minification, user locale/theme persistence, and business modals remain deferred
 to their owning phases.
+## P2-B04 account-recovery presentation
+
+Recovery request and reset are ordinary page workflows with progressive fragments, not modal workflows. English and
+Arabic pages preserve semantic headings, associated labels and password guidance, focusable error summaries, live
+status announcement, visible focus, RTL, reduced motion, forced colours, and keyboard operation. Invalid or expired
+reset links render a safe request-another-link state without retaining the token.

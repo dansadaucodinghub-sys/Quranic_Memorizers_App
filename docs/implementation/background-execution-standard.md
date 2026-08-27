@@ -55,3 +55,11 @@ No transaction spans modal display, user think time, worker execution, polling, 
 Default bounds are 100 jobs, 300 seconds, 1,000 ms idle sleep, 128 MiB memory, required production PCNTL, 300-second scheduler lease, and one-second scheduler lock timeout. Values are typed and range-validated. Operators must use the explicit CLI commands and an external scheduler/supervisor; application bootstrap, readiness, and HTTP never auto-run background work.
 
 The MySQL migration must be applied through the governed schema CLI before production tasks are registered. Real scheduler-claim acceptance requires two independent approved MySQL LTS connections. PHP 8.5, locked PHPUnit 13, and approved MySQL evidence remain mandatory for batch completion.
+## P2-B04 production scheduled delivery
+
+The production registry now contains `identity.security_notifications.deliver`, scheduled every 60 seconds. Registry
+listing is metadata-only and does not eagerly resolve database, encryption, mail, or notification dependencies. The
+handler resolves only after the scheduler owns the due execution slot. It claims bounded notification batches with
+execution-owned leases and optimistic versions, performs SMTP outside database transactions, and records bounded retry
+or terminal outcomes. Delivery is at least once; no exactly-once SMTP claim is made. No HTTP route can run or select the
+task. Production deployment must configure and monitor an external CLI scheduler.

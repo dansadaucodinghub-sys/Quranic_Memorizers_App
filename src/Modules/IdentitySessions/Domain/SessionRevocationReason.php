@@ -14,4 +14,5 @@ enum SessionRevocationReason: string
     case ACCOUNT_NOT_ACTIVE = 'ACCOUNT_NOT_ACTIVE';
     case DEVICE_NOT_ACTIVE = 'DEVICE_NOT_ACTIVE';
     case TOKEN_COMPROMISE = 'TOKEN_COMPROMISE';
+    case PASSWORD_RESET = 'PASSWORD_RESET';
 }

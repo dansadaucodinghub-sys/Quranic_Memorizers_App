@@ -351,3 +351,38 @@ recovery-authorized B01 normalization contract.
 | Revoked device reuse | Device status checked per request; revoked/invalid cookie creates a new record only after valid login | MITIGATED in authentication and repository behavior; device-notification policy belongs to B04 |
 | Browser mutation confusion | Same-origin navigation allowlist, controlled modal, expected version, panel-only refresh, no retry/storage | MITIGATED by jsdom tests; manual browser/AT matrix remains OPEN |
 | Authentication telemetry becoming an audit ledger | Only bounded event vocabulary is permitted; operational logs remain non-authoritative | GOVERNED; authoritative security-audit persistence remains in its owning batch |
+
+## QMDB-P2-B04 account-recovery and notification risk treatment
+
+| Risk area | Executable mitigation | Residual state |
+| --- | --- | --- |
+| Account enumeration through recovery | Identical acceptance across account/contact/status/rate/mail outcomes | MITIGATED in HTTP tests; operational timing review remains OPEN |
+| Recovery request flooding | HMAC email and peer buckets plus idempotency | MITIGATED in source/MySQL; CAPTCHA policy OPEN |
+| Recovery-token theft | 256-bit opaque secret, short bounded lifetime, single use | MITIGATED in source/tests; endpoint security remains operational |
+| Recovery-token logging | Redaction, no string conversion/serialization, bounded errors | MITIGATED by architecture and scan gates |
+| Recovery-token replay | Locked pending-state validation and atomic consume | MITIGATED in MySQL/HTTP tests |
+| Email-link scanner reset | GET cannot mutate or consume | MITIGATED in HTTP/architecture tests |
+| Expired-token acceptance | UTC expiry checked before and under final lock | MITIGATED in unit/MySQL tests |
+| Concurrent token consumption | Challenge/account locking plus optimistic state and idempotency | MITIGATED by transactional MySQL scenarios |
+| Weak replacement password | Existing B02 password policy reused | MITIGATED in validation tests; final policy approval OPEN |
+| Argon2 denial-of-service load | Reset rate limits and hash before transaction | MITIGATED structurally; production load tuning OPEN |
+| Credential replacement race | Account/challenge locks and one active-credential constraint | MITIGATED in MySQL tests |
+| Session creation racing password reset | Account serialization and all-session revoke inside reset | MITIGATED by transaction design; stress monitoring OPEN |
+| Surviving stale session after reset | Revoke all account sessions with `PASSWORD_RESET` | MITIGATED in end-to-end MySQL/HTTP tests |
+| Device incorrectly revoked after reset | Reset does not mutate device lifecycle | MITIGATED in MySQL tests |
+| Automatic login after reset | No session creation; clear session cookie and signed-out completion | MITIGATED in HTTP/architecture tests |
+| Idempotency collision | UUID submission IDs bound to operation fingerprint and unique constraints | MITIGATED; cryptographic residual negligible |
+| Recovery history growth | Append-oriented indexed events | OPEN — retention decision required before cleanup |
+| Notification intent duplication | Atomic source/account deduplication key | MITIGATED in MySQL tests |
+| Notification delivery duplication | Documented at-least-once transport | ACCEPTED operational residual; no exactly-once claim |
+| Notification lease not released | Lease expiry permits bounded reclaim | MITIGATED in scheduler/MySQL tests |
+| Notification stale-owner update | Execution ID plus optimistic version predicates | MITIGATED in MySQL tests |
+| SMTP outage | Safe retry/terminal classification; reset remains committed | MITIGATED for source integrity; provider availability OPEN |
+| Notification retry storm | Bounded batch, attempts, exponential delay and cap | MITIGATED in unit/MySQL tests |
+| Recovery email outage | Generic response and after-commit failure isolation | MITIGATED for confidentiality/integrity; provider operations OPEN |
+| Recovery modal misuse | Routes/views enforce ordinary pages only | MITIGATED by architecture/frontend tests |
+| Password field re-rendering | Progressive failure clears password controls | MITIGATED in frontend tests |
+| Token retained in invalid response | Invalid flow removes token and uses no browser storage | MITIGATED in frontend/HTTP tests |
+| Notification records mistaken for audit evidence | Standards label them operational, not tamper-evident audit | GOVERNED; audit batch remains OPEN |
+| Production scheduled task not executed | Explicit CLI task and fail-closed readiness | OPEN deployment gate |
+| Scheduler deployment not yet configured | External scheduler requirement documented | OPEN deployment gate; not represented as executed |

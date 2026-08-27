@@ -9,6 +9,9 @@ use Qmdb\Modules\Identity\Infrastructure\Migration\CreateAccountSecurityFoundati
 use Qmdb\Modules\Identity\Infrastructure\Migration\CreateUserAccountsMigration;
 use Qmdb\Modules\IdentityAccess\Infrastructure\Migration\CreateIdentityRateLimitFoundationMigration;
 use Qmdb\Modules\IdentityAccess\Infrastructure\Migration\CreateIdentityVerificationFoundationMigration;
+use Qmdb\Modules\IdentityRecovery\Infrastructure\Migration\CreatePasswordRecoveryFoundationMigration;
+use Qmdb\Modules\IdentityRecovery\Infrastructure\Migration\ExtendIdentityRecoveryConstraintsMigration;
+use Qmdb\Modules\IdentitySecurityNotifications\Infrastructure\Migration\CreateSecurityNotificationFoundationMigration;
 use Qmdb\Modules\IdentitySessions\Infrastructure\Migration\CreateUserDevicesMigration;
 use Qmdb\Modules\IdentitySessions\Infrastructure\Migration\CreateUserSessionsMigration;
 use Qmdb\Modules\Tenancy\Infrastructure\Migration\CreateWorkspaceMembershipsMigration;
@@ -21,7 +24,7 @@ use SplFileInfo;
 
 final class SchemaFoundationArchitectureTest extends TestCase
 {
-    public function testProductionManifestsContainOnlyAuthorizedP1ThroughP2B03Migrations(): void
+    public function testProductionManifestsContainOnlyAuthorizedP1ThroughP2B04Migrations(): void
     {
         $migrationFactory = require dirname(__DIR__, 2) . '/database/migrations.php';
         $seedFactory = require dirname(__DIR__, 2) . '/database/seeds.php';
@@ -36,7 +39,7 @@ final class SchemaFoundationArchitectureTest extends TestCase
         }
 
         $ordered = $migrations->ordered();
-        self::assertCount(9, $ordered);
+        self::assertCount(12, $ordered);
         self::assertSame(
             [
                 CreateScheduledTaskRunsMigration::class,
@@ -48,6 +51,9 @@ final class SchemaFoundationArchitectureTest extends TestCase
                 CreateIdentityRateLimitFoundationMigration::class,
                 CreateUserDevicesMigration::class,
                 CreateUserSessionsMigration::class,
+                ExtendIdentityRecoveryConstraintsMigration::class,
+                CreatePasswordRecoveryFoundationMigration::class,
+                CreateSecurityNotificationFoundationMigration::class,
             ],
             array_map(static fn (Migration $migration): string => $migration::class, $ordered),
         );
@@ -62,6 +68,9 @@ final class SchemaFoundationArchitectureTest extends TestCase
                 '20260826010600_create_identity_rate_limit_foundation',
                 '20260826010700_create_user_devices',
                 '20260826010800_create_user_sessions',
+                '20260826010900_extend_identity_recovery_constraints',
+                '20260826011000_create_password_recovery_foundation',
+                '20260826011100_create_security_notification_foundation',
             ],
             array_map(static fn (Migration $migration): string => $migration->id()->value(), $ordered),
         );

@@ -140,3 +140,41 @@ test('keeps the revoke modal open when the mutation fails', async () => {
     assert.equal(closed, false);
     assert.equal(dialog.hasAttribute('open'), true);
 });
+
+test('reset failure clears passwords and invalid-token replacement retains no token or modal', async () => {
+    installDom(`<!doctype html><html><body><section data-qmdb-form-region>
+        <div data-qmdb-error-summary hidden tabindex="-1"></div>
+        <form method="post" action="/reset-password/01991f93-0b42-7abc-8abc-1234567890ab" data-qmdb-progressive-form>
+            <input type="hidden" name="csrf_token" value="csrf-value">
+            <input type="hidden" name="token" value="recovery-token-secret">
+            <input type="hidden" name="password_reset_submission_id" value="01991f93-0b42-7abc-8abc-1234567890ac" data-qmdb-idempotency-key>
+            <input type="password" name="new_password" value="Secret passphrase 123!">
+            <input type="password" name="new_password_confirmation" value="Secret passphrase 123!">
+            <button type="submit">Reset</button>
+        </form>
+    </section></body></html>`);
+    const form = document.querySelector('form');
+    window.localStorage.clear();
+    window.sessionStorage.clear();
+    globalThis.fetch = async () => new Response(
+        '<section data-qmdb-fragment-root data-qmdb-form-region><div data-qmdb-error-summary tabindex="-1">Invalid link</div></section>',
+        {
+            status: 422,
+            headers: {
+                'Content-Type': 'text/vnd.qmdb.fragment+html; charset=utf-8',
+                'X-QMDB-Fragment': '1',
+            },
+        },
+    );
+    const controller = new ProgressiveFormController({
+        focusManager: { focus() {} },
+        liveRegion: { announce() {} },
+    });
+    await controller.handleSubmit({ target: form, preventDefault() {} });
+
+    assert.equal(window.localStorage.length, 0);
+    assert.equal(window.sessionStorage.length, 0);
+    assert.equal(document.body.textContent.includes('recovery-token-secret'), false);
+    assert.equal(document.querySelector('input[name="token"]'), null);
+    assert.equal(document.querySelector('dialog'), null);
+});

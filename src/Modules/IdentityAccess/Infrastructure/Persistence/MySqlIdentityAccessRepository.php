@@ -36,7 +36,18 @@ final readonly class MySqlIdentityAccessRepository implements IdentityAccessRepo
         IdentityFingerprint $fingerprint,
         DateTimeImmutable $now,
     ): IdempotencyClaimStatus {
-        if (!in_array($operation, ['ACCOUNT_REGISTRATION', 'EMAIL_VERIFICATION_RESEND'], true)) {
+        if (
+            !in_array(
+                $operation,
+                [
+                'ACCOUNT_REGISTRATION',
+                'EMAIL_VERIFICATION_RESEND',
+                'PASSWORD_RECOVERY_REQUEST',
+                'PASSWORD_RECOVERY_RESET',
+                ],
+                true,
+            )
+        ) {
             throw new \InvalidArgumentException('Identity idempotency operation is invalid.');
         }
         $connection = $this->provider->connection();

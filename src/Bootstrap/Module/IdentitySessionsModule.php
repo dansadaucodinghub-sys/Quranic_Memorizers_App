@@ -29,7 +29,6 @@ use Qmdb\Modules\IdentitySessions\Domain\Repository\UserSessionRepository;
 use Qmdb\Modules\IdentitySessions\Domain\SessionCookieParser;
 use Qmdb\Modules\IdentitySessions\Infrastructure\Persistence\MySqlIdentitySessionRepository;
 use Qmdb\Modules\IdentitySessions\Interface\Http\AccountSecurityController;
-use Qmdb\Modules\IdentitySessions\Interface\Http\ApplicationReadinessController;
 use Qmdb\Modules\IdentitySessions\Interface\Http\AuthenticatedRequestGuard;
 use Qmdb\Modules\IdentitySessions\Interface\Http\DeviceRevocationController;
 use Qmdb\Modules\IdentitySessions\Interface\Http\IdentitySessionFormInput;
@@ -39,7 +38,6 @@ use Qmdb\Modules\IdentitySessions\Interface\Http\LogoutController;
 use Qmdb\Modules\IdentitySessions\Interface\Http\SessionAuthenticationMiddleware;
 use Qmdb\Modules\IdentitySessions\Interface\Http\SessionRevocationController;
 use Qmdb\Shared\Database\Connection\DatabaseConnectionProvider;
-use Qmdb\Shared\Database\Health\DatabaseHealthCheck;
 use Qmdb\Shared\Database\Transaction\TransactionManager;
 use Qmdb\Shared\DependencyInjection\ClosureServiceFactory;
 use Qmdb\Shared\DependencyInjection\DependencyResolver;
@@ -262,24 +260,6 @@ final readonly class IdentitySessionsModule implements Module
                     ServiceReference::get($r, SchemaHealthCheck::class),
                 )),
         ));
-        $this->controller(
-            $context,
-            ApplicationReadinessController::class,
-            [JsonResponseFactory::class, DatabaseHealthCheck::class, SchemaHealthCheck::class,
-                \Qmdb\Modules\IdentityAccess\Application\Readiness\IdentityAccessReadinessCheck::class,
-                IdentitySessionReadinessCheck::class],
-            static fn (DependencyResolver $r): ApplicationReadinessController =>
-                new ApplicationReadinessController(
-                    ServiceReference::get($r, JsonResponseFactory::class),
-                    ServiceReference::get($r, DatabaseHealthCheck::class),
-                    ServiceReference::get($r, SchemaHealthCheck::class),
-                    ServiceReference::get(
-                        $r,
-                        \Qmdb\Modules\IdentityAccess\Application\Readiness\IdentityAccessReadinessCheck::class,
-                    ),
-                    ServiceReference::get($r, IdentitySessionReadinessCheck::class),
-                )
-        );
     }
 
     private function controllers(ModuleRegistrationContext $context): void

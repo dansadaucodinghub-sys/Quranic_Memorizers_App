@@ -1,5 +1,24 @@
 # P2 Implementation Parameter Register
 
+## QMDB-P2-B04 recovery and notification parameters
+
+| Parameter | Implemented default | Bound/meaning |
+| --- | ---: | --- |
+| Recovery challenge TTL | Typed environment default | Bounded challenge lifetime; startup rejects unsafe values |
+| Recovery challenge attempts | Typed environment default | Positive maximum; exhaustion revokes the challenge |
+| Recovery request email/peer windows | Typed environment defaults | HMAC-protected anonymous throttling |
+| Recovery reset attempt window | Typed environment default | HMAC challenge and peer throttling |
+| Notification batch size | 25 | Positive bounded work per scheduled invocation |
+| Notification maximum attempts | 5 | Terminal failure after the configured bound |
+| Notification lease | 120 seconds | Execution-owned claim lease |
+| Notification retry base | 60 seconds | Exponential delay base |
+| Notification retry maximum | 3,600 seconds | Retry-delay cap |
+| Scheduled delivery cadence | 60 seconds | `identity.security_notifications.deliver` |
+
+These are implementation parameters, not changes to the frozen P0 quality-attribute register. Final production values,
+retention, provider, trusted-proxy, and scheduler deployment settings require environment-owner evidence.
+
+
 This controlled extension records executable P2 defaults without modifying or claiming approval of the frozen P0
 quality-attribute parameter register. Values remain implementation defaults until the recorded owners approve production
 evidence and change control.

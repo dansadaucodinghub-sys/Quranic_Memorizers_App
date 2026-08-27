@@ -398,3 +398,33 @@ An open decision closes only when its owner records the selected outcome, altern
 - [Decision register](decision-register.md)
 - [Project state](project-state.md)
 - [P0-B01 requirements](../requirements/P0-B01-requirements.md)
+
+## QMDB-P2-B04 open-decision disposition
+
+| Open decision | Owner role | Required resolution | Classification | Conservative current assumption |
+| --- | --- | --- | --- | --- |
+| MFA recovery interaction | Security/Product | P2-B05 | BLOCKS_P2_B05 | B04 email reset grants no MFA authority |
+| Passkey recovery interaction | Security/Product | P2-B05 | BLOCKS_P2_B05 | No passkey mutation exists in B04 |
+| Recovery-code format | Security/Architecture | P2-B05 | BLOCKS_P2_B05 | No recovery code is issued |
+| Support-assisted recovery | Security Operations | Later P2 | BLOCKS_P2_LATER_BATCH | Unsupported and denied |
+| Administrator-assisted recovery | Security/Product | Later P2 | BLOCKS_P2_LATER_BATCH | Unsupported and denied |
+| Historical email-reuse policy | Privacy/Identity | Before email reassignment | BLOCKS_P2_LATER_BATCH | Historical keyed lookup remains retained |
+| Password-history enforcement | Security/Product | Before policy expansion | NON_BLOCKING_B04 | Only former credential history is retained |
+| Password-reuse prohibition | Security/Product | Before policy expansion | NON_BLOCKING_B04 | Existing B02 policy applies; no history comparison |
+| Final recovery TTL | Security/Product | Production approval | BLOCKS_DEPLOYMENT | Typed conservative implementation default |
+| Final recovery attempt limits | Security/Product | Production approval | BLOCKS_DEPLOYMENT | Typed positive bounded defaults |
+| Final notification retry limits | Operations/Security | Production approval | BLOCKS_DEPLOYMENT | Five attempts with capped exponential delay |
+| Security-notification provider | Operations/Procurement | Production deployment | BLOCKS_DEPLOYMENT | Provider-neutral Symfony Mailer adapter |
+| Mail-delivery retry provider | Operations/Architecture | Production deployment | BLOCKS_DEPLOYMENT | Database-backed scheduled retry only |
+| Notification retention | Privacy/Data Governance | Before production retention job | BLOCKS_DEPLOYMENT | Retain; no destructive automation |
+| Recovery-event retention | Privacy/Data Governance | Before production retention job | BLOCKS_DEPLOYMENT | Retain append-oriented history |
+| Idempotency-record retention | Data Governance | Before production cleanup | BLOCKS_DEPLOYMENT | Existing records retained |
+| Trusted-proxy policy | Security/Operations | Production ingress | BLOCKS_DEPLOYMENT | Direct peer only; untrusted forwarded headers ignored |
+| CAPTCHA policy | Security/Product | Abuse-hardening review | NON_BLOCKING_B04 | HMAC rate limits; no CAPTCHA |
+| Security-notification inbox | Product/Security | Later P2 | BLOCKS_P2_LATER_BATCH | Email only |
+| Push notification provider | Product/Operations | Later phase | BLOCKS_LATER_PHASE | No push delivery |
+| SMS recovery | Product/Privacy | Later phase | BLOCKS_LATER_PHASE | Email recovery only |
+| Phone-based recovery | Product/Privacy | Later phase | BLOCKS_LATER_PHASE | Phone cannot recover an account |
+| Recovery fraud-review process | Security Operations | Production operations | BLOCKS_DEPLOYMENT | Bounded events/rate data; no automated adjudication |
+| External security-notification escalation | Security Operations | Production operations | BLOCKS_DEPLOYMENT | No external escalation |
+| Password-reset audit checkpoint | Audit/Security | P2 audit batch | BLOCKS_P2_LATER_BATCH | Operational history only; no audit claim |

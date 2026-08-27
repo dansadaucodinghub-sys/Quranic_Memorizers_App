@@ -17,6 +17,8 @@ use Qmdb\Bootstrap\Module\HttpFoundationModule;
 use Qmdb\Bootstrap\Module\IdentityFoundationModule;
 use Qmdb\Bootstrap\Module\IdentityAccessModule;
 use Qmdb\Bootstrap\Module\IdentitySessionsModule;
+use Qmdb\Bootstrap\Module\IdentityRecoveryModule;
+use Qmdb\Bootstrap\Module\IdentitySecurityNotificationsModule;
 use Qmdb\Bootstrap\Module\ObservabilityFoundationModule;
 use Qmdb\Bootstrap\Module\PresentationFoundationModule;
 use Qmdb\Bootstrap\Module\SchemaFoundationModule;
@@ -30,6 +32,8 @@ use Qmdb\Shared\Configuration\Infrastructure\DotenvEnvironmentLoader;
 use Qmdb\Shared\Configuration\Logging\LoggingConfigurationFactory;
 use Qmdb\Modules\IdentityAccess\Configuration\IdentityAccessConfigurationFactory;
 use Qmdb\Modules\IdentitySessions\Configuration\IdentitySessionConfigurationFactory;
+use Qmdb\Modules\IdentityRecovery\Configuration\IdentityRecoveryConfigurationFactory;
+use Qmdb\Modules\IdentitySecurityNotifications\Configuration\SecurityNotificationConfigurationFactory;
 use Qmdb\Shared\DependencyInjection\CompiledContainer;
 use Qmdb\Shared\DependencyInjection\ContainerBuilder;
 use Qmdb\Shared\Module\ModuleRegistry;
@@ -130,6 +134,12 @@ final readonly class ApplicationFactory
             $loadedEnvironment->variables(),
             $configuration,
         );
+        $identityRecoveryConfiguration = (new IdentityRecoveryConfigurationFactory())->create(
+            $loadedEnvironment->variables(),
+        );
+        $securityNotificationConfiguration = (new SecurityNotificationConfigurationFactory())->create(
+            $loadedEnvironment->variables(),
+        );
 
         $registry = new ModuleRegistry([
             new CoreFoundationModule($configuration, $loadedEnvironment->variables(), $runtimeEnvironment),
@@ -145,6 +155,14 @@ final readonly class ApplicationFactory
             new SecurityWebModule($identityAccessConfiguration),
             new IdentityAccessModule($identityAccessConfiguration),
             new IdentitySessionsModule($identitySessionConfiguration),
+            new IdentitySecurityNotificationsModule(
+                $securityNotificationConfiguration,
+                $identityAccessConfiguration,
+            ),
+            new IdentityRecoveryModule(
+                $identityRecoveryConfiguration,
+                $identityAccessConfiguration,
+            ),
             new ApplicationHttpModule($this->projectRoot),
             new ConsoleFoundationModule(),
         ]);

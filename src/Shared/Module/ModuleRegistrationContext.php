@@ -10,6 +10,8 @@ use Qmdb\Shared\Application\Event\DomainEventSubscriberRegistration;
 use Qmdb\Shared\Application\Event\DomainEventSubscriberRegistry;
 use Qmdb\Shared\Application\Query\QueryHandlerRegistry;
 use Qmdb\Shared\Application\Query\QueryRegistration;
+use Qmdb\Shared\Background\Scheduler\ScheduledTaskRegistration;
+use Qmdb\Shared\Background\Scheduler\ScheduledTaskRegistrationRegistry;
 use Qmdb\Shared\DependencyInjection\ContainerBuilder;
 use Qmdb\Shared\DependencyInjection\ServiceAlias;
 use Qmdb\Shared\DependencyInjection\ServiceDefinition;
@@ -24,7 +26,20 @@ final class ModuleRegistrationContext
         private readonly CommandHandlerRegistry $commands,
         private readonly QueryHandlerRegistry $queries,
         private readonly DomainEventSubscriberRegistry $events,
+        private readonly ?ScheduledTaskRegistrationRegistry $scheduledTasks = null,
     ) {
+    }
+
+    public function scheduledTask(ScheduledTaskRegistration $registration): void
+    {
+        $this->assertOpen();
+        if ($registration->owningModule !== $this->moduleId->value()) {
+            throw new ModuleDependencyException('Scheduled task ownership does not match its registering module.');
+        }
+        if ($this->scheduledTasks === null) {
+            throw new ModuleDependencyException('Scheduled task registration is unavailable.');
+        }
+        $this->scheduledTasks->register($registration);
     }
 
     public function service(ServiceDefinition $definition): void

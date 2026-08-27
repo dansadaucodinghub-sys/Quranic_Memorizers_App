@@ -9,6 +9,9 @@ use Qmdb\Modules\IdentityAccess\Infrastructure\Migration\CreateIdentityRateLimit
 use Qmdb\Modules\IdentityAccess\Infrastructure\Migration\CreateIdentityVerificationFoundationMigration;
 use Qmdb\Modules\IdentitySessions\Infrastructure\Migration\CreateUserDevicesMigration;
 use Qmdb\Modules\IdentitySessions\Infrastructure\Migration\CreateUserSessionsMigration;
+use Qmdb\Modules\IdentityRecovery\Infrastructure\Migration\CreatePasswordRecoveryFoundationMigration;
+use Qmdb\Modules\IdentityRecovery\Infrastructure\Migration\ExtendIdentityRecoveryConstraintsMigration;
+use Qmdb\Modules\IdentitySecurityNotifications\Infrastructure\Migration\CreateSecurityNotificationFoundationMigration;
 use Qmdb\Modules\Tenancy\Infrastructure\Migration\CreateWorkspaceMembershipsMigration;
 use Qmdb\Modules\Tenancy\Infrastructure\Migration\CreateWorkspacesMigration;
 use Qmdb\Shared\Schema\Migration\MigrationRegistry;
@@ -25,5 +28,8 @@ return static function (): MigrationRegistry {
         ->register(new CreateIdentityRateLimitFoundationMigration())
         ->register(new CreateUserDevicesMigration())
         ->register(new CreateUserSessionsMigration())
+        ->register(new ExtendIdentityRecoveryConstraintsMigration())
+        ->register(new CreatePasswordRecoveryFoundationMigration())
+        ->register(new CreateSecurityNotificationFoundationMigration())
         ->build();
 };

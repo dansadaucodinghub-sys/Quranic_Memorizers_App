@@ -15,7 +15,6 @@ use Qmdb\Shared\Background\Job\BackgroundJobHandlerRegistry;
 use Qmdb\Shared\Background\Job\ConservativeBackgroundJobFailureClassifier;
 use Qmdb\Shared\Background\Scheduler\Infrastructure\MySqlScheduledTaskRunRepository;
 use Qmdb\Shared\Background\Scheduler\ScheduledTaskMap;
-use Qmdb\Shared\Background\Scheduler\ScheduledTaskRegistry;
 use Qmdb\Shared\Background\Scheduler\ScheduledTaskRunRepository;
 use Qmdb\Shared\Background\Scheduler\Scheduler;
 use Qmdb\Shared\Background\Source\BackgroundJobSource;
@@ -190,11 +189,6 @@ final readonly class BackgroundExecutionFoundationModule implements Module
 
     private function registerScheduler(ModuleRegistrationContext $context): void
     {
-        $context->service(ServiceDefinition::instance(
-            ScheduledTaskMap::class,
-            self::ID,
-            (new ScheduledTaskRegistry())->build(),
-        ));
         $context->service(ServiceDefinition::factory(
             MySqlScheduledTaskRunRepository::class,
             self::ID,

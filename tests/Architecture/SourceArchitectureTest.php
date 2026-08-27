@@ -109,6 +109,8 @@ final class SourceArchitectureTest extends TestCase
                 str_contains($path, '/Shared/Infrastructure/Persistence/MySql/')
                 || str_contains($path, '/Modules/Identity/Infrastructure/Persistence/')
                 || str_contains($path, '/Modules/IdentityAccess/Infrastructure/Persistence/')
+                || str_contains($path, '/Modules/IdentityRecovery/Infrastructure/Persistence/')
+                || str_contains($path, '/Modules/IdentitySecurityNotifications/Infrastructure/Persistence/')
                 || str_contains($path, '/Modules/IdentitySessions/Infrastructure/Persistence/')
                 || str_contains($path, '/Modules/Tenancy/Infrastructure/Persistence/')
                 || str_ends_with($path, '/Shared/Database/Connection/DatabaseConnectionProvider.php')
@@ -124,7 +126,15 @@ final class SourceArchitectureTest extends TestCase
         $modules = glob($this->projectRoot() . '/src/Modules/*', GLOB_ONLYDIR);
         self::assertIsArray($modules);
         self::assertSame(
-            ['Identity', 'IdentityAccess', 'IdentitySessions', 'SecurityWeb', 'Tenancy'],
+            [
+                'Identity',
+                'IdentityAccess',
+                'IdentityRecovery',
+                'IdentitySecurityNotifications',
+                'IdentitySessions',
+                'SecurityWeb',
+                'Tenancy',
+            ],
             array_map('basename', $modules),
         );
         self::assertDirectoryDoesNotExist($this->projectRoot() . '/src/Modules/Authorization');

@@ -15,6 +15,7 @@ use Qmdb\Modules\IdentityAccess\Interface\Http\EmailVerificationFormController;
 use Qmdb\Modules\IdentityAccess\Interface\Http\EmailVerificationResendFormController;
 use Qmdb\Modules\IdentityAccess\Interface\Http\EmailVerificationResendSubmitController;
 use Qmdb\Modules\IdentityAccess\Interface\Http\EmailVerificationSubmitController;
+use Qmdb\Modules\IdentityAccess\Application\Readiness\IdentityAccessReadinessCheck;
 use Qmdb\Modules\IdentitySessions\Interface\Http\AccountSecurityController;
 use Qmdb\Modules\IdentitySessions\Interface\Http\ApplicationReadinessController;
 use Qmdb\Modules\IdentitySessions\Interface\Http\DeviceRevocationController;
@@ -23,10 +24,20 @@ use Qmdb\Modules\IdentitySessions\Interface\Http\LoginSubmitController;
 use Qmdb\Modules\IdentitySessions\Interface\Http\LogoutController;
 use Qmdb\Modules\IdentitySessions\Interface\Http\SessionAuthenticationMiddleware;
 use Qmdb\Modules\IdentitySessions\Interface\Http\SessionRevocationController;
+use Qmdb\Modules\IdentitySessions\Application\Readiness\IdentitySessionReadinessCheck;
+use Qmdb\Modules\IdentityRecovery\Application\Readiness\IdentityRecoveryReadinessCheck;
+use Qmdb\Modules\IdentitySecurityNotifications\Application\Readiness\IdentitySecurityNotificationReadinessCheck;
+use Qmdb\Modules\IdentityRecovery\Interface\Http\PasswordRecoveryRequestAcceptedController;
+use Qmdb\Modules\IdentityRecovery\Interface\Http\PasswordRecoveryRequestFormController;
+use Qmdb\Modules\IdentityRecovery\Interface\Http\PasswordRecoveryRequestSubmitController;
+use Qmdb\Modules\IdentityRecovery\Interface\Http\PasswordResetCompletedController;
+use Qmdb\Modules\IdentityRecovery\Interface\Http\PasswordResetFormController;
+use Qmdb\Modules\IdentityRecovery\Interface\Http\PasswordResetSubmitController;
 use Qmdb\Shared\DependencyInjection\ClosureServiceFactory;
 use Qmdb\Shared\DependencyInjection\DependencyResolver;
 use Qmdb\Shared\DependencyInjection\ServiceDefinition;
 use Qmdb\Shared\DependencyInjection\ServiceReference;
+use Qmdb\Shared\Database\Health\DatabaseHealthCheck;
 use Qmdb\Shared\Http\Controller\ControllerDispatcher;
 use Qmdb\Shared\Http\Controller\LivenessController;
 use Qmdb\Shared\Http\Controller\SystemAboutApiController;
@@ -35,6 +46,7 @@ use Qmdb\Shared\Http\Controller\SystemHomeController;
 use Qmdb\Shared\Http\Controller\SystemStatusPageController;
 use Qmdb\Shared\Http\Kernel\HttpKernel;
 use Qmdb\Shared\Http\Message\ProblemDetailsResponseFactory;
+use Qmdb\Shared\Http\Message\JsonResponseFactory;
 use Qmdb\Shared\Http\Middleware\CorrelationIdMiddleware;
 use Qmdb\Shared\Http\Middleware\CspNonceMiddleware;
 use Qmdb\Shared\Http\Middleware\ExceptionHandlingMiddleware;
@@ -51,6 +63,7 @@ use Qmdb\Shared\Module\Module;
 use Qmdb\Shared\Module\ModuleId;
 use Qmdb\Shared\Module\ModuleRegistrationContext;
 use Qmdb\Shared\Observability\Error\ErrorHandlingRuntime;
+use Qmdb\Shared\Schema\Health\SchemaHealthCheck;
 use RuntimeException;
 
 final readonly class ApplicationHttpModule implements Module
@@ -68,11 +81,39 @@ final readonly class ApplicationHttpModule implements Module
 
     public function dependencies(): array
     {
-        return [new ModuleId('foundation.http'), new ModuleId('identity.access'), new ModuleId('identity.sessions')];
+        return [
+            new ModuleId('foundation.http'),
+            new ModuleId('identity.access'),
+            new ModuleId('identity.sessions'),
+            new ModuleId('identity.recovery'),
+        ];
     }
 
     public function register(ModuleRegistrationContext $context): void
     {
+        $context->service(ServiceDefinition::factory(
+            ApplicationReadinessController::class,
+            self::ID,
+            [
+                JsonResponseFactory::class,
+                DatabaseHealthCheck::class,
+                SchemaHealthCheck::class,
+                IdentityAccessReadinessCheck::class,
+                IdentitySessionReadinessCheck::class,
+                IdentityRecoveryReadinessCheck::class,
+                IdentitySecurityNotificationReadinessCheck::class,
+            ],
+            new ClosureServiceFactory(static fn (DependencyResolver $resolver): ApplicationReadinessController =>
+                new ApplicationReadinessController(
+                    ServiceReference::get($resolver, JsonResponseFactory::class),
+                    ServiceReference::get($resolver, DatabaseHealthCheck::class),
+                    ServiceReference::get($resolver, SchemaHealthCheck::class),
+                    ServiceReference::get($resolver, IdentityAccessReadinessCheck::class),
+                    ServiceReference::get($resolver, IdentitySessionReadinessCheck::class),
+                    ServiceReference::get($resolver, IdentityRecoveryReadinessCheck::class),
+                    ServiceReference::get($resolver, IdentitySecurityNotificationReadinessCheck::class),
+                )),
+        ));
         $controllers = [
             SystemHomeController::class,
             SystemAboutPageController::class,
@@ -94,6 +135,12 @@ final readonly class ApplicationHttpModule implements Module
             AccountSecurityController::class,
             SessionRevocationController::class,
             DeviceRevocationController::class,
+            PasswordRecoveryRequestFormController::class,
+            PasswordRecoveryRequestSubmitController::class,
+            PasswordRecoveryRequestAcceptedController::class,
+            PasswordResetFormController::class,
+            PasswordResetSubmitController::class,
+            PasswordResetCompletedController::class,
         ];
         $context->service(ServiceDefinition::factory(
             RouteCollection::class,

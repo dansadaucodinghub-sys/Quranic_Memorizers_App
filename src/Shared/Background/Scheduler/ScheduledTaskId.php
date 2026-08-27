@@ -13,7 +13,7 @@ final readonly class ScheduledTaskId implements Stringable
     {
         if (
             strlen($value) > 120
-            || preg_match('/\A[a-z][a-z0-9]*(?:\.[a-z][a-z0-9]*)+\z/D', $value) !== 1
+            || preg_match('/\A[a-z][a-z0-9_]*(?:\.[a-z][a-z0-9_]*)+\z/D', $value) !== 1
         ) {
             throw new InvalidArgumentException('Scheduled task ID is invalid.');
         }

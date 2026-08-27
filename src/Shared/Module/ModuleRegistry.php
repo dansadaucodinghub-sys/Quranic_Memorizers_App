@@ -16,6 +16,11 @@ use Qmdb\Shared\DependencyInjection\ClosureServiceFactory;
 use Qmdb\Shared\DependencyInjection\ContainerBuilder;
 use Qmdb\Shared\DependencyInjection\DependencyResolver;
 use Qmdb\Shared\DependencyInjection\ServiceDefinition;
+use Qmdb\Shared\Background\Scheduler\DeferredScheduledTaskHandler;
+use Qmdb\Shared\Background\Scheduler\ScheduledTask;
+use Qmdb\Shared\Background\Scheduler\ScheduledTaskMap;
+use Qmdb\Shared\Background\Scheduler\ScheduledTaskRegistration;
+use Qmdb\Shared\Background\Scheduler\ScheduledTaskRegistrationRegistry;
 
 final class ModuleRegistry
 {
@@ -75,9 +80,17 @@ final class ModuleRegistry
         $commands = new CommandHandlerRegistry();
         $queries = new QueryHandlerRegistry();
         $events = new DomainEventSubscriberRegistry();
+        $scheduledTasks = new ScheduledTaskRegistrationRegistry();
 
         foreach ($this->orderedModules as $module) {
-            $context = new ModuleRegistrationContext($module->id(), $builder, $commands, $queries, $events);
+            $context = new ModuleRegistrationContext(
+                $module->id(),
+                $builder,
+                $commands,
+                $queries,
+                $events,
+                $scheduledTasks,
+            );
             $module->register($context);
             $context->freeze();
         }
@@ -85,6 +98,7 @@ final class ModuleRegistry
         $commandMap = $commands->freeze();
         $queryMap = $queries->freeze();
         $eventMap = $events->freeze();
+        $scheduledTaskRegistrations = $scheduledTasks->freeze();
         $handlerServiceIds = array_values(array_unique(array_merge(
             $commandMap->handlerServiceIds(),
             $queryMap->handlerServiceIds(),
@@ -129,6 +143,38 @@ final class ModuleRegistry
                 ),
             ),
         ));
+        if (isset($moduleDependencies['foundation.background'])) {
+            $scheduledHandlerServiceIds = array_values(array_unique(array_map(
+                static fn (ScheduledTaskRegistration $registration): string => $registration->handlerServiceId,
+                $scheduledTaskRegistrations,
+            )));
+            $builder->register(ServiceDefinition::extensionFactory(
+                ScheduledTaskMap::class,
+                'foundation.background',
+                [],
+                $scheduledHandlerServiceIds,
+                new ClosureServiceFactory(static function (DependencyResolver $resolver) use (
+                    $scheduledTaskRegistrations,
+                ): ScheduledTaskMap {
+                    $tasks = [];
+                    foreach ($scheduledTaskRegistrations as $registration) {
+                        $tasks[] = new ScheduledTask(
+                            $registration->id,
+                            $registration->description,
+                            $registration->schedule,
+                            new DeferredScheduledTaskHandler(
+                                static fn (): object => $resolver->get($registration->handlerServiceId),
+                                $registration->handlerServiceId,
+                            ),
+                            $registration->leaseSeconds,
+                            $registration->owningModule,
+                        );
+                    }
+
+                    return new ScheduledTaskMap($tasks);
+                }),
+            ));
+        }
 
         $this->compiled = true;
 

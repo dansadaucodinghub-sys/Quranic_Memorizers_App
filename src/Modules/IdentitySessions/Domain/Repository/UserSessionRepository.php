@@ -73,6 +73,12 @@ interface UserSessionRepository
         DateTimeImmutable $now,
     ): int;
 
+    public function revokeAllForAccount(
+        int $accountInternalId,
+        SessionRevocationReason $reason,
+        DateTimeImmutable $now,
+    ): int;
+
     /** @return list<SessionInventoryRecord> */
     public function listSessionsForAccount(int $accountInternalId, int $limit = 50): array;
 }

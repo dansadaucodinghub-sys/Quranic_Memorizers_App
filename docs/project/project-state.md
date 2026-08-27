@@ -7,12 +7,12 @@
 | Source Baseline | QMDB-BL-001 |
 | Product Freeze | QMDB-P0-FRZ-001 |
 | Engineering Freeze | QMDB-P1-FRZ-001 |
-| Document Version | 3.3.0 |
-| Last Updated | 2026-08-26 |
+| Document Version | 3.4.0 |
+| Last Updated | 2026-08-27 |
 | Status | P0 COMPLETE; P1 COMPLETE; P2 RECOVERY IN PROGRESS |
 | Current Phase | P2 — Identity, Security, and Tenant Isolation |
-| Current Batch | QMDB-P2-B04 — Account Recovery and Security Notifications |
-| Batch Status | QMDB-P2-B03 COMPLETE — B04 AUTHORIZED FOR EXECUTION |
+| Current Batch | QMDB-P2-B05 — MFA, Passkeys, Recovery Codes, and Step-Up Authentication |
+| Batch Status | QMDB-P2-B04 COMPLETE — B05 AUTHORIZED FOR EXECUTION |
 | Implementation Readiness | READY_FOR_NEXT_BATCH |
 | P2 Status | IN PROGRESS |
 
@@ -32,8 +32,8 @@ sequential execution of P2-B01 through P2-B05. P1 remains frozen; P2 changes use
 | --- | --- |
 | Recovery Run | QMDB-RECOVERY-RUN-001 |
 | Recovery Status | IN PROGRESS |
-| Last Fully Completed Batch | QMDB-P2-B03 |
-| Current Executable Batch | QMDB-P2-B04 |
+| Last Fully Completed Batch | QMDB-P2-B04 |
+| Current Executable Batch | QMDB-P2-B05 |
 | Sequence Rule | B01 → B02 → B03 → B04 → B05; no batch advances before its mandatory gates pass |
 | P2-B06 Status | BLOCKED — outside recovery scope |
 
@@ -96,8 +96,27 @@ build reports.
 | QMDB-P2-B01 | COMPLETE | Identity/tenancy source, four migrations, 731-test quality suite, 16-test MySQL suite, scanners, release and 4,271 freeze checks pass |
 | QMDB-P2-B02 | COMPLETE | Registration, verification, password authentication, two migrations, parallel concurrency, frontend, scanner, release and freeze gates pass |
 | QMDB-P2-B03 | COMPLETE | Secure server-side sessions/devices, login/logout, rotation, expiry, concurrency, inventory, revocation, frontend, scanner, release and freeze gates pass |
-| QMDB-P2-B04 | NOT STARTED | Current authorized recovery batch |
-| QMDB-P2-B05 | NOT STARTED | Blocked by sequential prerequisite B04 |
+| QMDB-P2-B04 | COMPLETE | Account recovery/reset, session invalidation, durable security notifications, scheduler, concurrency, frontend, scanner, release and freeze gates pass |
+| QMDB-P2-B05 | NOT STARTED | Current and final authorized recovery batch |
+
+## QMDB-P2-B04 delivery and verification ledger
+
+| Measure | Actual result |
+| --- | --- |
+| Production PHP files added / updated | 74 / 23 |
+| Modules / migrations / tables added | 2 / 3 / 4 |
+| Routes added | 6 |
+| Pages / fragments / email templates | 4 / 4 / 4 |
+| Translation keys added | 34 English + 34 Arabic |
+| JavaScript modules updated | 1 shared policy module |
+| Production scheduled tasks | 1 (`identity.security_notifications.deliver`) |
+| B04 unit tests | 13 |
+| B04 MySQL integration tests | 5; includes a two-process reset race |
+| B04 HTTP/scheduler scenarios | Generic EN/AR/fallback/progressive recovery; atomic reset; scheduled delivery and no-duplicate rerun |
+| Frontend tests | 41 total; 2 B04-specific additions |
+| Architecture tests | 6 B04-specific assertions groups plus updated foundation allowlists |
+| Validation failures resolved | Hydration typing, reset idempotency race, readiness ownership, scheduler dependency resolution, Sodium runtime, Composer process ceiling, scanner cache boundary |
+| Remaining environment limitations | Hosted CI, manual browser/AT matrix, production scheduler/provider configuration, and Docker/WSL host repair remain external gates |
 
 ## Deferred evidence that does not reopen P1
 
@@ -128,9 +147,9 @@ Recovery Run: QMDB-RECOVERY-RUN-001
 
 Current Phase: P2 — Identity, Security, and Tenant Isolation
 
-Last Completed Batch: QMDB-P2-B03
+Last Completed Batch: QMDB-P2-B04
 
-Current Executable Batch: QMDB-P2-B04
+Current Executable Batch: QMDB-P2-B05
 
 P1 Status: COMPLETE
 
@@ -138,7 +157,7 @@ P2 Status: IN PROGRESS
 
 Recovery Status: IN PROGRESS
 
-Batch Status: QMDB-P2-B03 COMPLETE — QMDB-P2-B04 AUTHORIZED FOR EXECUTION
+Batch Status: QMDB-P2-B04 COMPLETE — QMDB-P2-B05 AUTHORIZED FOR EXECUTION
 
 Implementation Status: READY FOR NEXT BATCH
 

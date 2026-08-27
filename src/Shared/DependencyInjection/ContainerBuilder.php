@@ -130,6 +130,24 @@ final class ContainerBuilder
                     $target,
                 );
             }
+            foreach ($definition->extensionDependencies as $dependency) {
+                $target = $aliases[$dependency] ?? $dependency;
+                if (!isset($definitions[$target])) {
+                    throw new DependencyInjectionException(sprintf(
+                        'Extension service "%s" depends on unknown contribution "%s".',
+                        $id,
+                        $dependency,
+                    ));
+                }
+
+                $this->assertModuleAccess(
+                    $definitions[$target]->ownerModuleId,
+                    $definition->ownerModuleId,
+                    $moduleDependencies,
+                    $target,
+                    $id,
+                );
+            }
         }
 
         $temporary = [];
@@ -163,7 +181,11 @@ final class ContainerBuilder
         }
 
         $temporary[$id] = true;
-        foreach ($definitions[$id]->dependencies as $dependency) {
+        $dependencies = array_merge(
+            $definitions[$id]->dependencies,
+            $definitions[$id]->extensionDependencies,
+        );
+        foreach ($dependencies as $dependency) {
             $this->visit($aliases[$dependency] ?? $dependency, $definitions, $aliases, $temporary, $permanent);
         }
         unset($temporary[$id]);

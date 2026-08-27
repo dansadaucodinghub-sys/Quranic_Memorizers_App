@@ -68,7 +68,10 @@ final class CompiledContainer implements ContainerInterface
             }
 
             $resolver = new RestrictedDependencyResolver(
-                $definition->dependencies,
+                array_values(array_unique(array_merge(
+                    $definition->dependencies,
+                    $definition->extensionDependencies,
+                ))),
                 fn (string $dependencyId): object => $this->resolve($dependencyId),
                 $target,
             );
