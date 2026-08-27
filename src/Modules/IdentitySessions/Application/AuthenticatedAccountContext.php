@@ -10,6 +10,7 @@ use LogicException;
 use Qmdb\Modules\Identity\Domain\Value\AccountId;
 use Qmdb\Modules\IdentitySessions\Domain\DeviceId;
 use Qmdb\Modules\IdentitySessions\Domain\SessionId;
+use Qmdb\Modules\IdentityMultiFactor\Domain\SessionAuthenticationAssurance;
 
 final readonly class AuthenticatedAccountContext implements JsonSerializable
 {
@@ -22,6 +23,7 @@ final readonly class AuthenticatedAccountContext implements JsonSerializable
         public DeviceId $deviceId,
         public DateTimeImmutable $authenticatedAt,
         public int $sessionVersion,
+        public SessionAuthenticationAssurance $assurance,
     ) {
     }
 

@@ -10,4 +10,5 @@ enum AccountLoginOutcome: string
     case INVALID_CREDENTIALS = 'INVALID_CREDENTIALS';
     case THROTTLED = 'THROTTLED';
     case REPLAYED = 'REPLAYED';
+    case MFA_REQUIRED = 'MFA_REQUIRED';
 }

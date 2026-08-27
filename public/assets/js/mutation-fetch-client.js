@@ -67,3 +67,46 @@ export async function submitMutationForm(form, { signal, fetchImpl = globalThis.
         retryable: false,
     });
 }
+
+export async function submitJsonMutation(
+    path,
+    { csrfToken, body, signal, fetchImpl = globalThis.fetch } = {},
+) {
+    const base = globalThis.location?.href ?? 'http://localhost/';
+    const target = new URL(path, base);
+    if (target.origin !== new URL(base).origin) {
+        throw new QmdbFetchError({ code: 'CROSS_ORIGIN_REJECTED', title: 'Cross-origin request rejected' });
+    }
+    let response;
+    try {
+        response = await fetchImpl(target.href, {
+            method: 'POST',
+            credentials: 'same-origin',
+            redirect: 'error',
+            signal,
+            headers: {
+                Accept: 'application/json, application/problem+json',
+                'Content-Type': 'application/json',
+                'X-QMDB-CSRF': csrfToken ?? '',
+            },
+            body: JSON.stringify(body ?? {}),
+        });
+    } catch (error) {
+        if (error?.name === 'AbortError') throw error;
+        throw new QmdbFetchError();
+    }
+    const requestId = response.headers.get('X-Request-ID') ?? '';
+    let payload = {};
+    try { payload = await response.json(); } catch { payload = {}; }
+    if (!response.ok) {
+        throw new QmdbFetchError({
+            status: response.status,
+            requestId: requestId || (typeof payload.request_id === 'string' ? payload.request_id : ''),
+            code: typeof payload.code === 'string' ? payload.code : 'MUTATION_REQUEST_FAILED',
+            title: typeof payload.title === 'string' ? payload.title : 'Request failed',
+            retryable: false,
+        });
+    }
+
+    return payload;
+}

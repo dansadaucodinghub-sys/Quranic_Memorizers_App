@@ -8,6 +8,7 @@ use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
 use Qmdb\Modules\IdentityAccess\Application\Readiness\IdentityAccessReadinessCheck;
 use Qmdb\Modules\IdentityRecovery\Application\Readiness\IdentityRecoveryReadinessCheck;
+use Qmdb\Modules\IdentityMultiFactor\Application\Readiness\IdentityMultiFactorReadinessCheck;
 use Qmdb\Modules\IdentitySecurityNotifications\Application\Readiness\IdentitySecurityNotificationReadinessCheck;
 use Qmdb\Modules\IdentitySessions\Application\Readiness\IdentitySessionReadinessCheck;
 use Qmdb\Shared\Database\Health\DatabaseHealthCheck;
@@ -25,6 +26,7 @@ final readonly class ApplicationReadinessController implements Controller
         private IdentitySessionReadinessCheck $sessions,
         private IdentityRecoveryReadinessCheck $recovery,
         private IdentitySecurityNotificationReadinessCheck $notifications,
+        private IdentityMultiFactorReadinessCheck $multiFactor,
     ) {
     }
 
@@ -36,6 +38,7 @@ final readonly class ApplicationReadinessController implements Controller
             && $this->sessions->isReady()
             && $this->recovery->isReady()
             && $this->notifications->isReady();
+        $ready = $ready && $this->multiFactor->isReady();
 
         return $this->responses->create(['status' => $ready ? 'ready' : 'not_ready'], $ready ? 200 : 503);
     }

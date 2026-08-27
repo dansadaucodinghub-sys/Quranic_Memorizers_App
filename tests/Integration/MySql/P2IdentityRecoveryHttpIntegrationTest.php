@@ -38,6 +38,10 @@ use Qmdb\Modules\IdentitySecurityNotifications\Infrastructure\Migration\CreateSe
 use Qmdb\Modules\IdentitySecurityNotifications\Infrastructure\Persistence\MySqlAccountSecurityNotificationRepository;
 use Qmdb\Modules\IdentitySessions\Infrastructure\Migration\CreateUserDevicesMigration;
 use Qmdb\Modules\IdentitySessions\Infrastructure\Migration\CreateUserSessionsMigration;
+use Qmdb\Modules\IdentityMultiFactor\Infrastructure\Migration\CreateAuthenticationTransactionFoundationMigration;
+use Qmdb\Modules\IdentityMultiFactor\Infrastructure\Migration\CreatePasskeyFoundationMigration;
+use Qmdb\Modules\IdentityMultiFactor\Infrastructure\Migration\CreateTotpRecoveryCodeFoundationMigration;
+use Qmdb\Modules\IdentityMultiFactor\Infrastructure\Migration\ExtendIdentityMultiFactorConstraintsMigration;
 use Qmdb\Modules\Tenancy\Infrastructure\Migration\CreateWorkspaceMembershipsMigration;
 use Qmdb\Modules\Tenancy\Infrastructure\Migration\CreateWorkspacesMigration;
 use Qmdb\Shared\Infrastructure\Persistence\MySql\Connection\MySqlConnectionProvider;
@@ -78,7 +82,7 @@ final class P2IdentityRecoveryHttpIntegrationTest extends MySqlIntegrationTestCa
         self::assertSame(200, $readiness->getStatusCode());
         self::assertSame('{"status":"ready"}', (string)$readiness->getBody());
 
-        self::assertCount(12, $this->migrationRegistry()->ordered());
+        self::assertCount(16, $this->migrationRegistry()->ordered());
         foreach (
             ['account_password_recovery_challenges', 'account_password_recovery_events',
                 'account_security_notifications', 'account_security_notification_events'] as $table
@@ -630,6 +634,15 @@ final class P2IdentityRecoveryHttpIntegrationTest extends MySqlIntegrationTestCa
     private function identityTables(): array
     {
         return [
+            'account_webauthn_ceremonies',
+            'account_passkey_credentials',
+            'account_webauthn_user_handles',
+            'account_recovery_codes',
+            'account_recovery_code_sets',
+            'account_totp_authenticators',
+            'account_step_up_grants',
+            'account_authentication_transactions',
+            'account_mfa_policies',
             'account_security_notification_events',
             'account_security_notifications',
             'account_password_recovery_events',
@@ -665,6 +678,10 @@ final class P2IdentityRecoveryHttpIntegrationTest extends MySqlIntegrationTestCa
             new ExtendIdentityRecoveryConstraintsMigration(),
             new CreatePasswordRecoveryFoundationMigration(),
             new CreateSecurityNotificationFoundationMigration(),
+            new ExtendIdentityMultiFactorConstraintsMigration(),
+            new CreateAuthenticationTransactionFoundationMigration(),
+            new CreateTotpRecoveryCodeFoundationMigration(),
+            new CreatePasskeyFoundationMigration(),
         ];
     }
 

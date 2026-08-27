@@ -7,13 +7,13 @@
 | Source Baseline | QMDB-BL-001 |
 | Product Freeze | QMDB-P0-FRZ-001 |
 | Engineering Freeze | QMDB-P1-FRZ-001 |
-| Document Version | 3.4.0 |
+| Document Version | 3.5.0 |
 | Last Updated | 2026-08-27 |
-| Status | P0 COMPLETE; P1 COMPLETE; P2 RECOVERY IN PROGRESS |
+| Status | P0 COMPLETE; P1 COMPLETE; P2 RECOVERY SCOPE COMPLETE |
 | Current Phase | P2 — Identity, Security, and Tenant Isolation |
 | Current Batch | QMDB-P2-B05 — MFA, Passkeys, Recovery Codes, and Step-Up Authentication |
-| Batch Status | QMDB-P2-B04 COMPLETE — B05 AUTHORIZED FOR EXECUTION |
-| Implementation Readiness | READY_FOR_NEXT_BATCH |
+| Batch Status | QMDB-P2-B05 COMPLETE |
+| Implementation Readiness | RECOVERY_SCOPE_COMPLETE — B06 NOT AUTHORIZED |
 | P2 Status | IN PROGRESS |
 
 ## Authoritative outcome
@@ -31,9 +31,9 @@ sequential execution of P2-B01 through P2-B05. P1 remains frozen; P2 changes use
 | Field | Current value |
 | --- | --- |
 | Recovery Run | QMDB-RECOVERY-RUN-001 |
-| Recovery Status | IN PROGRESS |
-| Last Fully Completed Batch | QMDB-P2-B04 |
-| Current Executable Batch | QMDB-P2-B05 |
+| Recovery Status | COMPLETE |
+| Last Fully Completed Batch | QMDB-P2-B05 |
+| Current Executable Batch | NONE — B06 requires new authorization |
 | Sequence Rule | B01 → B02 → B03 → B04 → B05; no batch advances before its mandatory gates pass |
 | P2-B06 Status | BLOCKED — outside recovery scope |
 
@@ -97,7 +97,7 @@ build reports.
 | QMDB-P2-B02 | COMPLETE | Registration, verification, password authentication, two migrations, parallel concurrency, frontend, scanner, release and freeze gates pass |
 | QMDB-P2-B03 | COMPLETE | Secure server-side sessions/devices, login/logout, rotation, expiry, concurrency, inventory, revocation, frontend, scanner, release and freeze gates pass |
 | QMDB-P2-B04 | COMPLETE | Account recovery/reset, session invalidation, durable security notifications, scheduler, concurrency, frontend, scanner, release and freeze gates pass |
-| QMDB-P2-B05 | NOT STARTED | Current and final authorized recovery batch |
+| QMDB-P2-B05 | COMPLETE | MFA, TOTP, recovery codes, passkeys, passwordless login, assurance, action-scoped step-up, concurrency, frontend, scanner, release and freeze gates pass |
 
 ## QMDB-P2-B04 delivery and verification ledger
 
@@ -117,6 +117,26 @@ build reports.
 | Architecture tests | 6 B04-specific assertions groups plus updated foundation allowlists |
 | Validation failures resolved | Hydration typing, reset idempotency race, readiness ownership, scheduler dependency resolution, Sodium runtime, Composer process ceiling, portable nested-tool resolution, scanner cache boundary |
 | Remaining environment limitations | Hosted CI, manual browser/AT matrix, production scheduler/provider configuration, and Docker/WSL host repair remain external gates |
+
+## QMDB-P2-B05 delivery and verification ledger
+
+| Measure | Actual result |
+| --- | --- |
+| Production PHP files added / updated | 105 / 28 |
+| Production JavaScript files added / updated | 5 / 2 |
+| Modules / migrations / tables added | 1 / 4 / 9 |
+| Routes / pages / fragments added | 30 / 11 / 10 |
+| Translation entries added | 75 English + 75 Arabic |
+| Security-notification types added / scheduled tasks added | 9 / 0; existing B04 delivery task reused |
+| Unit suite | PASS — 572 tests, 1,303 assertions; 19 B05-specific test methods |
+| Non-MySQL integration suite | PASS — 91 tests, 420 assertions; 6 B05 HTTP methods |
+| Architecture suite | PASS — 107 tests, 51,329 assertions |
+| MySQL suite | PASS — 51 tests, 977 assertions; 13 B05 MySQL/WebAuthn methods and independent-process races |
+| Frontend suite | PASS — 28 files syntax-valid, 48 tests, zero npm vulnerabilities |
+| Migration lifecycle | PASS — 16 applied; B05 rollback/reapply, idempotent rerun and schema verification |
+| Security and supply chain | PASS — Gitleaks, Trivy, Composer audit/platform, 269 SBOM checks, 52 runtime licences with zero unknown/review |
+| Corrections made | Stale metadata assertions; frozen-document write removed; recovery alphabet; PDO placeholder; concurrency winners; server-authoritative grant UI; stale WebAuthn ceremony retry; OpenSSL fixture configuration; Gitleaks prose false positive; Trivy timeout handling |
+| Remaining environment limitations | Hosted CI; production HTTPS RP/origin and key custody; physical authenticator/browser/AT matrix; production provider/scheduler; assisted/lost-factor process; Docker/WSL host repair |
 
 ## Deferred evidence that does not reopen P1
 
@@ -147,18 +167,18 @@ Recovery Run: QMDB-RECOVERY-RUN-001
 
 Current Phase: P2 — Identity, Security, and Tenant Isolation
 
-Last Completed Batch: QMDB-P2-B04
+Last Completed Batch: QMDB-P2-B05
 
-Current Executable Batch: QMDB-P2-B05
+Current Executable Batch: NONE
 
 P1 Status: COMPLETE
 
 P2 Status: IN PROGRESS
 
-Recovery Status: IN PROGRESS
+Recovery Status: COMPLETE
 
-Batch Status: QMDB-P2-B04 COMPLETE — QMDB-P2-B05 AUTHORIZED FOR EXECUTION
+Batch Status: QMDB-P2-B05 COMPLETE
 
-Implementation Status: READY FOR NEXT BATCH
+Implementation Status: RECOVERY SCOPE COMPLETE — NEXT BATCH NOT AUTHORIZED
 
 P2-B06 Status: BLOCKED

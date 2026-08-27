@@ -162,6 +162,8 @@ final class HttpArchitectureTest extends TestCase
             'ext-mbstring',
             'ext-pdo',
             'ext-pdo_mysql',
+            'ext-sodium',
+            'endroid/qr-code',
             'monolog/monolog',
             'nyholm/psr7',
             'nyholm/psr7-server',
@@ -171,8 +173,10 @@ final class HttpArchitectureTest extends TestCase
             'psr/http-server-handler',
             'psr/http-server-middleware',
             'psr/log',
+            'spomky-labs/otphp',
             'symfony/mailer',
             'vlucas/phpdotenv',
+            'web-auth/webauthn-lib',
         ], array_keys($runtime));
 
         foreach (['nikic/fast-route', 'symfony/routing', 'league/route', 'php-di/php-di'] as $forbidden) {

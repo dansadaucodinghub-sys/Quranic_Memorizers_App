@@ -14,6 +14,10 @@ use Qmdb\Modules\IdentityRecovery\Infrastructure\Migration\ExtendIdentityRecover
 use Qmdb\Modules\IdentitySecurityNotifications\Infrastructure\Migration\CreateSecurityNotificationFoundationMigration;
 use Qmdb\Modules\IdentitySessions\Infrastructure\Migration\CreateUserDevicesMigration;
 use Qmdb\Modules\IdentitySessions\Infrastructure\Migration\CreateUserSessionsMigration;
+use Qmdb\Modules\IdentityMultiFactor\Infrastructure\Migration\ExtendIdentityMultiFactorConstraintsMigration;
+use Qmdb\Modules\IdentityMultiFactor\Infrastructure\Migration\CreateAuthenticationTransactionFoundationMigration;
+use Qmdb\Modules\IdentityMultiFactor\Infrastructure\Migration\CreateTotpRecoveryCodeFoundationMigration;
+use Qmdb\Modules\IdentityMultiFactor\Infrastructure\Migration\CreatePasskeyFoundationMigration;
 use Qmdb\Modules\Tenancy\Infrastructure\Migration\CreateWorkspaceMembershipsMigration;
 use Qmdb\Modules\Tenancy\Infrastructure\Migration\CreateWorkspacesMigration;
 use Qmdb\Shared\Background\Scheduler\Migration\CreateScheduledTaskRunsMigration;
@@ -39,7 +43,7 @@ final class SchemaFoundationArchitectureTest extends TestCase
         }
 
         $ordered = $migrations->ordered();
-        self::assertCount(12, $ordered);
+        self::assertCount(16, $ordered);
         self::assertSame(
             [
                 CreateScheduledTaskRunsMigration::class,
@@ -54,6 +58,10 @@ final class SchemaFoundationArchitectureTest extends TestCase
                 ExtendIdentityRecoveryConstraintsMigration::class,
                 CreatePasswordRecoveryFoundationMigration::class,
                 CreateSecurityNotificationFoundationMigration::class,
+                ExtendIdentityMultiFactorConstraintsMigration::class,
+                CreateAuthenticationTransactionFoundationMigration::class,
+                CreateTotpRecoveryCodeFoundationMigration::class,
+                CreatePasskeyFoundationMigration::class,
             ],
             array_map(static fn (Migration $migration): string => $migration::class, $ordered),
         );
@@ -71,6 +79,10 @@ final class SchemaFoundationArchitectureTest extends TestCase
                 '20260826010900_extend_identity_recovery_constraints',
                 '20260826011000_create_password_recovery_foundation',
                 '20260826011100_create_security_notification_foundation',
+                '20260826011200_extend_identity_multifactor_constraints',
+                '20260826011300_create_authentication_transaction_foundation',
+                '20260826011400_create_totp_recovery_code_foundation',
+                '20260826011500_create_passkey_foundation',
             ],
             array_map(static fn (Migration $migration): string => $migration->id()->value(), $ordered),
         );

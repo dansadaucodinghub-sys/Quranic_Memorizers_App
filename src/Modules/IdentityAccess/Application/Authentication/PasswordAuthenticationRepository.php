@@ -12,6 +12,8 @@ interface PasswordAuthenticationRepository
 {
     public function byEmailHash(LookupHash $lookupHash): ?PasswordAuthenticationRecord;
 
+    public function byAccount(int $accountInternalId): ?PasswordAuthenticationRecord;
+
     public function replacePasswordHash(
         int $accountInternalId,
         PasswordHashResult $hash,

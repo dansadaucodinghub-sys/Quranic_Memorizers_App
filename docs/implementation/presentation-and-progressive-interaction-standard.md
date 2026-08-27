@@ -85,3 +85,16 @@ Recovery request and reset are ordinary page workflows with progressive fragment
 Arabic pages preserve semantic headings, associated labels and password guidance, focusable error summaries, live
 status announcement, visible focus, RTL, reduced motion, forced colours, and keyboard operation. Invalid or expired
 reset links render a safe request-another-link state without retaining the token.
+
+## P2-B05 authenticator and step-up presentation
+
+MFA challenge, authentication-security management, TOTP enrollment, passkey registration, factor revocation, recovery-
+code status and action-scoped step-up are complete server-rendered workflows. JavaScript enhances only WebAuthn binary
+exchange and the explicit recovery-code copy action; every non-WebAuthn action retains a normal form submission path.
+The server decides which methods and protected controls are eligible. A hidden button or a forged client request never
+substitutes for a valid, unconsumed step-up grant.
+
+Pages preserve semantic headings, associated labels, field guidance, focusable error summaries, status announcements,
+visible focus, keyboard operation, 400 percent reflow, reduced motion, forced colours and Arabic RTL. Recovery codes are
+identified as one-time sensitive content and appear only once. Passkey cancellation, unavailable platform support and
+failed ceremonies return bounded, localized guidance without exposing challenges or cryptographic details.

@@ -12,6 +12,10 @@ use Qmdb\Modules\IdentitySessions\Infrastructure\Migration\CreateUserSessionsMig
 use Qmdb\Modules\IdentityRecovery\Infrastructure\Migration\CreatePasswordRecoveryFoundationMigration;
 use Qmdb\Modules\IdentityRecovery\Infrastructure\Migration\ExtendIdentityRecoveryConstraintsMigration;
 use Qmdb\Modules\IdentitySecurityNotifications\Infrastructure\Migration\CreateSecurityNotificationFoundationMigration;
+use Qmdb\Modules\IdentityMultiFactor\Infrastructure\Migration\CreateAuthenticationTransactionFoundationMigration;
+use Qmdb\Modules\IdentityMultiFactor\Infrastructure\Migration\CreatePasskeyFoundationMigration;
+use Qmdb\Modules\IdentityMultiFactor\Infrastructure\Migration\CreateTotpRecoveryCodeFoundationMigration;
+use Qmdb\Modules\IdentityMultiFactor\Infrastructure\Migration\ExtendIdentityMultiFactorConstraintsMigration;
 use Qmdb\Modules\Tenancy\Infrastructure\Migration\CreateWorkspaceMembershipsMigration;
 use Qmdb\Modules\Tenancy\Infrastructure\Migration\CreateWorkspacesMigration;
 use Qmdb\Shared\Schema\Migration\MigrationRegistry;
@@ -31,5 +35,9 @@ return static function (): MigrationRegistry {
         ->register(new ExtendIdentityRecoveryConstraintsMigration())
         ->register(new CreatePasswordRecoveryFoundationMigration())
         ->register(new CreateSecurityNotificationFoundationMigration())
+        ->register(new ExtendIdentityMultiFactorConstraintsMigration())
+        ->register(new CreateAuthenticationTransactionFoundationMigration())
+        ->register(new CreateTotpRecoveryCodeFoundationMigration())
+        ->register(new CreatePasskeyFoundationMigration())
         ->build();
 };

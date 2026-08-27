@@ -24,6 +24,9 @@ use Qmdb\Modules\IdentitySessions\Domain\SessionId;
 use Qmdb\Modules\IdentitySessions\Domain\SessionRevocationReason;
 use Qmdb\Modules\IdentitySessions\Domain\SessionStatus;
 use Qmdb\Modules\IdentitySessions\Domain\SessionTokenHash;
+use Qmdb\Modules\IdentityMultiFactor\Domain\AuthenticationAssuranceLevel;
+use Qmdb\Modules\IdentityMultiFactor\Domain\AuthenticationMethod;
+use Qmdb\Modules\IdentityMultiFactor\Domain\SessionAuthenticationAssurance;
 use Qmdb\Shared\Database\Connection\DatabaseConnectionProvider;
 use UnexpectedValueException;
 
@@ -153,7 +156,9 @@ final readonly class MySqlIdentitySessionRepository implements UserDeviceReposit
             'SELECT s.id, s.public_id, s.account_id, a.public_id AS account_public_id, '
             . 'a.account_status, s.device_id, d.public_id AS device_public_id, d.status AS device_status, '
             . 's.current_token_hash, s.previous_token_hash, s.previous_token_expires_at, s.status, s.version, '
-            . 's.issued_at, s.authenticated_at, s.last_seen_at, s.idle_expires_at, '
+            . 's.issued_at, s.authenticated_at, s.primary_authentication_method, '
+            . 's.secondary_authentication_method, s.assurance_level, s.strong_authenticated_at, '
+            . 's.last_seen_at, s.idle_expires_at, '
             . 's.absolute_expires_at, s.rotated_at FROM user_sessions s '
             . 'INNER JOIN user_accounts a ON a.id = s.account_id '
             . 'INNER JOIN user_devices d ON d.id = s.device_id AND d.account_id = s.account_id '
@@ -237,13 +242,24 @@ final readonly class MySqlIdentitySessionRepository implements UserDeviceReposit
         DateTimeImmutable $now,
         DateTimeImmutable $idleExpiresAt,
         DateTimeImmutable $absoluteExpiresAt,
+        ?SessionAuthenticationAssurance $assurance = null,
     ): void {
+        $assurance ??= new SessionAuthenticationAssurance(
+            AuthenticationMethod::PASSWORD,
+            null,
+            AuthenticationAssuranceLevel::PRIMARY,
+            $now,
+            null,
+        );
         $statement = $this->pdo()->prepare(
             'INSERT INTO user_sessions (public_id, account_id, device_id, login_submission_id, '
-            . 'current_token_hash, status, version, issued_at, authenticated_at, last_seen_at, '
+            . 'current_token_hash, status, version, issued_at, authenticated_at, '
+            . 'primary_authentication_method, secondary_authentication_method, assurance_level, '
+            . 'strong_authenticated_at, last_seen_at, '
             . 'idle_expires_at, absolute_expires_at, rotated_at, updated_at) VALUES '
             . "(:public_id, :account_id, :device_id, :submission_id, :token_hash, 'ACTIVE', 1, "
-            . ':issued_at, :authenticated_at, :last_seen_at, :idle_expires_at, '
+            . ':issued_at, :authenticated_at, :primary_method, :secondary_method, :assurance_level, '
+            . ':strong_authenticated_at, :last_seen_at, :idle_expires_at, '
             . ':absolute_expires_at, :rotated_at, :updated_at)',
         );
         $statement->bindValue(':public_id', $sessionId->toBinary(), PDO::PARAM_LOB);
@@ -251,6 +267,13 @@ final readonly class MySqlIdentitySessionRepository implements UserDeviceReposit
         $statement->bindValue(':device_id', $deviceInternalId, PDO::PARAM_INT);
         $statement->bindValue(':submission_id', $submissionId->toBinary(), PDO::PARAM_LOB);
         $statement->bindValue(':token_hash', $tokenHash->toBinary(), PDO::PARAM_LOB);
+        $statement->bindValue(':primary_method', $assurance->primaryMethod->value);
+        $statement->bindValue(':secondary_method', $assurance->secondaryMethod?->value);
+        $statement->bindValue(':assurance_level', $assurance->level->value);
+        $statement->bindValue(
+            ':strong_authenticated_at',
+            $assurance->strongAuthenticatedAt === null ? null : self::format($assurance->strongAuthenticatedAt),
+        );
         foreach (['issued_at', 'authenticated_at', 'last_seen_at', 'rotated_at', 'updated_at'] as $name) {
             $statement->bindValue(':' . $name, self::format($now));
         }
@@ -421,12 +444,36 @@ final readonly class MySqlIdentitySessionRepository implements UserDeviceReposit
         return $statement->rowCount();
     }
 
+    public function revokeOthersForAccount(
+        int $accountInternalId,
+        int $preservedSessionInternalId,
+        SessionRevocationReason $reason,
+        DateTimeImmutable $now,
+    ): int {
+        $statement = $this->pdo()->prepare(
+            "UPDATE user_sessions SET status = 'REVOKED', revoked_at = :revoked_at, "
+            . 'revoke_reason_code = :reason, updated_at = :updated_at, version = version + 1 '
+            . "WHERE account_id = :account_id AND id <> :preserved_id AND status = 'ACTIVE'",
+        );
+        $statement->execute([
+            ':revoked_at' => self::format($now),
+            ':reason' => $reason->value,
+            ':updated_at' => self::format($now),
+            ':account_id' => $accountInternalId,
+            ':preserved_id' => $preservedSessionInternalId,
+        ]);
+
+        return $statement->rowCount();
+    }
+
     public function listSessionsForAccount(int $accountInternalId, int $limit = 50): array
     {
         $limit = max(1, min(100, $limit));
         $statement = $this->pdo()->prepare(
             'SELECT s.public_id, d.public_id AS device_public_id, s.status, s.version, s.issued_at, '
-            . 's.last_seen_at, s.idle_expires_at, s.absolute_expires_at FROM user_sessions s '
+            . 's.last_seen_at, s.idle_expires_at, s.absolute_expires_at, '
+            . 's.primary_authentication_method, s.secondary_authentication_method, '
+            . 's.assurance_level, s.strong_authenticated_at FROM user_sessions s '
             . 'INNER JOIN user_devices d ON d.id = s.device_id AND d.account_id = s.account_id '
             . 'WHERE s.account_id = :account_id ORDER BY s.issued_at DESC, s.id DESC LIMIT ' . $limit,
         );
@@ -443,6 +490,10 @@ final readonly class MySqlIdentitySessionRepository implements UserDeviceReposit
                 self::string($row, 'last_seen_at'),
                 self::string($row, 'idle_expires_at'),
                 self::string($row, 'absolute_expires_at'),
+                self::string($row, 'primary_authentication_method'),
+                self::nullableString($row, 'secondary_authentication_method'),
+                self::string($row, 'assurance_level'),
+                self::nullableString($row, 'strong_authenticated_at'),
             );
         }
 
@@ -490,6 +541,17 @@ final readonly class MySqlIdentitySessionRepository implements UserDeviceReposit
             new DateTimeImmutable(self::string($row, 'idle_expires_at')),
             new DateTimeImmutable(self::string($row, 'absolute_expires_at')),
             new DateTimeImmutable(self::string($row, 'rotated_at')),
+            new SessionAuthenticationAssurance(
+                AuthenticationMethod::from(self::string($row, 'primary_authentication_method')),
+                ($secondary = self::nullableString($row, 'secondary_authentication_method')) === null
+                    ? null
+                    : AuthenticationMethod::from($secondary),
+                AuthenticationAssuranceLevel::from(self::string($row, 'assurance_level')),
+                new DateTimeImmutable(self::string($row, 'authenticated_at')),
+                ($strong = self::nullableString($row, 'strong_authenticated_at')) === null
+                    ? null
+                    : new DateTimeImmutable($strong),
+            ),
         );
     }
 
@@ -526,6 +588,17 @@ final readonly class MySqlIdentitySessionRepository implements UserDeviceReposit
         }
 
         return (int)$value;
+    }
+
+    /** @param array<string, mixed> $row */
+    private static function nullableString(array $row, string $column): ?string
+    {
+        $value = $row[$column] ?? null;
+        if ($value === null || is_string($value)) {
+            return $value;
+        }
+
+        throw new UnexpectedValueException('Identity-session persistence row is invalid.');
     }
 
     /**

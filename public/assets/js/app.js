@@ -5,6 +5,10 @@ import { PartialRefreshController } from './partial-refresh-controller.js';
 import { RequestCoordinator } from './request-coordinator.js';
 import { ThemeController } from './theme-controller.js';
 import { ProgressiveFormController } from './progressive-form-controller.js';
+import { PasskeyLoginController } from './passkey-login-controller.js';
+import { PasskeyRegistrationController } from './passkey-registration-controller.js';
+import { PasskeyStepUpController } from './passkey-step-up-controller.js';
+import { RecoveryCodeDisplayController } from './recovery-code-display-controller.js';
 
 function start() {
     const liveRegion = new LiveRegion(document.getElementById('qmdb-live-region'));
@@ -14,6 +18,10 @@ function start() {
     new PartialRefreshController({ coordinator, liveRegion, focusManager }).start();
     new ModalController({ coordinator, liveRegion, focusManager }).start();
     new ProgressiveFormController({ liveRegion, focusManager }).start();
+    new PasskeyLoginController({ liveRegion }).start();
+    new PasskeyRegistrationController({ liveRegion }).start();
+    new PasskeyStepUpController({ liveRegion }).start();
+    new RecoveryCodeDisplayController({ liveRegion }).start();
 }
 
 try { start(); } catch { console.error('QMDB progressive enhancement could not start.'); }

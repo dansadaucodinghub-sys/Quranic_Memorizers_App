@@ -24,6 +24,13 @@ final class RecordingAuthenticationRepository implements PasswordAuthenticationR
         return $this->record;
     }
 
+    public function byAccount(int $accountInternalId): ?PasswordAuthenticationRecord
+    {
+        $this->calls++;
+
+        return $this->record?->accountInternalId === $accountInternalId ? $this->record : null;
+    }
+
     public function replacePasswordHash(
         int $accountInternalId,
         PasswordHashResult $hash,

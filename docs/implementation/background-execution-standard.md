@@ -63,3 +63,11 @@ handler resolves only after the scheduler owns the due execution slot. It claims
 execution-owned leases and optimistic versions, performs SMTP outside database transactions, and records bounded retry
 or terminal outcomes. Delivery is at least once; no exactly-once SMTP claim is made. No HTTP route can run or select the
 task. Production deployment must configure and monitor an external CLI scheduler.
+
+## P2-B05 security-notification reuse
+
+B05 adds durable intents for MFA enablement/disablement, TOTP addition/removal, passkey addition/removal/suspension,
+recovery-code regeneration and recovery-code use. It does not add a second scheduler, worker or provider path. The
+existing `identity.security_notifications.deliver` task owns their bounded at-least-once delivery under the same lease,
+retry, localization, redaction and no-HTTP-execution rules established in B04. Factor mutations commit authoritative
+state and notification intent atomically; SMTP remains after commit and outside the mutation transaction.

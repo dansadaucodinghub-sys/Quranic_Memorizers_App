@@ -69,6 +69,11 @@ final readonly class LoginSubmitController implements Controller
         if ($result->outcome === AccountLoginOutcome::REPLAYED) {
             return $this->form($request, $csrf, 409, $email, 'form.error.idempotency');
         }
+        if ($result->outcome === AccountLoginOutcome::MFA_REQUIRED) {
+            $response = $this->view->redirect('/login/mfa');
+
+            return $this->cookies->apply($response, $result->cookieInstructions, $csrf['cookie']);
+        }
         $rotatedCsrf = $this->csrf->rotate(CsrfAction::ACCOUNT_LOGIN);
         $response = $this->fragments->isFragment($request)
             ? $this->view->render(

@@ -15,4 +15,14 @@ final readonly class SecurityNotificationDeduplicationKeyFactory
 
         return new SecurityNotificationDeduplicationKey(hash('sha256', $canonical, true));
     }
+
+    public function forEvent(
+        AccountSecurityNotificationType $type,
+        string $sourcePublicId,
+        string $accountPublicId,
+    ): SecurityNotificationDeduplicationKey {
+        $canonical = $type->value . "\0" . $sourcePublicId . "\0" . $accountPublicId;
+
+        return new SecurityNotificationDeduplicationKey(hash('sha256', $canonical, true));
+    }
 }

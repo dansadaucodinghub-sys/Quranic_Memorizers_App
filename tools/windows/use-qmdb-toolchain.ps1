@@ -13,6 +13,11 @@ $nodeDirectory = Split-Path -Parent $paths.Node
 $mysqlDirectory = Split-Path -Parent $paths.MySql
 $env:PATH = "$phpDirectory;$nodeDirectory;$mysqlDirectory;$env:PATH"
 $env:PHPRC = $phpDirectory
+$opensslConfiguration = Join-Path $phpDirectory 'extras\ssl\openssl.cnf'
+if (-not (Test-Path -LiteralPath $opensslConfiguration)) {
+    throw "QMDB PHP OpenSSL configuration is missing: $opensslConfiguration"
+}
+$env:OPENSSL_CONF = $opensslConfiguration
 $env:COMPOSER_HOME = Join-Path (Get-QmdbRuntimeRoot) 'composer-home'
 $env:COMPOSER_CACHE_DIR = Join-Path (Get-QmdbRuntimeRoot) 'composer-cache'
 $env:QMDB_COMPOSER_PHAR = $paths.Composer
@@ -35,6 +40,7 @@ if ($env:QMDB_TEST_DB_HOST) {
         AUTH_IDENTITY_HMAC_KEY = 'qmdb-test-identity-hmac-key-32-bytes-minimum'
         AUTH_CONTACT_ENCRYPTION_KEY = 'Y2NjY2NjY2NjY2NjY2NjY2NjY2NjY2NjY2NjY2NjY2M='
         AUTH_CONTACT_ENCRYPTION_KEY_ID = 'test-v1'
+        AUTH_MFA_ENCRYPTION_KEY = 'bW1tbW1tbW1tbW1tbW1tbW1tbW1tbW1tbW1tbW1tbW0='
         MAILER_DSN = 'null://null'
         MAIL_FROM_ADDRESS = 'no-reply@example.test'
         MAIL_FROM_NAME = 'QMDB Test'

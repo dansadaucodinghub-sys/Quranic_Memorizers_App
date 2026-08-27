@@ -3,7 +3,7 @@ import assert from 'node:assert/strict';
 import { installDom } from './test-dom.js';
 
 installDom('<!doctype html><form method="post" action="/register"><input name="email" value="person@example.test"><input type="hidden" name="csrf_token" value="csrf-value"><input type="hidden" name="registration_submission_id" value="01991f93-0b42-7abc-8abc-1234567890ab" data-qmdb-idempotency-key></form>');
-const { submitMutationForm } = await import('../../public/assets/js/mutation-fetch-client.js');
+const { submitJsonMutation, submitMutationForm } = await import('../../public/assets/js/mutation-fetch-client.js');
 
 test('submits one same-origin URL-encoded mutation with CSRF and idempotency headers', async () => {
     let captured;
@@ -79,4 +79,36 @@ test('rejects an unsafe enhanced navigation instruction', async () => {
         ) }),
         (error) => error?.code === 'UNSAFE_NAVIGATION_REJECTED',
     );
+});
+
+test('submits same-origin JSON mutations once with CSRF and no retry', async () => {
+    let calls = 0;
+    const result = await submitJsonMutation('/login/passkey/options', {
+        csrfToken: 'csrf-json',
+        body: { purpose: 'login' },
+        fetchImpl: async (url, options) => {
+            calls += 1;
+            assert.equal(url, 'http://localhost/login/passkey/options');
+            assert.equal(options.method, 'POST');
+            assert.equal(options.credentials, 'same-origin');
+            assert.equal(options.redirect, 'error');
+            assert.equal(options.headers['X-QMDB-CSRF'], 'csrf-json');
+            return new Response('{"status":"ok"}', {
+                status: 200,
+                headers: { 'Content-Type': 'application/json' },
+            });
+        },
+    });
+    assert.equal(calls, 1);
+    assert.deepEqual(result, { status: 'ok' });
+});
+
+test('rejects cross-origin JSON mutation before fetch', async () => {
+    let calls = 0;
+    await assert.rejects(submitJsonMutation('https://evil.example/options', {
+        csrfToken: 'csrf-json',
+        body: {},
+        fetchImpl: async () => { calls += 1; },
+    }));
+    assert.equal(calls, 0);
 });

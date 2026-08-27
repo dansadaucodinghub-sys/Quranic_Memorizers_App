@@ -9,6 +9,7 @@ use Qmdb\Modules\IdentitySessions\Domain\LoginSubmissionId;
 use Qmdb\Modules\IdentitySessions\Domain\SessionId;
 use Qmdb\Modules\IdentitySessions\Domain\SessionRevocationReason;
 use Qmdb\Modules\IdentitySessions\Domain\SessionTokenHash;
+use Qmdb\Modules\IdentityMultiFactor\Domain\SessionAuthenticationAssurance;
 
 interface UserSessionRepository
 {
@@ -31,6 +32,7 @@ interface UserSessionRepository
         DateTimeImmutable $now,
         DateTimeImmutable $idleExpiresAt,
         DateTimeImmutable $absoluteExpiresAt,
+        ?SessionAuthenticationAssurance $assurance = null,
     ): void;
 
     public function rotate(
@@ -75,6 +77,13 @@ interface UserSessionRepository
 
     public function revokeAllForAccount(
         int $accountInternalId,
+        SessionRevocationReason $reason,
+        DateTimeImmutable $now,
+    ): int;
+
+    public function revokeOthersForAccount(
+        int $accountInternalId,
+        int $preservedSessionInternalId,
         SessionRevocationReason $reason,
         DateTimeImmutable $now,
     ): int;

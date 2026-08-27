@@ -428,3 +428,28 @@ An open decision closes only when its owner records the selected outcome, altern
 | Recovery fraud-review process | Security Operations | Production operations | BLOCKS_DEPLOYMENT | Bounded events/rate data; no automated adjudication |
 | External security-notification escalation | Security Operations | Production operations | BLOCKS_DEPLOYMENT | No external escalation |
 | Password-reset audit checkpoint | Audit/Security | P2 audit batch | BLOCKS_P2_LATER_BATCH | Operational history only; no audit claim |
+
+## P2-B05 open decisions and conservative assumptions
+
+| Decision | Owner | Required point | Classification | Current assumption |
+| --- | --- | --- | --- | --- |
+| Organization/workspace/role MFA enforcement | Security/Product/Access Control | B06 authorization design | BLOCKS_P2_B06_POLICY | Account opt-in only; no organization mandate |
+| Final step-up recency and attempt profile | Security | Production policy approval | BLOCKS_DEPLOYMENT | 300-second grant; 5 transaction attempts |
+| TOTP algorithm/profile evolution | Security/Operations | Before changing interoperable profile | NON_BLOCKING_B05 | SHA-1, 30 seconds, 6 digits, one-step drift |
+| WebAuthn attestation policy | Security/Privacy | Hardware-assurance decision | BLOCKS_HIGH_ASSURANCE_ROLLOUT | `none` |
+| Certified hardware authenticator list | Security/Procurement | High-assurance rollout | BLOCKS_HIGH_ASSURANCE_ROLLOUT | No certification claim |
+| FIDO Metadata Service integration | Security/Privacy/Operations | Attestation-enabled rollout | BLOCKS_HIGH_ASSURANCE_ROLLOUT | Not integrated |
+| Conditional UI/autofill mediation | Product/Security | Browser UX batch | NON_BLOCKING_B05 | Explicit passkey actions only |
+| Cross-device passkey UX | Product/Accessibility | Production browser matrix | BLOCKS_RELEASE_UX | Browser-native ceremony only |
+| Production RP display name | Product/Brand/Security | Production configuration | BLOCKS_DEPLOYMENT | `Quran Memorizer DB` example value |
+| TOTP key custody and rotation | Security/Operations | Production secrets readiness | BLOCKS_DEPLOYMENT | External single active version-1 key |
+| TOTP ciphertext re-encryption migration | Security/Data | Before key retirement | BLOCKS_KEY_ROTATION | No automatic migration in B05 |
+| Multiple active TOTP authenticators | Security/Product | Account-security roadmap review | NON_BLOCKING_B05 | Repository supports lifecycle; UI enrolls one active profile |
+| Recovery-code count and entropy | Security/Product | Production policy approval | NON_BLOCKING_B05 | 10 codes from 16 random bytes each |
+| Recovery-code print/download policy | Privacy/Product | Production UX approval | BLOCKS_RELEASE_UX | Read/copy/print page; no persisted download |
+| Assisted MFA recovery/reset | Support/Security/Privacy | Dedicated recovery design | BLOCKS_ASSISTED_RECOVERY | Not available; existing verified recovery does not bypass factors |
+| Lost-all-factors process | Security Operations/Product | Before enforced MFA rollout | BLOCKS_ENFORCED_MFA_ROLLOUT | No unsafe bypass; support cannot reset factors |
+| Passkey-only escalation policy | Security | Privileged authorization batches | BLOCKS_P2_LATER_BATCH | B05 action assurance matrix only |
+| Signature-counter clone response | Security Operations | Incident runbook | BLOCKS_DEPLOYMENT | Suspend credential and notify; no automated account suspension |
+| MFA rollout communications | Product/Support | Enforced or broad rollout | BLOCKS_ENFORCED_MFA_ROLLOUT | Opt-in account workflow only |
+| Physical authenticator/browser/AT matrix | Quality/Accessibility/Security | Affected production release | BLOCKS_RELEASE | Automated fixtures only; manual evidence remains open |

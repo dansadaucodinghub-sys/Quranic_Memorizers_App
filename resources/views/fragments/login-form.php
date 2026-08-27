@@ -22,4 +22,9 @@ declare(strict_types=1);
     </form>
     <p><a href="/register"><?= $escape->escapeText($translator->trans('login.register')) ?></a></p>
     <p><a href="/verify-email/resend"><?= $escape->escapeText($translator->trans('login.resend')) ?></a></p>
+    <button class="button" type="button" data-qmdb-passkey-login hidden
+        data-options-url="/login/passkey/options" data-verify-url="/login/passkey/verify"
+        data-csrf-token="<?= $escape->escapeAttribute($view->string('csrf_token')) ?>">
+        <?= $escape->escapeText($translator->trans('mfa.use_passkey')) ?>
+    </button>
 </section>

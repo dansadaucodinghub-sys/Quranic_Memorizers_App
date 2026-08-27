@@ -106,6 +106,18 @@ final readonly class PresentationFoundationModule implements Module
                     'pages.password-reset' => $root . '/resources/views/pages/password-reset.php',
                     'pages.password-reset-completed' =>
                         $root . '/resources/views/pages/password-reset-completed.php',
+                    'pages.login-mfa' => $root . '/resources/views/pages/login-mfa.php',
+                    'pages.account-step-up' => $root . '/resources/views/pages/account-step-up.php',
+                    'pages.account-authentication-security' =>
+                        $root . '/resources/views/pages/account-authentication-security.php',
+                    'pages.totp-enrollment-start' => $root . '/resources/views/pages/totp-enrollment-start.php',
+                    'pages.totp-enrollment-confirm' => $root . '/resources/views/pages/totp-enrollment-confirm.php',
+                    'pages.recovery-codes-one-time' => $root . '/resources/views/pages/recovery-codes-one-time.php',
+                    'pages.recovery-codes-status' => $root . '/resources/views/pages/recovery-codes-status.php',
+                    'pages.passkey-registration' => $root . '/resources/views/pages/passkey-registration.php',
+                    'pages.passkey-revoke-confirm' => $root . '/resources/views/pages/passkey-revoke-confirm.php',
+                    'pages.mfa-disable-confirm' => $root . '/resources/views/pages/mfa-disable-confirm.php',
+                    'pages.totp-revoke-confirm' => $root . '/resources/views/pages/totp-revoke-confirm.php',
                     'fragments.system-about-dialog' => $root . '/resources/views/fragments/system-about-dialog.php',
                     'fragments.system-status-card' => $root . '/resources/views/fragments/system-status-card.php',
                     'fragments.account-register-form' =>
@@ -136,6 +148,23 @@ final readonly class PresentationFoundationModule implements Module
                         $root . '/resources/views/fragments/password-reset-form.php',
                     'fragments.password-reset-completed' =>
                         $root . '/resources/views/fragments/password-reset-completed.php',
+                    'fragments.login-mfa-form' => $root . '/resources/views/fragments/login-mfa-form.php',
+                    'fragments.account-step-up-form' => $root . '/resources/views/fragments/account-step-up-form.php',
+                    'fragments.account-authentication-security-panel' =>
+                        $root . '/resources/views/fragments/account-authentication-security-panel.php',
+                    'fragments.totp-enrollment-confirm-form' =>
+                        $root . '/resources/views/fragments/totp-enrollment-confirm-form.php',
+                    'fragments.recovery-codes-one-time' =>
+                        $root . '/resources/views/fragments/recovery-codes-one-time.php',
+                    'fragments.recovery-codes-status' =>
+                        $root . '/resources/views/fragments/recovery-codes-status.php',
+                    'fragments.passkey-revoke-dialog' =>
+                        $root . '/resources/views/fragments/passkey-revoke-dialog.php',
+                    'fragments.passkey-list' => $root . '/resources/views/fragments/passkey-list.php',
+                    'fragments.mfa-disable-dialog' =>
+                        $root . '/resources/views/fragments/mfa-disable-dialog.php',
+                    'fragments.totp-revoke-dialog' =>
+                        $root . '/resources/views/fragments/totp-revoke-dialog.php',
                     'emails.email-verification-html' => $root . '/resources/views/emails/email-verification.html.php',
                     'emails.email-verification-text' => $root . '/resources/views/emails/email-verification.txt.php',
                     'emails.password-recovery-html' =>

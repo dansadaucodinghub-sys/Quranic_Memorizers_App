@@ -89,3 +89,34 @@ change control.
   ambiguous outcome; deployment must configure and monitor the CLI scheduler.
 - **Future review conditions:** MFA/passkey recovery, provider, retention, CAPTCHA/trusted-proxy, password history,
   fraud review, and audit checkpoint decisions require their owning threat, privacy, operations, and test evidence.
+
+## P2-ADR-006 — Conservative MFA, WebAuthn and action-scoped step-up profile
+
+- **Status:** Accepted for QMDB-P2-B05 under `QMDB-RECOVERY-RUN-001`.
+- **Context:** The frozen baseline requires MFA, passkeys, recovery codes and step-up but deliberately leaves provider,
+  attestation, hardware, key-custody and organization-enforcement choices for controlled implementation.
+- **Assurance decision:** Sessions use `PRIMARY`, `MULTI_FACTOR` and `PHISHING_RESISTANT`. Password is primary; TOTP and
+  recovery code are secondary; a verified passkey assertion is phishing resistant. Server records, never client claims,
+  determine the level.
+- **Transaction decision:** Login MFA, passwordless passkey and step-up use opaque, expiring, attempt-bounded,
+  purpose-bound transactions. The browser holds an HttpOnly verifier; MySQL holds only its keyed hash. Superseded
+  pending WebAuthn ceremonies are revoked before replacement.
+- **Step-up decision:** Grants are account-, session- and target-action-bound, short lived and single use. Strong factor
+  administration consumes the grant in the protected mutation transaction. Password is not offered where an action
+  requires multi-factor or phishing-resistant assurance.
+- **TOTP decision:** Use the interoperable SHA-1/30-second/6-digit profile with one-step drift, atomic last-counter
+  advancement and Sodium authenticated encryption under an externally supplied versioned key.
+- **Recovery-code decision:** Generate ten independent codes from 16 random bytes, normalize with Crockford-style
+  unambiguous symbols, display plaintext once and persist only keyed verifiers. Consumption is atomic.
+- **WebAuthn decision:** Use exact configured RP ID and allowed-origin matching, required user verification, `none`
+  attestation, discoverable credentials for passwordless use, stored public keys only, signature-counter risk handling,
+  and credential suspension on detected counter regression.
+- **MFA lifecycle decision:** Enabling requires an active strong authenticator and creates one recovery-code set;
+  removing the final authenticator while MFA is enabled is denied. Policy and authenticator changes create durable
+  security-notification intents and revoke affected sessions where required.
+- **Presentation decision:** Server-rendered English/Arabic workflows are authoritative. JavaScript is bounded to
+  WebAuthn encoding/transport and explicit clipboard copy. One-time secrets never enter browser storage.
+- **Boundary:** B05 does not implement organization/workspace/role MFA enforcement, assisted recovery, attestation
+  metadata services, hardware certification, conditional mediation, audit-ledger claims or B06 authorization policy.
+- **Consequences:** Production must supply HTTPS RP/origin and managed encryption-key evidence; physical authenticators,
+  target browsers and assistive technologies still require controlled manual verification before release.

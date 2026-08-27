@@ -12,6 +12,7 @@ use Qmdb\Modules\IdentitySessions\Domain\DeviceStatus;
 use Qmdb\Modules\IdentitySessions\Domain\SessionId;
 use Qmdb\Modules\IdentitySessions\Domain\SessionStatus;
 use Qmdb\Modules\IdentitySessions\Domain\SessionTokenHash;
+use Qmdb\Modules\IdentityMultiFactor\Domain\SessionAuthenticationAssurance;
 
 final readonly class SessionAuthenticationRecord
 {
@@ -35,6 +36,7 @@ final readonly class SessionAuthenticationRecord
         public DateTimeImmutable $idleExpiresAt,
         public DateTimeImmutable $absoluteExpiresAt,
         public DateTimeImmutable $rotatedAt,
+        public SessionAuthenticationAssurance $assurance,
     ) {
     }
 

@@ -34,4 +34,10 @@ final readonly class AccountLoginResult
     {
         return new self(AccountLoginOutcome::REPLAYED, [], 0);
     }
+
+    /** @param list<AuthenticationCookieInstruction> $cookies */
+    public static function mfaRequired(array $cookies): self
+    {
+        return new self(AccountLoginOutcome::MFA_REQUIRED, $cookies, 0);
+    }
 }

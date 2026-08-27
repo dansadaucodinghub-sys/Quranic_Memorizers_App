@@ -37,3 +37,23 @@ evidence and change control.
 
 Changing a value requires accountable security/operations review, configuration regression tests, affected-NFR review,
 and project-state evidence. Superseded values retain history.
+
+## P2-B05 MFA, passkey and step-up defaults
+
+| Parameter | Implemented default | Governance state | Required production evidence |
+| --- | --- | --- | --- |
+| Step-up grant TTL / maximum attempts | 300 seconds / 5 | Conservative action-scoped default | Privileged-workflow usability and abuse review |
+| TOTP algorithm / period / digits / drift | SHA-1 / 30 seconds / 6 digits / plus or minus 1 step | RFC-compatible fixed profile | Authenticator interoperability and clock-control review |
+| TOTP enrollment TTL | 600 seconds | Conservative default | Enrollment journey and abandoned-secret cleanup review |
+| TOTP encryption | Sodium authenticated encryption; external key; version 1 | Secret required; fail-closed readiness | Managed key custody, rotation and recovery procedure |
+| Recovery-code set | 10 codes; 16 random bytes per code | One-time display; keyed verifier storage | Print/download support and assisted-recovery policy review |
+| WebAuthn RP ID / name | `localhost` / `Quran Memorizer DB` in example config | Deployment-specific | Approved production domain and institutional display name |
+| WebAuthn allowed origin | `http://localhost:8080` in example config | Development only; HTTPS required outside loopback | Exact production HTTPS origin inventory |
+| WebAuthn challenge TTL / response limit | 300 seconds / 65,536 bytes | Conservative bounded default | Browser/device compatibility and request-size review |
+| User verification / attestation | `required` / `none` | Conservative privacy-preserving default | Hardware-assurance and attestation policy decision |
+| Passwordless passkeys | Enabled | Feature default; server policy remains authoritative | Supported-browser and recovery journey review |
+| MFA attempt window / maximum attempts | 900 seconds / 10 | Conservative abuse-control default | Security/usability and distributed-rate-limit review |
+
+`AUTH_MFA_ENCRYPTION_KEY` has no committed default and must be supplied through the approved secret boundary. Example
+RP/origin values are not production approvals. A changed RP ID invalidates the applicability of existing credentials and
+therefore requires a migration and user-communication plan, not an ordinary environment edit.

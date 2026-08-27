@@ -20,6 +20,7 @@ use Qmdb\Bootstrap\Module\IdentityFoundationModule;
 use Qmdb\Bootstrap\Module\IdentityRecoveryModule;
 use Qmdb\Bootstrap\Module\IdentitySecurityNotificationsModule;
 use Qmdb\Bootstrap\Module\IdentitySessionsModule;
+use Qmdb\Bootstrap\Module\IdentityMultiFactorModule;
 use Qmdb\Bootstrap\Module\ObservabilityFoundationModule;
 use Qmdb\Bootstrap\Module\PresentationFoundationModule;
 use Qmdb\Bootstrap\Module\SchemaFoundationModule;
@@ -39,6 +40,7 @@ use Qmdb\Modules\IdentityAccess\Configuration\IdentityAccessConfigurationFactory
 use Qmdb\Modules\IdentityRecovery\Configuration\IdentityRecoveryConfigurationFactory;
 use Qmdb\Modules\IdentitySecurityNotifications\Configuration\SecurityNotificationConfigurationFactory;
 use Qmdb\Modules\IdentitySessions\Configuration\IdentitySessionConfigurationFactory;
+use Qmdb\Modules\IdentityMultiFactor\Configuration\IdentityMultiFactorConfigurationFactory;
 use Qmdb\Shared\DependencyInjection\CompiledContainer;
 use Qmdb\Shared\DependencyInjection\ContainerBuilder;
 use Qmdb\Shared\Module\ModuleRegistry;
@@ -63,6 +65,7 @@ final class FoundationCompilationTest extends TestCase
             'foundation.background',
             'identity.security_notifications',
             'identity.sessions',
+            'identity.multifactor',
             'identity.recovery',
             'application.http',
             'foundation.console',
@@ -88,7 +91,7 @@ final class FoundationCompilationTest extends TestCase
         $result = $queryBus->ask(new GetSystemInformation());
 
         self::assertInstanceOf(SystemInformation::class, $result);
-        self::assertSame('QMDB-P2-B04', $result->currentBatch());
+        self::assertSame('QMDB-P2-B05', $result->currentBatch());
     }
 
     public function testFoundationContainsNoDeferredInfrastructureService(): void
@@ -114,6 +117,7 @@ final class FoundationCompilationTest extends TestCase
             'AUTH_CSRF_SIGNING_KEY' => 'test-csrf-signing-key-with-at-least-32-bytes',
             'AUTH_IDENTITY_HMAC_KEY' => 'test-identity-hmac-key-with-at-least-32-bytes',
             'AUTH_CONTACT_ENCRYPTION_KEY' => 'Y2NjY2NjY2NjY2NjY2NjY2NjY2NjY2NjY2NjY2NjY2M=',
+            'AUTH_MFA_ENCRYPTION_KEY' => 'bW1tbW1tbW1tbW1tbW1tbW1tbW1tbW1tbW1tbW1tbW0=',
             'MAILER_DSN' => 'null://null',
         ]);
         $configuration = (new ApplicationConfigurationFactory())->create(
@@ -124,6 +128,7 @@ final class FoundationCompilationTest extends TestCase
         $identitySessions = (new IdentitySessionConfigurationFactory())->create($variables, $configuration);
         $identityRecovery = (new IdentityRecoveryConfigurationFactory())->create($variables);
         $securityNotifications = (new SecurityNotificationConfigurationFactory())->create($variables);
+        $identityMultiFactor = (new IdentityMultiFactorConfigurationFactory())->create($variables, $configuration);
         $registry = new ModuleRegistry([
             new CoreFoundationModule(
                 $configuration,
@@ -147,9 +152,10 @@ final class FoundationCompilationTest extends TestCase
             new HttpFoundationModule(dirname(__DIR__, 3)),
             new SecurityWebModule($identityAccess),
             new IdentityAccessModule($identityAccess),
-            new IdentitySessionsModule($identitySessions),
+            new IdentitySessionsModule($identitySessions, $identityMultiFactor),
             new IdentitySecurityNotificationsModule($securityNotifications, $identityAccess),
             new IdentityRecoveryModule($identityRecovery, $identityAccess),
+            new IdentityMultiFactorModule(),
             new ApplicationHttpModule(dirname(__DIR__, 3)),
             new ConsoleFoundationModule(),
         ]);

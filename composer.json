@@ -9,6 +9,8 @@
     "ext-mbstring": "*",
     "ext-pdo": "*",
     "ext-pdo_mysql": "*",
+    "ext-sodium": "*",
+    "endroid/qr-code": "^6.1",
     "monolog/monolog": "^3.10",
     "nyholm/psr7": "^1.8",
     "nyholm/psr7-server": "^1.1",
@@ -18,8 +20,10 @@
     "psr/http-server-handler": "^1.0",
     "psr/http-server-middleware": "^1.0",
     "psr/log": "^3.0",
+    "spomky-labs/otphp": "^11.5",
     "symfony/mailer": "^7.4",
-    "vlucas/phpdotenv": "^5.6"
+    "vlucas/phpdotenv": "^5.6",
+    "web-auth/webauthn-lib": "^5.3"
   },
   "require-dev": {
     "phpstan/phpstan": "^2.2",

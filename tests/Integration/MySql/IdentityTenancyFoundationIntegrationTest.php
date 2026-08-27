@@ -207,6 +207,15 @@ final class IdentityTenancyFoundationIntegrationTest extends MySqlIntegrationTes
     {
         foreach (
             [
+                'account_webauthn_ceremonies',
+                'account_passkey_credentials',
+                'account_webauthn_user_handles',
+                'account_recovery_codes',
+                'account_recovery_code_sets',
+                'account_totp_authenticators',
+                'account_step_up_grants',
+                'account_authentication_transactions',
+                'account_mfa_policies',
                 'account_security_notification_events',
                 'account_security_notifications',
                 'account_password_recovery_events',

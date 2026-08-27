@@ -94,3 +94,17 @@ fallbacks. Both send same-origin CSRF and server-issued idempotency values, bloc
 a mutation automatically. Recovery stays outside the modal system. Failure handling clears password fields, safely
 preserves non-sensitive email input, exposes a request ID only for unexpected errors, and never stores a recovery token
 in local or session storage.
+
+## P2-B05 WebAuthn and recovery-code protocol
+
+Passkey registration, passkey login, MFA login and passkey step-up use the browser WebAuthn API only after a
+same-origin server endpoint issues a bounded, single-use ceremony. The client base64url-encodes binary fields,
+preserves authenticator response data without interpretation, rejects unsupported or malformed browser responses and
+submits them to the server for all cryptographic, challenge, origin, RP ID, user-handle, user-verification and signature
+decisions. No client result establishes authentication or authorization. Mutations retain explicit CSRF and
+transaction-cookie bindings and are never automatically retried.
+
+Recovery codes are rendered only on the one-time post-generation page. The optional copy control reads the displayed
+DOM value at activation time and writes it directly to the clipboard; it does not place codes in local storage,
+session storage, analytics, logs, URLs or hidden persistence. Without JavaScript, the codes remain readable and
+printable. Browser cancellation and authenticator errors preserve an operable fallback and a focusable status message.

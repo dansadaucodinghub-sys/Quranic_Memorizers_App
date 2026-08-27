@@ -17,6 +17,10 @@ use Qmdb\Modules\Identity\Domain\Value\CredentialId;
 use Qmdb\Modules\IdentityAccess\Security\Fingerprint\EmailLookupHashGenerator;
 use Qmdb\Modules\IdentitySessions\Infrastructure\Migration\CreateUserDevicesMigration;
 use Qmdb\Modules\IdentitySessions\Infrastructure\Migration\CreateUserSessionsMigration;
+use Qmdb\Modules\IdentityMultiFactor\Infrastructure\Migration\CreateAuthenticationTransactionFoundationMigration;
+use Qmdb\Modules\IdentityMultiFactor\Infrastructure\Migration\CreatePasskeyFoundationMigration;
+use Qmdb\Modules\IdentityMultiFactor\Infrastructure\Migration\CreateTotpRecoveryCodeFoundationMigration;
+use Qmdb\Modules\IdentityMultiFactor\Infrastructure\Migration\ExtendIdentityMultiFactorConstraintsMigration;
 use Qmdb\Shared\Presentation\Response\FragmentRequestDetector;
 use Qmdb\Tests\Support\MySql\MySqlIntegrationTestCase;
 
@@ -35,10 +39,34 @@ final class P2IdentitySessionHttpIntegrationTest extends MySqlIntegrationTestCas
         $this->originalMaximumActiveSessions = getenv('AUTH_SESSION_MAX_ACTIVE_PER_ACCOUNT');
         putenv('AUTH_SESSION_MAX_ACTIVE_PER_ACCOUNT=5');
         $this->connection = $this->provider()->connection();
+        foreach (
+            [
+            'account_webauthn_ceremonies',
+            'account_passkey_credentials',
+            'account_webauthn_user_handles',
+            'account_recovery_codes',
+            'account_recovery_code_sets',
+            'account_totp_authenticators',
+            'account_step_up_grants',
+            'account_authentication_transactions',
+            'account_mfa_policies',
+            ] as $table
+        ) {
+            $this->connection->exec('DROP TABLE IF EXISTS ' . $table);
+        }
         $this->connection->exec('DROP TABLE IF EXISTS user_sessions');
         $this->connection->exec('DROP TABLE IF EXISTS user_devices');
         $this->clearRows(false);
-        foreach ([new CreateUserDevicesMigration(), new CreateUserSessionsMigration()] as $migration) {
+        foreach (
+            [
+            new CreateUserDevicesMigration(),
+            new CreateUserSessionsMigration(),
+            new ExtendIdentityMultiFactorConstraintsMigration(),
+            new CreateAuthenticationTransactionFoundationMigration(),
+            new CreateTotpRecoveryCodeFoundationMigration(),
+            new CreatePasskeyFoundationMigration(),
+            ] as $migration
+        ) {
             foreach ($migration->up() as $step) {
                 $this->connection->prepare($step->sql())->execute($step->parameters());
             }

@@ -37,6 +37,19 @@ use Qmdb\Modules\IdentitySessions\Interface\Http\LoginSubmitController;
 use Qmdb\Modules\IdentitySessions\Interface\Http\LogoutController;
 use Qmdb\Modules\IdentitySessions\Interface\Http\SessionAuthenticationMiddleware;
 use Qmdb\Modules\IdentitySessions\Interface\Http\SessionRevocationController;
+use Qmdb\Modules\IdentityMultiFactor\Application\AuthenticationTransactionCookieFactory;
+use Qmdb\Modules\IdentityMultiFactor\Application\PasswordLoginMfaGate;
+use Qmdb\Modules\IdentityMultiFactor\Configuration\IdentityMultiFactorConfiguration;
+use Qmdb\Modules\IdentityMultiFactor\Domain\Repository\AccountMfaPolicyRepository;
+use Qmdb\Modules\IdentityMultiFactor\Domain\Repository\AuthenticationTransactionRepository;
+use Qmdb\Modules\IdentityMultiFactor\Domain\Repository\MultiFactorNotificationTargetRepository;
+use Qmdb\Modules\IdentityMultiFactor\Domain\Repository\PasskeyCredentialRepository;
+use Qmdb\Modules\IdentityMultiFactor\Domain\Repository\RecoveryCodeSetRepository;
+use Qmdb\Modules\IdentityMultiFactor\Domain\Repository\StepUpGrantRepository;
+use Qmdb\Modules\IdentityMultiFactor\Domain\Repository\TotpAuthenticatorRepository;
+use Qmdb\Modules\IdentityMultiFactor\Domain\Repository\WebAuthnCeremonyRepository;
+use Qmdb\Modules\IdentityMultiFactor\Domain\Repository\WebAuthnUserHandleRepository;
+use Qmdb\Modules\IdentityMultiFactor\Infrastructure\Persistence\MySqlIdentityMultiFactorRepository;
 use Qmdb\Shared\Database\Connection\DatabaseConnectionProvider;
 use Qmdb\Shared\Database\Transaction\TransactionManager;
 use Qmdb\Shared\DependencyInjection\ClosureServiceFactory;
@@ -55,8 +68,10 @@ final readonly class IdentitySessionsModule implements Module
 {
     private const ID = 'identity.sessions';
 
-    public function __construct(private IdentitySessionConfiguration $configuration)
-    {
+    public function __construct(
+        private IdentitySessionConfiguration $configuration,
+        private IdentityMultiFactorConfiguration $multiFactorConfiguration,
+    ) {
     }
 
     public function id(): ModuleId
@@ -87,6 +102,11 @@ final readonly class IdentitySessionsModule implements Module
             self::ID,
             $this->configuration,
         ));
+        $context->service(ServiceDefinition::instance(
+            IdentityMultiFactorConfiguration::class,
+            self::ID,
+            $this->multiFactorConfiguration,
+        ));
         foreach (
             [
             SessionCookieParser::class => new SessionCookieParser(),
@@ -115,10 +135,55 @@ final readonly class IdentitySessionsModule implements Module
         ));
         $context->alias(UserDeviceRepository::class, MySqlIdentitySessionRepository::class);
         $context->alias(UserSessionRepository::class, MySqlIdentitySessionRepository::class);
+        $context->service(ServiceDefinition::factory(
+            MySqlIdentityMultiFactorRepository::class,
+            self::ID,
+            [DatabaseConnectionProvider::class],
+            new ClosureServiceFactory(static fn (DependencyResolver $r): MySqlIdentityMultiFactorRepository =>
+                new MySqlIdentityMultiFactorRepository(
+                    ServiceReference::get($r, DatabaseConnectionProvider::class),
+                )),
+        ));
+        foreach (
+            [
+            AccountMfaPolicyRepository::class,
+            AuthenticationTransactionRepository::class,
+            MultiFactorNotificationTargetRepository::class,
+            PasskeyCredentialRepository::class,
+            RecoveryCodeSetRepository::class,
+            StepUpGrantRepository::class,
+            TotpAuthenticatorRepository::class,
+            WebAuthnCeremonyRepository::class,
+            WebAuthnUserHandleRepository::class,
+            ] as $contract
+        ) {
+            $context->alias($contract, MySqlIdentityMultiFactorRepository::class);
+        }
     }
 
     private function registerApplications(ModuleRegistrationContext $context): void
     {
+        $context->service(ServiceDefinition::factory(
+            AuthenticationTransactionCookieFactory::class,
+            self::ID,
+            [IdentityMultiFactorConfiguration::class],
+            new ClosureServiceFactory(static fn (DependencyResolver $r): AuthenticationTransactionCookieFactory =>
+                new AuthenticationTransactionCookieFactory(
+                    ServiceReference::get($r, IdentityMultiFactorConfiguration::class),
+                )),
+        ));
+        $context->service(ServiceDefinition::factory(
+            PasswordLoginMfaGate::class,
+            self::ID,
+            [AccountMfaPolicyRepository::class, AuthenticationTransactionRepository::class,
+                IdentityMultiFactorConfiguration::class],
+            new ClosureServiceFactory(static fn (DependencyResolver $r): PasswordLoginMfaGate =>
+                new PasswordLoginMfaGate(
+                    ServiceReference::get($r, AccountMfaPolicyRepository::class),
+                    ServiceReference::get($r, AuthenticationTransactionRepository::class),
+                    ServiceReference::get($r, IdentityMultiFactorConfiguration::class),
+                )),
+        ));
         $context->service(ServiceDefinition::factory(
             SessionCookieFactory::class,
             self::ID,
@@ -156,7 +221,8 @@ final readonly class IdentitySessionsModule implements Module
             [PasswordAuthenticationService::class, PasswordAuthenticationRepository::class,
                 PasswordHasher::class, UserDeviceRepository::class, UserSessionRepository::class,
                 TransactionManager::class, DeviceCookieParser::class, SessionCookieFactory::class,
-                DeviceCookieFactory::class, IdentitySessionConfiguration::class, Clock::class],
+                DeviceCookieFactory::class, IdentitySessionConfiguration::class, Clock::class,
+                PasswordLoginMfaGate::class, AuthenticationTransactionCookieFactory::class],
             new ClosureServiceFactory(static fn (DependencyResolver $r): AccountLoginService =>
                 new AccountLoginService(
                     ServiceReference::get($r, PasswordAuthenticationService::class),
@@ -170,6 +236,8 @@ final readonly class IdentitySessionsModule implements Module
                     ServiceReference::get($r, DeviceCookieFactory::class),
                     ServiceReference::get($r, IdentitySessionConfiguration::class),
                     ServiceReference::get($r, Clock::class),
+                    ServiceReference::get($r, PasswordLoginMfaGate::class),
+                    ServiceReference::get($r, AuthenticationTransactionCookieFactory::class),
                 )),
         ));
         $context->service(ServiceDefinition::factory(

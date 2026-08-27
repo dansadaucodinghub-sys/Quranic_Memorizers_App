@@ -28,6 +28,7 @@ final class ProductionHttpRuntimeFactory
                 'AUTH_CSRF_SIGNING_KEY' => 'test-csrf-signing-key-with-at-least-32-bytes',
                 'AUTH_IDENTITY_HMAC_KEY' => 'test-identity-hmac-key-with-at-least-32-bytes',
                 'AUTH_CONTACT_ENCRYPTION_KEY' => 'Y2NjY2NjY2NjY2NjY2NjY2NjY2NjY2NjY2NjY2NjY2M=',
+                'AUTH_MFA_ENCRYPTION_KEY' => 'bW1tbW1tbW1tbW1tbW1tbW1tbW1tbW1tbW1tbW1tbW0=',
                 'MAILER_DSN' => 'null://null',
                 'MAIL_FROM_ADDRESS' => 'no-reply@example.test',
             ]),

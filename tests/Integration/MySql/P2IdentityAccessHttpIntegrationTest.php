@@ -29,6 +29,10 @@ use Qmdb\Modules\IdentityRecovery\Infrastructure\Migration\ExtendIdentityRecover
 use Qmdb\Modules\IdentitySecurityNotifications\Infrastructure\Migration\CreateSecurityNotificationFoundationMigration;
 use Qmdb\Modules\IdentitySessions\Infrastructure\Migration\CreateUserDevicesMigration;
 use Qmdb\Modules\IdentitySessions\Infrastructure\Migration\CreateUserSessionsMigration;
+use Qmdb\Modules\IdentityMultiFactor\Infrastructure\Migration\CreateAuthenticationTransactionFoundationMigration;
+use Qmdb\Modules\IdentityMultiFactor\Infrastructure\Migration\CreatePasskeyFoundationMigration;
+use Qmdb\Modules\IdentityMultiFactor\Infrastructure\Migration\CreateTotpRecoveryCodeFoundationMigration;
+use Qmdb\Modules\IdentityMultiFactor\Infrastructure\Migration\ExtendIdentityMultiFactorConstraintsMigration;
 use Qmdb\Modules\IdentityAccess\Infrastructure\Persistence\MySqlIdentityAccessRepository;
 use Qmdb\Modules\IdentityAccess\Infrastructure\Security\SecureEmailVerificationTokenGenerator;
 use Qmdb\Modules\Tenancy\Infrastructure\Migration\CreateWorkspaceMembershipsMigration;
@@ -432,6 +436,15 @@ final class P2IdentityAccessHttpIntegrationTest extends MySqlIntegrationTestCase
     {
         foreach (
             [
+                'account_webauthn_ceremonies',
+                'account_passkey_credentials',
+                'account_webauthn_user_handles',
+                'account_recovery_codes',
+                'account_recovery_code_sets',
+                'account_totp_authenticators',
+                'account_step_up_grants',
+                'account_authentication_transactions',
+                'account_mfa_policies',
                 'account_security_notification_events',
                 'account_security_notifications',
                 'account_password_recovery_events',
@@ -533,6 +546,10 @@ final class P2IdentityAccessHttpIntegrationTest extends MySqlIntegrationTestCase
             new ExtendIdentityRecoveryConstraintsMigration(),
             new CreatePasswordRecoveryFoundationMigration(),
             new CreateSecurityNotificationFoundationMigration(),
+            new ExtendIdentityMultiFactorConstraintsMigration(),
+            new CreateAuthenticationTransactionFoundationMigration(),
+            new CreateTotpRecoveryCodeFoundationMigration(),
+            new CreatePasskeyFoundationMigration(),
         ];
     }
 }

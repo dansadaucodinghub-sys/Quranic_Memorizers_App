@@ -22,6 +22,8 @@ use Qmdb\Modules\IdentitySessions\Domain\SessionCookieValue;
 use Qmdb\Modules\IdentitySessions\Domain\SessionId;
 use Qmdb\Modules\IdentitySessions\Domain\SessionRevocationReason;
 use Qmdb\Modules\IdentitySessions\Domain\SessionTokenSecret;
+use Qmdb\Modules\IdentityMultiFactor\Application\AuthenticationTransactionCookieFactory;
+use Qmdb\Modules\IdentityMultiFactor\Application\PasswordLoginMfaGate;
 use Qmdb\Shared\Database\Transaction\TransactionManager;
 use Qmdb\Shared\Time\Clock;
 
@@ -39,6 +41,8 @@ final readonly class AccountLoginService
         private DeviceCookieFactory $deviceCookies,
         private IdentitySessionConfiguration $configuration,
         private Clock $clock,
+        private PasswordLoginMfaGate $mfaGate,
+        private AuthenticationTransactionCookieFactory $authenticationTransactionCookies,
     ) {
     }
 
@@ -62,6 +66,22 @@ final readonly class AccountLoginService
             $command->deviceCookie,
         );
         $now = $this->clock->now();
+        try {
+            $mfaTransaction = $this->transactions->transactional(function () use ($principal, $rehash, $now) {
+                if ($rehash !== null) {
+                    $this->credentials->replacePasswordHash($principal->accountInternalId, $rehash, $now);
+                }
+
+                return $this->mfaGate->beginWhenRequired($principal->accountInternalId, $now);
+            });
+        } catch (\DomainException) {
+            return AccountLoginResult::invalid();
+        }
+        if ($mfaTransaction !== null) {
+            return AccountLoginResult::mfaRequired([
+                $this->authenticationTransactionCookies->issue($mfaTransaction),
+            ]);
+        }
         $idle = $now->modify('+' . $this->configuration->idleTtlSeconds . ' seconds');
         $absolute = $now->modify('+' . $this->configuration->absoluteTtlSeconds . ' seconds');
         if ($idle > $absolute) {
@@ -71,7 +91,6 @@ final readonly class AccountLoginService
             $created = $this->transactions->transactional(function () use (
                 $principal,
                 $command,
-                $rehash,
                 &$device,
                 $deviceValue,
                 $now,
@@ -94,9 +113,6 @@ final readonly class AccountLoginService
                         SessionRevocationReason::REAUTHENTICATION,
                         $now,
                     );
-                }
-                if ($rehash !== null) {
-                    $this->credentials->replacePasswordHash($principal->accountInternalId, $rehash, $now);
                 }
                 if ($device === null && $deviceValue !== null) {
                     $device = $this->devices->createDevice(

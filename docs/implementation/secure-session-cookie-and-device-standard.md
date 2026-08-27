@@ -69,3 +69,21 @@ CI and manual assistive-technology/browser review remain publication evidence an
 Executable defaults and their unresolved production approvals are recorded in the controlled
 [P2 implementation parameter register](../operations/p2-implementation-parameter-register.md); the P0 parameter register
 remains frozen.
+
+## P2-B05 session assurance extension
+
+An authenticated session now records a primary authentication method, optional secondary method, assurance level and
+the instant strong authentication completed. Password-only sessions are `PRIMARY`; password plus TOTP or recovery code
+are `MULTI_FACTOR`; a verified passkey assertion is `PHISHING_RESISTANT`. These server-issued values are immutable to
+the client and are carried through rotation, inventory and authenticated context without weakening the B03 idle,
+absolute-expiry, previous-token-grace, revocation or device rules.
+
+Step-up is represented by a short-lived, session-bound, account-bound and action-bound grant. Consumption and the
+protected mutation occur in the same transaction. Grants are single-use, expire after the configured bound and cannot
+be reused across sessions or actions. MFA-policy changes and authenticator-compromise actions revoke other sessions
+through the established B03 repository; no client cookie raises assurance.
+
+The authentication-transaction cookie is separate from the session and device cookies, contains only an opaque
+transaction identifier plus verifier secret, and is HttpOnly, Secure in production, SameSite=Lax, host-only and
+path-bounded to authentication routes. The verifier is stored only as a keyed hash. Completion, cancellation, expiry
+or malformed state clears the browser cookie and consumes or revokes the server transaction.

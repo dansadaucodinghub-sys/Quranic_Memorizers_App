@@ -3,8 +3,7 @@
 ## Governance status
 
 This roadmap was prepared by `QMDB-P1-CLOSE`. `QMDB-RECOVERY-RUN-001` subsequently authorized strict sequential local
-execution through B05. B01 through B04 are complete; B05 is the current executable batch, and B06 remains blocked and
-outside the recovery scope.
+execution through B05. B01 through B05 are complete; B06 remains blocked and outside the recovery scope.
 
 Every P2 batch preserves Core PHP 8.5, MySQL/InnoDB, the modular monolith, server-derived tenant authority, explicit
 transactions, migration checksums, structured logging, request IDs, server rendering and `QMDB-CR-001`. Each batch must

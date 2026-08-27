@@ -6,13 +6,13 @@
 | Project Code | QMDB |
 | Source Baseline | QMDB-BL-001 |
 | Freeze ID | QMDB-P0-FRZ-001 |
-| Batch ID | QMDB-P2-B04 |
+| Batch ID | QMDB-P2-B05 |
 | Document Title | Implementation Entry Point |
 | Document Version | 1.0.0 |
-| Document Status | P1 COMPLETE; P2-B01 THROUGH P2-B04 COMPLETE |
+| Document Status | P1 COMPLETE; P2-B01 THROUGH P2-B05 COMPLETE |
 | Document Owner Role | Product, Architecture and Engineering Governance |
 | Last Updated | 2026-08-27 |
-| Approval Status | Recovery-authorized B01 through B04 accepted after complete executable gates; B05 is next |
+| Approval Status | Recovery-authorized B01 through B05 accepted after complete executable gates; B06 blocked |
 | Related Documents | [Closeout entry point](../closeout/README.md); [freeze manifest](../closeout/qmdb-p0-baseline-freeze.yaml); [project state](../project/project-state.md) |
 
 ## Purpose
@@ -44,18 +44,21 @@ The artifacts cover phased implementation routing, readiness/completion policy, 
 15. [P2 implementation parameter register](../operations/p2-implementation-parameter-register.md) — executable defaults
     and unresolved production approvals without modifying the frozen P0 register.
 16. [P2 implementation decisions](../project/p2-implementation-decisions.md) — controlled post-freeze technical decisions.
+17. [MFA, passkey, recovery-code and step-up standard](mfa-passkey-recovery-code-and-step-up-standard.md) — implemented
+    B05 assurance, authenticator, ceremony, recovery and privileged-mutation contract.
+18. [P2-B05 implementation report](reports/QMDB-P2-B05-implementation-report.md) — B05 scope, security boundaries,
+    executable evidence and explicit physical/deployment gates.
 
 ## Current authorization
 
 P0 remains complete and frozen. P1-B01 through P1-B10 are complete and P1 is closed/frozen. The project-owner recovery
-authorization established conservative executable OD-051/OD-052 contracts, after which P2-B01 through P2-B04 passed their
-mandatory schema, security, MySQL, frontend, scanner, release and engineering-freeze gates.
+authorization established conservative executable OD-051/OD-052 contracts, after which P2-B01 through P2-B05 passed
+their mandatory schema, security, MySQL, frontend, scanner, release and engineering-freeze gates.
 
 ## Exact next action
 
-Execute `QMDB-P2-B05 — MFA, Passkeys, Recovery Codes, and Step-Up Authentication` without weakening the completed B02
-identity-access, B03 session/device, or B04 recovery and security-notification contracts. Do not start B06 under the
-recovery authorization.
+Do not start `QMDB-P2-B06 — Roles, Permissions, and Scoped Authorization` without a new explicit authorization. The
+bounded `QMDB-RECOVERY-RUN-001` sequence is complete at B05.
 
 ## Governance
 

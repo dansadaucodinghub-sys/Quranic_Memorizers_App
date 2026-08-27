@@ -15,6 +15,10 @@ final readonly class SessionInventoryRecord
         public string $lastSeenAt,
         public string $idleExpiresAt,
         public string $absoluteExpiresAt,
+        public string $primaryAuthenticationMethod,
+        public ?string $secondaryAuthenticationMethod,
+        public string $assuranceLevel,
+        public ?string $strongAuthenticatedAt,
     ) {
     }
 }

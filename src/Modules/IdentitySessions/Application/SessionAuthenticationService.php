@@ -118,6 +118,7 @@ final readonly class SessionAuthenticationService
                 $record->deviceId,
                 $record->authenticatedAt,
                 $record->version + 1,
+                $record->assurance,
             );
 
             return SessionAuthenticationResult::authenticated(
@@ -170,6 +171,7 @@ final readonly class SessionAuthenticationService
             $record->deviceId,
             $record->authenticatedAt,
             $record->version,
+            $record->assurance,
         );
     }
 

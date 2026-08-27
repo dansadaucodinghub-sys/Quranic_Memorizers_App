@@ -28,6 +28,7 @@ use Qmdb\Modules\IdentityRecovery\Interface\Http\PasswordRecoveryRequestSubmitCo
 use Qmdb\Modules\IdentityRecovery\Interface\Http\PasswordResetCompletedController;
 use Qmdb\Modules\IdentityRecovery\Interface\Http\PasswordResetFormController;
 use Qmdb\Modules\IdentityRecovery\Interface\Http\PasswordResetSubmitController;
+use Qmdb\Modules\IdentityMultiFactor\Interface\Http\IdentityMultiFactorController;
 use Qmdb\Shared\Http\Routing\HttpMethod;
 use Qmdb\Shared\Http\Routing\Route;
 use Qmdb\Shared\Http\Routing\RouteCollection;
@@ -60,6 +61,7 @@ return static function (
     PasswordResetFormController $passwordResetForm,
     PasswordResetSubmitController $passwordResetSubmit,
     PasswordResetCompletedController $passwordResetCompleted,
+    IdentityMultiFactorController $multiFactor,
 ): RouteCollection {
     return new RouteCollection(
         new Route('system.home', [HttpMethod::GET], new RoutePattern('/'), $homeController),
@@ -194,6 +196,181 @@ return static function (
             [HttpMethod::GET],
             new RoutePattern('/reset-password/completed'),
             $passwordResetCompleted,
+        ),
+        new Route('account.mfa.login.form', [HttpMethod::GET], new RoutePattern('/login/mfa'), $multiFactor),
+        new Route(
+            'account.mfa.login.totp',
+            [HttpMethod::POST],
+            new RoutePattern('/login/mfa/totp'),
+            $multiFactor,
+        ),
+        new Route(
+            'account.mfa.login.recovery_code',
+            [HttpMethod::POST],
+            new RoutePattern('/login/mfa/recovery-code'),
+            $multiFactor,
+        ),
+        new Route(
+            'account.mfa.login.passkey.options',
+            [HttpMethod::POST],
+            new RoutePattern('/login/mfa/passkey/options'),
+            $multiFactor,
+        ),
+        new Route(
+            'account.mfa.login.passkey.verify',
+            [HttpMethod::POST],
+            new RoutePattern('/login/mfa/passkey/verify'),
+            $multiFactor,
+        ),
+        new Route(
+            'account.passkey.login.options',
+            [HttpMethod::POST],
+            new RoutePattern('/login/passkey/options'),
+            $multiFactor,
+        ),
+        new Route(
+            'account.passkey.login.verify',
+            [HttpMethod::POST],
+            new RoutePattern('/login/passkey/verify'),
+            $multiFactor,
+        ),
+        new Route(
+            'account.step_up.form',
+            [HttpMethod::GET],
+            new RoutePattern('/account/step-up/{action}'),
+            $multiFactor,
+        ),
+        new Route(
+            'account.step_up.password',
+            [HttpMethod::POST],
+            new RoutePattern('/account/step-up/password'),
+            $multiFactor,
+        ),
+        new Route(
+            'account.step_up.totp',
+            [HttpMethod::POST],
+            new RoutePattern('/account/step-up/totp'),
+            $multiFactor,
+        ),
+        new Route(
+            'account.step_up.recovery_code',
+            [HttpMethod::POST],
+            new RoutePattern('/account/step-up/recovery-code'),
+            $multiFactor,
+        ),
+        new Route(
+            'account.step_up.passkey.options',
+            [HttpMethod::POST],
+            new RoutePattern('/account/step-up/passkey/options'),
+            $multiFactor,
+        ),
+        new Route(
+            'account.step_up.passkey.verify',
+            [HttpMethod::POST],
+            new RoutePattern('/account/step-up/passkey/verify'),
+            $multiFactor,
+        ),
+        new Route(
+            'account.security.authentication',
+            [HttpMethod::GET],
+            new RoutePattern('/account/security/authentication'),
+            $multiFactor,
+        ),
+        new Route(
+            'account.mfa.totp.enroll.form',
+            [HttpMethod::GET],
+            new RoutePattern('/account/security/mfa/totp/enroll'),
+            $multiFactor,
+        ),
+        new Route(
+            'account.mfa.totp.enroll.submit',
+            [HttpMethod::POST],
+            new RoutePattern('/account/security/mfa/totp/enroll'),
+            $multiFactor,
+        ),
+        new Route(
+            'account.mfa.totp.confirm',
+            [HttpMethod::POST],
+            new RoutePattern('/account/security/mfa/totp/{authenticatorId}/confirm'),
+            $multiFactor,
+        ),
+        new Route(
+            'account.mfa.totp.qr',
+            [HttpMethod::GET],
+            new RoutePattern('/account/security/mfa/totp/{authenticatorId}/qr'),
+            $multiFactor,
+        ),
+        new Route(
+            'account.mfa.totp.revoke.form',
+            [HttpMethod::GET],
+            new RoutePattern('/account/security/mfa/totp/{authenticatorId}/revoke'),
+            $multiFactor,
+        ),
+        new Route(
+            'account.mfa.totp.revoke.submit',
+            [HttpMethod::POST],
+            new RoutePattern('/account/security/mfa/totp/{authenticatorId}/revoke'),
+            $multiFactor,
+        ),
+        new Route(
+            'account.passkey.register.form',
+            [HttpMethod::GET],
+            new RoutePattern('/account/security/passkeys/register'),
+            $multiFactor,
+        ),
+        new Route(
+            'account.passkey.register.options',
+            [HttpMethod::POST],
+            new RoutePattern('/account/security/passkeys/registration/options'),
+            $multiFactor,
+        ),
+        new Route(
+            'account.passkey.register.verify',
+            [HttpMethod::POST],
+            new RoutePattern('/account/security/passkeys/registration/verify'),
+            $multiFactor,
+        ),
+        new Route(
+            'account.passkey.revoke.form',
+            [HttpMethod::GET],
+            new RoutePattern('/account/security/passkeys/{passkeyId}/revoke'),
+            $multiFactor,
+        ),
+        new Route(
+            'account.passkey.revoke.submit',
+            [HttpMethod::POST],
+            new RoutePattern('/account/security/passkeys/{passkeyId}/revoke'),
+            $multiFactor,
+        ),
+        new Route(
+            'account.mfa.enable',
+            [HttpMethod::POST],
+            new RoutePattern('/account/security/mfa/enable'),
+            $multiFactor,
+        ),
+        new Route(
+            'account.mfa.disable.form',
+            [HttpMethod::GET],
+            new RoutePattern('/account/security/mfa/disable'),
+            $multiFactor,
+        ),
+        new Route(
+            'account.mfa.disable.submit',
+            [HttpMethod::POST],
+            new RoutePattern('/account/security/mfa/disable'),
+            $multiFactor,
+        ),
+        new Route(
+            'account.mfa.recovery_codes.status',
+            [HttpMethod::GET],
+            new RoutePattern('/account/security/mfa/recovery-codes'),
+            $multiFactor,
+        ),
+        new Route(
+            'account.mfa.recovery_codes.regenerate',
+            [HttpMethod::POST],
+            new RoutePattern('/account/security/mfa/recovery-codes/regenerate'),
+            $multiFactor,
         ),
     );
 };

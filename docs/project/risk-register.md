@@ -386,3 +386,26 @@ recovery-authorized B01 normalization contract.
 | Notification records mistaken for audit evidence | Standards label them operational, not tamper-evident audit | GOVERNED; audit batch remains OPEN |
 | Production scheduled task not executed | Explicit CLI task and fail-closed readiness | OPEN deployment gate |
 | Scheduler deployment not yet configured | External scheduler requirement documented | OPEN deployment gate; not represented as executed |
+
+## P2-B05 risk treatment
+
+| Risk | Implemented treatment | Current disposition |
+| --- | --- | --- |
+| TOTP secret disclosure | Sodium authenticated encryption, external key, redaction and no post-start rendering | MITIGATED in source/tests; production key custody OPEN |
+| TOTP replay or parallel double use | Atomic monotonic counter update under transaction | MITIGATED in unit/MySQL concurrency tests |
+| Recovery-code disclosure | One-time plaintext display; keyed verifier only; no URL/storage/log/notification copy | MITIGATED in source/frontend/HTTP tests |
+| Recovery-code parallel reuse | Conditional atomic consume | MITIGATED in two-process MySQL test |
+| Authentication-transaction theft/replay | Opaque ID plus secret verifier, keyed hash, expiry, attempt limit, purpose binding and consumption | MITIGATED in unit/HTTP/MySQL tests |
+| Step-up confused deputy | Grant bound to account, session and enumerated action; consumed with mutation | MITIGATED in HTTP/MySQL tests |
+| Concurrent step-up grant creation | Transactional single-pending-grant invariant | MITIGATED in two-process MySQL test |
+| Final-factor removal | Active-factor count and policy invariant checked in the mutation transaction | MITIGATED in parallel TOTP/passkey revoke test |
+| WebAuthn origin/RP substitution | Exact origin and RP ID hash verification | MITIGATED with deterministic signed fixtures |
+| WebAuthn challenge replay | Single-use expiring ceremony and superseded-pending revocation | MITIGATED in MySQL ceremony tests |
+| Forged credential/signature/user handle | Credential ownership, user-handle binding and public-key signature verification | MITIGATED in deterministic negative tests |
+| Authenticator-clone indication | Signature-counter regression suspends credential and creates notification intent | MITIGATED in code/tests; incident runbook OPEN |
+| Database/encryption-key joint compromise | Key held outside MySQL; ciphertext authenticated | REDUCED; managed secret separation evidence OPEN |
+| RP ID or origin misconfiguration | Typed configuration and fail-closed readiness checks | MITIGATED locally; production values OPEN |
+| Accessibility/browser incompatibility | Server fallbacks, status/error semantics and bounded WebAuthn client | AUTOMATED MITIGATION; physical browser/AT matrix OPEN |
+| Attestation privacy/device tracking | Attestation fixed to `none` | MITIGATED for B05; future hardware assurance OPEN |
+| Account lockout after factor loss | Recovery codes and multiple passkeys supported | RESIDUAL OPEN; assisted/lost-all-factor policy required before enforced rollout |
+| Notification omission during factor change | State and durable notification intent share the transaction | MITIGATED; external scheduler/provider operations OPEN |

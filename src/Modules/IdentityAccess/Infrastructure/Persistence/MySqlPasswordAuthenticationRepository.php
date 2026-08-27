@@ -82,6 +82,42 @@ final readonly class MySqlPasswordAuthenticationRepository implements PasswordAu
         return $statement->rowCount() === 1;
     }
 
+    public function byAccount(int $accountInternalId): ?PasswordAuthenticationRecord
+    {
+        $statement = $this->provider->connection()->prepare(
+            'SELECT a.id, a.public_id, a.account_status, e.status_code AS email_status, '
+            . 'c.credential_status, c.password_hash, c.algorithm, c.metadata_version '
+            . 'FROM user_accounts a INNER JOIN account_email_addresses e ON e.user_account_id = a.id '
+            . "AND e.status_code = 'VERIFIED' "
+            . 'INNER JOIN account_credentials c ON c.user_account_id = a.id '
+            . "AND c.credential_type = 'PASSWORD' AND c.credential_status = 'ACTIVE' "
+            . 'WHERE a.id = :account_id LIMIT 1',
+        );
+        $statement->execute([':account_id' => $accountInternalId]);
+        $value = $statement->fetch(PDO::FETCH_ASSOC);
+        if (!is_array($value)) {
+            return null;
+        }
+        $row = [];
+        foreach ($value as $column => $field) {
+            if (!is_string($column)) {
+                throw new UnexpectedValueException('Authentication persistence row is invalid.');
+            }
+            $row[$column] = $field;
+        }
+
+        return new PasswordAuthenticationRecord(
+            self::requiredInteger($row, 'id'),
+            AccountId::fromBinary(self::requiredString($row, 'public_id')),
+            AccountStatus::from(self::requiredString($row, 'account_status')),
+            AccountContactStatus::from(self::requiredString($row, 'email_status')),
+            CredentialStatus::from(self::requiredString($row, 'credential_status')),
+            new SensitivePasswordHash(self::requiredString($row, 'password_hash')),
+            self::requiredString($row, 'algorithm'),
+            self::requiredInteger($row, 'metadata_version'),
+        );
+    }
+
     /** @param array<string, mixed> $row */
     private static function requiredString(array $row, string $column): string
     {

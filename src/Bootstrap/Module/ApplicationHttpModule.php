@@ -27,6 +27,8 @@ use Qmdb\Modules\IdentitySessions\Interface\Http\SessionRevocationController;
 use Qmdb\Modules\IdentitySessions\Application\Readiness\IdentitySessionReadinessCheck;
 use Qmdb\Modules\IdentityRecovery\Application\Readiness\IdentityRecoveryReadinessCheck;
 use Qmdb\Modules\IdentitySecurityNotifications\Application\Readiness\IdentitySecurityNotificationReadinessCheck;
+use Qmdb\Modules\IdentityMultiFactor\Application\Readiness\IdentityMultiFactorReadinessCheck;
+use Qmdb\Modules\IdentityMultiFactor\Interface\Http\IdentityMultiFactorController;
 use Qmdb\Modules\IdentityRecovery\Interface\Http\PasswordRecoveryRequestAcceptedController;
 use Qmdb\Modules\IdentityRecovery\Interface\Http\PasswordRecoveryRequestFormController;
 use Qmdb\Modules\IdentityRecovery\Interface\Http\PasswordRecoveryRequestSubmitController;
@@ -86,6 +88,7 @@ final readonly class ApplicationHttpModule implements Module
             new ModuleId('identity.access'),
             new ModuleId('identity.sessions'),
             new ModuleId('identity.recovery'),
+            new ModuleId('identity.multifactor'),
         ];
     }
 
@@ -102,6 +105,7 @@ final readonly class ApplicationHttpModule implements Module
                 IdentitySessionReadinessCheck::class,
                 IdentityRecoveryReadinessCheck::class,
                 IdentitySecurityNotificationReadinessCheck::class,
+                IdentityMultiFactorReadinessCheck::class,
             ],
             new ClosureServiceFactory(static fn (DependencyResolver $resolver): ApplicationReadinessController =>
                 new ApplicationReadinessController(
@@ -112,6 +116,7 @@ final readonly class ApplicationHttpModule implements Module
                     ServiceReference::get($resolver, IdentitySessionReadinessCheck::class),
                     ServiceReference::get($resolver, IdentityRecoveryReadinessCheck::class),
                     ServiceReference::get($resolver, IdentitySecurityNotificationReadinessCheck::class),
+                    ServiceReference::get($resolver, IdentityMultiFactorReadinessCheck::class),
                 )),
         ));
         $controllers = [
@@ -141,6 +146,7 @@ final readonly class ApplicationHttpModule implements Module
             PasswordResetFormController::class,
             PasswordResetSubmitController::class,
             PasswordResetCompletedController::class,
+            IdentityMultiFactorController::class,
         ];
         $context->service(ServiceDefinition::factory(
             RouteCollection::class,
