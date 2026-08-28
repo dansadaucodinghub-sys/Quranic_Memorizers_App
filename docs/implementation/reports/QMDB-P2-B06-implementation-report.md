@@ -146,8 +146,10 @@ Trivy; SBOM/licence generation; release build/verification; direct local CI and 
 
 The final completion evidence records PHP 8.5.10, Composer 2.8.8, Node 24.19.0, npm 11.17.0 and MySQL 8.4.11. PHPCS and
 maximum-level PHPStan pass. JavaScript syntax passes for 28 files, all 48 frontend tests pass and npm reports zero
-vulnerabilities. The clean schema applies 19 migrations, reverses and reapplies all three B06 migrations, applies the
-seed once, returns a no-op on rerun and verifies the exact 10/7/27/0/0 catalog.
+vulnerabilities. The complete PHP suite passes 901 tests and 57,778 assertions; the isolated MySQL suite passes 62 tests
+and 1,138 assertions. The clean schema applies 19 migrations, reverses and reapplies all three B06 migrations, applies
+the seed once, returns a no-op on rerun and verifies the exact 10/7/27/0/0 catalog. A real scheduled-delivery run reports
+one due, one claimed, one succeeded and zero failed/skipped.
 
 During validation, executable evidence corrected catalog UUID checksum encoding, readiness schema-privilege ownership,
 invalid structured event names, inherited fixture foreign-key teardown order, a stale recovery readiness expectation,
@@ -159,6 +161,21 @@ MySQL fixtures left the ledger and table state unsuitable for the later release-
 a test-environment/name-guarded table reset, schema install, migration, seed and authorization verification immediately
 after MySQL tests. A regression test enforces that ordering; production databases and database-level drop operations
 are prohibited.
+
+Repository, frozen-product-baseline, workflow, Markdown-link and lockfile checks pass 2,719, 177, 47, 1,004 and 15
+checks. Gitleaks passes history and working-tree scans; Trivy passes HIGH/CRITICAL vulnerability, secret and
+misconfiguration scanning with a freshly downloaded database. SBOM validation passes 269 checks; the generated SBOM
+SHA-256 is `1c970d4b72320c2f3629ab788479c71f3708bb3c598095f515f72db39cdd1054`. The licence inventory contains 52
+runtime and 29 development packages with zero unknown runtime or review-required licences.
+
+The P1 engineering-freeze extension governs 1,216 files and passes 7,333 checks; its generated candidate SHA-256 is
+`7142b1abfb34d1dd2d6a90cc4dd10a5f9cd2676672ed7777395ac10205079d1d`. Direct local CI and the independently invoked
+`composer ci` each pass all 31 stages. The verified clean-source artifact is
+`qmdb-0.1.0-dev-2ec3e82b7a01.tar.gz`, SHA-256
+`ad65401fdf41491932c2311a4366b28e856aabfd3f34321c4f2909639a550aba`, from source revision
+`2ec3e82b7a01b1a08c45be404a144ec7d56706ef`; its manifest SHA-256 is
+`53b88a1737aa6793d64acc684ddae251caa62022c8ce8726175e66f8e71a1fb8`. Verification linted 2,665 PHP files,
+checked 2,890 artifact files, passed CLI/HTTP/security scanners and observed MySQL readiness HTTP 200.
 
 ## Security controls, known limitations and open risks
 

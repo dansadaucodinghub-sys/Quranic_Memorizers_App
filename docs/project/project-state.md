@@ -150,6 +150,9 @@ build reports.
 | Step-up actions / security-notification types added | 4 / 4; existing B04 delivery task reused |
 | B06 unit test methods | 12 across catalog, decision, delegation and readiness contracts |
 | B06 MySQL integration test methods | 11 across catalog, constraints, decisions, administration and concurrency |
+| Complete PHP suite | PASS — 901 tests, 57,778 assertions |
+| Complete MySQL suite | PASS — 62 tests, 1,138 assertions on MySQL 8.4.11 |
+| Frontend suite | PASS — 28 files syntax-valid, 48 tests, zero npm vulnerabilities |
 | Seed tests | Exact 10/7/27/0/0 catalog, checksum, fail-closed drift and idempotent no-op rerun |
 | Constraint tests | Duplicate code/ID, invalid scope, cross-scope mapping, cross-workspace assignment and assignment uniqueness |
 | Authorization decision tests | Unknown, inactive, wrong-scope, cross-workspace and insufficient-assurance decisions deny |
@@ -157,6 +160,11 @@ build reports.
 | Concurrency tests | Duplicate platform/workspace assignment, protected administrator/owner revocation, single-use step-up and delegation revocation race |
 | Architecture/security tests | 7 dedicated architecture methods plus safe generic-403, metadata, notification and boundary regressions |
 | Validation failures resolved | Catalog UUID checksum encoding; readiness schema ownership; invalid structured event names; inherited fixture foreign keys; stale readiness expectation; P-256 coordinate padding; repeatable-read delegation recheck; post-MySQL CI schema restoration |
+| Repository / workflow / links / lockfiles | PASS — 2,719 / 47 / 1,004 / 15 checks; P0 freeze 177 checks |
+| Security and supply chain | PASS — Gitleaks, Trivy, 269 SBOM checks, 52 runtime licences with zero unknown/review; SBOM SHA-256 `1c970d4b72320c2f3629ab788479c71f3708bb3c598095f515f72db39cdd1054` |
+| Release verification | PASS — 2,890 files, 2,665 PHP lints, readiness 200, archive SHA-256 `ad65401fdf41491932c2311a4366b28e856aabfd3f34321c4f2909639a550aba`, manifest SHA-256 `53b88a1737aa6793d64acc684ddae251caa62022c8ce8726175e66f8e71a1fb8` |
+| Local CI | PASS — direct runner 31/31 and independent `composer ci` 31/31 |
+| Engineering freeze | PASS — 1,216 governed files, 7,333 checks, source revision `2ec3e82b7a01b1a08c45be404a144ec7d56706ef` |
 | Deferred evidence items | 9 inherited non-blocking environment/operations items remain explicitly unexecuted |
 | Remaining environment limitations | Hosted CI; physical authenticator/browser/AT evidence; production WebAuthn/key/scheduler/provider configuration; assisted-factor policy; Docker/WSL and Linux-only evidence; platform-administrator bootstrap |
 
