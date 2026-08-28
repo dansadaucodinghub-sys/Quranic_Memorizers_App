@@ -5,10 +5,10 @@
 | Project | Qur’an Memorizer DB |
 | Project code | QMDB |
 | Baseline ID | QMDB-BL-001 |
-| Document version | 2.2.0 |
-| Status | 106 controlled open decisions; five technical decisions resolved by QMDB-P0-CLOSE |
-| Current phase | P1 — Engineering and Repository Foundation (blocked) |
-| Last updated | 2026-08-25 |
+| Document version | 2.3.0 |
+| Status | Controlled open decisions; B06 foundational taxonomy resolved and remaining authorization decisions deferred |
+| Current phase | P2 — Identity, Security, and Tenant Isolation |
+| Last updated | 2026-08-28 |
 | Document owner role | Product and Architecture Governance |
 | Approval status | Open matters remain unapproved; closeout blocker classifications are approved under QMDB-P0-FRZ-001 |
 
@@ -453,3 +453,42 @@ An open decision closes only when its owner records the selected outcome, altern
 | Signature-counter clone response | Security Operations | Incident runbook | BLOCKS_DEPLOYMENT | Suspend credential and notify; no automated account suspension |
 | MFA rollout communications | Product/Support | Enforced or broad rollout | BLOCKS_ENFORCED_MFA_ROLLOUT | Opt-in account workflow only |
 | Physical authenticator/browser/AT matrix | Quality/Accessibility/Security | Affected production release | BLOCKS_RELEASE | Automated fixtures only; manual evidence remains open |
+
+## P2-B06 authorization decisions and conservative assumptions
+
+The historical entries labelled `OD-062` and the duplicate `OD-084` “Initial permission taxonomy” are resolved only for
+the explicit B06 foundational catalog in `P2-ADR-007`. This disposition does not resolve unrelated identifiers reused
+elsewhere or authorize permissions owned by future business modules.
+
+| Decision | Owner role | Required resolution phase | Blocker classification | Conservative current assumption |
+| --- | --- | --- | --- | --- |
+| Production platform-administrator bootstrap process | Security Operations / Release | Before production authorization activation | BLOCKS_DEPLOYMENT | No seed assignment, bootstrap command or unrestricted backdoor exists |
+| Custom workspace roles | Product / Security / Access Control | Dedicated authorization-extension batch | BLOCKS_CUSTOM_ROLE_ROLLOUT | Only the five immutable seeded workspace roles are usable |
+| Custom role naming | Product / Localization / Security | With custom-role design | BLOCKS_CUSTOM_ROLE_ROLLOUT | No user-defined role names or aliases |
+| Role retirement authority | Security Governance | Before any role retirement | BLOCKS_ROLE_RETIREMENT | Seeded roles remain active; no runtime retirement mutation |
+| Permission retirement process | Security / Owning Module | Before any permission retirement | BLOCKS_PERMISSION_RETIREMENT | Seeded permissions remain active; no runtime retirement mutation |
+| Role catalog versioning beyond seed checksums | Architecture / Release | Before independent catalog rollout | NON_BLOCKING_B06 | Migration and seed ledgers plus catalog checksums are authoritative |
+| Explicit deny assignments | Security Architecture | Future policy design | BLOCKS_EXPLICIT_DENY | No deny rows; absence of a valid grant denies |
+| Role inheritance | Security Architecture | Future policy design | BLOCKS_ROLE_INHERITANCE | Flat explicit role-permission mappings only |
+| Delegated administration limits | Security / Product | Before limited administration rollout | BLOCKS_DELEGATED_ADMIN | Actor may delegate only permissions currently possessed |
+| Approval workflow for high-risk role assignments | Security Governance / Product | Before governed privileged-role rollout | BLOCKS_HIGH_RISK_ROLE_ROLLOUT | No approval workflow; direct mutation requires permission and step-up |
+| Dual-control role assignment | Security Governance | Before dual-control requirement | BLOCKS_DUAL_CONTROL | Not implemented; no dual-control claim |
+| Organization-scoped roles | Organization Module Owner / Security | Owning organization batch | BLOCKS_ORGANIZATION_AUTHORIZATION | Workspace roles do not imply organization authority |
+| National geography roles | Geography Module Owner / Security | Owning geography batch | BLOCKS_GEOGRAPHY_AUTHORIZATION | No geography authority is inferred |
+| State roles | Geography Module Owner / Security | Owning geography batch | BLOCKS_GEOGRAPHY_AUTHORIZATION | No state authority is inferred |
+| FCT roles | Geography Module Owner / Security | Owning geography batch | BLOCKS_GEOGRAPHY_AUTHORIZATION | No FCT authority is inferred |
+| Local Government roles | Geography Module Owner / Security | Owning geography batch | BLOCKS_GEOGRAPHY_AUTHORIZATION | No LGA authority is inferred |
+| Competition assignments | Competition Module Owner / Security | Competition administration batch | BLOCKS_COMPETITION_AUTHORIZATION | No competition-resource permission exists |
+| Judge assignments | Competition Module Owner / Security | Judging workflow batch | BLOCKS_JUDGING_AUTHORIZATION | No judge authority exists |
+| Certificate-management permissions | Certificate Module Owner / Security | Certificate-management batch | BLOCKS_CERTIFICATE_AUTHORIZATION | No certificate permission exists |
+| Media permissions | Media Module Owner / Security | Media batch | BLOCKS_MEDIA_AUTHORIZATION | No media permission exists |
+| Social moderation permissions | Social Module Owner / Security | Social/community batch | BLOCKS_SOCIAL_AUTHORIZATION | No moderation permission exists |
+| Authorization decision caching | Architecture / Security | Before cache introduction | NON_BLOCKING_B06 | Every decision reads authoritative persistence; no decision cache |
+| Authorization analytics | Security Operations / Privacy | Observability and privacy review | NON_BLOCKING_B06 | Bounded structured operational events only |
+| Role-assignment retention | Privacy / Data Governance | Before retention automation | BLOCKS_RETENTION_AUTOMATION | Revoked assignments are retained historically |
+| Authorization-notification escalation | Security Operations | Before external escalation | BLOCKS_DEPLOYMENT | Existing scheduled email delivery only |
+| Workspace owner transfer workflow | Product / Security | Dedicated ownership-transfer batch | BLOCKS_OWNER_TRANSFER | Assignment and revocation are separate; final owner cannot be removed |
+| Closed-workspace authorization behavior | Tenancy / Security | QMDB-P2-B07 | BLOCKS_P2_B07_POLICY | Only active workspaces authorize; other states deny |
+| Support access | Support Governance / Security / Privacy | Before support-access rollout | BLOCKS_SUPPORT_ACCESS | Support receives no implicit or bypass authority |
+| Break-glass access | Security Governance / Operations | Before emergency-access rollout | BLOCKS_BREAK_GLASS | No break-glass role, command or bypass exists |
+| Privilege-review cadence | Security Governance / Audit | Before production governance approval | BLOCKS_DEPLOYMENT | No cadence claimed; assignments remain queryable history |

@@ -87,3 +87,16 @@ The authentication-transaction cookie is separate from the session and device co
 transaction identifier plus verifier secret, and is HttpOnly, Secure in production, SameSite=Lax, host-only and
 path-bounded to authentication routes. The verifier is stored only as a keyed hash. Completion, cancellation, expiry
 or malformed state clears the browser cookie and consumes or revokes the server transaction.
+
+## P2-B06 authorization boundary
+
+`AuthenticatedAccountContext` supplies server-verified account, session, device, and assurance evidence to the
+authorization layer, but it never contains permissions or creates Tenant Context. A valid or high-assurance session
+still denies without an active mapped role assignment in the exact platform or workspace scope.
+
+Privilege changes consume a B05 action-bound step-up grant tied to the same session. Platform role assignment and
+revocation require phishing-resistant step-up; workspace role assignment and revocation require multi-factor or
+stronger step-up. Session rotation and device lifecycle do not transfer grants across sessions, and no role or
+permission is stored in a session/device cookie or browser storage. Authorization regression gates cover inactive
+sessions/accounts, cross-session grant use, consumed-grant reuse, and the distinction between authenticated context and
+trusted `TenantContext`.

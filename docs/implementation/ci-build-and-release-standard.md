@@ -84,3 +84,21 @@ php tools/build/verify-release.php
 On Linux x86-64 CI, install scanners first with `bash tools/security/install-tools.sh`. Production credentials must
 never be supplied to these workflows. Release publication, signing, attestations, and deployment require later,
 separately approved controls.
+
+## P2-B06 authorization regression gates
+
+The repository and extracted release must include the `security.authorization` module, its three explicitly registered
+migrations, its one explicitly registered production seed, the `security:authorization:verify` command, and the shared
+security-event email templates. The release must exclude tests, account/workspace fixtures, assignments, private paths,
+environment files, and secrets.
+
+Required authorization evidence includes exact catalog counts and checksums; deny-by-default, unknown/wrong-scope and
+assurance decisions; active account/workspace/membership/role/permission enforcement; safe generic 403 mapping; seed
+idempotency and drift detection; rollback/reapply; cross-workspace relational denial; delegation subset checks;
+transactional step-up/notification behavior; and independent-process duplicate-assignment, last-administrator,
+last-owner, and grant-consumption races. The complete legacy MFA, session, recovery, tenant, frontend, scheduler,
+security-scan, SBOM/licence, and artifact suites remain mandatory.
+
+An intentionally pre-B06 schema must report generic `not_ready`. A fully migrated and seeded schema must pass both
+readiness and `security:authorization:verify`. Missing MySQL or skipped concurrency tests are not acceptable B06
+completion evidence.

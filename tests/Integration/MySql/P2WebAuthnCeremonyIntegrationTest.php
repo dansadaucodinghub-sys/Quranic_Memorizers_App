@@ -390,6 +390,11 @@ final class P2WebAuthnCeremonyIntegrationTest extends MySqlIntegrationTestCase
         if (!is_string($x) || !is_string($y)) {
             self::fail('Generated WebAuthn test key has no EC coordinates.');
         }
+        if (strlen($x) > 32 || strlen($y) > 32) {
+            self::fail('Generated WebAuthn test key has invalid P-256 coordinate width.');
+        }
+        $x = str_pad($x, 32, "\0", STR_PAD_LEFT);
+        $y = str_pad($y, 32, "\0", STR_PAD_LEFT);
         $credentialId ??= random_bytes(32);
         $coseKey = MapObject::create()
             ->add(UnsignedIntegerObject::create(1), UnsignedIntegerObject::create(2))
@@ -619,6 +624,8 @@ final class P2WebAuthnCeremonyIntegrationTest extends MySqlIntegrationTestCase
     {
         foreach (
             [
+                'workspace_role_assignments', 'platform_role_assignments', 'authorization_role_permissions',
+                'authorization_roles', 'authorization_permissions',
                 'account_webauthn_ceremonies', 'account_passkey_credentials', 'account_webauthn_user_handles',
                 'account_recovery_codes', 'account_recovery_code_sets', 'account_totp_authenticators',
                 'account_step_up_grants', 'account_authentication_transactions', 'account_mfa_policies',
@@ -637,7 +644,9 @@ final class P2WebAuthnCeremonyIntegrationTest extends MySqlIntegrationTestCase
     {
         foreach (
             [
-                'account_webauthn_ceremonies', 'account_passkey_credentials', 'account_webauthn_user_handles',
+                'workspace_role_assignments', 'platform_role_assignments', 'authorization_role_permissions',
+                'authorization_roles', 'authorization_permissions', 'account_webauthn_ceremonies',
+                'account_passkey_credentials', 'account_webauthn_user_handles',
                 'account_recovery_codes', 'account_recovery_code_sets', 'account_totp_authenticators',
                 'account_step_up_grants', 'account_authentication_transactions', 'account_mfa_policies',
                 'account_security_notification_events', 'account_security_notifications',

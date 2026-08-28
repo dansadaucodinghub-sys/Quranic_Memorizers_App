@@ -140,3 +140,23 @@ Organization/role/workspace-enforced MFA, roles, permissions, tenant switching, 
 reset, conditional UI, metadata services, certification policy, and authoritative audit remain outside B05. Physical
 authenticator/browser/assistive-technology evidence is a production release gate and is never inferred from deterministic
 library fixtures.
+
+## P2-B06 authorization step-up extension
+
+B06 adds four enumerated privilege-mutation actions without changing the B05 grant contract:
+
+```text
+AUTHORIZATION_PLATFORM_ROLE_ASSIGN   PHISHING_RESISTANT
+AUTHORIZATION_PLATFORM_ROLE_REVOKE   PHISHING_RESISTANT
+AUTHORIZATION_WORKSPACE_ROLE_ASSIGN  MULTI_FACTOR
+AUTHORIZATION_WORKSPACE_ROLE_REVOKE  MULTI_FACTOR
+```
+
+The authorization service first requires the actor's mapped permission and delegation subset, then transactionally
+revalidates current authority, consumes the exact account/session/action grant, writes or revokes the assignment, and
+creates the durable security-notification intent. Any failure rolls back all three state changes. A stronger session
+assurance does not create a role, permission, Tenant Context, or authorization decision by itself.
+
+Wrong-action, expired, consumed, cross-account, and cross-session grants deny. Independent-process tests verify one
+winner when a grant is consumed concurrently. Production administrator bootstrap, organization-enforced MFA, assisted
+factor recovery, and final production recency/attempt parameters remain governed open decisions.

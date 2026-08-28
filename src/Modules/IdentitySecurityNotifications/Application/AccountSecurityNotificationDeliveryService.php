@@ -6,7 +6,7 @@ namespace Qmdb\Modules\IdentitySecurityNotifications\Application;
 
 use Qmdb\Modules\Identity\Infrastructure\Security\ContactCipher;
 use Qmdb\Modules\IdentitySecurityNotifications\Application\Mail\AccountSecurityNotificationNotifier;
-use Qmdb\Modules\IdentitySecurityNotifications\Application\Mail\PasswordResetCompletedNotificationMessageFactory;
+use Qmdb\Modules\IdentitySecurityNotifications\Application\Mail\AccountSecurityNotificationMessageFactory;
 use Qmdb\Modules\IdentitySecurityNotifications\Configuration\SecurityNotificationConfiguration;
 use Qmdb\Modules\IdentitySecurityNotifications\Domain\AccountSecurityNotification;
 use Qmdb\Modules\IdentitySecurityNotifications\Domain\NotificationClaimExecutionId;
@@ -21,7 +21,7 @@ final readonly class AccountSecurityNotificationDeliveryService
         private AccountSecurityNotificationRepository $notifications,
         private TransactionManager $transactions,
         private ContactCipher $contacts,
-        private PasswordResetCompletedNotificationMessageFactory $messages,
+        private AccountSecurityNotificationMessageFactory $messages,
         private AccountSecurityNotificationNotifier $notifier,
         private AccountSecurityNotificationFailureClassifier $failureClassifier,
         private SecurityNotificationRetryPolicy $retryPolicy,
@@ -59,6 +59,7 @@ final readonly class AccountSecurityNotificationDeliveryService
                     $recipient,
                     $notification->locale,
                     $notification->occurredAt,
+                    $notification->type,
                 ));
                 $changed = $this->transactions->transactional(fn (): bool =>
                     $this->notifications->markDelivered($notification, $executionId, $this->clock->now()));

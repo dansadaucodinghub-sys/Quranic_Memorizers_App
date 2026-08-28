@@ -28,6 +28,7 @@ use Qmdb\Modules\IdentitySessions\Application\Readiness\IdentitySessionReadiness
 use Qmdb\Modules\IdentityRecovery\Application\Readiness\IdentityRecoveryReadinessCheck;
 use Qmdb\Modules\IdentitySecurityNotifications\Application\Readiness\IdentitySecurityNotificationReadinessCheck;
 use Qmdb\Modules\IdentityMultiFactor\Application\Readiness\IdentityMultiFactorReadinessCheck;
+use Qmdb\Modules\SecurityAuthorization\Application\AuthorizationReadinessCheck;
 use Qmdb\Modules\IdentityMultiFactor\Interface\Http\IdentityMultiFactorController;
 use Qmdb\Modules\IdentityRecovery\Interface\Http\PasswordRecoveryRequestAcceptedController;
 use Qmdb\Modules\IdentityRecovery\Interface\Http\PasswordRecoveryRequestFormController;
@@ -89,6 +90,7 @@ final readonly class ApplicationHttpModule implements Module
             new ModuleId('identity.sessions'),
             new ModuleId('identity.recovery'),
             new ModuleId('identity.multifactor'),
+            new ModuleId('security.authorization'),
         ];
     }
 
@@ -106,6 +108,7 @@ final readonly class ApplicationHttpModule implements Module
                 IdentityRecoveryReadinessCheck::class,
                 IdentitySecurityNotificationReadinessCheck::class,
                 IdentityMultiFactorReadinessCheck::class,
+                AuthorizationReadinessCheck::class,
             ],
             new ClosureServiceFactory(static fn (DependencyResolver $resolver): ApplicationReadinessController =>
                 new ApplicationReadinessController(
@@ -117,6 +120,7 @@ final readonly class ApplicationHttpModule implements Module
                     ServiceReference::get($resolver, IdentityRecoveryReadinessCheck::class),
                     ServiceReference::get($resolver, IdentitySecurityNotificationReadinessCheck::class),
                     ServiceReference::get($resolver, IdentityMultiFactorReadinessCheck::class),
+                    ServiceReference::get($resolver, AuthorizationReadinessCheck::class),
                 )),
         ));
         $controllers = [

@@ -390,6 +390,7 @@ final class P2IdentityMultiFactorIntegrationTest extends MySqlIntegrationTestCas
     {
         foreach (
             [
+                'workspace_role_assignments', 'platform_role_assignments',
                 'account_webauthn_ceremonies', 'account_passkey_credentials', 'account_webauthn_user_handles',
                 'account_recovery_codes', 'account_recovery_code_sets', 'account_totp_authenticators',
                 'account_step_up_grants', 'account_authentication_transactions', 'account_mfa_policies',
@@ -409,7 +410,9 @@ final class P2IdentityMultiFactorIntegrationTest extends MySqlIntegrationTestCas
     {
         foreach (
             [
-            'account_webauthn_ceremonies', 'account_passkey_credentials', 'account_webauthn_user_handles',
+            'workspace_role_assignments', 'platform_role_assignments', 'authorization_role_permissions',
+            'authorization_roles', 'authorization_permissions', 'account_webauthn_ceremonies',
+            'account_passkey_credentials', 'account_webauthn_user_handles',
             'account_recovery_codes', 'account_recovery_code_sets', 'account_totp_authenticators',
             'account_step_up_grants', 'account_authentication_transactions', 'account_mfa_policies',
             'account_security_notification_events', 'account_security_notifications',

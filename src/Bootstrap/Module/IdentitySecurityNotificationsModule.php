@@ -9,6 +9,7 @@ use Qmdb\Modules\IdentityAccess\Configuration\IdentityAccessConfiguration;
 use Qmdb\Modules\IdentitySecurityNotifications\Application\AccountSecurityNotificationDeliveryService;
 use Qmdb\Modules\IdentitySecurityNotifications\Application\AccountSecurityNotificationFailureClassifier;
 use Qmdb\Modules\IdentitySecurityNotifications\Application\Mail\AccountSecurityNotificationNotifier;
+use Qmdb\Modules\IdentitySecurityNotifications\Application\Mail\AccountSecurityNotificationMessageFactory;
 use Qmdb\Modules\IdentitySecurityNotifications\Application\Mail\PasswordResetCompletedNotificationMessageFactory;
 use Qmdb\Modules\IdentitySecurityNotifications\Application\ScheduledSecurityNotificationTask;
 use Qmdb\Modules\IdentitySecurityNotifications\Application\SecurityNotificationRetryPolicy;
@@ -138,6 +139,24 @@ final readonly class IdentitySecurityNotificationsModule implements Module
             ),
         ));
         $context->service(ServiceDefinition::factory(
+            AccountSecurityNotificationMessageFactory::class,
+            self::ID,
+            [
+                PasswordResetCompletedNotificationMessageFactory::class,
+                TranslationCatalog::class,
+                PhpViewRenderer::class,
+            ],
+            new ClosureServiceFactory(
+                fn (DependencyResolver $resolver): AccountSecurityNotificationMessageFactory =>
+                    new AccountSecurityNotificationMessageFactory(
+                        ServiceReference::get($resolver, PasswordResetCompletedNotificationMessageFactory::class),
+                        $this->identityAccess->publicBaseUrl,
+                        ServiceReference::get($resolver, TranslationCatalog::class),
+                        ServiceReference::get($resolver, PhpViewRenderer::class),
+                    ),
+            ),
+        ));
+        $context->service(ServiceDefinition::factory(
             SymfonyMailerSecurityNotificationNotifier::class,
             self::ID,
             [MailerInterface::class],
@@ -170,7 +189,7 @@ final readonly class IdentitySecurityNotificationsModule implements Module
                 AccountSecurityNotificationRepository::class,
                 TransactionManager::class,
                 ContactCipher::class,
-                PasswordResetCompletedNotificationMessageFactory::class,
+                AccountSecurityNotificationMessageFactory::class,
                 AccountSecurityNotificationNotifier::class,
                 AccountSecurityNotificationFailureClassifier::class,
                 SecurityNotificationRetryPolicy::class,
@@ -183,7 +202,7 @@ final readonly class IdentitySecurityNotificationsModule implements Module
                         ServiceReference::get($resolver, AccountSecurityNotificationRepository::class),
                         ServiceReference::get($resolver, TransactionManager::class),
                         ServiceReference::get($resolver, ContactCipher::class),
-                        ServiceReference::get($resolver, PasswordResetCompletedNotificationMessageFactory::class),
+                        ServiceReference::get($resolver, AccountSecurityNotificationMessageFactory::class),
                         ServiceReference::get($resolver, AccountSecurityNotificationNotifier::class),
                         ServiceReference::get($resolver, AccountSecurityNotificationFailureClassifier::class),
                         ServiceReference::get($resolver, SecurityNotificationRetryPolicy::class),

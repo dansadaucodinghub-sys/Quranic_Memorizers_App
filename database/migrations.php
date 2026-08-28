@@ -16,6 +16,9 @@ use Qmdb\Modules\IdentityMultiFactor\Infrastructure\Migration\CreateAuthenticati
 use Qmdb\Modules\IdentityMultiFactor\Infrastructure\Migration\CreatePasskeyFoundationMigration;
 use Qmdb\Modules\IdentityMultiFactor\Infrastructure\Migration\CreateTotpRecoveryCodeFoundationMigration;
 use Qmdb\Modules\IdentityMultiFactor\Infrastructure\Migration\ExtendIdentityMultiFactorConstraintsMigration;
+use Qmdb\Modules\SecurityAuthorization\Infrastructure\Migration\CreateAuthorizationCatalogFoundationMigration;
+use Qmdb\Modules\SecurityAuthorization\Infrastructure\Migration\CreatePlatformRoleAssignmentFoundationMigration;
+use Qmdb\Modules\SecurityAuthorization\Infrastructure\Migration\CreateWorkspaceRoleAssignmentFoundationMigration;
 use Qmdb\Modules\Tenancy\Infrastructure\Migration\CreateWorkspaceMembershipsMigration;
 use Qmdb\Modules\Tenancy\Infrastructure\Migration\CreateWorkspacesMigration;
 use Qmdb\Shared\Schema\Migration\MigrationRegistry;
@@ -39,5 +42,8 @@ return static function (): MigrationRegistry {
         ->register(new CreateAuthenticationTransactionFoundationMigration())
         ->register(new CreateTotpRecoveryCodeFoundationMigration())
         ->register(new CreatePasskeyFoundationMigration())
+        ->register(new CreateAuthorizationCatalogFoundationMigration())
+        ->register(new CreatePlatformRoleAssignmentFoundationMigration())
+        ->register(new CreateWorkspaceRoleAssignmentFoundationMigration())
         ->build();
 };

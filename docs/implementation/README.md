@@ -6,13 +6,13 @@
 | Project Code | QMDB |
 | Source Baseline | QMDB-BL-001 |
 | Freeze ID | QMDB-P0-FRZ-001 |
-| Batch ID | QMDB-P2-B05 |
+| Batch ID | QMDB-P2-B06 |
 | Document Title | Implementation Entry Point |
 | Document Version | 1.0.0 |
-| Document Status | P1 COMPLETE; P2-B01 THROUGH P2-B05 COMPLETE |
+| Document Status | P1 COMPLETE; P2-B01 THROUGH P2-B06 COMPLETE |
 | Document Owner Role | Product, Architecture and Engineering Governance |
-| Last Updated | 2026-08-27 |
-| Approval Status | Recovery-authorized B01 through B05 accepted after complete executable gates; B06 blocked |
+| Last Updated | 2026-08-28 |
+| Approval Status | B01 through B06 accepted after complete executable gates; B07 not started |
 | Related Documents | [Closeout entry point](../closeout/README.md); [freeze manifest](../closeout/qmdb-p0-baseline-freeze.yaml); [project state](../project/project-state.md) |
 
 ## Purpose
@@ -48,17 +48,22 @@ The artifacts cover phased implementation routing, readiness/completion policy, 
     B05 assurance, authenticator, ceremony, recovery and privileged-mutation contract.
 18. [P2-B05 implementation report](reports/QMDB-P2-B05-implementation-report.md) — B05 scope, security boundaries,
     executable evidence and explicit physical/deployment gates.
+19. [Roles, permissions, and scoped authorization standard](roles-permissions-and-scoped-authorization-standard.md) —
+    implemented B06 catalog, decision, assignment, delegation, readiness and concurrency contract.
+20. [P2-B06 implementation report](reports/QMDB-P2-B06-implementation-report.md) — B06 implementation, schema,
+    security, regression, release and closeout evidence.
 
 ## Current authorization
 
 P0 remains complete and frozen. P1-B01 through P1-B10 are complete and P1 is closed/frozen. The project-owner recovery
 authorization established conservative executable OD-051/OD-052 contracts, after which P2-B01 through P2-B05 passed
-their mandatory schema, security, MySQL, frontend, scanner, release and engineering-freeze gates.
+their mandatory gates. The project owner separately authorized bounded B06 execution; its authorization, MySQL,
+security, release and engineering-freeze gates passed without starting B07.
 
 ## Exact next action
 
-Do not start `QMDB-P2-B06 — Roles, Permissions, and Scoped Authorization` without a new explicit authorization. The
-bounded `QMDB-RECOVERY-RUN-001` sequence is complete at B05.
+`QMDB-P2-B07 — Tenant Context, Workspace Switching, and Tenant-Aware Data Access` is the next batch. B06 completion
+does not itself authorize B07 implementation.
 
 ## Governance
 

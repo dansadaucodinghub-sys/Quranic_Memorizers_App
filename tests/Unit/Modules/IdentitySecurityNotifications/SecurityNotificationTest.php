@@ -17,6 +17,14 @@ use Qmdb\Modules\IdentitySecurityNotifications\Domain\AccountSecurityNotificatio
 use Qmdb\Modules\IdentitySecurityNotifications\Domain\NotificationClaimExecutionId;
 use Qmdb\Modules\IdentitySecurityNotifications\Domain\SecurityNotificationDeduplicationKeyFactory;
 use Qmdb\Modules\IdentityAccess\Application\Mail\EmailDeliveryException;
+use Qmdb\Modules\IdentityAccess\Configuration\PublicApplicationBaseUrl;
+use Qmdb\Modules\IdentitySecurityNotifications\Application\Mail\AccountSecurityNotificationMessageFactory;
+use Qmdb\Modules\IdentitySecurityNotifications\Application\Mail\PasswordResetCompletedNotificationMessageFactory;
+use Qmdb\Shared\Localization\TranslationCatalog;
+use Qmdb\Shared\Presentation\Asset\AssetUrlGenerator;
+use Qmdb\Shared\Presentation\Html\HtmlEscaper;
+use Qmdb\Shared\Presentation\View\PhpViewRenderer;
+use Qmdb\Shared\Presentation\View\ViewRegistry;
 
 final class SecurityNotificationTest extends TestCase
 {
@@ -98,6 +106,66 @@ final class SecurityNotificationTest extends TestCase
             new DateTimeImmutable('+2 minutes'),
             2,
             new DateTimeImmutable(),
+        );
+    }
+
+    public function testRoleChangeNotificationsRenderDistinctSafeEnglishAndArabicMessages(): void
+    {
+        $factory = $this->roleNotificationFactory();
+        foreach (
+            [
+            AccountSecurityNotificationType::PLATFORM_ROLE_ASSIGNED,
+            AccountSecurityNotificationType::PLATFORM_ROLE_REVOKED,
+            AccountSecurityNotificationType::WORKSPACE_ROLE_ASSIGNED,
+            AccountSecurityNotificationType::WORKSPACE_ROLE_REVOKED,
+            ] as $type
+        ) {
+            foreach (['en', 'ar'] as $locale) {
+                $message = $factory->create(
+                    'person@example.test',
+                    $locale,
+                    new DateTimeImmutable('2026-08-28T09:15:00Z'),
+                    $type,
+                );
+                self::assertNotSame('', $message->subject);
+                self::assertStringContainsString('2026-08-28 09:15 UTC', $message->textBody);
+                self::assertStringContainsString($locale === 'ar' ? 'dir="rtl"' : 'dir="ltr"', $message->htmlBody);
+                self::assertStringNotContainsString('person@example.test', $message->textBody . $message->htmlBody);
+                self::assertStringNotContainsString('permission', strtolower($message->textBody . $message->htmlBody));
+                self::assertDoesNotMatchRegularExpression(
+                    '/\b[0-9a-f]{8}-[0-9a-f-]{27}\b/i',
+                    $message->textBody . $message->htmlBody,
+                );
+            }
+        }
+    }
+
+    private function roleNotificationFactory(): AccountSecurityNotificationMessageFactory
+    {
+        $root = dirname(__DIR__, 4);
+        $translations = TranslationCatalog::fromFiles([
+            'en' => $root . '/resources/translations/en.php',
+            'ar' => $root . '/resources/translations/ar.php',
+        ]);
+        $views = new PhpViewRenderer(
+            new ViewRegistry([
+                'emails.password-reset-completed-html' => $root
+                    . '/resources/views/emails/password-reset-completed.html.php',
+                'emails.password-reset-completed-text' => $root
+                    . '/resources/views/emails/password-reset-completed.txt.php',
+                'emails.security-event-html' => $root . '/resources/views/emails/security-event.html.php',
+                'emails.security-event-text' => $root . '/resources/views/emails/security-event.txt.php',
+            ]),
+            new HtmlEscaper(),
+            new AssetUrlGenerator(),
+        );
+        $baseUrl = new PublicApplicationBaseUrl('https://example.test', true);
+
+        return new AccountSecurityNotificationMessageFactory(
+            new PasswordResetCompletedNotificationMessageFactory($baseUrl, $translations, $views),
+            $baseUrl,
+            $translations,
+            $views,
         );
     }
 }

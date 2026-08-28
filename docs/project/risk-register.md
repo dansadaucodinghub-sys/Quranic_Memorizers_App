@@ -5,13 +5,13 @@
 | Project | Qur’an Memorizer DB |
 | Project Code | QMDB |
 | Baseline ID | QMDB-BL-001 |
-| Batch ID | QMDB-P1-B08 |
+| Batch ID | QMDB-P2-B06 |
 | Document Title | Risk Register |
-| Document Version | 2.8.0 |
-| Document Status | Controlled risk ledger; P1 final dispositions approved, P2 entry risks remain open |
+| Document Version | 2.9.0 |
+| Document Status | Controlled risk ledger; P2-B06 executable authorization treatments recorded |
 | Document Owner Role | Product, Data, Security, Privacy, Business Continuity and Release Governance |
-| Last Updated | 2026-08-26 |
-| Approval Status | P0 classifications remain approved; B08 controls have compatibility evidence but acceptance remains OPEN pending PHP 8.5, complete prerequisites, and approved MySQL evidence |
+| Last Updated | 2026-08-28 |
+| Approval Status | P0 classifications remain approved; B06 source risks are treated only where executable evidence exists; production residuals remain open |
 | Related Documents | [Threat model](../security/threat-model.md); [Control catalog](../security/security-control-catalog.md); [B04 data requirements](../requirements/P0-B04-data-requirements.md); [schema readiness](../data/13-schema-review-and-implementation-readiness.md) |
 
 ## Purpose
@@ -409,3 +409,37 @@ recovery-authorized B01 normalization contract.
 | Attestation privacy/device tracking | Attestation fixed to `none` | MITIGATED for B05; future hardware assurance OPEN |
 | Account lockout after factor loss | Recovery codes and multiple passkeys supported | RESIDUAL OPEN; assisted/lost-all-factor policy required before enforced rollout |
 | Notification omission during factor change | State and durable notification intent share the transaction | MITIGATED; external scheduler/provider operations OPEN |
+
+## P2-B06 scoped-authorization risk treatment
+
+| Risk | Executable treatment | Current disposition |
+| --- | --- | --- |
+| Default-allow regression | Decision model initializes and falls through to explicit deny; unknown or incomplete evidence never allows | MITIGATED by unit, integration and architecture tests |
+| Unknown-permission acceptance | Request code must exist identically in the in-memory and persisted active catalogs | MITIGATED by decision and catalog-drift tests |
+| Wildcard-permission introduction | Permission-code grammar rejects wildcard tokens and the governed catalog declares only explicit codes | MITIGATED by domain, seed and architecture tests |
+| Cross-scope role assignment | Scope discriminator constraints, role-scope foreign keys and application eligibility checks | MITIGATED by schema and MySQL negative tests |
+| Cross-workspace assignment | Trusted `TenantContext`, composite workspace/membership foreign keys and workspace-qualified repositories | MITIGATED by cross-workspace MySQL tests |
+| Public-ID authorization misuse | Public identifiers resolve through account/membership repositories; decisions use verified internal ownership context | MITIGATED by repository and architecture tests |
+| Inactive account authorization | Active-account evidence is mandatory for every decision | MITIGATED by unit/MySQL decision tests |
+| Inactive membership authorization | Workspace and membership active states are mandatory | MITIGATED by workspace decision tests |
+| Retired role authorization | Only active role rows contribute effective permission evidence | MITIGATED by decision/catalog tests |
+| Retired permission authorization | Both registered and persisted permission must be active | MITIGATED by decision/catalog tests |
+| Insufficient-assurance authorization | Every permission declares a required assurance and server-derived assurance is compared explicitly | MITIGATED by assurance matrix tests |
+| Step-up grant reuse | Single-use conditional consumption occurs inside the privilege mutation transaction | MITIGATED by MySQL concurrency tests |
+| Step-up action confusion | Four enumerated action codes bind grants to the exact mutation | MITIGATED by domain and administration tests |
+| Cross-session step-up use | Grant consumption binds account, active session and target action | MITIGATED by inherited B05 and B06 integration tests |
+| Delegation privilege escalation | Target permissions must be a subset of actor permissions before and during the locked mutation | MITIGATED by unit and MySQL administration tests |
+| Last platform administrator removal | Locked count prevents removal of the final active security administrator | MITIGATED by independent-process concurrency test |
+| Last workspace owner removal | Workspace-qualified locked count prevents final-owner removal | MITIGATED by independent-process concurrency test |
+| Concurrent role assignment duplication | Active-state generated columns and unique keys serialize competing inserts | MITIGATED by independent-process platform/workspace tests |
+| Concurrent role revocation race | Optimistic versions, row locks and protected-role counts serialize revocation | MITIGATED by independent-process tests |
+| Catalog seed drift | Immutable checksum ledger, deterministic no-op rerun and fail-closed verifier | MITIGATED by migration/seed/catalog lifecycle tests |
+| Manual catalog mutation | Readiness and CLI compare persisted IDs, codes, scope, status, assurance and mappings to the governed catalog | MITIGATED detection; database change governance remains operational |
+| Authorization cache contamination | No authorization decision cache exists in B06 | AVOIDED in B06; future cache design remains OPEN |
+| Client-side authorization trust | Server repositories, session assurance and `TenantContext` are authoritative; clients cannot grant permission | MITIGATED by architecture and HTTP tests |
+| Authorization-detail leakage through 403 | Safe exception contract returns a generic problem response without role/permission diagnostics | MITIGATED by middleware/HTTP tests |
+| Role-assignment notification failure | Notification intent and privilege mutation share one transaction; delivery uses the existing retry scheduler | MITIGATED for state integrity; provider availability remains OPEN |
+| No production platform administrator bootstrap | Production seed creates zero assignments and no bypass command | OPEN DEPLOYMENT BLOCKER requiring approved bootstrap runbook and evidence |
+| Role catalog mistaken for business authorization | Catalog is limited to authorization, membership, security and settings foundations | GOVERNED; owning business modules must add explicit permissions |
+| Workspace scope mistaken for geography scope | Scope type and documentation explicitly reject geography coercion | MITIGATED structurally; geography authorization remains deferred |
+| Authentication assurance mistaken for authorization | Assurance is necessary where declared but never sufficient without an active mapped assignment | MITIGATED by negative decision tests |

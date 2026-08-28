@@ -120,3 +120,31 @@ change control.
   metadata services, hardware certification, conditional mediation, audit-ledger claims or B06 authorization policy.
 - **Consequences:** Production must supply HTTPS RP/origin and managed encryption-key evidence; physical authenticators,
   target browsers and assistive technologies still require controlled manual verification before release.
+
+## P2-ADR-007 — Explicit deny-by-default scoped authorization catalog
+
+- **Status:** Approved and implemented by QMDB-P2-B06.
+- **Context:** P2 requires executable least-privilege authorization without conflating authentication assurance,
+  workspaces, geography, organizations or future business-resource authority.
+- **Catalog decision:** Permission and system-role codes are explicit, immutable, seed-managed and checksum verified.
+  Wildcards and role inheritance are prohibited. The production seed creates ten permissions, seven roles and 27
+  mappings, but creates no role assignments.
+- **Scope decision:** Platform and workspace scopes are distinct and cannot be coerced. Workspace decisions require a
+  trusted `TenantContext`, an active workspace and active membership. Geography and business-resource scopes remain
+  with their owning modules.
+- **Decision decision:** Authorization denies by default. An allow requires a known active permission, active account,
+  active role, active assignment, exact scope and sufficient server-derived authentication assurance. Assurance alone
+  never grants a permission.
+- **Administration decision:** Role mutations consume action-, account- and session-bound single-use step-up grants in
+  the mutation transaction. Platform mutations require phishing-resistant assurance; workspace mutations require
+  multi-factor assurance. An actor may delegate only a subset of the permissions they currently possess, with a
+  locking in-transaction recheck to close revocation races.
+- **Continuity decision:** Revocations preserve assignment history. The final usable platform security administrator and
+  final workspace owner are protected under concurrency. Production bootstrap of the first platform administrator is
+  deliberately not implemented and remains a deployment blocker.
+- **Safety decision:** Authorization denials expose a generic HTTP 403 response. Assignment and revocation notifications
+  reuse the existing durable scheduled-delivery system.
+- **Boundary:** Custom roles, role-management UI, business-resource permissions and workspace switching are deferred;
+  workspace switching belongs to QMDB-P2-B07.
+- **Future review conditions:** Catalog expansion, explicit denies, inheritance, delegated administration, dual control,
+  caching or emergency access require their owning approval, threat, privacy, migration and executable test evidence.

@@ -10,6 +10,7 @@ use Psr\Http\Server\MiddlewareInterface;
 use Psr\Http\Server\RequestHandlerInterface;
 use Qmdb\Shared\Http\Message\ProblemDetails;
 use Qmdb\Shared\Http\Message\ProblemDetailsResponseFactory;
+use Qmdb\Shared\Http\Contract\SafeHttpException;
 use Qmdb\Shared\Http\Request\RequestContextAttributes;
 use Qmdb\Shared\Observability\Correlation\CorrelationId;
 use Qmdb\Shared\Observability\Error\ThrowableReporter;
@@ -28,6 +29,13 @@ final readonly class ExceptionHandlingMiddleware implements MiddlewareInterface
         try {
             return $handler->handle($request);
         } catch (Throwable $throwable) {
+            if ($throwable instanceof SafeHttpException && $throwable->statusCode() === 403) {
+                return $this->responseFactory->createForRequest(
+                    ProblemDetails::forbidden(),
+                    $request,
+                );
+            }
+
             $correlationId = $request->getAttribute(RequestContextAttributes::REQUEST_ID);
             if ($correlationId instanceof CorrelationId) {
                 $this->throwableReporter->report($throwable, $correlationId);

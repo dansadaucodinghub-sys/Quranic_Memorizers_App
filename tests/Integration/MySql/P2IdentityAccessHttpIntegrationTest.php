@@ -436,6 +436,11 @@ final class P2IdentityAccessHttpIntegrationTest extends MySqlIntegrationTestCase
     {
         foreach (
             [
+                'workspace_role_assignments',
+                'platform_role_assignments',
+                'authorization_role_permissions',
+                'authorization_roles',
+                'authorization_permissions',
                 'account_webauthn_ceremonies',
                 'account_passkey_credentials',
                 'account_webauthn_user_handles',

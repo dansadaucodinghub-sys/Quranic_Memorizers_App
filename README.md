@@ -1,8 +1,8 @@
 # Qur’an Memorizer DB
 
 QMDB is the governed Qur’an Memorizer Database platform. This repository contains the frozen P1 Core PHP engineering
-foundation and the active P2 identity and tenancy implementation. `QMDB-P2-B01` through `QMDB-P2-B05` are complete
-under the authorized recovery run. B06 remains blocked and outside the recovery scope.
+foundation and the active P2 identity and tenancy implementation. `QMDB-P2-B01` through `QMDB-P2-B06` are complete.
+P2 remains in progress; B07 is the next bounded batch and has not been started.
 
 ## Project identity
 
@@ -11,9 +11,9 @@ under the authorized recovery run. B06 remains blocked and outside the recovery 
 - Source baseline: QMDB-BL-001
 - Frozen baseline: QMDB-P0-FRZ-001
 - Phase: P2 — Identity, Security, and Tenant Isolation
-- Completed batch: QMDB-P2-B05
-- Next batch: QMDB-P2-B06 — Roles, Permissions, and Scoped Authorization (blocked; not authorized)
-- Readiness: RECOVERY_SCOPE_COMPLETE
+- Completed batch: QMDB-P2-B06 — Roles, Permissions, and Scoped Authorization
+- Next batch: QMDB-P2-B07 — Tenant Context, Workspace Switching, and Tenant-Aware Data Access
+- Readiness: READY_FOR_NEXT_BATCH
 - Engineering freeze: QMDB-P1-FRZ-001
 - Development version: 0.1.0-dev
 
@@ -26,6 +26,63 @@ under the authorized recovery run. B06 remains blocked and outside the recovery 
 - Git for repository-state inspection
 
 The PHP 8.5 requirement is frozen by ADR-003 and is enforced by Composer and the application runtime validator. Do not bypass it for deployment or completion evidence.
+
+## Authorization foundation
+
+P2-B06 provides deny-by-default authorization with explicit immutable permission codes, explicit system-role codes,
+distinct `PLATFORM` and `WORKSPACE` scopes, exact scope matching, and required authentication assurance per permission.
+Workspace decisions require a server-trusted `TenantContext`, an active account, active workspace, active membership,
+active role assignment, active role, and active permission. A session, an MFA result, or any public identifier is never
+authorization by itself.
+
+Role assignment and revocation require the actor's mapped permission, a one-time action-bound step-up grant, and a
+delegation subset check. Platform role changes require `PHISHING_RESISTANT` assurance; workspace role changes require
+`MULTI_FACTOR` or stronger assurance. MySQL constraints and tenant-scoped repositories prevent cross-scope and
+cross-workspace assignments. Revocation preserves history, while transactional checks protect the final usable
+platform security administrator and final usable workspace owner. Public authorization denials are generic 403
+problem responses without permission, role, scope, or decision details.
+
+Foundational role codes are:
+
+```text
+platform.security_administrator
+platform.authorization_auditor
+
+workspace.owner
+workspace.administrator
+workspace.security_manager
+workspace.membership_manager
+workspace.viewer
+```
+
+No role is described as unrestricted. Wildcard permissions, role inheritance, custom roles, and a role editor are not
+part of this foundation. The production seed creates only 10 permission definitions, 7 system-role definitions, and 27
+explicit mappings; it creates no account or membership assignment. Initial platform-administrator bootstrap remains a
+controlled operational decision. Initial workspace-owner assignment belongs to controlled workspace provisioning.
+
+Apply and verify the catalog with:
+
+```powershell
+php bin/console db:seed
+php bin/console db:seed:status
+php bin/console security:authorization:verify
+```
+
+Security boundaries:
+
+```text
+A session is not authorization.
+MFA is not authorization.
+A role public ID is not authorization.
+A workspace public ID is not Tenant Context.
+Workspace permissions require a trusted TenantContext and active membership.
+```
+
+Implemented now: the permission/role catalog, platform and workspace assignments, deny-by-default decisions, assurance
+enforcement, step-up-protected changes, delegation restrictions, last-administrator/owner protections, durable access-
+change notifications, readiness, and CLI verification. Workspace switching, Tenant Context HTTP resolution, custom
+roles, role-management UI, temporary privileges, support/break-glass access, business-module permissions, and
+geography/organization scopes remain in their owning future batches. The next batch is `QMDB-P2-B07`.
 
 ## Multi-factor authentication
 
@@ -50,8 +107,9 @@ the previous set. They are an MFA fallback and cannot perform B04 password recov
 Step-up authentication creates one-time grants bound to account, current session, action, assurance, and expiry. It is
 required for authenticator enrollment/removal, MFA policy changes, and recovery-code regeneration and never creates a
 new login session. Current scope includes TOTP MFA, passkeys, passwordless passkey login, MFA login, recovery codes,
-step-up, and authenticator management. Roles, permissions, workspace authorization/switching, temporary privilege,
-support access, break-glass access, and organization-enforced MFA are not implemented.
+step-up, and authenticator management. P2-B06 adds role-mutation step-up actions and scoped authorization without
+changing these authentication guarantees. Workspace switching, temporary privilege, support access, break-glass
+access, and organization-enforced MFA are not implemented.
 
 ## Password recovery and security notifications
 
@@ -68,8 +126,9 @@ delays, and performs mail transport outside transactions. Delivery is at least o
 not imply exactly-once SMTP delivery.
 
 Implemented: password recovery request, password reset, post-reset session invalidation, and password-reset-completed
-security notification. MFA, passkeys, and recovery-code fallback are implemented separately by P2-B05. Authenticated
-password change, support-assisted recovery, security-notification inbox, roles, and permissions remain unimplemented.
+security notification. MFA, passkeys, and recovery-code fallback are implemented separately by P2-B05; roles and
+permissions are implemented by P2-B06. Authenticated password change, support-assisted recovery, and a security-
+notification inbox remain unimplemented.
 
 ## Installation
 

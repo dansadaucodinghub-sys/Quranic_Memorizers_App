@@ -1,0 +1,148 @@
+<?php
+
+declare(strict_types=1);
+
+namespace Qmdb\Modules\SecurityAuthorization\Application;
+
+use Qmdb\Modules\IdentityMultiFactor\Application\StepUpGuard;
+use Qmdb\Modules\IdentityMultiFactor\Domain\StepUpAction;
+use Qmdb\Modules\IdentitySecurityNotifications\Domain\AccountSecurityNotificationType;
+use Qmdb\Modules\SecurityAuthorization\Domain\AuthorizationScopeType;
+use Qmdb\Modules\SecurityAuthorization\Domain\PermissionCode;
+use Qmdb\Modules\SecurityAuthorization\Domain\Repository\AuthorizationAdministrationRepository;
+use Qmdb\Modules\SecurityAuthorization\Domain\Repository\WorkspaceRoleAssignmentRepository;
+use Qmdb\Modules\SecurityAuthorization\Domain\RoleAssignmentActorKind;
+use Qmdb\Modules\SecurityAuthorization\Domain\RoleAssignmentStatus;
+use Qmdb\Modules\SecurityAuthorization\Domain\RoleAssignmentVersion;
+use Qmdb\Modules\SecurityAuthorization\Domain\RoleStatus;
+use Qmdb\Modules\SecurityAuthorization\Domain\WorkspaceAuthorizationScope;
+use Qmdb\Modules\SecurityAuthorization\Domain\WorkspaceRoleAssignment;
+use Qmdb\Modules\SecurityAuthorization\Domain\WorkspaceRoleAssignmentId;
+use Qmdb\Shared\Configuration\Logging\LogLevel;
+use Qmdb\Shared\Database\Transaction\TransactionManager;
+use Qmdb\Shared\Observability\Logging\EventLogger;
+use Qmdb\Shared\Observability\Logging\LogEventName;
+use Qmdb\Shared\Time\Clock;
+
+final readonly class WorkspaceRoleAssignmentService
+{
+    private const string ASSIGN_PERMISSION = 'workspace.authorization.assign';
+
+    public function __construct(
+        private AuthorizationGuard $authorization,
+        private AuthorizationAdministrationRepository $administration,
+        private WorkspaceRoleAssignmentRepository $assignments,
+        private DelegationValidator $delegation,
+        private StepUpGuard $stepUp,
+        private AuthorizationSecurityNotificationService $notifications,
+        private TransactionManager $transactions,
+        private EventLogger $logger,
+        private Clock $clock,
+    ) {
+    }
+
+    public function assign(WorkspaceRoleAssignmentCommand $command): WorkspaceRoleAssignmentResult
+    {
+        $request = new AuthorizationRequest(
+            AuthorizationSubject::fromAuthenticatedContext($command->actor),
+            new PermissionCode(self::ASSIGN_PERMISSION),
+            new WorkspaceAuthorizationScope($command->tenantContext),
+        );
+        $this->authorization->requireAllowed($request);
+        $actorMembership = $this->administration->activeMembershipForAccount(
+            $command->tenantContext,
+            $command->actor->accountInternalId,
+        );
+        $target = $this->administration->membership($command->tenantContext, $command->targetMembershipId);
+        $role = $this->administration->role($command->roleCode);
+        if (
+            $actorMembership === null || $target === null || !$target->active || $role === null
+            || $role->scopeType !== AuthorizationScopeType::WORKSPACE
+            || $role->status !== RoleStatus::ACTIVE
+        ) {
+            throw new \DomainException('The target membership or workspace role is not eligible.');
+        }
+        $this->delegation->workspace($command->actor->accountInternalId, $command->tenantContext, $role);
+        $now = $this->clock->now();
+        $result = $this->transactions->transactional(function () use (
+            $command,
+            $request,
+            $actorMembership,
+            $target,
+            $role,
+            $now,
+        ): WorkspaceRoleAssignmentResult {
+            $this->assignments->listActiveForMembership(
+                $command->tenantContext,
+                $actorMembership->internalId,
+                100,
+                true,
+            );
+            $this->authorization->requireAllowed($request);
+            $this->delegation->workspace(
+                $command->actor->accountInternalId,
+                $command->tenantContext,
+                $role,
+                true,
+            );
+            $this->stepUp->consume($command->actor, StepUpAction::AUTHORIZATION_WORKSPACE_ROLE_ASSIGN);
+            if (
+                $this->assignments->findActiveForMembershipAndRole(
+                    $command->tenantContext,
+                    $target->internalId,
+                    $role->internalId,
+                    true,
+                ) !== null
+            ) {
+                throw new \DomainException('An active workspace role assignment already exists.');
+            }
+            $assignment = new WorkspaceRoleAssignment(
+                null,
+                WorkspaceRoleAssignmentId::generate(),
+                $command->tenantContext->workspaceInternalId(),
+                $target->internalId,
+                $target->accountInternalId,
+                $role->internalId,
+                $role->code,
+                RoleAssignmentStatus::ACTIVE,
+                new RoleAssignmentVersion(1),
+                RoleAssignmentActorKind::ACCOUNT,
+                $command->actor->accountInternalId,
+                $command->reason,
+                $now,
+                null,
+                null,
+                null,
+                null,
+                $command->correlationId->value(),
+                $now,
+                $now,
+            );
+            $this->assignments->add($command->tenantContext, $assignment);
+            $this->notifications->create(
+                $target->accountInternalId,
+                AccountSecurityNotificationType::WORKSPACE_ROLE_ASSIGNED,
+                $assignment->id->toString(),
+                $now,
+            );
+
+            return new WorkspaceRoleAssignmentResult(
+                $assignment->id,
+                $assignment->roleCode,
+                $assignment->status,
+                $assignment->version,
+                $command->tenantContext->workspaceId(),
+            );
+        });
+        $this->logger->log(LogLevel::NOTICE, new LogEventName('authorization.workspace.role.assigned'), [
+            'actor_account_public_id' => $command->actor->accountId->toString(),
+            'target_account_public_id' => $target->accountId->toString(),
+            'assignment_public_id' => $result->assignmentId->toString(),
+            'role_code' => $result->roleCode->value(),
+            'scope_type' => AuthorizationScopeType::WORKSPACE->value,
+            'workspace_public_id' => $result->workspaceId->toString(),
+        ]);
+
+        return $result;
+    }
+}

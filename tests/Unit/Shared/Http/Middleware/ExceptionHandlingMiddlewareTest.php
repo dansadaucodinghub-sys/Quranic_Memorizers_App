@@ -8,6 +8,9 @@ use Nyholm\Psr7\Response;
 use PHPUnit\Framework\TestCase;
 use Psr\Http\Message\ServerRequestInterface;
 use Qmdb\Shared\Http\Middleware\ExceptionHandlingMiddleware;
+use Qmdb\Shared\Http\Request\RequestContextAttributes;
+use Qmdb\Shared\Observability\Correlation\CorrelationId;
+use Qmdb\Modules\SecurityAuthorization\Application\Exception\AuthorizationDeniedException;
 use Qmdb\Tests\Support\Http\CallableRequestHandler;
 use Qmdb\Tests\Support\Http\HttpTestFactory;
 use Qmdb\Tests\Support\Observability\RecordingThrowableReporter;
@@ -57,5 +60,37 @@ final class ExceptionHandlingMiddlewareTest extends TestCase
         );
 
         self::assertSame($expected, $response);
+    }
+
+    public function testAuthorizationDenialBecomesGenericCorrelated403WithoutErrorReporting(): void
+    {
+        $reporter = new RecordingThrowableReporter();
+        $requestId = '8c3a9e84f2294c11a2681369cf313daf';
+        $response = (new ExceptionHandlingMiddleware(
+            HttpTestFactory::problems(),
+            $reporter,
+        ))->process(
+            HttpTestFactory::request()->withAttribute(
+                RequestContextAttributes::REQUEST_ID,
+                new CorrelationId($requestId),
+            ),
+            new CallableRequestHandler(
+                static function (ServerRequestInterface $request): never {
+                    throw new AuthorizationDeniedException();
+                },
+            ),
+        );
+        $body = (string) $response->getBody();
+
+        self::assertSame(403, $response->getStatusCode());
+        self::assertSame(
+            '{"type":"about:blank","title":"Forbidden","status":403,'
+                . '"code":"AUTHORIZATION_DENIED","request_id":"' . $requestId . '"}',
+            $body,
+        );
+        self::assertSame([], $reporter->reports());
+        foreach (['permission', 'role', 'workspace', 'scope', 'stack', 'not permitted'] as $sensitive) {
+            self::assertStringNotContainsString($sensitive, strtolower($body));
+        }
     }
 }

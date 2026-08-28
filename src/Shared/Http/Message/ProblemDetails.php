@@ -11,6 +11,7 @@ final readonly class ProblemDetails
     /** @var array<int, string> */
     private const TITLES = [
         400 => 'Bad Request',
+        403 => 'Forbidden',
         404 => 'Not Found',
         405 => 'Method Not Allowed',
         500 => 'Internal Server Error',
@@ -19,6 +20,7 @@ final readonly class ProblemDetails
     /** @var array<int, string> */
     private const CODES = [
         400 => 'REQUEST_TARGET_INVALID',
+        403 => 'AUTHORIZATION_DENIED',
         404 => 'ROUTE_NOT_FOUND',
         405 => 'METHOD_NOT_ALLOWED',
         500 => 'INTERNAL_SERVER_ERROR',
@@ -52,6 +54,11 @@ final readonly class ProblemDetails
     public static function notFound(): self
     {
         return new self(404);
+    }
+
+    public static function forbidden(): self
+    {
+        return new self(403);
     }
 
     public static function methodNotAllowed(): self

@@ -2,7 +2,7 @@
 
 This map routes the frozen P0 requirements into executable P2 ownership. It does not change requirement meaning.
 `QMDB-RECOVERY-RUN-001` resolved the historical entry block conservatively and authorizes only sequential B01–B05
-execution; B01 through B04 are complete and B05 is next.
+execution. B01 through B06 are complete; B07 is the next bounded batch.
 
 | Capability | Requirement IDs | Batch | Owning module | Migration group | Security controls | Acceptance scenarios/invariants | Test type |
 | --- | --- | --- | --- | --- | --- | --- | --- |
@@ -16,9 +16,9 @@ execution; B01 through B04 are complete and B05 is next.
 | Account recovery | QMDB-FR-IAM-005 | B04 | Identity | Recovery challenges/history | QMDB-CTL-002/003/020 | QMDB-AS-002; INV-025 | Single-use, expiry, race and abuse tests |
 | Passkeys | QMDB-FR-IAM-003 | B05 | Identity | Passkey credentials | QMDB-CTL-002/007/022 | QMDB-AS-001/002 | Origin, RP, challenge, replay and counter tests |
 | MFA and step-up | QMDB-FR-IAM-004 | B05 | Identity | Authenticator/assurance | QMDB-CTL-002/004 | QMDB-AS-002/005; INV-024 | Factor, recovery and privileged-action tests |
-| Memberships | QMDB-FR-TEN-001/002 | B06, B07 | Tenancy/Access Control | Membership and tenant-context grants | QMDB-CTL-004/005/008 | QMDB-AS-003/004; INV-001/002 | Lifecycle, scope and cross-workspace tests |
-| Roles and permissions | QMDB-FR-AUT-001/002 | B06 | Access Control | Versioned role/permission grants | QMDB-CTL-004/005 | QMDB-AS-002/003/005; INV-004/013/024/025 | Matrix, deny-default, revocation |
-| Administrative scopes | QMDB-FR-AUT-001/002 | B06 | Access Control | Scoped grants | QMDB-CTL-004/005 | QMDB-AS-003/005 | Scope intersection and self-approval tests |
+| Memberships | QMDB-FR-TEN-001/002 | B06, B07 | Tenancy/Access Control | B06 membership-role assignments; B07 tenant-context access | QMDB-CTL-004/005/008 | QMDB-AS-003/004; INV-001/002 | B06 exact-scope assignment/cross-workspace constraints; B07 data-access lifecycle |
+| Roles and permissions | QMDB-FR-AUT-001/002 | B06 | Security Authorization | Explicit catalog and versioned platform/workspace assignments | QMDB-CTL-004/005 | QMDB-AS-002/003/005; INV-004/013/024/025 | Complete: deny-default, assurance, revocation, delegation and concurrency |
+| Administrative scopes | QMDB-FR-AUT-001/002 | B06 | Security Authorization | Distinct platform/workspace grants | QMDB-CTL-004/005 | QMDB-AS-003/005 | Complete: exact scope, delegation subset, step-up and protected-role tests |
 | Tenant context/isolation | QMDB-FR-TEN-002; QMDB-DR-002/003 | B01, B07 | Tenancy | Context contract; tenant-aware repositories | QMDB-CTL-005/008 | QMDB-AS-003/004; INV-001/002 | Composite FK, trusted context, denial/leakage tests |
 | Temporary privileges | QMDB-FR-AUT-002 | B08 | Access Control | Expiring exceptional grants | QMDB-CTL-004/005 | QMDB-AS-005; INV-004/013 | Expiry, approval and scope tests |
 | Support access | QMDB-FR-AUT-002 | B08 | Access Control/Security Operations | Support case/grant evidence | QMDB-CTL-004/030 | QMDB-AS-005 | Field/time/case scope and notification tests |

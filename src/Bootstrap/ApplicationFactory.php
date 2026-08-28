@@ -19,6 +19,7 @@ use Qmdb\Bootstrap\Module\IdentityAccessModule;
 use Qmdb\Bootstrap\Module\IdentitySessionsModule;
 use Qmdb\Bootstrap\Module\IdentityRecoveryModule;
 use Qmdb\Bootstrap\Module\IdentityMultiFactorModule;
+use Qmdb\Bootstrap\Module\SecurityAuthorizationModule;
 use Qmdb\Bootstrap\Module\IdentitySecurityNotificationsModule;
 use Qmdb\Bootstrap\Module\ObservabilityFoundationModule;
 use Qmdb\Bootstrap\Module\PresentationFoundationModule;
@@ -170,6 +171,7 @@ final readonly class ApplicationFactory
                 $identityAccessConfiguration,
             ),
             new IdentityMultiFactorModule(),
+            new SecurityAuthorizationModule(),
             new ApplicationHttpModule($this->projectRoot),
             new ConsoleFoundationModule(),
         ]);

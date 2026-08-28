@@ -20,6 +20,10 @@ use Qmdb\Modules\IdentityMultiFactor\Infrastructure\Migration\CreateTotpRecovery
 use Qmdb\Modules\IdentityMultiFactor\Infrastructure\Migration\CreatePasskeyFoundationMigration;
 use Qmdb\Modules\Tenancy\Infrastructure\Migration\CreateWorkspaceMembershipsMigration;
 use Qmdb\Modules\Tenancy\Infrastructure\Migration\CreateWorkspacesMigration;
+use Qmdb\Modules\SecurityAuthorization\Infrastructure\Migration\CreateAuthorizationCatalogFoundationMigration;
+use Qmdb\Modules\SecurityAuthorization\Infrastructure\Migration\CreatePlatformRoleAssignmentFoundationMigration;
+use Qmdb\Modules\SecurityAuthorization\Infrastructure\Migration\CreateWorkspaceRoleAssignmentFoundationMigration;
+use Qmdb\Modules\SecurityAuthorization\Infrastructure\Seed\SeedFoundationalAuthorizationCatalog;
 use Qmdb\Shared\Background\Scheduler\Migration\CreateScheduledTaskRunsMigration;
 use Qmdb\Shared\Schema\Migration\Migration;
 use Qmdb\Shared\Schema\Migration\MigrationRegistry;
@@ -28,7 +32,7 @@ use SplFileInfo;
 
 final class SchemaFoundationArchitectureTest extends TestCase
 {
-    public function testProductionManifestsContainOnlyAuthorizedP1ThroughP2B04Migrations(): void
+    public function testProductionManifestsContainOnlyAuthorizedP1ThroughP2B06SchemaChanges(): void
     {
         $migrationFactory = require dirname(__DIR__, 2) . '/database/migrations.php';
         $seedFactory = require dirname(__DIR__, 2) . '/database/seeds.php';
@@ -43,7 +47,7 @@ final class SchemaFoundationArchitectureTest extends TestCase
         }
 
         $ordered = $migrations->ordered();
-        self::assertCount(16, $ordered);
+        self::assertCount(19, $ordered);
         self::assertSame(
             [
                 CreateScheduledTaskRunsMigration::class,
@@ -62,6 +66,9 @@ final class SchemaFoundationArchitectureTest extends TestCase
                 CreateAuthenticationTransactionFoundationMigration::class,
                 CreateTotpRecoveryCodeFoundationMigration::class,
                 CreatePasskeyFoundationMigration::class,
+                CreateAuthorizationCatalogFoundationMigration::class,
+                CreatePlatformRoleAssignmentFoundationMigration::class,
+                CreateWorkspaceRoleAssignmentFoundationMigration::class,
             ],
             array_map(static fn (Migration $migration): string => $migration::class, $ordered),
         );
@@ -83,10 +90,17 @@ final class SchemaFoundationArchitectureTest extends TestCase
                 '20260826011300_create_authentication_transaction_foundation',
                 '20260826011400_create_totp_recovery_code_foundation',
                 '20260826011500_create_passkey_foundation',
+                '20260826011600_create_authorization_catalog_foundation',
+                '20260826011700_create_platform_role_assignment_foundation',
+                '20260826011800_create_workspace_role_assignment_foundation',
             ],
             array_map(static fn (Migration $migration): string => $migration->id()->value(), $ordered),
         );
-        self::assertSame([], $seeds->ordered());
+        self::assertCount(1, $seeds->ordered());
+        self::assertSame(
+            [SeedFoundationalAuthorizationCatalog::class],
+            array_map(static fn (object $seed): string => $seed::class, $seeds->ordered()),
+        );
     }
 
     public function testNoDiscoveryOrHttpMutationSurfaceExists(): void

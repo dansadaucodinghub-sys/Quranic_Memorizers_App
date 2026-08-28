@@ -6,14 +6,15 @@
 | Project Code | QMDB |
 | Source Baseline | QMDB-BL-001 |
 | Product Freeze | QMDB-P0-FRZ-001 |
+| Approved Change | QMDB-CR-001 — Asynchronous Progressive Interaction and Modal UX Standard |
 | Engineering Freeze | QMDB-P1-FRZ-001 |
-| Document Version | 3.5.0 |
-| Last Updated | 2026-08-27 |
-| Status | P0 COMPLETE; P1 COMPLETE; P2 RECOVERY SCOPE COMPLETE |
+| Document Version | 3.6.0 |
+| Last Updated | 2026-08-28 |
+| Status | P0 COMPLETE; P1 COMPLETE; P2-B01 through P2-B06 COMPLETE |
 | Current Phase | P2 — Identity, Security, and Tenant Isolation |
-| Current Batch | QMDB-P2-B05 — MFA, Passkeys, Recovery Codes, and Step-Up Authentication |
-| Batch Status | QMDB-P2-B05 COMPLETE |
-| Implementation Readiness | RECOVERY_SCOPE_COMPLETE — B06 NOT AUTHORIZED |
+| Current Batch | QMDB-P2-B06 — Roles, Permissions, and Scoped Authorization |
+| Batch Status | QMDB-P2-B06 COMPLETE |
+| Implementation Readiness | READY FOR NEXT BATCH — QMDB-P2-B07 is next, not implemented here |
 | P2 Status | IN PROGRESS |
 
 ## Authoritative outcome
@@ -32,10 +33,10 @@ sequential execution of P2-B01 through P2-B05. P1 remains frozen; P2 changes use
 | --- | --- |
 | Recovery Run | QMDB-RECOVERY-RUN-001 |
 | Recovery Status | COMPLETE |
-| Last Fully Completed Batch | QMDB-P2-B05 |
-| Current Executable Batch | NONE — B06 requires new authorization |
-| Sequence Rule | B01 → B02 → B03 → B04 → B05; no batch advances before its mandatory gates pass |
-| P2-B06 Status | BLOCKED — outside recovery scope |
+| Last Fully Completed Batch | QMDB-P2-B06 |
+| Next Batch | QMDB-P2-B07 — Tenant Context, Workspace Switching, and Tenant-Aware Data Access |
+| Sequence Rule | B01 → B02 → B03 → B04 → B05 → B06; B07 was not implemented by B06 |
+| P2-B06 Status | COMPLETE |
 
 ## P1 batch ledger
 
@@ -98,6 +99,7 @@ build reports.
 | QMDB-P2-B03 | COMPLETE | Secure server-side sessions/devices, login/logout, rotation, expiry, concurrency, inventory, revocation, frontend, scanner, release and freeze gates pass |
 | QMDB-P2-B04 | COMPLETE | Account recovery/reset, session invalidation, durable security notifications, scheduler, concurrency, frontend, scanner, release and freeze gates pass |
 | QMDB-P2-B05 | COMPLETE | MFA, TOTP, recovery codes, passkeys, passwordless login, assurance, action-scoped step-up, concurrency, frontend, scanner, release and freeze gates pass |
+| QMDB-P2-B06 | COMPLETE | Deny-by-default platform/workspace authorization, explicit seeded catalog, assurance-aware decisions, atomic step-up-protected administration, delegation and concurrency controls pass |
 
 ## QMDB-P2-B04 delivery and verification ledger
 
@@ -138,12 +140,38 @@ build reports.
 | Corrections made | Stale metadata assertions; frozen-document write removed; recovery alphabet; PDO placeholder; concurrency winners; server-authoritative grant UI; stale WebAuthn ceremony retry; OpenSSL fixture configuration; Gitleaks prose false positive; Trivy timeout handling; Composer CI process ceiling |
 | Remaining environment limitations | Hosted CI; production HTTPS RP/origin and key custody; physical authenticator/browser/AT matrix; production provider/scheduler; assisted/lost-factor process; Docker/WSL host repair |
 
+## QMDB-P2-B06 delivery and verification ledger
+
+| Measure | Actual result |
+| --- | --- |
+| Production PHP files added / updated | 75 / 15 |
+| Modules / migrations / seeds / tables added | 1 / 3 / 1 / 5 |
+| Permissions / roles / role-permission mappings seeded | 10 / 7 / 27; zero role assignments |
+| Step-up actions / security-notification types added | 4 / 4; existing B04 delivery task reused |
+| B06 unit test methods | 12 across catalog, decision, delegation and readiness contracts |
+| B06 MySQL integration test methods | 11 across catalog, constraints, decisions, administration and concurrency |
+| Seed tests | Exact 10/7/27/0/0 catalog, checksum, fail-closed drift and idempotent no-op rerun |
+| Constraint tests | Duplicate code/ID, invalid scope, cross-scope mapping, cross-workspace assignment and assignment uniqueness |
+| Authorization decision tests | Unknown, inactive, wrong-scope, cross-workspace and insufficient-assurance decisions deny |
+| Delegation tests | Permission-subset validation plus locked concurrent authority-revocation recheck |
+| Concurrency tests | Duplicate platform/workspace assignment, protected administrator/owner revocation, single-use step-up and delegation revocation race |
+| Architecture/security tests | 6 dedicated architecture methods plus safe generic-403, metadata, notification and boundary regressions |
+| Validation failures resolved | Catalog UUID checksum encoding; readiness schema ownership; invalid structured event names; inherited fixture foreign keys; stale readiness expectation; P-256 coordinate padding; repeatable-read delegation recheck |
+| Deferred evidence items | 9 inherited non-blocking environment/operations items remain explicitly unexecuted |
+| Remaining environment limitations | Hosted CI; physical authenticator/browser/AT evidence; production WebAuthn/key/scheduler/provider configuration; assisted-factor policy; Docker/WSL and Linux-only evidence; platform-administrator bootstrap |
+
 ## Deferred evidence that does not reopen P1
 
 | Evidence | Classification | Required point |
 | --- | --- | --- |
 | Hosted GitHub Actions execution | Operational confirmation; workflows are statically and locally verified | Before merge or published release |
-| Manual keyboard, screen-reader, zoom, forced-colour and browser matrix | Release accessibility evidence; automated foundation gates pass | Before an affected production UI release |
+| Physical authenticator and supported-browser testing | High-assurance release evidence; deterministic fixtures pass | Before affected production authentication release |
+| Manual keyboard, screen-reader, zoom and forced-colour testing | Release accessibility evidence; automated foundation gates pass | Before an affected production UI release |
+| Production HTTPS WebAuthn RP ID and origin approval | Deployment security configuration | Before production passkey activation |
+| Managed MFA encryption-key custody and rotation | Production secret-management evidence | Before production MFA activation |
+| Production scheduler and notification-provider operations | Deployment delivery evidence | Before production notification activation |
+| Assisted or lost-all-factor recovery policy | Security/product governance | Before enforced MFA rollout |
+| Docker/WSL host repair | Optional host-environment recovery | Before relying on that host path |
 | Linux PCNTL signal-delivery rehearsal | Deployment-platform evidence; bounded once mode and fail-closed policy pass | Before enabling continuous production workers |
 
 These items are not represented as executed. They remain fail-closed release/deployment gates in their owning
@@ -157,28 +185,39 @@ environments and do not conceal an incomplete P1 source contract.
 
 ## State block
 
-Source Baseline: QMDB-BL-001
+Project: Qur’an Memorizer DB
 
-Frozen Baseline: QMDB-P0-FRZ-001
+Source Product Baseline: QMDB-BL-001
 
-Engineering Freeze: QMDB-P1-FRZ-001
+Frozen Product Baseline: QMDB-P0-FRZ-001
 
-Recovery Run: QMDB-RECOVERY-RUN-001
+Approved Post-Freeze Change: QMDB-CR-001 — Asynchronous Progressive Interaction and Modal UX Standard
+
+Frozen Engineering Baseline: QMDB-P1-FRZ-001
+
+Recovery Run: QMDB-RECOVERY-RUN-001 — COMPLETE
+
+Completed Phase: P1 — Engineering and Repository Foundation
 
 Current Phase: P2 — Identity, Security, and Tenant Isolation
 
-Last Completed Batch: QMDB-P2-B05
+Completed P2 Batches:
 
-Current Executable Batch: NONE
+- QMDB-P2-B01
+- QMDB-P2-B02
+- QMDB-P2-B03
+- QMDB-P2-B04
+- QMDB-P2-B05
+- QMDB-P2-B06
+
+Completed Batch: QMDB-P2-B06 — Roles, Permissions, and Scoped Authorization
+
+Next Batch: QMDB-P2-B07 — Tenant Context, Workspace Switching, and Tenant-Aware Data Access
 
 P1 Status: COMPLETE
 
 P2 Status: IN PROGRESS
 
-Recovery Status: COMPLETE
+Batch Status: COMPLETE
 
-Batch Status: QMDB-P2-B05 COMPLETE
-
-Implementation Status: RECOVERY SCOPE COMPLETE — NEXT BATCH NOT AUTHORIZED
-
-P2-B06 Status: BLOCKED
+Implementation Status: READY FOR NEXT BATCH

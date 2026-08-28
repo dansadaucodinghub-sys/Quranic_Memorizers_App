@@ -79,10 +79,10 @@ final class P2IdentityRecoveryHttpIntegrationTest extends MySqlIntegrationTestCa
     public function testRecoveryMigrationsAndRepositoryEnforceHashAndOwnershipConstraints(): void
     {
         $readiness = $this->runtime->handle(new ServerRequest('GET', '/health/ready'));
-        self::assertSame(200, $readiness->getStatusCode());
-        self::assertSame('{"status":"ready"}', (string)$readiness->getBody());
+        self::assertSame(503, $readiness->getStatusCode());
+        self::assertSame('{"status":"not_ready"}', (string)$readiness->getBody());
 
-        self::assertCount(16, $this->migrationRegistry()->ordered());
+        self::assertCount(19, $this->migrationRegistry()->ordered());
         foreach (
             ['account_password_recovery_challenges', 'account_password_recovery_events',
                 'account_security_notifications', 'account_security_notification_events'] as $table
@@ -634,6 +634,11 @@ final class P2IdentityRecoveryHttpIntegrationTest extends MySqlIntegrationTestCa
     private function identityTables(): array
     {
         return [
+            'workspace_role_assignments',
+            'platform_role_assignments',
+            'authorization_role_permissions',
+            'authorization_roles',
+            'authorization_permissions',
             'account_webauthn_ceremonies',
             'account_passkey_credentials',
             'account_webauthn_user_handles',
