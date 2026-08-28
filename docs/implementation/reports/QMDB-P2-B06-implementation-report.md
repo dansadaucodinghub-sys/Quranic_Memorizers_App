@@ -126,7 +126,7 @@ inconsistency. The clean result is 10 permissions, seven roles, 27 mappings and 
 
 ## Tests added
 
-B06 adds 29 dedicated test methods across eight test files: 12 unit, 11 MySQL integration and six architecture methods.
+B06 adds 30 dedicated test methods across eight test files: 12 unit, 11 MySQL integration and seven architecture methods.
 Coverage includes code grammar and wildcard rejection, deterministic catalogs, cross-scope mappings, default deny,
 account/workspace/membership/role/permission states, assurance, tenant isolation, persistence constraints, seed drift,
 administration atomicity, notification rollback, delegation subsets, protected final roles and independent-process
@@ -153,6 +153,12 @@ During validation, executable evidence corrected catalog UUID checksum encoding,
 invalid structured event names, inherited fixture foreign-key teardown order, a stale recovery readiness expectation,
 P-256 coordinate padding, deterministic module ordering and the MySQL isolation-level delegation race. No suppression,
 wildcard, default allow, bypass or automatic catalog repair was introduced.
+
+The first B06 local-CI closeout run exposed one orchestration defect after all substantive suites passed: destructive
+MySQL fixtures left the ledger and table state unsuitable for the later release-readiness probe. Local CI now performs
+a test-environment/name-guarded table reset, schema install, migration, seed and authorization verification immediately
+after MySQL tests. A regression test enforces that ordering; production databases and database-level drop operations
+are prohibited.
 
 ## Security controls, known limitations and open risks
 

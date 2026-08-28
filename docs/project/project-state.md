@@ -155,8 +155,8 @@ build reports.
 | Authorization decision tests | Unknown, inactive, wrong-scope, cross-workspace and insufficient-assurance decisions deny |
 | Delegation tests | Permission-subset validation plus locked concurrent authority-revocation recheck |
 | Concurrency tests | Duplicate platform/workspace assignment, protected administrator/owner revocation, single-use step-up and delegation revocation race |
-| Architecture/security tests | 6 dedicated architecture methods plus safe generic-403, metadata, notification and boundary regressions |
-| Validation failures resolved | Catalog UUID checksum encoding; readiness schema ownership; invalid structured event names; inherited fixture foreign keys; stale readiness expectation; P-256 coordinate padding; repeatable-read delegation recheck |
+| Architecture/security tests | 7 dedicated architecture methods plus safe generic-403, metadata, notification and boundary regressions |
+| Validation failures resolved | Catalog UUID checksum encoding; readiness schema ownership; invalid structured event names; inherited fixture foreign keys; stale readiness expectation; P-256 coordinate padding; repeatable-read delegation recheck; post-MySQL CI schema restoration |
 | Deferred evidence items | 9 inherited non-blocking environment/operations items remain explicitly unexecuted |
 | Remaining environment limitations | Hosted CI; physical authenticator/browser/AT evidence; production WebAuthn/key/scheduler/provider configuration; assisted-factor policy; Docker/WSL and Linux-only evidence; platform-administrator bootstrap |
 

@@ -108,6 +108,25 @@ final class SecurityAuthorizationArchitectureTest extends TestCase
         self::assertStringNotContainsString('WorkspaceRoleAssignment', $seeds);
     }
 
+    public function testLocalCiRestoresCanonicalSchemaAfterDestructiveMySqlTests(): void
+    {
+        $runner = $this->read($this->root() . '/tools/Ci/LocalCiRunner.php');
+        $reset = $this->read($this->root() . '/tools/Ci/reset-test-schema.php');
+
+        $mysqlTests = strpos($runner, "['mysql-tests', ['composer', 'test:mysql']]");
+        $schemaReset = strpos($runner, "['mysql-schema-reset', ['php', 'tools/ci/reset-test-schema.php']]");
+        $releaseVerify = strpos($runner, "['release-verify', ['php', 'tools/build/verify-release.php']]");
+        self::assertIsInt($mysqlTests);
+        self::assertIsInt($schemaReset);
+        self::assertIsInt($releaseVerify);
+        self::assertGreaterThan($mysqlTests, $schemaReset);
+        self::assertGreaterThan($schemaReset, $releaseVerify);
+        self::assertStringContainsString("\$environment !== 'test'", $reset);
+        self::assertStringContainsString('(?:_test|_ci)', $reset);
+        self::assertStringContainsString('SET SESSION FOREIGN_KEY_CHECKS = 1', $reset);
+        self::assertStringNotContainsString('DROP DATABASE', $reset);
+    }
+
     private function root(): string
     {
         return dirname(__DIR__, 2);

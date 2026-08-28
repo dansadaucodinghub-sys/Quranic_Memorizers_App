@@ -102,3 +102,9 @@ security-scan, SBOM/licence, and artifact suites remain mandatory.
 An intentionally pre-B06 schema must report generic `not_ready`. A fully migrated and seeded schema must pass both
 readiness and `security:authorization:verify`. Missing MySQL or skipped concurrency tests are not acceptable B06
 completion evidence.
+
+MySQL integration fixtures intentionally exercise destructive schema lifecycles. When MySQL is configured, local CI
+must therefore reset only the explicitly named `_test`/`_ci` database after the MySQL suite, reinstall the schema ledger,
+apply all migrations and the governed seed, and pass `security:authorization:verify` before release verification. The
+reset refuses non-test environments and database names and never drops a database. This prevents release readiness
+from depending on fixture execution order or stale tables.

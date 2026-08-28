@@ -42,6 +42,14 @@ final class LocalCiRunner
 
         if ($this->mysqlConfigured()) {
             $stages[] = ['mysql-tests', ['composer', 'test:mysql']];
+            $stages[] = ['mysql-schema-reset', ['php', 'tools/ci/reset-test-schema.php']];
+            $stages[] = ['mysql-schema-install', ['php', 'bin/console', 'db:schema:install']];
+            $stages[] = ['mysql-migrate', ['php', 'bin/console', 'db:migrate']];
+            $stages[] = ['mysql-seed', ['php', 'bin/console', 'db:seed']];
+            $stages[] = [
+                'mysql-authorization-verify',
+                ['php', 'bin/console', 'security:authorization:verify'],
+            ];
         } else {
             $this->recordSkipped('mysql-tests', 'QMDB_TEST_DB_* is not configured.');
         }
