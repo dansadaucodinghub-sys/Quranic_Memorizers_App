@@ -9,8 +9,8 @@ engineering_freeze:
   closeout_batch: QMDB-P1-CLOSE
   freeze_status: APPROVED
   readiness: P1_COMPLETE
-  generated_at_utc: "2026-08-28T12:46:32Z"
-  source_revision: "b3308cb6f1d76f50bfb16f9e1d0304243088e323"
+  generated_at_utc: "2026-08-28T14:08:19Z"
+  source_revision: "36cb167723a8af18dc3a8e9e3e11ee827d90051f"
   source_state: governed_clean
   completed_batches:
     - QMDB-P1-B01
@@ -126,7 +126,7 @@ engineering_freeze:
       sha256: 9b86c329c3190e6a23109a4af8da5052eb9e845f5c5550f01da9ad979889b58f
     - path: "docs/implementation/ci-build-and-release-standard.md"
       category: FROZEN_ENGINEERING_FOUNDATION
-      sha256: 707cc85c435eee73741b133b2c2472ee057fbc3604a156d54e7afca356fd88f2
+      sha256: d094ec3d2798ec7832c1d9ee8d11c433402729dffd5815973f2c84c9ba2834e5
     - path: "docs/implementation/definition-of-ready-and-done.md"
       category: FROZEN_ENGINEERING_FOUNDATION
       sha256: e17771e9e1e41e436e16fcf7d9c5044cdf4f89d978e1ce769b7966b1534e4258
@@ -2886,7 +2886,7 @@ engineering_freeze:
       sha256: 54f7eec7205d4421e553af4342aacb9a2b1f893d97766cd595503a33057dd3eb
     - path: "tests/Architecture/SecurityAuthorizationArchitectureTest.php"
       category: FROZEN_ENGINEERING_FOUNDATION
-      sha256: 9436bbe1c0e4f00cf09cca0aa1043e8f9d62f13fac4ff1c1b3cf1fdd4da2151a
+      sha256: 5fa0326480fa326d491b2e7cc69dd6e811562e2effdbcb64ce7fb51c552370b8
     - path: "tests/Architecture/SourceArchitectureTest.php"
       category: FROZEN_ENGINEERING_FOUNDATION
       sha256: f948de9fc5e2555139f5fc74b97c64d8a3d1c9790025759c97ef0e97ac619233
@@ -3549,7 +3549,7 @@ engineering_freeze:
       sha256: b885b9aefa785dcece7595181fbf9ecee3e3221d9b82f35e24530e5499d7ef87
     - path: "tools/Ci/LocalCiRunner.php"
       category: FROZEN_ENGINEERING_FOUNDATION
-      sha256: 8b03b4db9e8c96ce17e1584c9134dcfde3f8ff9cfd7568d97afd77ec78e6c2ae
+      sha256: bec6f2f6345c158983ebb0e96a211885c46030055580f0b1e79abf0aea58cc70
     - path: "tools/Ci/LockfileVerifier.php"
       category: FROZEN_ENGINEERING_FOUNDATION
       sha256: a229af80fc62a059f5cfeec17776e3ae9a252fccfa74cf032dbedf2ad96c81b1
@@ -3565,6 +3565,9 @@ engineering_freeze:
     - path: "tools/Ci/WorkflowPolicyVerifier.php"
       category: FROZEN_ENGINEERING_FOUNDATION
       sha256: e522494472a15888e92cf246b2dbbf6472eff922cf23d95496c623e741b47667
+    - path: "tools/Ci/reset-test-schema.php"
+      category: FROZEN_ENGINEERING_FOUNDATION
+      sha256: 08ce2492cc6b916d816bee27184cb1b1f6f0e5a31cda8f967c1c0f5b604b6714
     - path: "tools/Ci/run-local-ci.php"
       category: FROZEN_ENGINEERING_FOUNDATION
       sha256: 37c7d3ace62d0d5f6e0ceb9788c07a64faa05a29e710c87c13d4e1e93921e2c9
