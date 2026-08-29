@@ -4,7 +4,15 @@ declare(strict_types=1);
 
 namespace Qmdb\Tests\Unit\Modules\SecurityAuthorization;
 
+use DateTimeImmutable;
 use PHPUnit\Framework\TestCase;
+use Qmdb\Modules\Identity\Domain\Value\AccountId;
+use Qmdb\Modules\IdentityMultiFactor\Domain\AuthenticationAssuranceLevel;
+use Qmdb\Modules\IdentityMultiFactor\Domain\AuthenticationMethod;
+use Qmdb\Modules\IdentityMultiFactor\Domain\SessionAuthenticationAssurance;
+use Qmdb\Modules\IdentitySessions\Application\AuthenticatedAccountContext;
+use Qmdb\Modules\IdentitySessions\Domain\DeviceId;
+use Qmdb\Modules\IdentitySessions\Domain\SessionId;
 use Qmdb\Modules\SecurityAuthorization\Application\DelegationValidator;
 use Qmdb\Modules\SecurityAuthorization\Application\Exception\AuthorizationDeniedException;
 use Qmdb\Modules\SecurityAuthorization\Domain\AuthorizationRoleRecord;
@@ -13,10 +21,9 @@ use Qmdb\Modules\SecurityAuthorization\Domain\PermissionCode;
 use Qmdb\Modules\SecurityAuthorization\Domain\RoleCode;
 use Qmdb\Modules\SecurityAuthorization\Domain\RoleId;
 use Qmdb\Modules\SecurityAuthorization\Domain\RoleStatus;
-use Qmdb\Modules\Tenancy\Application\TenantContext;
-use Qmdb\Modules\Tenancy\Domain\Value\WorkspaceId;
 use Qmdb\Tests\Support\SecurityAuthorization\ConfigurableAuthorizationAdministrationRepository;
 use Qmdb\Tests\Support\SecurityAuthorization\ConfigurableEffectivePermissionRepository;
+use Qmdb\Tests\Support\TenancyContext\AccountWorkspaceTenantContextFactory;
 
 final class DelegationValidatorTest extends TestCase
 {
@@ -44,7 +51,24 @@ final class DelegationValidatorTest extends TestCase
             new PermissionCode('workspace.authorization.view'),
             new PermissionCode('workspace.authorization.assign'),
         ];
-        $context = TenantContext::trusted(1, WorkspaceId::generate());
+        $now = new DateTimeImmutable('2026-08-28T10:00:00Z');
+        $context = AccountWorkspaceTenantContextFactory::create(new AuthenticatedAccountContext(
+            1,
+            AccountId::generate(),
+            1,
+            SessionId::generate(),
+            1,
+            DeviceId::generate(),
+            $now,
+            1,
+            new SessionAuthenticationAssurance(
+                AuthenticationMethod::PASSWORD,
+                null,
+                AuthenticationAssuranceLevel::PRIMARY,
+                $now,
+                null,
+            ),
+        ), 1);
 
         foreach (
             [
@@ -54,7 +78,7 @@ final class DelegationValidatorTest extends TestCase
             ] as $index => $role
         ) {
             try {
-                $validator->workspace(1, $context, $role);
+                $validator->workspace($context, $role);
                 self::fail('Delegation case ' . $index . ' must be denied.');
             } catch (AuthorizationDeniedException) {
                 self::addToAssertionCount(1);

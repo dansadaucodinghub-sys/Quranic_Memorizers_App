@@ -8,7 +8,7 @@ use Qmdb\Modules\SecurityAuthorization\Domain\EffectivePermissionEvidence;
 use Qmdb\Modules\SecurityAuthorization\Domain\PermissionCode;
 use Qmdb\Modules\SecurityAuthorization\Domain\PersistedPermission;
 use Qmdb\Modules\SecurityAuthorization\Domain\Repository\EffectivePermissionRepository;
-use Qmdb\Modules\Tenancy\Application\TenantContext;
+use Qmdb\Modules\TenancyContext\Domain\AccountWorkspaceTenantContext;
 
 final class ConfigurableEffectivePermissionRepository implements EffectivePermissionRepository
 {
@@ -44,12 +44,12 @@ final class ConfigurableEffectivePermissionRepository implements EffectivePermis
         return $this->activeAccount;
     }
 
-    public function workspaceIsActive(TenantContext $context): bool
+    public function workspaceIsActive(AccountWorkspaceTenantContext $context): bool
     {
         return $this->activeWorkspace;
     }
 
-    public function membershipIsActive(TenantContext $context, int $accountInternalId): bool
+    public function membershipIsActive(AccountWorkspaceTenantContext $context): bool
     {
         return $this->activeMembership;
     }
@@ -62,13 +62,12 @@ final class ConfigurableEffectivePermissionRepository implements EffectivePermis
     }
 
     public function findEffectiveWorkspacePermission(
-        int $accountInternalId,
-        TenantContext $context,
+        AccountWorkspaceTenantContext $context,
         PermissionCode $permission,
     ): EffectivePermissionEvidence {
         if (
             $this->authorizedWorkspaceInternalId !== null
-            && $context->workspaceInternalId() !== $this->authorizedWorkspaceInternalId
+            && $context->workspaceInternalId !== $this->authorizedWorkspaceInternalId
         ) {
             return new EffectivePermissionEvidence(false, false, false);
         }
@@ -85,8 +84,7 @@ final class ConfigurableEffectivePermissionRepository implements EffectivePermis
     }
 
     public function listEffectiveWorkspacePermissions(
-        int $accountInternalId,
-        TenantContext $context,
+        AccountWorkspaceTenantContext $context,
         int $limit = 100,
         bool $forUpdate = false,
     ): array {

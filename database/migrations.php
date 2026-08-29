@@ -21,6 +21,7 @@ use Qmdb\Modules\SecurityAuthorization\Infrastructure\Migration\CreatePlatformRo
 use Qmdb\Modules\SecurityAuthorization\Infrastructure\Migration\CreateWorkspaceRoleAssignmentFoundationMigration;
 use Qmdb\Modules\Tenancy\Infrastructure\Migration\CreateWorkspaceMembershipsMigration;
 use Qmdb\Modules\Tenancy\Infrastructure\Migration\CreateWorkspacesMigration;
+use Qmdb\Modules\TenancyContext\Infrastructure\Migration\AddSessionBoundTenantContextMigration;
 use Qmdb\Shared\Schema\Migration\MigrationRegistry;
 use Qmdb\Shared\Schema\Migration\MigrationRegistryBuilder;
 
@@ -45,5 +46,6 @@ return static function (): MigrationRegistry {
         ->register(new CreateAuthorizationCatalogFoundationMigration())
         ->register(new CreatePlatformRoleAssignmentFoundationMigration())
         ->register(new CreateWorkspaceRoleAssignmentFoundationMigration())
+        ->register(new AddSessionBoundTenantContextMigration())
         ->build();
 };

@@ -7,20 +7,20 @@ namespace Qmdb\Modules\SecurityAuthorization\Application;
 use Qmdb\Modules\IdentitySessions\Application\AuthenticatedAccountContext;
 use Qmdb\Modules\SecurityAuthorization\Domain\RoleAssignmentReasonCode;
 use Qmdb\Modules\SecurityAuthorization\Domain\WorkspaceRoleAssignmentId;
-use Qmdb\Modules\Tenancy\Application\TenantContext;
+use Qmdb\Modules\TenancyContext\Domain\AccountWorkspaceTenantContext;
 use Qmdb\Shared\Observability\Correlation\CorrelationId;
 
 final readonly class WorkspaceRoleRevocationCommand
 {
     public function __construct(
         public AuthenticatedAccountContext $actor,
-        public TenantContext $tenantContext,
+        public AccountWorkspaceTenantContext $tenantContext,
         public WorkspaceRoleAssignmentId $assignmentId,
         public RoleAssignmentReasonCode $reason,
         public CorrelationId $correlationId,
     ) {
-        if ($tenantContext->isSystem()) {
-            throw new \InvalidArgumentException('Workspace role revocation requires trusted tenant context.');
+        if ($tenantContext->accountInternalId !== $actor->accountInternalId) {
+            throw new \InvalidArgumentException('Workspace role revocation actor does not match Tenant Context.');
         }
         if (
             in_array($reason, [

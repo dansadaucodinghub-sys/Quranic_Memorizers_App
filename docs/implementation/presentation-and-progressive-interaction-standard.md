@@ -98,3 +98,10 @@ Pages preserve semantic headings, associated labels, field guidance, focusable e
 visible focus, keyboard operation, 400 percent reflow, reduced motion, forced colours and Arabic RTL. Recovery codes are
 identified as one-time sensitive content and appear only once. Passkey cancellation, unavailable platform support and
 failed ceremonies return bounded, localized guidance without exposing challenges or cryptographic details.
+
+## P2-B07 workspace presentation extension
+
+Authenticated page headers expose a text workspace status and a link to `/account/workspaces`. The selector has one
+H1, named controls, explicit selected text, an accessible empty state, logical RTL ordering, visible focus inherited
+from the design system, and no positive tabindex or switch modal. Full-page POST redirects and enhanced safe
+navigation remain equivalent.

@@ -443,3 +443,43 @@ recovery-authorized B01 normalization contract.
 | Role catalog mistaken for business authorization | Catalog is limited to authorization, membership, security and settings foundations | GOVERNED; owning business modules must add explicit permissions |
 | Workspace scope mistaken for geography scope | Scope type and documentation explicitly reject geography coercion | MITIGATED structurally; geography authorization remains deferred |
 | Authentication assurance mistaken for authorization | Assurance is necessary where declared but never sufficient without an active mapped assignment | MITIGATED by negative decision tests |
+
+## P2-B07 Tenant Context risk treatment
+
+| Risk | Implemented control | Status |
+| --- | --- | --- |
+| Client-selected workspace becomes authority | Public ID is a lookup only; session resolver constructs the immutable context | MITIGATED by architecture, HTTP, and MySQL tests |
+| Workspace cookie becomes authority | No workspace cookie is defined or read; selection remains on the authenticated session row | AVOIDED by source and architecture verification |
+| Workspace header becomes authority | The forbidden workspace-identity header is absent; only a non-authoritative context-version freshness header exists | AVOIDED by source and CLI verification |
+| Cross-account or cross-workspace membership composition | Composite session FK references workspace, account, and membership candidate key | MITIGATED by MySQL negative tests |
+| Cross-account membership selection | Account-scoped ACTIVE membership resolution returns one generic unavailable outcome | MITIGATED by MySQL and HTTP tests |
+| Cross-workspace selection | Workspace and membership are resolved as one exact account-bound pair | MITIGATED by composite integrity and negative tests |
+| First-workspace privilege surprise | New and cleared sessions remain unselected; resolver never substitutes a workspace | AVOIDED |
+| Device cookie restores tenant authority | Device records and cookies contain no workspace selection; each session begins unselected | AVOIDED |
+| Stale-tab mutation | Positive context version, optimistic update, safe 409, and no automatic retry | MITIGATED |
+| Lost context-version update | Session row locking and expected-version predicates allow one mutation winner | MITIGATED by independent-process races |
+| Concurrent session-token rotation loses context | Authentication and Tenant Context versions are independent columns and concurrent updates preserve both | MITIGATED by independent-process rotation race |
+| Membership revocation races workspace switch | Execution-time resolution rejects inactive membership and clears any invalid selection | MITIGATED by independent-process race |
+| Workspace suspension races workspace switch | Execution-time resolution rejects inactive workspace and clears any invalid selection | MITIGATED by independent-process race |
+| Multi-tab context drift | Version-only broadcast navigates supporting stale tabs; old forms still fail server-side | MITIGATED; BroadcastChannel absence remains safe |
+| BroadcastChannel unsupported | Server-side expected-version checks remain authoritative without browser signaling | MITIGATED with fallback test |
+| Cross-session context leakage | Selection belongs to a session row, not account or device | MITIGATED by isolation tests |
+| Inactive workspace or membership remains usable | Every request revalidates state and atomically clears invalid selection | MITIGATED |
+| Tenant Context mistaken for authorization | Authorization still requires active persisted permission, role, assignment, membership, workspace, account and assurance evidence | MITIGATED by authorization negative tests |
+| Tenant Context version mistaken for authorization | Version is used only as optimistic freshness evidence | MITIGATED by typed contracts and authorization tests |
+| Cross-workspace role leakage | Workspace authorization binds the exact account/session context and persisted membership | MITIGATED by MySQL authorization tests |
+| Unscoped tenant repository method | Tenant-owned repositories implement the marker and require Tenant Context in every operation | MITIGATED by architecture/static-analysis tests |
+| Tenant SQL omits workspace scope | Tenant-owned reads and writes bind an exact `workspace_id`; cross-workspace updates affect zero rows | MITIGATED by repository and MySQL tests |
+| Tenant cache collision | Trusted-context namespace and hashed unbounded key material | MITIGATED at contract level; persistent cache remains absent |
+| Background job uses stale membership | Execution resolver revalidates exact active membership and classifies failure permanently | MITIGATED at foundation level; no production tenant job exists |
+| Background job uses stale workspace | Execution resolver revalidates active workspace and classifies failure permanently | MITIGATED at foundation level; no production tenant job exists |
+| Workspace name leaks through logs | Operational events allow only bounded public IDs, versions, reason codes and request IDs | MITIGATED by logging contracts/tests |
+| Membership inventory leaks through logs | Inventory and full job payloads are never logged | MITIGATED by safe-context tests |
+| Workspace information leakage | Inventory is account-scoped; errors are generic; no internal IDs, roles, or permissions are returned | MITIGATED |
+| Session table context growth | B07 adds four bounded scalar columns and two targeted indexes, not a per-switch history table | MITIGATED structurally; future audit history remains separate |
+| Workspace provisioning is absent | UI and resolver do not fabricate workspace or owner state | OPEN PRODUCT CAPABILITY; owning provisioning batch required |
+| No default-workspace UX | Users explicitly choose a workspace and cleared/new sessions remain unselected | GOVERNED limitation; product policy remains open |
+| Persistent tenant cache is absent | Only a collision-safe cache-key value contract exists | DEFERRED; no performance claim |
+| Tenant export is absent | Only a marker contract requires future trusted context | DEFERRED to export-owning batch |
+| Standalone MySQL suite leaves unusable schema | Guarded wrapper always restores migration/seed/readiness state | MITIGATED by CI orchestration correction |
+| Temporary/support/break-glass authority inferred from context | No such grant, route, job, or context exists in B07 | AVOIDED; P2-B08 owns future design |

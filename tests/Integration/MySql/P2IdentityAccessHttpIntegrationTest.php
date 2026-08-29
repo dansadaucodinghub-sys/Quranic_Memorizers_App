@@ -37,6 +37,7 @@ use Qmdb\Modules\IdentityAccess\Infrastructure\Persistence\MySqlIdentityAccessRe
 use Qmdb\Modules\IdentityAccess\Infrastructure\Security\SecureEmailVerificationTokenGenerator;
 use Qmdb\Modules\Tenancy\Infrastructure\Migration\CreateWorkspaceMembershipsMigration;
 use Qmdb\Modules\Tenancy\Infrastructure\Migration\CreateWorkspacesMigration;
+use Qmdb\Modules\TenancyContext\Infrastructure\Migration\AddSessionBoundTenantContextMigration;
 use Qmdb\Shared\Presentation\Response\FragmentRequestDetector;
 use Qmdb\Shared\Schema\Migration\Migration;
 use Qmdb\Tests\Support\MySql\MySqlIntegrationTestCase;
@@ -555,6 +556,7 @@ final class P2IdentityAccessHttpIntegrationTest extends MySqlIntegrationTestCase
             new CreateAuthenticationTransactionFoundationMigration(),
             new CreateTotpRecoveryCodeFoundationMigration(),
             new CreatePasskeyFoundationMigration(),
+            new AddSessionBoundTenantContextMigration(),
         ];
     }
 }

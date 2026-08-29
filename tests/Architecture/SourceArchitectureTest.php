@@ -116,6 +116,7 @@ final class SourceArchitectureTest extends TestCase
                 || str_contains($path, '/Modules/SecurityAuthorization/Infrastructure/Persistence/')
                 || str_contains($path, '/Modules/SecurityAuthorization/Infrastructure/Seed/')
                 || str_contains($path, '/Modules/Tenancy/Infrastructure/Persistence/')
+                || str_contains($path, '/Modules/TenancyContext/Infrastructure/Persistence/')
                 || str_ends_with($path, '/Shared/Database/Connection/DatabaseConnectionProvider.php')
                 || str_contains($path, '/Shared/Schema/')
                 || str_contains($path, '/Shared/Background/Scheduler/Infrastructure/'),
@@ -139,6 +140,7 @@ final class SourceArchitectureTest extends TestCase
                 'SecurityAuthorization',
                 'SecurityWeb',
                 'Tenancy',
+                'TenancyContext',
             ],
             array_map('basename', $modules),
         );

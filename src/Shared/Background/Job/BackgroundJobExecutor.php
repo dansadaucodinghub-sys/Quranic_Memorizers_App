@@ -22,6 +22,7 @@ final readonly class BackgroundJobExecutor
         private BackgroundJobFailureClassifier $failureClassifier,
         private Clock $clock,
         private EventLogger $logger,
+        private ?BackgroundJobContextResolver $contextResolver = null,
     ) {
     }
 
@@ -37,7 +38,7 @@ final readonly class BackgroundJobExecutor
 
         try {
             $handler = $this->handlers->handlerFor($envelope->job());
-            $return = $handler($envelope->job(), $context);
+            $return = $this->invoke($handler, $envelope->job(), $context);
             if ($return !== null) {
                 throw new UnexpectedValueException('Background job handler must return null.');
             }
@@ -67,6 +68,24 @@ final readonly class BackgroundJobExecutor
 
             return new BackgroundJobExecutionResult(BackgroundJobExecutionOutcome::FAILED, $failure);
         }
+    }
+
+    private function invoke(
+        BackgroundJobHandler $handler,
+        BackgroundJob $job,
+        BackgroundJobExecutionContext $execution,
+    ): mixed {
+        if (!$job instanceof ContextBoundBackgroundJob) {
+            return $handler($job, $execution);
+        }
+        if ($this->contextResolver === null || !$this->contextResolver->supports($job)) {
+            throw new PermanentBackgroundJobFailure('Required background job context is unavailable.');
+        }
+        if (!$handler instanceof ContextAwareBackgroundJobHandler) {
+            throw new PermanentBackgroundJobFailure('Context-bound background job handler is invalid.');
+        }
+
+        return $handler->__invokeWithContext($job, $execution, $this->contextResolver->resolve($job));
     }
 
     private function context(

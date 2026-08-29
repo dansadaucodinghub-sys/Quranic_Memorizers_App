@@ -71,3 +71,10 @@ recovery-code regeneration and recovery-code use. It does not add a second sched
 existing `identity.security_notifications.deliver` task owns their bounded at-least-once delivery under the same lease,
 retry, localization, redaction and no-HTTP-execution rules established in B04. Factor mutations commit authoritative
 state and notification intent atomically; SMTP remains after commit and outside the mutation transaction.
+
+## P2-B07 tenant-bound job foundation
+
+Future tenant jobs implement `AccountTenantBoundBackgroundJob` and carry server-owned Account, Workspace, and
+Membership references. The execution resolver revalidates active and exact relational state before returning trusted
+context. Inactive or mismatched state resolves no context. B07 registers no production tenant job, does not replace the
+null job source, adds no durable queue, and does not log job payloads.

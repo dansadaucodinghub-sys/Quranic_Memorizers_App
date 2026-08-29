@@ -44,6 +44,7 @@ use Qmdb\Modules\IdentityMultiFactor\Infrastructure\Migration\CreateTotpRecovery
 use Qmdb\Modules\IdentityMultiFactor\Infrastructure\Migration\ExtendIdentityMultiFactorConstraintsMigration;
 use Qmdb\Modules\Tenancy\Infrastructure\Migration\CreateWorkspaceMembershipsMigration;
 use Qmdb\Modules\Tenancy\Infrastructure\Migration\CreateWorkspacesMigration;
+use Qmdb\Modules\TenancyContext\Infrastructure\Migration\AddSessionBoundTenantContextMigration;
 use Qmdb\Shared\Infrastructure\Persistence\MySql\Connection\MySqlConnectionProvider;
 use Qmdb\Shared\Background\Scheduler\Migration\CreateScheduledTaskRunsMigration;
 use Qmdb\Shared\Presentation\Response\FragmentRequestDetector;
@@ -82,7 +83,7 @@ final class P2IdentityRecoveryHttpIntegrationTest extends MySqlIntegrationTestCa
         self::assertSame(503, $readiness->getStatusCode());
         self::assertSame('{"status":"not_ready"}', (string)$readiness->getBody());
 
-        self::assertCount(19, $this->migrationRegistry()->ordered());
+        self::assertCount(20, $this->migrationRegistry()->ordered());
         foreach (
             ['account_password_recovery_challenges', 'account_password_recovery_events',
                 'account_security_notifications', 'account_security_notification_events'] as $table
@@ -687,6 +688,7 @@ final class P2IdentityRecoveryHttpIntegrationTest extends MySqlIntegrationTestCa
             new CreateAuthenticationTransactionFoundationMigration(),
             new CreateTotpRecoveryCodeFoundationMigration(),
             new CreatePasskeyFoundationMigration(),
+            new AddSessionBoundTenantContextMigration(),
         ];
     }
 

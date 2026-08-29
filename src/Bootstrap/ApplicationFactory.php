@@ -26,6 +26,7 @@ use Qmdb\Bootstrap\Module\PresentationFoundationModule;
 use Qmdb\Bootstrap\Module\SchemaFoundationModule;
 use Qmdb\Bootstrap\Module\SecurityWebModule;
 use Qmdb\Bootstrap\Module\TenancyFoundationModule;
+use Qmdb\Bootstrap\Module\TenancyContextModule;
 use Qmdb\Shared\Background\Configuration\BackgroundExecutionConfigurationFactory;
 use Qmdb\Shared\Configuration\ApplicationConfigurationFactory;
 use Qmdb\Shared\Configuration\Database\DatabaseConfigurationFactory;
@@ -172,6 +173,7 @@ final readonly class ApplicationFactory
             ),
             new IdentityMultiFactorModule(),
             new SecurityAuthorizationModule(),
+            new TenancyContextModule($this->projectRoot),
             new ApplicationHttpModule($this->projectRoot),
             new ConsoleFoundationModule(),
         ]);

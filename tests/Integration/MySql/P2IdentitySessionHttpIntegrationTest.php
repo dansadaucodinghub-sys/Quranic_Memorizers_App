@@ -21,6 +21,7 @@ use Qmdb\Modules\IdentityMultiFactor\Infrastructure\Migration\CreateAuthenticati
 use Qmdb\Modules\IdentityMultiFactor\Infrastructure\Migration\CreatePasskeyFoundationMigration;
 use Qmdb\Modules\IdentityMultiFactor\Infrastructure\Migration\CreateTotpRecoveryCodeFoundationMigration;
 use Qmdb\Modules\IdentityMultiFactor\Infrastructure\Migration\ExtendIdentityMultiFactorConstraintsMigration;
+use Qmdb\Modules\TenancyContext\Infrastructure\Migration\AddSessionBoundTenantContextMigration;
 use Qmdb\Shared\Presentation\Response\FragmentRequestDetector;
 use Qmdb\Tests\Support\MySql\MySqlIntegrationTestCase;
 
@@ -61,6 +62,17 @@ final class P2IdentitySessionHttpIntegrationTest extends MySqlIntegrationTestCas
         }
         $this->connection->exec('DROP TABLE IF EXISTS user_sessions');
         $this->connection->exec('DROP TABLE IF EXISTS user_devices');
+        if (
+            (int)$this->scalar(
+                "SELECT COUNT(*) FROM information_schema.STATISTICS WHERE TABLE_SCHEMA = DATABASE() "
+                . "AND TABLE_NAME = 'workspace_memberships' "
+                . "AND INDEX_NAME = 'uq_workspace_memberships_workspace_account_id'",
+            ) > 0
+        ) {
+            $this->connection->exec(
+                'ALTER TABLE workspace_memberships DROP INDEX uq_workspace_memberships_workspace_account_id',
+            );
+        }
         $this->clearRows(false);
         foreach (
             [
@@ -70,6 +82,7 @@ final class P2IdentitySessionHttpIntegrationTest extends MySqlIntegrationTestCas
             new CreateAuthenticationTransactionFoundationMigration(),
             new CreateTotpRecoveryCodeFoundationMigration(),
             new CreatePasskeyFoundationMigration(),
+            new AddSessionBoundTenantContextMigration(),
             ] as $migration
         ) {
             foreach ($migration->up() as $step) {

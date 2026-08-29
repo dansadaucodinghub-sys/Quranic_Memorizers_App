@@ -39,6 +39,7 @@ final readonly class WorkspaceRoleRevocationService
 
     public function revoke(WorkspaceRoleRevocationCommand $command): bool
     {
+        $tenant = $command->tenantContext->tenant();
         $request = new AuthorizationRequest(
             AuthorizationSubject::fromAuthenticatedContext($command->actor),
             new PermissionCode(self::ASSIGN_PERMISSION),
@@ -46,13 +47,13 @@ final readonly class WorkspaceRoleRevocationService
         );
         $this->authorization->requireAllowed($request);
         $actorMembership = $this->administration->activeMembershipForAccount(
-            $command->tenantContext,
+            $tenant,
             $command->actor->accountInternalId,
         );
         if ($actorMembership === null) {
             return false;
         }
-        if ($this->assignments->findActiveAssignment($command->tenantContext, $command->assignmentId) === null) {
+        if ($this->assignments->findActiveAssignment($tenant, $command->assignmentId) === null) {
             return false;
         }
         $now = $this->clock->now();
@@ -61,16 +62,17 @@ final readonly class WorkspaceRoleRevocationService
             $request,
             $actorMembership,
             $now,
+            $tenant,
         ) {
             $this->assignments->listActiveForMembership(
-                $command->tenantContext,
+                $tenant,
                 $actorMembership->internalId,
                 100,
                 true,
             );
             $this->authorization->requireAllowed($request);
             $locked = $this->assignments->findActiveAssignment(
-                $command->tenantContext,
+                $tenant,
                 $command->assignmentId,
                 true,
             );
@@ -82,7 +84,6 @@ final readonly class WorkspaceRoleRevocationService
                 throw new \UnexpectedValueException('Assigned workspace role is unavailable.');
             }
             $this->delegation->workspace(
-                $command->actor->accountInternalId,
                 $command->tenantContext,
                 $role,
                 true,
@@ -90,7 +91,7 @@ final readonly class WorkspaceRoleRevocationService
             $this->stepUp->consume($command->actor, StepUpAction::AUTHORIZATION_WORKSPACE_ROLE_REVOKE);
             if (
                 $locked->roleCode->value() === self::PROTECTED_ROLE
-                && $this->assignments->countActiveWorkspaceOwners($command->tenantContext, true) <= 1
+                && $this->assignments->countActiveWorkspaceOwners($tenant, true) <= 1
             ) {
                 throw new \DomainException('The final usable workspace owner cannot be revoked.');
             }
@@ -100,7 +101,7 @@ final readonly class WorkspaceRoleRevocationService
                 $command->reason,
                 $now,
             );
-            if (!$this->assignments->revoke($command->tenantContext, $revoked)) {
+            if (!$this->assignments->revoke($tenant, $revoked)) {
                 throw new \UnexpectedValueException('Workspace role assignment changed concurrently.');
             }
             $this->notifications->create(
@@ -120,7 +121,7 @@ final readonly class WorkspaceRoleRevocationService
             'assignment_public_id' => $assignment->id->toString(),
             'role_code' => $assignment->roleCode->value(),
             'scope_type' => AuthorizationScopeType::WORKSPACE->value,
-            'workspace_public_id' => $command->tenantContext->workspaceId()->toString(),
+            'workspace_public_id' => $command->tenantContext->workspaceId->toString(),
         ]);
 
         return true;

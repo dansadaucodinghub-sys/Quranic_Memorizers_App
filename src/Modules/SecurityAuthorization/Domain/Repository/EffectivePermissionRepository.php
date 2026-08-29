@@ -7,7 +7,7 @@ namespace Qmdb\Modules\SecurityAuthorization\Domain\Repository;
 use Qmdb\Modules\SecurityAuthorization\Domain\EffectivePermissionEvidence;
 use Qmdb\Modules\SecurityAuthorization\Domain\PermissionCode;
 use Qmdb\Modules\SecurityAuthorization\Domain\PersistedPermission;
-use Qmdb\Modules\Tenancy\Application\TenantContext;
+use Qmdb\Modules\TenancyContext\Domain\AccountWorkspaceTenantContext;
 
 interface EffectivePermissionRepository
 {
@@ -15,9 +15,9 @@ interface EffectivePermissionRepository
 
     public function accountIsActive(int $accountInternalId): bool;
 
-    public function workspaceIsActive(TenantContext $context): bool;
+    public function workspaceIsActive(AccountWorkspaceTenantContext $context): bool;
 
-    public function membershipIsActive(TenantContext $context, int $accountInternalId): bool;
+    public function membershipIsActive(AccountWorkspaceTenantContext $context): bool;
 
     public function findEffectivePlatformPermission(
         int $accountInternalId,
@@ -25,8 +25,7 @@ interface EffectivePermissionRepository
     ): EffectivePermissionEvidence;
 
     public function findEffectiveWorkspacePermission(
-        int $accountInternalId,
-        TenantContext $context,
+        AccountWorkspaceTenantContext $context,
         PermissionCode $permission,
     ): EffectivePermissionEvidence;
 
@@ -39,8 +38,7 @@ interface EffectivePermissionRepository
 
     /** @return list<PermissionCode> */
     public function listEffectiveWorkspacePermissions(
-        int $accountInternalId,
-        TenantContext $context,
+        AccountWorkspaceTenantContext $context,
         int $limit = 100,
         bool $forUpdate = false,
     ): array;

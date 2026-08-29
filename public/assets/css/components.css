@@ -46,3 +46,15 @@
 .password-requirements h2 { font-size: 1rem; margin-block: 0 var(--space-1); }
 .password-requirements p { margin: 0; }
 .identity-result { background: var(--color-surface); border: var(--border-width) solid var(--color-border); border-radius: var(--radius-lg); box-shadow: var(--shadow-soft); padding: clamp(1.25rem, 5vw, 2.5rem); }
+.workspace-context-control { border: var(--border-width) solid var(--color-border); border-radius: var(--radius-sm); color: var(--color-text); display: grid; line-height: 1.2; min-block-size: var(--touch-target); padding: var(--space-2) var(--space-3); text-decoration: none; }
+.workspace-context-links { align-items: start; display: grid; gap: var(--space-1); }
+.workspace-context-links > span, .workspace-option small { color: var(--color-muted); font-size: .76rem; }
+.workspace-context-change { color: var(--color-primary); font-size: .78rem; font-weight: 700; justify-self: start; }
+.workspace-selector { background: var(--color-surface); border: var(--border-width) solid var(--color-border); border-radius: var(--radius-lg); box-shadow: var(--shadow-soft); margin-block-start: var(--space-6); padding: clamp(1rem, 4vw, 2rem); }
+.workspace-list { display: grid; gap: var(--space-3); margin-block-start: var(--space-5); }
+.workspace-option { align-items: center; background: var(--color-bg); border: var(--border-width) solid var(--color-border); border-radius: var(--radius-sm); display: flex; flex-wrap: wrap; gap: var(--space-4); justify-content: space-between; padding: var(--space-4); }
+.workspace-option.is-selected { border-color: var(--color-primary); box-shadow: inset .25rem 0 0 var(--color-primary); }
+.workspace-option span { display: grid; gap: var(--space-1); }
+.workspace-empty { border-inline-start: .25rem solid var(--color-accent); margin-block-start: var(--space-5); padding: var(--space-4); }
+.workspace-account-actions { margin-block-start: var(--space-6); }
+.status-banner { border-inline-start: .25rem solid var(--color-ready); margin-block-start: var(--space-5); padding: var(--space-3) var(--space-4); }

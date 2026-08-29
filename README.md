@@ -1,8 +1,8 @@
 # Qur’an Memorizer DB
 
 QMDB is the governed Qur’an Memorizer Database platform. This repository contains the frozen P1 Core PHP engineering
-foundation and the active P2 identity and tenancy implementation. `QMDB-P2-B01` through `QMDB-P2-B06` are complete.
-P2 remains in progress; B07 is the next bounded batch and has not been started.
+foundation and the active P2 identity and tenancy implementation. `QMDB-P2-B01` through `QMDB-P2-B07` are complete.
+P2 remains in progress; B08 is the next bounded batch and has not been started.
 
 ## Project identity
 
@@ -11,8 +11,8 @@ P2 remains in progress; B07 is the next bounded batch and has not been started.
 - Source baseline: QMDB-BL-001
 - Frozen baseline: QMDB-P0-FRZ-001
 - Phase: P2 — Identity, Security, and Tenant Isolation
-- Completed batch: QMDB-P2-B06 — Roles, Permissions, and Scoped Authorization
-- Next batch: QMDB-P2-B07 — Tenant Context, Workspace Switching, and Tenant-Aware Data Access
+- Completed batch: QMDB-P2-B07 — Tenant Context, Workspace Switching, and Tenant-Aware Data Access
+- Next batch: QMDB-P2-B08 — Temporary Privileges, Support Access, and Break-Glass Controls
 - Readiness: READY_FOR_NEXT_BATCH
 - Engineering freeze: QMDB-P1-FRZ-001
 - Development version: 0.1.0-dev
@@ -26,6 +26,52 @@ P2 remains in progress; B07 is the next bounded batch and has not been started.
 - Git for repository-state inspection
 
 The PHP 8.5 requirement is frozen by ADR-003 and is enforced by Composer and the application runtime validator. Do not bypass it for deployment or completion evidence.
+
+## Tenant Context
+
+P2-B07 provides a server-authoritative, session-bound Tenant Context. Each authenticated session starts without a
+workspace and may hold at most one explicitly selected active workspace membership. Selection and clearing update a
+dedicated optimistic context version; they do not replace, weaken, or infer authentication or authorization. There is
+no first-workspace fallback, device-cookie restoration, workspace cookie, client-authoritative workspace header, or
+browser storage authority.
+
+Workspace switching is available at:
+
+```text
+/account/workspaces
+/workspace
+```
+
+Switch and clear requests are CSRF- and context-version-protected, support ordinary POST redirects and progressive
+same-origin navigation, and never retry automatically. A successful change is visible to every tab sharing that
+session through a bounded `BroadcastChannel` version notification; the message contains no workspace, membership,
+role, permission, or internal identifier.
+
+Tenant-owned repositories implement the tenant-scoped marker and must include exact `workspace_id` predicates.
+Public IDs never replace tenant scope, cross-workspace mutations affect no rows, and account workspace inventory is
+the intentionally global account-scoped exception. Global account repositories remain explicitly global.
+
+Future tenant-bound background jobs must carry server-owned Account, Workspace, and Membership references. Execution
+revalidates active account, workspace, and membership state. B07 registers no production tenant job, durable queue,
+persistent tenant cache, or export engine; it supplies only guarded job, cache-key, and future-export contracts.
+
+Current B07 scope:
+
+```text
+Implemented:
+Session-bound Tenant Context
+Workspace selection and explicit clearing
+Tenant Context middleware and freshness version
+Tenant-aware authorization and repository guardrails
+Tenant-bound background-job foundation
+
+Not yet implemented:
+Workspace creation or provisioning defaults
+Custom roles or temporary privileges
+Support or break-glass access
+Organizations, geography, or competitions
+Tenant-aware exports or persistent tenant cache
+```
 
 ## Authorization foundation
 
@@ -80,9 +126,9 @@ Workspace permissions require a trusted TenantContext and active membership.
 
 Implemented now: the permission/role catalog, platform and workspace assignments, deny-by-default decisions, assurance
 enforcement, step-up-protected changes, delegation restrictions, last-administrator/owner protections, durable access-
-change notifications, readiness, and CLI verification. Workspace switching, Tenant Context HTTP resolution, custom
-roles, role-management UI, temporary privileges, support/break-glass access, business-module permissions, and
-geography/organization scopes remain in their owning future batches. The next batch is `QMDB-P2-B07`.
+change notifications, readiness, and CLI verification. P2-B07 now supplies session-bound Tenant Context and workspace
+switching; custom roles, role-management UI, temporary privileges, support/break-glass access, business-module
+permissions, and geography/organization scopes remain in their owning future batches. The next batch is `QMDB-P2-B08`.
 
 ## Multi-factor authentication
 
@@ -108,8 +154,8 @@ Step-up authentication creates one-time grants bound to account, current session
 required for authenticator enrollment/removal, MFA policy changes, and recovery-code regeneration and never creates a
 new login session. Current scope includes TOTP MFA, passkeys, passwordless passkey login, MFA login, recovery codes,
 step-up, and authenticator management. P2-B06 adds role-mutation step-up actions and scoped authorization without
-changing these authentication guarantees. Workspace switching, temporary privilege, support access, break-glass
-access, and organization-enforced MFA are not implemented.
+changing these authentication guarantees. P2-B07 adds session-bound workspace switching without changing authentication
+assurance. Temporary privilege, support access, break-glass access, and organization-enforced MFA are not implemented.
 
 ## Password recovery and security notifications
 

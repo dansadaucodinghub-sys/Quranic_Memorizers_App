@@ -8,13 +8,13 @@
 | Product Freeze | QMDB-P0-FRZ-001 |
 | Approved Change | QMDB-CR-001 — Asynchronous Progressive Interaction and Modal UX Standard |
 | Engineering Freeze | QMDB-P1-FRZ-001 |
-| Document Version | 3.6.0 |
+| Document Version | 3.7.0 |
 | Last Updated | 2026-08-28 |
-| Status | P0 COMPLETE; P1 COMPLETE; P2-B01 through P2-B06 COMPLETE |
+| Status | P0 COMPLETE; P1 COMPLETE; P2-B01 through P2-B07 COMPLETE |
 | Current Phase | P2 — Identity, Security, and Tenant Isolation |
-| Current Batch | QMDB-P2-B06 — Roles, Permissions, and Scoped Authorization |
-| Batch Status | QMDB-P2-B06 COMPLETE |
-| Implementation Readiness | READY FOR NEXT BATCH — QMDB-P2-B07 is next, not implemented here |
+| Current Batch | QMDB-P2-B07 — Tenant Context, Workspace Switching, and Tenant-Aware Data Access |
+| Batch Status | QMDB-P2-B07 COMPLETE |
+| Implementation Readiness | READY FOR NEXT BATCH — QMDB-P2-B08 is next, not implemented here |
 | P2 Status | IN PROGRESS |
 
 ## Authoritative outcome
@@ -33,10 +33,10 @@ sequential execution of P2-B01 through P2-B05. P1 remains frozen; P2 changes use
 | --- | --- |
 | Recovery Run | QMDB-RECOVERY-RUN-001 |
 | Recovery Status | COMPLETE |
-| Last Fully Completed Batch | QMDB-P2-B06 |
-| Next Batch | QMDB-P2-B07 — Tenant Context, Workspace Switching, and Tenant-Aware Data Access |
-| Sequence Rule | B01 → B02 → B03 → B04 → B05 → B06; B07 was not implemented by B06 |
-| P2-B06 Status | COMPLETE |
+| Last Fully Completed Batch | QMDB-P2-B07 |
+| Next Batch | QMDB-P2-B08 — Temporary Privileges, Support Access, and Break-Glass Controls |
+| Sequence Rule | B01 → B02 → B03 → B04 → B05 → B06 → B07; B08 was not implemented by B07 |
+| P2-B07 Status | COMPLETE |
 
 ## P1 batch ledger
 
@@ -100,6 +100,7 @@ build reports.
 | QMDB-P2-B04 | COMPLETE | Account recovery/reset, session invalidation, durable security notifications, scheduler, concurrency, frontend, scanner, release and freeze gates pass |
 | QMDB-P2-B05 | COMPLETE | MFA, TOTP, recovery codes, passkeys, passwordless login, assurance, action-scoped step-up, concurrency, frontend, scanner, release and freeze gates pass |
 | QMDB-P2-B06 | COMPLETE | Deny-by-default platform/workspace authorization, explicit seeded catalog, assurance-aware decisions, atomic step-up-protected administration, delegation and concurrency controls pass |
+| QMDB-P2-B07 | COMPLETE | Session-authoritative Tenant Context, explicit workspace switching/clearing, composite membership integrity, tenant-scoped boundaries, stale-version and cross-session isolation controls pass |
 
 ## QMDB-P2-B04 delivery and verification ledger
 
@@ -168,6 +169,19 @@ build reports.
 | Deferred evidence items | 9 inherited non-blocking environment/operations items remain explicitly unexecuted |
 | Remaining environment limitations | Hosted CI; physical authenticator/browser/AT evidence; production WebAuthn/key/scheduler/provider configuration; assisted-factor policy; Docker/WSL and Linux-only evidence; platform-administrator bootstrap |
 
+## QMDB-P2-B07 delivery and verification ledger
+
+| Measure | Actual result |
+| --- | --- |
+| Module / migration / new table | `tenancy.context` / 1 / 0; four columns extend `user_sessions` |
+| Composite integrity | Session workspace/account/membership FK to exact membership candidate key; all-or-none and positive-version checks |
+| Routes | `GET /account/workspaces`, `POST /account/workspaces/switch`, `POST /account/workspaces/clear`, `GET /workspace` |
+| Authority | Server session only; no workspace cookie/header/browser storage/default selection |
+| Isolation | Account-scoped inventory, per-session selection, stale optimistic version, inactive-state clearing, generic unavailable response |
+| Tenant-aware foundations | Repository marker, account-bound job resolver, tenant cache-key factory, future export marker; no production job/cache/export engine |
+| Prerequisite correction | Standalone MySQL test command now restores schema, seed, authorization, Tenant Context, and schema verification |
+| Deferred evidence | Hosted CI and manual browser/assistive-technology evidence remain external release gates; no mandatory local source gate is waived |
+
 ## Deferred evidence that does not reopen P1
 
 | Evidence | Classification | Required point |
@@ -217,10 +231,11 @@ Completed P2 Batches:
 - QMDB-P2-B04
 - QMDB-P2-B05
 - QMDB-P2-B06
+- QMDB-P2-B07
 
-Completed Batch: QMDB-P2-B06 — Roles, Permissions, and Scoped Authorization
+Completed Batch: QMDB-P2-B07 — Tenant Context, Workspace Switching, and Tenant-Aware Data Access
 
-Next Batch: QMDB-P2-B07 — Tenant Context, Workspace Switching, and Tenant-Aware Data Access
+Next Batch: QMDB-P2-B08 — Temporary Privileges, Support Access, and Break-Glass Controls
 
 P1 Status: COMPLETE
 

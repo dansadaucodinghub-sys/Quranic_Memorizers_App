@@ -18,7 +18,7 @@ final class HttpRoutesTest extends TestCase
             'application' => 'QMDB',
             'name' => 'Qur’an Memorizer DB',
             'phase' => 'P2',
-            'batch' => 'QMDB-P2-B06',
+            'batch' => 'QMDB-P2-B07',
             'baseline' => 'QMDB-P0-FRZ-001',
             'status' => 'ready',
         ];

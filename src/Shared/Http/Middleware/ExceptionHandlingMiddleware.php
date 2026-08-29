@@ -29,10 +29,15 @@ final readonly class ExceptionHandlingMiddleware implements MiddlewareInterface
         try {
             return $handler->handle($request);
         } catch (Throwable $throwable) {
-            if ($throwable instanceof SafeHttpException && $throwable->statusCode() === 403) {
+            if ($throwable instanceof SafeHttpException) {
+                $headers = str_starts_with($throwable->safeCode(), 'TENANT_CONTEXT_')
+                    ? ['X-QMDB-Navigate' => '/account/workspaces']
+                    : [];
+
                 return $this->responseFactory->createForRequest(
-                    ProblemDetails::forbidden(),
+                    ProblemDetails::safe($throwable->statusCode(), $throwable->safeCode()),
                     $request,
+                    $headers,
                 );
             }
 

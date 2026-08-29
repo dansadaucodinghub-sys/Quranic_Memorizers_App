@@ -4,15 +4,12 @@ declare(strict_types=1);
 
 namespace Qmdb\Modules\SecurityAuthorization\Domain;
 
-use Qmdb\Modules\Tenancy\Application\TenantContext;
+use Qmdb\Modules\TenancyContext\Domain\AccountWorkspaceTenantContext;
 
 final readonly class WorkspaceAuthorizationScope implements AuthorizationScope
 {
-    public function __construct(public TenantContext $tenantContext)
+    public function __construct(public AccountWorkspaceTenantContext $tenantContext)
     {
-        if ($tenantContext->isSystem()) {
-            throw new \InvalidArgumentException('Workspace authorization requires trusted tenant context.');
-        }
     }
 
     public function type(): AuthorizationScopeType

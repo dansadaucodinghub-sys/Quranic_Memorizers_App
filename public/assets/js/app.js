@@ -9,6 +9,7 @@ import { PasskeyLoginController } from './passkey-login-controller.js';
 import { PasskeyRegistrationController } from './passkey-registration-controller.js';
 import { PasskeyStepUpController } from './passkey-step-up-controller.js';
 import { RecoveryCodeDisplayController } from './recovery-code-display-controller.js';
+import { TenantContextController } from './tenant-context-controller.js';
 
 function start() {
     const liveRegion = new LiveRegion(document.getElementById('qmdb-live-region'));
@@ -22,6 +23,7 @@ function start() {
     new PasskeyRegistrationController({ liveRegion }).start();
     new PasskeyStepUpController({ liveRegion }).start();
     new RecoveryCodeDisplayController({ liveRegion }).start();
+    new TenantContextController().start();
 }
 
 try { start(); } catch { console.error('QMDB progressive enhancement could not start.'); }

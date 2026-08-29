@@ -5,8 +5,8 @@
 | Project | Qur’an Memorizer DB |
 | Project code | QMDB |
 | Baseline ID | QMDB-BL-001 |
-| Document version | 2.3.0 |
-| Status | Controlled open decisions; B06 foundational taxonomy resolved and remaining authorization decisions deferred |
+| Document version | 2.4.0 |
+| Status | Controlled open decisions; B07 tenant-context authority resolved and future tenant capabilities deferred |
 | Current phase | P2 — Identity, Security, and Tenant Isolation |
 | Last updated | 2026-08-28 |
 | Document owner role | Product and Architecture Governance |
@@ -492,3 +492,37 @@ elsewhere or authorize permissions owned by future business modules.
 | Support access | Support Governance / Security / Privacy | Before support-access rollout | BLOCKS_SUPPORT_ACCESS | Support receives no implicit or bypass authority |
 | Break-glass access | Security Governance / Operations | Before emergency-access rollout | BLOCKS_BREAK_GLASS | No break-glass role, command or bypass exists |
 | Privilege-review cadence | Security Governance / Audit | Before production governance approval | BLOCKS_DEPLOYMENT | No cadence claimed; assignments remain queryable history |
+
+## P2-B07 Tenant Context decisions and conservative assumptions
+
+| Decision | Owner role | Required point | Classification | Implemented disposition |
+| --- | --- | --- | --- | --- |
+| Closed/suspended workspace context | Tenancy / Security | P2-B07 | RESOLVED | Only ACTIVE workspaces resolve; other states clear the session selection without fallback |
+| Workspace creation authority | Product Governance / Security | Workspace provisioning batch | BLOCKS_PROVISIONING | B07 exposes no workspace-creation authority or route |
+| Workspace provisioning flow | Product / Tenancy / Operations | Workspace provisioning batch | BLOCKS_PROVISIONING | B07 neither provisions nor repairs workspace state |
+| Initial workspace owner assignment | Security Governance / Tenancy | Workspace provisioning batch | BLOCKS_PROVISIONING | Selection creates no membership or role assignment |
+| Personal workspace policy | Product Governance / Privacy | Before personal-workspace rollout | BLOCKS_PERSONAL_WORKSPACE | No personal workspace is assumed or automatically created |
+| Default workspace preference | Product / Tenancy | Workspace provisioning batch | BLOCKS_DEFAULT_SELECTION | New and cleared sessions remain unselected |
+| Remember-last-workspace policy | Product / Privacy / Security | Before preference persistence | BLOCKS_REMEMBERED_CONTEXT | B07 stores only the current session selection and no account preference |
+| Cross-device workspace preference | Product / Privacy / Security | Before cross-device preference rollout | BLOCKS_CROSS_DEVICE_CONTEXT | Device cookies and records do not restore or carry workspace context |
+| Context retention after session renewal | Identity Sessions / Security | Before changing renewal behavior | BLOCKS_SESSION_RENEWAL_CONTEXT | B07 preserves context only on the same authoritative session row; no new policy is inferred |
+| Context transfer during reauthentication | Identity Sessions / Security | Before reauthentication transfer | BLOCKS_REAUTH_CONTEXT | B07 has no context-copy or transfer path |
+| Workspace switching frequency limits | Security / Operations / Product | Before abuse limits are introduced | NON_BLOCKING_B07 | Existing authenticated mutation and CSRF controls apply; no unapproved numeric limit is invented |
+| Multi-tab fallback without BroadcastChannel | Frontend / Accessibility | Browser release review | NON_BLOCKING_B07 | Server version checks remain authoritative; unsupported browsers receive no client-side notification |
+| Workspace archival behavior | Product / Data Governance / Tenancy | Before workspace archival | BLOCKS_WORKSPACE_ARCHIVAL | B07 defines no archival mutation or restoration flow |
+| Closed-workspace access | Product / Security / Tenancy | Before closed-workspace access | BLOCKS_CLOSED_WORKSPACE_ACCESS | Non-ACTIVE workspaces cannot resolve as Tenant Context |
+| Suspended-workspace remediation | Product / Tenancy / Support | Before remediation workflow | BLOCKS_REMEDIATION | Context is cleared; the user receives no automatic replacement or restoration |
+| Organization-to-workspace relationship | Organization Module Owner / Tenancy | Organization implementation batch | BLOCKS_ORGANIZATION_CONTEXT | Tenant Context contains no organization identity or inferred authority |
+| Geography-scoped Tenant Context | Geography Module Owner / Security | Geography authorization batch | BLOCKS_GEOGRAPHY_CONTEXT | Workspace context cannot be coerced into national, state, FCT, LGA, or area-council authority |
+| Competition sub-context | Competition Module Owner / Security | Competition implementation batch | BLOCKS_COMPETITION_CONTEXT | No competition identity is stored on the session Tenant Context |
+| Cross-workspace oversight | Product / Security / Privacy | Dedicated oversight design | BLOCKS_CROSS_WORKSPACE_OVERSIGHT | One session resolves one workspace; no aggregate or supervisor bypass exists |
+| Tenant Context client authority | Security Architecture | P2-B07 | RESOLVED | Server session and composite relationship are authoritative; client ID is lookup only |
+| Tenant cache implementation | Architecture / Operations | Before persistent cache | BLOCKS_PERSISTENT_CACHE | Namespaced key contract only; no persistent cache |
+| Tenant export execution | Privacy / Data Governance | Export-owning batch | BLOCKS_TENANT_EXPORT | Marker contract only; no export engine |
+| System-only tenant background jobs | Architecture / Security / Operations | Before first system tenant job | BLOCKS_SYSTEM_TENANT_JOB | Every current tenant-bound job contract requires account, workspace, and membership revalidation |
+| Tenant-aware server-sent events | Frontend / Platform / Security | Owning live-update batch | BLOCKS_TENANT_SSE | No tenant SSE stream, subscription, or replay cursor exists |
+| Tenant-aware search indexing | Search / Privacy / Security | Search implementation batch | BLOCKS_TENANT_SEARCH | No tenant index or cross-workspace search projection exists |
+| Support access | Support Governance / Security / Privacy | P2-B08 | BLOCKS_SUPPORT_ACCESS | Support receives no implicit tenant context or permission |
+| Break-glass access | Security Governance / Operations / Privacy | P2-B08 | BLOCKS_BREAK_GLASS | No emergency context, role, bypass, or impersonation path exists |
+| Support and emergency context | Security / Privacy / Support Governance | P2-B08 | BLOCKS_P2_B08 | No support, temporary, impersonation, or break-glass context exists |
+| Cross-tab refresh UX | Product / Accessibility | Browser release review | NON_BLOCKING_B07 | Broadcast only a bounded version and navigate safely; server remains authoritative |

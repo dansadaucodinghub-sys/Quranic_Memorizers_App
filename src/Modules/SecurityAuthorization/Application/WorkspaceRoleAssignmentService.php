@@ -43,6 +43,7 @@ final readonly class WorkspaceRoleAssignmentService
 
     public function assign(WorkspaceRoleAssignmentCommand $command): WorkspaceRoleAssignmentResult
     {
+        $tenant = $command->tenantContext->tenant();
         $request = new AuthorizationRequest(
             AuthorizationSubject::fromAuthenticatedContext($command->actor),
             new PermissionCode(self::ASSIGN_PERMISSION),
@@ -50,10 +51,10 @@ final readonly class WorkspaceRoleAssignmentService
         );
         $this->authorization->requireAllowed($request);
         $actorMembership = $this->administration->activeMembershipForAccount(
-            $command->tenantContext,
+            $tenant,
             $command->actor->accountInternalId,
         );
-        $target = $this->administration->membership($command->tenantContext, $command->targetMembershipId);
+        $target = $this->administration->membership($tenant, $command->targetMembershipId);
         $role = $this->administration->role($command->roleCode);
         if (
             $actorMembership === null || $target === null || !$target->active || $role === null
@@ -62,7 +63,7 @@ final readonly class WorkspaceRoleAssignmentService
         ) {
             throw new \DomainException('The target membership or workspace role is not eligible.');
         }
-        $this->delegation->workspace($command->actor->accountInternalId, $command->tenantContext, $role);
+        $this->delegation->workspace($command->tenantContext, $role);
         $now = $this->clock->now();
         $result = $this->transactions->transactional(function () use (
             $command,
@@ -71,16 +72,16 @@ final readonly class WorkspaceRoleAssignmentService
             $target,
             $role,
             $now,
+            $tenant,
         ): WorkspaceRoleAssignmentResult {
             $this->assignments->listActiveForMembership(
-                $command->tenantContext,
+                $tenant,
                 $actorMembership->internalId,
                 100,
                 true,
             );
             $this->authorization->requireAllowed($request);
             $this->delegation->workspace(
-                $command->actor->accountInternalId,
                 $command->tenantContext,
                 $role,
                 true,
@@ -88,7 +89,7 @@ final readonly class WorkspaceRoleAssignmentService
             $this->stepUp->consume($command->actor, StepUpAction::AUTHORIZATION_WORKSPACE_ROLE_ASSIGN);
             if (
                 $this->assignments->findActiveForMembershipAndRole(
-                    $command->tenantContext,
+                    $tenant,
                     $target->internalId,
                     $role->internalId,
                     true,
@@ -99,7 +100,7 @@ final readonly class WorkspaceRoleAssignmentService
             $assignment = new WorkspaceRoleAssignment(
                 null,
                 WorkspaceRoleAssignmentId::generate(),
-                $command->tenantContext->workspaceInternalId(),
+                $command->tenantContext->workspaceInternalId,
                 $target->internalId,
                 $target->accountInternalId,
                 $role->internalId,
@@ -118,7 +119,7 @@ final readonly class WorkspaceRoleAssignmentService
                 $now,
                 $now,
             );
-            $this->assignments->add($command->tenantContext, $assignment);
+            $this->assignments->add($tenant, $assignment);
             $this->notifications->create(
                 $target->accountInternalId,
                 AccountSecurityNotificationType::WORKSPACE_ROLE_ASSIGNED,
@@ -131,7 +132,7 @@ final readonly class WorkspaceRoleAssignmentService
                 $assignment->roleCode,
                 $assignment->status,
                 $assignment->version,
-                $command->tenantContext->workspaceId(),
+                $command->tenantContext->workspaceId,
             );
         });
         $this->logger->log(LogLevel::NOTICE, new LogEventName('authorization.workspace.role.assigned'), [

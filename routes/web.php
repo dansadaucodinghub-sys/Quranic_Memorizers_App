@@ -29,6 +29,10 @@ use Qmdb\Modules\IdentityRecovery\Interface\Http\PasswordResetCompletedControlle
 use Qmdb\Modules\IdentityRecovery\Interface\Http\PasswordResetFormController;
 use Qmdb\Modules\IdentityRecovery\Interface\Http\PasswordResetSubmitController;
 use Qmdb\Modules\IdentityMultiFactor\Interface\Http\IdentityMultiFactorController;
+use Qmdb\Modules\TenancyContext\Interface\Http\AccountWorkspacesController;
+use Qmdb\Modules\TenancyContext\Interface\Http\CurrentWorkspaceController;
+use Qmdb\Modules\TenancyContext\Interface\Http\WorkspaceClearController;
+use Qmdb\Modules\TenancyContext\Interface\Http\WorkspaceSwitchController;
 use Qmdb\Shared\Http\Routing\HttpMethod;
 use Qmdb\Shared\Http\Routing\Route;
 use Qmdb\Shared\Http\Routing\RouteCollection;
@@ -62,6 +66,10 @@ return static function (
     PasswordResetSubmitController $passwordResetSubmit,
     PasswordResetCompletedController $passwordResetCompleted,
     IdentityMultiFactorController $multiFactor,
+    AccountWorkspacesController $accountWorkspaces,
+    WorkspaceSwitchController $workspaceSwitch,
+    WorkspaceClearController $workspaceClear,
+    CurrentWorkspaceController $currentWorkspace,
 ): RouteCollection {
     return new RouteCollection(
         new Route('system.home', [HttpMethod::GET], new RoutePattern('/'), $homeController),
@@ -131,6 +139,25 @@ return static function (
         new Route('account.login.form', [HttpMethod::GET], new RoutePattern('/login'), $loginForm),
         new Route('account.login.submit', [HttpMethod::POST], new RoutePattern('/login'), $loginSubmit),
         new Route('account.logout', [HttpMethod::POST], new RoutePattern('/logout'), $logout),
+        new Route(
+            'account.workspaces.index',
+            [HttpMethod::GET],
+            new RoutePattern('/account/workspaces'),
+            $accountWorkspaces,
+        ),
+        new Route(
+            'account.workspaces.switch',
+            [HttpMethod::POST],
+            new RoutePattern('/account/workspaces/switch'),
+            $workspaceSwitch,
+        ),
+        new Route(
+            'account.workspaces.clear',
+            [HttpMethod::POST],
+            new RoutePattern('/account/workspaces/clear'),
+            $workspaceClear,
+        ),
+        new Route('workspace.current', [HttpMethod::GET], new RoutePattern('/workspace'), $currentWorkspace),
         new Route(
             'account.security.sessions',
             [HttpMethod::GET],

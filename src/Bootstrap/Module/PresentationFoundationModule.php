@@ -110,6 +110,8 @@ final readonly class PresentationFoundationModule implements Module
                     'pages.account-step-up' => $root . '/resources/views/pages/account-step-up.php',
                     'pages.account-authentication-security' =>
                         $root . '/resources/views/pages/account-authentication-security.php',
+                    'pages.account-workspaces' => $root . '/resources/views/pages/account-workspaces.php',
+                    'pages.workspace' => $root . '/resources/views/pages/workspace.php',
                     'pages.totp-enrollment-start' => $root . '/resources/views/pages/totp-enrollment-start.php',
                     'pages.totp-enrollment-confirm' => $root . '/resources/views/pages/totp-enrollment-confirm.php',
                     'pages.recovery-codes-one-time' => $root . '/resources/views/pages/recovery-codes-one-time.php',
@@ -152,6 +154,9 @@ final readonly class PresentationFoundationModule implements Module
                     'fragments.account-step-up-form' => $root . '/resources/views/fragments/account-step-up-form.php',
                     'fragments.account-authentication-security-panel' =>
                         $root . '/resources/views/fragments/account-authentication-security-panel.php',
+                    'fragments.account-workspaces-panel' =>
+                        $root . '/resources/views/fragments/account-workspaces-panel.php',
+                    'fragments.workspace-panel' => $root . '/resources/views/fragments/workspace-panel.php',
                     'fragments.totp-enrollment-confirm-form' =>
                         $root . '/resources/views/fragments/totp-enrollment-confirm-form.php',
                     'fragments.recovery-codes-one-time' =>

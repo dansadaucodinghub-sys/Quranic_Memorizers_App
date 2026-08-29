@@ -13,7 +13,7 @@ use Qmdb\Modules\SecurityAuthorization\Domain\PermissionId;
 use Qmdb\Modules\SecurityAuthorization\Domain\PermissionStatus;
 use Qmdb\Modules\SecurityAuthorization\Domain\PersistedPermission;
 use Qmdb\Modules\SecurityAuthorization\Domain\Repository\EffectivePermissionRepository;
-use Qmdb\Modules\Tenancy\Application\TenantContext;
+use Qmdb\Modules\TenancyContext\Domain\AccountWorkspaceTenantContext;
 use Qmdb\Shared\Database\Connection\DatabaseConnectionProvider;
 
 final readonly class MySqlEffectivePermissionRepository implements EffectivePermissionRepository
@@ -52,22 +52,23 @@ final readonly class MySqlEffectivePermissionRepository implements EffectivePerm
         );
     }
 
-    public function workspaceIsActive(TenantContext $context): bool
+    public function workspaceIsActive(AccountWorkspaceTenantContext $context): bool
     {
         return $this->exists(
             "SELECT 1 FROM workspaces WHERE id = :workspace_id AND status_code = 'ACTIVE' LIMIT 1",
-            [':workspace_id' => $context->workspaceInternalId()],
+            [':workspace_id' => $context->workspaceInternalId],
         );
     }
 
-    public function membershipIsActive(TenantContext $context, int $accountInternalId): bool
+    public function membershipIsActive(AccountWorkspaceTenantContext $context): bool
     {
         return $this->exists(
-            "SELECT 1 FROM workspace_memberships WHERE workspace_id = :workspace_id "
+            "SELECT 1 FROM workspace_memberships WHERE id = :membership_id AND workspace_id = :workspace_id "
             . "AND user_account_id = :account_id AND status_code = 'ACTIVE' LIMIT 1",
             [
-                ':workspace_id' => $context->workspaceInternalId(),
-                ':account_id' => $accountInternalId,
+                ':membership_id' => $context->membership->membershipInternalId,
+                ':workspace_id' => $context->workspaceInternalId,
+                ':account_id' => $context->accountInternalId,
             ],
         );
     }
@@ -106,19 +107,20 @@ final readonly class MySqlEffectivePermissionRepository implements EffectivePerm
     }
 
     public function findEffectiveWorkspacePermission(
-        int $accountInternalId,
-        TenantContext $context,
+        AccountWorkspaceTenantContext $context,
         PermissionCode $permission,
     ): EffectivePermissionEvidence {
         $parameters = [
-            ':account_id' => $accountInternalId,
-            ':workspace_id' => $context->workspaceInternalId(),
+            ':account_id' => $context->accountInternalId,
+            ':workspace_id' => $context->workspaceInternalId,
+            ':membership_id' => $context->membership->membershipInternalId,
         ];
         $membershipJoin = ' FROM workspace_role_assignments assignment '
             . 'INNER JOIN workspace_memberships membership ON membership.id = assignment.membership_id '
             . 'AND membership.workspace_id = assignment.workspace_id '
             . "AND membership.status_code = 'ACTIVE' ";
-        $where = "WHERE assignment.workspace_id = :workspace_id AND membership.user_account_id = :account_id "
+        $where = "WHERE assignment.workspace_id = :workspace_id AND assignment.membership_id = :membership_id "
+            . "AND membership.user_account_id = :account_id "
             . "AND assignment.status = 'ACTIVE' ";
         $assignment = $this->exists('SELECT 1' . $membershipJoin . $where . 'LIMIT 1', $parameters);
         $role = $this->exists(
@@ -166,8 +168,7 @@ final readonly class MySqlEffectivePermissionRepository implements EffectivePerm
     }
 
     public function listEffectiveWorkspacePermissions(
-        int $accountInternalId,
-        TenantContext $context,
+        AccountWorkspaceTenantContext $context,
         int $limit = 100,
         bool $forUpdate = false,
     ): array {
@@ -183,12 +184,14 @@ final readonly class MySqlEffectivePermissionRepository implements EffectivePerm
             . 'INNER JOIN authorization_permissions permission_definition '
             . 'ON permission_definition.id = mapping.permission_id '
             . "AND permission_definition.scope_type = 'WORKSPACE' AND permission_definition.status = 'ACTIVE' "
-            . 'WHERE assignment.workspace_id = :workspace_id AND membership.user_account_id = :account_id '
+            . 'WHERE assignment.workspace_id = :workspace_id AND assignment.membership_id = :membership_id '
+            . 'AND membership.user_account_id = :account_id '
             . "AND assignment.status = 'ACTIVE' ORDER BY permission_definition.code LIMIT :row_limit"
             . ($forUpdate ? ' FOR UPDATE' : ''),
             [
-                ':workspace_id' => $context->workspaceInternalId(),
-                ':account_id' => $accountInternalId,
+                ':workspace_id' => $context->workspaceInternalId,
+                ':membership_id' => $context->membership->membershipInternalId,
+                ':account_id' => $context->accountInternalId,
             ],
             $limit,
         );

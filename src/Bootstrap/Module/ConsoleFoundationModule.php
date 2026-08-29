@@ -27,6 +27,7 @@ use Qmdb\Shared\Module\ModuleRegistrationContext;
 use Qmdb\Shared\Observability\Error\ErrorHandlingRuntime;
 use Qmdb\Shared\Schema\Console\SchemaConsoleApplication;
 use Qmdb\Modules\SecurityAuthorization\Interface\Console\AuthorizationVerifyConsoleCommand;
+use Qmdb\Modules\TenancyContext\Interface\Console\TenantContextVerifyConsoleCommand;
 
 final readonly class ConsoleFoundationModule implements Module
 {
@@ -46,6 +47,7 @@ final readonly class ConsoleFoundationModule implements Module
             new ModuleId('foundation.schema'),
             new ModuleId('foundation.background'),
             new ModuleId('security.authorization'),
+            new ModuleId('tenancy.context'),
         ];
     }
 
@@ -103,6 +105,7 @@ final readonly class ConsoleFoundationModule implements Module
             ScheduleRunConsoleCommand::class,
             WorkerRunConsoleCommand::class,
             AuthorizationVerifyConsoleCommand::class,
+            TenantContextVerifyConsoleCommand::class,
         ];
         $context->service(ServiceDefinition::factory(
             ConsoleCommandMap::class,
@@ -124,6 +127,7 @@ final readonly class ConsoleFoundationModule implements Module
                 $registry->register(ServiceReference::get($resolver, ScheduleRunConsoleCommand::class));
                 $registry->register(ServiceReference::get($resolver, WorkerRunConsoleCommand::class));
                 $registry->register(ServiceReference::get($resolver, AuthorizationVerifyConsoleCommand::class));
+                $registry->register(ServiceReference::get($resolver, TenantContextVerifyConsoleCommand::class));
 
                 return $registry->build();
             }),

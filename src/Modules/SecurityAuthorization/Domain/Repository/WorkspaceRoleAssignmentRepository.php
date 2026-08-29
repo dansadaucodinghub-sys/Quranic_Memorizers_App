@@ -7,8 +7,9 @@ namespace Qmdb\Modules\SecurityAuthorization\Domain\Repository;
 use Qmdb\Modules\SecurityAuthorization\Domain\WorkspaceRoleAssignment;
 use Qmdb\Modules\SecurityAuthorization\Domain\WorkspaceRoleAssignmentId;
 use Qmdb\Modules\Tenancy\Application\TenantContext;
+use Qmdb\Modules\Tenancy\Application\TenantScopedRepository;
 
-interface WorkspaceRoleAssignmentRepository
+interface WorkspaceRoleAssignmentRepository extends TenantScopedRepository
 {
     public function add(TenantContext $context, WorkspaceRoleAssignment $assignment): int;
 

@@ -50,6 +50,11 @@ final class LocalCiRunner
                 'mysql-authorization-verify',
                 ['php', 'bin/console', 'security:authorization:verify'],
             ];
+            $stages[] = [
+                'mysql-tenant-context-verify',
+                ['php', 'bin/console', 'tenancy:context:verify'],
+            ];
+            $stages[] = ['mysql-schema-verify', ['php', 'bin/console', 'db:schema:verify']];
         } else {
             $this->recordSkipped('mysql-tests', 'QMDB_TEST_DB_* is not configured.');
         }

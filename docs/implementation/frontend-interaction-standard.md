@@ -108,3 +108,10 @@ Recovery codes are rendered only on the one-time post-generation page. The optio
 DOM value at activation time and writes it directly to the clipboard; it does not place codes in local storage,
 session storage, analytics, logs, URLs or hidden persistence. Without JavaScript, the codes remain readable and
 printable. Browser cancellation and authenticator errors preserve an operable fallback and a focusable status message.
+
+## P2-B07 Tenant Context interaction extension
+
+Mutation fetches include the current server-rendered `X-QMDB-Tenant-Context-Version` when present and never include a
+workspace authority header. The Tenant Context controller reads only version metadata, persists nothing, and limits
+cross-tab `BroadcastChannel` messages to a fixed type and positive version. Workspace switching uses ordinary forms,
+duplicate-submit protection, busy state, same-origin navigation, and no automatic retry or modal.

@@ -9,13 +9,21 @@ $content = $view->value('content');
 if (!$content instanceof SafeHtml) {
     throw new RuntimeException('Page content is invalid.');
 }
-$shared = new ViewData(['current_path' => $view->string('current_path')]);
+$shared = new ViewData([
+    'current_path' => $view->string('current_path'),
+    'tenant_context_version' => $view->integer('tenant_context_version'),
+    'tenant_workspace_id' => $view->string('tenant_workspace_id'),
+    'tenant_workspace_name' => $view->string('tenant_workspace_name'),
+    'tenant_authenticated' => $view->boolean('tenant_authenticated'),
+]);
 ?><!doctype html>
 <html lang="<?= $escape->escapeAttribute($view->string('locale')) ?>" dir="<?= $escape->escapeAttribute($view->string('direction')) ?>">
 <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <title><?= $escape->escapeText($view->string('title')) ?></title>
+    <meta name="qmdb-tenant-context-version" content="<?= $escape->escapeAttribute((string)$view->integer('tenant_context_version')) ?>">
+    <meta name="qmdb-tenant-context-present" content="<?= $view->string('tenant_workspace_id') === '' ? '0' : '1' ?>">
     <?php foreach (['tokens.css', 'base.css', 'layout.css', 'components.css', 'themes.css', 'utilities.css'] as $cssFile): ?>
     <link rel="stylesheet" href="<?= $escape->escapeAttribute($assets->css($cssFile)->value()) ?>">
     <?php endforeach; ?>

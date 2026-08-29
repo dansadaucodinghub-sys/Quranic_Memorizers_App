@@ -35,6 +35,8 @@ final readonly class SystemAboutPageController implements Controller
             $context['nonce'],
             'title.about',
             $context['path'],
+            $context['tenant'],
+            $context['authenticated'],
         );
         $fragment = $this->views->render('fragments.system-about-dialog', $view, $context['translator']);
 

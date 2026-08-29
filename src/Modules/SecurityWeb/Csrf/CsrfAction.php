@@ -13,6 +13,8 @@ enum CsrfAction: string
     case ACCOUNT_LOGOUT = 'account.logout';
     case ACCOUNT_SESSION_REVOKE = 'account.session.revoke';
     case ACCOUNT_DEVICE_REVOKE = 'account.device.revoke';
+    case ACCOUNT_WORKSPACE_SWITCH = 'account.workspace.switch';
+    case ACCOUNT_WORKSPACE_CLEAR = 'account.workspace.clear';
     case ACCOUNT_PASSWORD_RECOVERY_REQUEST = 'account.password_recovery.request';
     case ACCOUNT_PASSWORD_RECOVERY_RESET = 'account.password_recovery.reset';
     case ACCOUNT_MFA_LOGIN_TOTP = 'account.mfa.login.totp';

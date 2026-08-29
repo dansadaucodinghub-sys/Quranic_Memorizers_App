@@ -7,13 +7,20 @@ namespace Qmdb\Tests\Unit\Shared\Background;
 use DateTimeImmutable;
 use PHPUnit\Framework\Attributes\DataProvider;
 use PHPUnit\Framework\TestCase;
+use Qmdb\Modules\Identity\Domain\Value\AccountId;
+use Qmdb\Modules\Tenancy\Domain\Value\WorkspaceId;
+use Qmdb\Modules\TenancyContext\Application\Background\TenantBoundBackgroundJobExecutionContext;
+use Qmdb\Shared\Background\Job\BackgroundJob;
+use Qmdb\Shared\Background\Job\BackgroundJobContextResolver;
 use Qmdb\Shared\Background\Job\BackgroundJobEnvelope;
 use Qmdb\Shared\Background\Job\BackgroundJobExecutionOutcome;
 use Qmdb\Shared\Background\Job\BackgroundJobExecutor;
 use Qmdb\Shared\Background\Job\BackgroundJobHandlerMap;
 use Qmdb\Shared\Background\Job\BackgroundJobId;
+use Qmdb\Shared\Background\Job\BackgroundJobExecutionContext;
 use Qmdb\Shared\Background\Job\BackgroundJobName;
 use Qmdb\Shared\Background\Job\ConservativeBackgroundJobFailureClassifier;
+use Qmdb\Shared\Background\Job\ContextAwareBackgroundJobHandler;
 use Qmdb\Shared\Background\Job\JobReservationToken;
 use Qmdb\Shared\Background\Job\PermanentBackgroundJobFailure;
 use Qmdb\Shared\Background\Job\ReservedBackgroundJob;
@@ -21,11 +28,13 @@ use Qmdb\Shared\Background\Job\RetryableBackgroundJobFailure;
 use Qmdb\Shared\Background\Worker\BackgroundWorkerIdentity;
 use Qmdb\Shared\Observability\Correlation\CorrelationId;
 use Qmdb\Shared\Observability\Error\ExceptionFingerprint;
+use Qmdb\Shared\Identifier\UuidV7;
 use Qmdb\Tests\Support\Background\InMemoryBackgroundJobSource;
 use Qmdb\Tests\Support\Background\SequenceClock;
 use Qmdb\Tests\Support\Background\TestBackgroundJob;
 use Qmdb\Tests\Support\Background\TestBackgroundJobHandler;
 use Qmdb\Tests\Support\Observability\InMemoryEventLogger;
+use Qmdb\Tests\Support\TenancyContext\TestAccountTenantBoundBackgroundJob;
 use RuntimeException;
 
 final class BackgroundJobExecutionTest extends TestCase
@@ -97,6 +106,100 @@ final class BackgroundJobExecutionTest extends TestCase
         );
     }
 
+    public function testContextBoundJobIsRevalidatedAndPassedOnlyToApprovedHandler(): void
+    {
+        $accountId = AccountId::generate();
+        $workspaceId = WorkspaceId::generate();
+        $membershipId = UuidV7::generate();
+        $job = new TestAccountTenantBoundBackgroundJob($accountId, $workspaceId, $membershipId);
+        $tenant = new TenantBoundBackgroundJobExecutionContext(
+            7,
+            $accountId,
+            11,
+            $workspaceId,
+            13,
+            $membershipId,
+        );
+        $resolver = new class ($tenant) implements BackgroundJobContextResolver {
+            public int $calls = 0;
+
+            public function __construct(private readonly object $context)
+            {
+            }
+
+            public function supports(BackgroundJob $job): bool
+            {
+                return $job instanceof TestAccountTenantBoundBackgroundJob;
+            }
+
+            public function resolve(BackgroundJob $job): object
+            {
+                ++$this->calls;
+
+                return $this->context;
+            }
+        };
+        $handler = new class implements ContextAwareBackgroundJobHandler {
+            public int $ordinaryCalls = 0;
+            public int $tenantCalls = 0;
+            public ?object $tenantContext = null;
+
+            public function __invoke(BackgroundJob $job, BackgroundJobExecutionContext $context): mixed
+            {
+                ++$this->ordinaryCalls;
+
+                return null;
+            }
+
+            public function __invokeWithContext(
+                BackgroundJob $job,
+                BackgroundJobExecutionContext $execution,
+                object $resolvedContext,
+            ): mixed {
+                ++$this->tenantCalls;
+                $this->tenantContext = $resolvedContext;
+
+                return null;
+            }
+        };
+        $source = new InMemoryBackgroundJobSource();
+        $logger = new InMemoryEventLogger();
+        $executor = new BackgroundJobExecutor(
+            new BackgroundJobHandlerMap([TestAccountTenantBoundBackgroundJob::class => $handler]),
+            $source,
+            new ConservativeBackgroundJobFailureClassifier(new ExceptionFingerprint()),
+            new SequenceClock([new DateTimeImmutable(self::NOW)]),
+            $logger,
+            $resolver,
+        );
+
+        $result = $executor->execute(
+            $this->reserved(job: $job),
+            new BackgroundWorkerIdentity(str_repeat('c', 32)),
+            false,
+        );
+
+        self::assertSame(BackgroundJobExecutionOutcome::SUCCEEDED, $result->outcome());
+        self::assertSame(1, $resolver->calls);
+        self::assertSame(0, $handler->ordinaryCalls);
+        self::assertSame(1, $handler->tenantCalls);
+        self::assertSame($tenant, $handler->tenantContext);
+        self::assertSame(11, $tenant->tenant()->workspaceInternalId());
+        self::assertSame($workspaceId->toString(), $tenant->tenant()->workspaceId()->toString());
+        self::assertSame('[redacted]', $tenant->__debugInfo()['workspace_id']);
+        self::assertSame(['acknowledge'], $source->actions);
+        $logs = json_encode($logger->records(), JSON_THROW_ON_ERROR);
+        self::assertStringNotContainsString($accountId->toString(), $logs);
+        self::assertStringNotContainsString($workspaceId->toString(), $logs);
+        self::assertStringNotContainsString($membershipId->toString(), $logs);
+        try {
+            serialize($tenant);
+            self::fail('Trusted background Tenant Context must not be serializable.');
+        } catch (\LogicException) {
+            self::addToAssertionCount(1);
+        }
+    }
+
     #[DataProvider('terminalFailures')]
     public function testPermanentUnknownExhaustedAndInvalidReturnFailuresAreNotRetried(
         object $failureOrReturn,
@@ -141,15 +244,18 @@ final class BackgroundJobExecutionTest extends TestCase
         );
     }
 
-    private function reserved(int $attempt = 1, int $maximumAttempts = 3): ReservedBackgroundJob
-    {
+    private function reserved(
+        int $attempt = 1,
+        int $maximumAttempts = 3,
+        ?BackgroundJob $job = null,
+    ): ReservedBackgroundJob {
         $now = new DateTimeImmutable(self::NOW);
 
         return new ReservedBackgroundJob(
             new BackgroundJobEnvelope(
                 new BackgroundJobId(str_repeat('a', 32)),
                 new BackgroundJobName('test.background.job'),
-                new TestBackgroundJob(),
+                $job ?? new TestBackgroundJob(),
                 new CorrelationId(str_repeat('b', 32)),
                 $now,
                 $now,

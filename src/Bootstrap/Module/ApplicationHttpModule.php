@@ -29,6 +29,12 @@ use Qmdb\Modules\IdentityRecovery\Application\Readiness\IdentityRecoveryReadines
 use Qmdb\Modules\IdentitySecurityNotifications\Application\Readiness\IdentitySecurityNotificationReadinessCheck;
 use Qmdb\Modules\IdentityMultiFactor\Application\Readiness\IdentityMultiFactorReadinessCheck;
 use Qmdb\Modules\SecurityAuthorization\Application\AuthorizationReadinessCheck;
+use Qmdb\Modules\TenancyContext\Application\TenantContextReadinessCheck;
+use Qmdb\Modules\TenancyContext\Interface\Http\AccountWorkspacesController;
+use Qmdb\Modules\TenancyContext\Interface\Http\CurrentWorkspaceController;
+use Qmdb\Modules\TenancyContext\Interface\Http\TenantContextMiddleware;
+use Qmdb\Modules\TenancyContext\Interface\Http\WorkspaceClearController;
+use Qmdb\Modules\TenancyContext\Interface\Http\WorkspaceSwitchController;
 use Qmdb\Modules\IdentityMultiFactor\Interface\Http\IdentityMultiFactorController;
 use Qmdb\Modules\IdentityRecovery\Interface\Http\PasswordRecoveryRequestAcceptedController;
 use Qmdb\Modules\IdentityRecovery\Interface\Http\PasswordRecoveryRequestFormController;
@@ -91,6 +97,7 @@ final readonly class ApplicationHttpModule implements Module
             new ModuleId('identity.recovery'),
             new ModuleId('identity.multifactor'),
             new ModuleId('security.authorization'),
+            new ModuleId('tenancy.context'),
         ];
     }
 
@@ -109,6 +116,7 @@ final readonly class ApplicationHttpModule implements Module
                 IdentitySecurityNotificationReadinessCheck::class,
                 IdentityMultiFactorReadinessCheck::class,
                 AuthorizationReadinessCheck::class,
+                TenantContextReadinessCheck::class,
             ],
             new ClosureServiceFactory(static fn (DependencyResolver $resolver): ApplicationReadinessController =>
                 new ApplicationReadinessController(
@@ -121,6 +129,7 @@ final readonly class ApplicationHttpModule implements Module
                     ServiceReference::get($resolver, IdentitySecurityNotificationReadinessCheck::class),
                     ServiceReference::get($resolver, IdentityMultiFactorReadinessCheck::class),
                     ServiceReference::get($resolver, AuthorizationReadinessCheck::class),
+                    ServiceReference::get($resolver, TenantContextReadinessCheck::class),
                 )),
         ));
         $controllers = [
@@ -151,6 +160,10 @@ final readonly class ApplicationHttpModule implements Module
             PasswordResetSubmitController::class,
             PasswordResetCompletedController::class,
             IdentityMultiFactorController::class,
+            AccountWorkspacesController::class,
+            WorkspaceSwitchController::class,
+            WorkspaceClearController::class,
+            CurrentWorkspaceController::class,
         ];
         $context->service(ServiceDefinition::factory(
             RouteCollection::class,
@@ -198,7 +211,8 @@ final readonly class ApplicationHttpModule implements Module
             [CorrelationIdMiddleware::class, CspNonceMiddleware::class, SecurityHeadersMiddleware::class,
                 HttpRequestLoggingMiddleware::class, ExceptionHandlingMiddleware::class,
                 RequestTargetValidationMiddleware::class, LocaleMiddleware::class,
-                SessionAuthenticationMiddleware::class, RoutingRequestHandler::class],
+                SessionAuthenticationMiddleware::class, TenantContextMiddleware::class,
+                RoutingRequestHandler::class],
             new ClosureServiceFactory(static fn (DependencyResolver $resolver): HttpKernel => new HttpKernel(
                 [
                     ServiceReference::get($resolver, CorrelationIdMiddleware::class),
@@ -209,6 +223,7 @@ final readonly class ApplicationHttpModule implements Module
                     ServiceReference::get($resolver, RequestTargetValidationMiddleware::class),
                     ServiceReference::get($resolver, LocaleMiddleware::class),
                     ServiceReference::get($resolver, SessionAuthenticationMiddleware::class),
+                    ServiceReference::get($resolver, TenantContextMiddleware::class),
                 ],
                 ServiceReference::get($resolver, RoutingRequestHandler::class),
             )),

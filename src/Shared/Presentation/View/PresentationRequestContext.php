@@ -18,7 +18,16 @@ final readonly class PresentationRequestContext
     {
     }
 
-    /** @return array{translator: Translator, nonce: CspNonce, path: string} */
+    /**
+     * @return array{
+     *   translator: Translator,
+     *   nonce: CspNonce,
+     *   path: string,
+     *   tenant: ?TenantPresentationContext,
+     *   tenant_context_version: int,
+     *   authenticated: bool
+     * }
+     */
     public function fromRequest(ServerRequestInterface $request): array
     {
         $locale = $request->getAttribute(RequestContextAttributes::LOCALE);
@@ -31,6 +40,12 @@ final readonly class PresentationRequestContext
             'translator' => new Translator($this->catalog, $locale->locale()),
             'nonce' => $nonce,
             'path' => $request->getUri()->getPath() ?: '/',
+            'tenant' => ($tenant = $request->getAttribute('qmdb.tenant_context')) instanceof TenantPresentationContext
+                ? $tenant
+                : null,
+            'tenant_context_version' => is_int($request->getAttribute('qmdb.tenant_context_version'))
+                ? $request->getAttribute('qmdb.tenant_context_version') : 0,
+            'authenticated' => is_object($request->getAttribute('qmdb.authenticated_account')),
         ];
     }
 }

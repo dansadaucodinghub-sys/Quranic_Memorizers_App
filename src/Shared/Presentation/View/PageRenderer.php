@@ -21,6 +21,9 @@ final readonly class PageRenderer
         CspNonce $nonce,
         string $titleKey,
         string $currentPath,
+        ?TenantPresentationContext $tenant = null,
+        bool $authenticated = false,
+        int $tenantContextVersion = 0,
     ): SafeHtml {
         $content = $this->renderer->render($page, $pageData, $translator);
 
@@ -31,6 +34,10 @@ final readonly class PageRenderer
             'direction' => $translator->locale()->direction()->value,
             'nonce' => $nonce->value(),
             'current_path' => $currentPath,
+            'tenant_context_version' => max($tenant?->tenantContextVersion() ?? 0, $tenantContextVersion),
+            'tenant_workspace_id' => $tenant?->workspacePublicId() ?? '',
+            'tenant_workspace_name' => $tenant?->workspaceDisplayName() ?? '',
+            'tenant_authenticated' => $authenticated,
         ]), $translator);
     }
 }

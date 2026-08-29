@@ -26,11 +26,20 @@ final readonly class SystemHomeController implements Controller
     {
         $context = $this->context->fromRequest($request);
         $information = $this->data->information();
-        $html = $this->pages->render('pages.home', new ViewData([
+        $html = $this->pages->render(
+            'pages.home',
+            new ViewData([
             'phase' => $information['phase'],
             'batch' => $information['batch'],
             'status' => $this->data->status(),
-        ]), $context['translator'], $context['nonce'], 'title.home', $context['path']);
+            ]),
+            $context['translator'],
+            $context['nonce'],
+            'title.home',
+            $context['path'],
+            $context['tenant'],
+            $context['authenticated']
+        );
 
         return $this->responses->create($html);
     }

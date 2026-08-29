@@ -10,7 +10,7 @@ use Qmdb\Modules\SecurityAuthorization\Domain\AuthorizationScopeType;
 use Qmdb\Modules\SecurityAuthorization\Domain\Repository\AuthorizationAdministrationRepository;
 use Qmdb\Modules\SecurityAuthorization\Domain\Repository\EffectivePermissionRepository;
 use Qmdb\Modules\SecurityAuthorization\Domain\RoleStatus;
-use Qmdb\Modules\Tenancy\Application\TenantContext;
+use Qmdb\Modules\TenancyContext\Domain\AccountWorkspaceTenantContext;
 
 final readonly class DelegationValidator
 {
@@ -35,8 +35,7 @@ final readonly class DelegationValidator
     }
 
     public function workspace(
-        int $actorAccountInternalId,
-        TenantContext $context,
+        AccountWorkspaceTenantContext $context,
         AuthorizationRoleRecord $targetRole,
         bool $forUpdate = false,
     ): void {
@@ -48,7 +47,6 @@ final readonly class DelegationValidator
         }
         $this->assertSubset(
             $this->effectivePermissions->listEffectiveWorkspacePermissions(
-                $actorAccountInternalId,
                 $context,
                 100,
                 $forUpdate,

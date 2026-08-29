@@ -27,6 +27,7 @@ use Qmdb\Bootstrap\Module\SchemaFoundationModule;
 use Qmdb\Bootstrap\Module\SecurityWebModule;
 use Qmdb\Bootstrap\Module\SecurityAuthorizationModule;
 use Qmdb\Bootstrap\Module\TenancyFoundationModule;
+use Qmdb\Bootstrap\Module\TenancyContextModule;
 use Qmdb\Bootstrap\RuntimeEnvironment;
 use Qmdb\Shared\Application\Query\QueryBus;
 use Qmdb\Shared\Application\System\GetSystemInformation;
@@ -70,6 +71,7 @@ final class FoundationCompilationTest extends TestCase
             'identity.recovery',
             'tenancy.workspaces',
             'security.authorization',
+            'tenancy.context',
             'application.http',
             'foundation.console',
         ], $registry->orderedModuleIds());
@@ -93,7 +95,7 @@ final class FoundationCompilationTest extends TestCase
         $result = $queryBus->ask(new GetSystemInformation());
 
         self::assertInstanceOf(SystemInformation::class, $result);
-        self::assertSame('QMDB-P2-B06', $result->currentBatch());
+        self::assertSame('QMDB-P2-B07', $result->currentBatch());
     }
 
     public function testFoundationContainsNoDeferredInfrastructureService(): void
@@ -159,6 +161,7 @@ final class FoundationCompilationTest extends TestCase
             new IdentityRecoveryModule($identityRecovery, $identityAccess),
             new IdentityMultiFactorModule(),
             new SecurityAuthorizationModule(),
+            new TenancyContextModule(dirname(__DIR__, 3)),
             new ApplicationHttpModule(dirname(__DIR__, 3)),
             new ConsoleFoundationModule(),
         ]);

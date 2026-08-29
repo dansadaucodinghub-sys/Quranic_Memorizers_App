@@ -20,6 +20,7 @@ use Qmdb\Modules\IdentityMultiFactor\Infrastructure\Migration\CreateTotpRecovery
 use Qmdb\Modules\IdentityMultiFactor\Infrastructure\Migration\CreatePasskeyFoundationMigration;
 use Qmdb\Modules\Tenancy\Infrastructure\Migration\CreateWorkspaceMembershipsMigration;
 use Qmdb\Modules\Tenancy\Infrastructure\Migration\CreateWorkspacesMigration;
+use Qmdb\Modules\TenancyContext\Infrastructure\Migration\AddSessionBoundTenantContextMigration;
 use Qmdb\Modules\SecurityAuthorization\Infrastructure\Migration\CreateAuthorizationCatalogFoundationMigration;
 use Qmdb\Modules\SecurityAuthorization\Infrastructure\Migration\CreatePlatformRoleAssignmentFoundationMigration;
 use Qmdb\Modules\SecurityAuthorization\Infrastructure\Migration\CreateWorkspaceRoleAssignmentFoundationMigration;
@@ -32,7 +33,7 @@ use SplFileInfo;
 
 final class SchemaFoundationArchitectureTest extends TestCase
 {
-    public function testProductionManifestsContainOnlyAuthorizedP1ThroughP2B06SchemaChanges(): void
+    public function testProductionManifestsContainOnlyAuthorizedP1ThroughP2B07SchemaChanges(): void
     {
         $migrationFactory = require dirname(__DIR__, 2) . '/database/migrations.php';
         $seedFactory = require dirname(__DIR__, 2) . '/database/seeds.php';
@@ -47,7 +48,7 @@ final class SchemaFoundationArchitectureTest extends TestCase
         }
 
         $ordered = $migrations->ordered();
-        self::assertCount(19, $ordered);
+        self::assertCount(20, $ordered);
         self::assertSame(
             [
                 CreateScheduledTaskRunsMigration::class,
@@ -69,6 +70,7 @@ final class SchemaFoundationArchitectureTest extends TestCase
                 CreateAuthorizationCatalogFoundationMigration::class,
                 CreatePlatformRoleAssignmentFoundationMigration::class,
                 CreateWorkspaceRoleAssignmentFoundationMigration::class,
+                AddSessionBoundTenantContextMigration::class,
             ],
             array_map(static fn (Migration $migration): string => $migration::class, $ordered),
         );
@@ -93,6 +95,7 @@ final class SchemaFoundationArchitectureTest extends TestCase
                 '20260826011600_create_authorization_catalog_foundation',
                 '20260826011700_create_platform_role_assignment_foundation',
                 '20260826011800_create_workspace_role_assignment_foundation',
+                '20260826011900_add_session_bound_tenant_context',
             ],
             array_map(static fn (Migration $migration): string => $migration->id()->value(), $ordered),
         );

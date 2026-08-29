@@ -44,6 +44,9 @@ final readonly class IdentityAccessView
             $context['nonce'],
             $titleKey,
             $context['path'],
+            $context['tenant'],
+            $context['authenticated'],
+            $context['tenant_context_version'],
         );
         $response = $this->responses->create($request, $pageHtml, $fragmentHtml, $status);
 

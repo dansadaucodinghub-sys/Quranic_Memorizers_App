@@ -67,19 +67,21 @@ final readonly class RoleBasedAuthorizationService implements AuthorizationServi
             return AuthorizationDecision::deny(AuthorizationDecisionReason::DENIED_INSUFFICIENT_ASSURANCE);
         }
         if ($request->scope instanceof WorkspaceAuthorizationScope) {
+            if (
+                $request->subject->accountInternalId !== $request->scope->tenantContext->accountInternalId
+                || $request->subject->sessionInternalId !== $request->scope->tenantContext->sessionInternalId
+            ) {
+                return AuthorizationDecision::deny(AuthorizationDecisionReason::DENIED_SCOPE_MISMATCH);
+            }
             if (!$this->permissions->workspaceIsActive($request->scope->tenantContext)) {
                 return AuthorizationDecision::deny(AuthorizationDecisionReason::DENIED_WORKSPACE_NOT_ACTIVE);
             }
             if (
-                !$this->permissions->membershipIsActive(
-                    $request->scope->tenantContext,
-                    $request->subject->accountInternalId,
-                )
+                !$this->permissions->membershipIsActive($request->scope->tenantContext)
             ) {
                 return AuthorizationDecision::deny(AuthorizationDecisionReason::DENIED_MEMBERSHIP_NOT_ACTIVE);
             }
             $evidence = $this->permissions->findEffectiveWorkspacePermission(
-                $request->subject->accountInternalId,
                 $request->scope->tenantContext,
                 $request->permission,
             );
@@ -115,7 +117,7 @@ final readonly class RoleBasedAuthorizationService implements AuthorizationServi
             'assurance_level' => $request->subject->assurance->value,
         ];
         if ($request->scope instanceof WorkspaceAuthorizationScope) {
-            $context['workspace_public_id'] = $request->scope->tenantContext->workspaceId()->toString();
+            $context['workspace_public_id'] = $request->scope->tenantContext->workspaceId->toString();
         }
         if ($exceptionFingerprint !== null) {
             $context['exception_fingerprint'] = $exceptionFingerprint;

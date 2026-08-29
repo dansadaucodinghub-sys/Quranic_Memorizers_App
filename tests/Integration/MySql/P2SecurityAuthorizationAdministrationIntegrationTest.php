@@ -41,6 +41,7 @@ use Qmdb\Tests\Support\IdentityAccess\FixedIdentityClock;
 use Qmdb\Tests\Support\MySql\AuthorizationMySqlFixture;
 use Qmdb\Tests\Support\MySql\MySqlIntegrationTestCase;
 use Qmdb\Tests\Support\Observability\InMemoryEventLogger;
+use Qmdb\Tests\Support\TenancyContext\AccountWorkspaceTenantContextFactory;
 
 final class P2SecurityAuthorizationAdministrationIntegrationTest extends MySqlIntegrationTestCase
 {
@@ -134,9 +135,12 @@ final class P2SecurityAuthorizationAdministrationIntegrationTest extends MySqlIn
         [$actorInternalId, $actorId] = $this->fixture->account();
         [$targetInternalId] = $this->fixture->account();
         $this->fixture->verifiedEmail($targetInternalId);
-        [$workspaceInternalId, , $tenantContext] = $this->fixture->workspace();
+        [$workspaceInternalId, $workspaceId] = $this->fixture->workspace();
         [$otherWorkspaceInternalId] = $this->fixture->workspace();
-        [$actorMembershipInternalId] = $this->fixture->membership($workspaceInternalId, $actorInternalId);
+        [$actorMembershipInternalId, $actorMembershipId] = $this->fixture->membership(
+            $workspaceInternalId,
+            $actorInternalId,
+        );
         [$targetMembershipInternalId, $targetMembershipId] = $this->fixture->membership(
             $workspaceInternalId,
             $targetInternalId,
@@ -154,17 +158,24 @@ final class P2SecurityAuthorizationAdministrationIntegrationTest extends MySqlIn
             $actorId,
             $assignAction->value,
         );
+        $assignTenantContext = AccountWorkspaceTenantContextFactory::create(
+            $assignActor,
+            $workspaceInternalId,
+            $workspaceId,
+            $actorMembershipInternalId,
+            $actorMembershipId,
+        );
 
         $result = $this->workspaceAssignmentService->assign(new WorkspaceRoleAssignmentCommand(
             $assignActor,
-            $tenantContext,
+            $assignTenantContext,
             $targetMembershipId,
             new RoleCode('workspace.viewer'),
             RoleAssignmentReasonCode::SECURITY_ADMINISTRATION,
             self::correlation(3),
         ));
 
-        self::assertSame($tenantContext->workspaceId()->toString(), $result->workspaceId->toString());
+        self::assertSame($workspaceId->toString(), $result->workspaceId->toString());
         self::assertSame(1, $this->fixture->activeWorkspaceAssignmentCount(
             $workspaceInternalId,
             $targetMembershipInternalId,
@@ -179,9 +190,16 @@ final class P2SecurityAuthorizationAdministrationIntegrationTest extends MySqlIn
             $actorId,
             $revokeAction->value,
         );
+        $revokeTenantContext = AccountWorkspaceTenantContextFactory::create(
+            $revokeActor,
+            $workspaceInternalId,
+            $workspaceId,
+            $actorMembershipInternalId,
+            $actorMembershipId,
+        );
         self::assertTrue($this->workspaceRevocationService->revoke(new WorkspaceRoleRevocationCommand(
             $revokeActor,
-            $tenantContext,
+            $revokeTenantContext,
             $result->assignmentId,
             RoleAssignmentReasonCode::MEMBERSHIP_STATE_CHANGE,
             self::correlation(4),

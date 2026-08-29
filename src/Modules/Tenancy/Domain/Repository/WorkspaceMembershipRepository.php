@@ -5,9 +5,10 @@ declare(strict_types=1);
 namespace Qmdb\Modules\Tenancy\Domain\Repository;
 
 use Qmdb\Modules\Tenancy\Application\TenantContext;
+use Qmdb\Modules\Tenancy\Application\TenantScopedRepository;
 use Qmdb\Modules\Tenancy\Domain\WorkspaceMembership;
 
-interface WorkspaceMembershipRepository
+interface WorkspaceMembershipRepository extends TenantScopedRepository
 {
     public function create(TenantContext $context, WorkspaceMembership $membership): int;
 

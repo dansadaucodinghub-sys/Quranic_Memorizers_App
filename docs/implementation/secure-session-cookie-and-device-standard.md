@@ -100,3 +100,10 @@ stronger step-up. Session rotation and device lifecycle do not transfer grants a
 permission is stored in a session/device cookie or browser storage. Authorization regression gates cover inactive
 sessions/accounts, cross-session grant use, consumed-grant reuse, and the distinction between authenticated context and
 trusted `TenantContext`.
+
+## P2-B07 session Tenant Context extension
+
+Workspace selection is authoritative only in `user_sessions`, is independent per session, and uses its own positive
+`tenant_context_version`. Switching or clearing does not change the authentication session version, token hashes,
+rotation, assurance, device record, or cookie. New sessions begin unselected; device-cookie reuse never restores a
+workspace. Revoked or expired sessions cannot resolve or mutate Tenant Context.

@@ -25,7 +25,7 @@ use Qmdb\Modules\SecurityAuthorization\Domain\PlatformAuthorizationScope;
 use Qmdb\Modules\SecurityAuthorization\Domain\WorkspaceAuthorizationScope;
 use Qmdb\Modules\SecurityAuthorization\Infrastructure\Persistence\MySqlEffectivePermissionRepository;
 use Qmdb\Modules\SecurityAuthorization\Infrastructure\Persistence\MySqlWorkspaceRoleAssignmentRepository;
-use Qmdb\Modules\Tenancy\Application\TenantContext;
+use Qmdb\Modules\TenancyContext\Domain\AccountWorkspaceTenantContext;
 use Qmdb\Shared\Schema\Checksum\CanonicalChecksum;
 use Qmdb\Shared\Schema\Migration\MigrationChecksum;
 use Qmdb\Shared\Schema\Migration\MigrationRegistry;
@@ -34,6 +34,7 @@ use Qmdb\Shared\Schema\Seed\SeedRegistry;
 use Qmdb\Tests\Support\MySql\AuthorizationMySqlFixture;
 use Qmdb\Tests\Support\MySql\MySqlIntegrationTestCase;
 use Qmdb\Tests\Support\Observability\InMemoryEventLogger;
+use Qmdb\Tests\Support\TenancyContext\AccountWorkspaceTenantContextFactory;
 
 final class P2SecurityAuthorizationIntegrationTest extends MySqlIntegrationTestCase
 {
@@ -208,10 +209,10 @@ final class P2SecurityAuthorizationIntegrationTest extends MySqlIntegrationTestC
     public function testWorkspaceAuthorizationAndRepositoryAreExactTenantScoped(): void
     {
         [$accountInternalId, $accountId] = $this->fixture->account();
-        [$workspaceA, , $contextA] = $this->fixture->workspace();
-        [$workspaceB, , $contextB] = $this->fixture->workspace();
-        [$membershipA] = $this->fixture->membership($workspaceA, $accountInternalId);
-        $this->fixture->membership($workspaceB, $accountInternalId);
+        [$workspaceA, $workspaceAId, $repositoryContextA] = $this->fixture->workspace();
+        [$workspaceB, $workspaceBId, $repositoryContextB] = $this->fixture->workspace();
+        [$membershipA, $membershipAId] = $this->fixture->membership($workspaceA, $accountInternalId);
+        [$membershipB, $membershipBId] = $this->fixture->membership($workspaceB, $accountInternalId);
         $assignmentId = $this->fixture->workspaceAssignment(
             $workspaceA,
             $membershipA,
@@ -219,8 +220,27 @@ final class P2SecurityAuthorizationIntegrationTest extends MySqlIntegrationTestC
             $accountInternalId,
         );
         $service = $this->service();
-        $request = fn (TenantContext $context): AuthorizationRequest => new AuthorizationRequest(
-            $this->subject($accountInternalId, $accountId, AuthenticationAssuranceLevel::PRIMARY),
+        $authenticated = $this->authenticated(
+            $accountInternalId,
+            $accountId,
+            AuthenticationAssuranceLevel::PRIMARY,
+        );
+        $contextA = AccountWorkspaceTenantContextFactory::create(
+            $authenticated,
+            $workspaceA,
+            $workspaceAId,
+            $membershipA,
+            $membershipAId,
+        );
+        $contextB = AccountWorkspaceTenantContextFactory::create(
+            $authenticated,
+            $workspaceB,
+            $workspaceBId,
+            $membershipB,
+            $membershipBId,
+        );
+        $request = fn (AccountWorkspaceTenantContext $context): AuthorizationRequest => new AuthorizationRequest(
+            AuthorizationSubject::fromAuthenticatedContext($authenticated),
             new PermissionCode('workspace.authorization.view'),
             new WorkspaceAuthorizationScope($context),
         );
@@ -231,8 +251,8 @@ final class P2SecurityAuthorizationIntegrationTest extends MySqlIntegrationTestC
             $service->decide($request($contextB))->reason,
         );
         $repository = new MySqlWorkspaceRoleAssignmentRepository($this->provider());
-        self::assertNotNull($repository->findActiveAssignment($contextA, $assignmentId));
-        self::assertNull($repository->findActiveAssignment($contextB, $assignmentId));
+        self::assertNotNull($repository->findActiveAssignment($repositoryContextA, $assignmentId));
+        self::assertNull($repository->findActiveAssignment($repositoryContextB, $assignmentId));
 
         $this->fixture->updateMembershipStatus($membershipA, 'INVITED');
         self::assertSame(
@@ -268,6 +288,16 @@ final class P2SecurityAuthorizationIntegrationTest extends MySqlIntegrationTestC
         AccountId $accountId,
         AuthenticationAssuranceLevel $level,
     ): AuthorizationSubject {
+        return AuthorizationSubject::fromAuthenticatedContext(
+            $this->authenticated($accountInternalId, $accountId, $level),
+        );
+    }
+
+    private function authenticated(
+        int $accountInternalId,
+        AccountId $accountId,
+        AuthenticationAssuranceLevel $level,
+    ): AuthenticatedAccountContext {
         $now = new DateTimeImmutable('2026-08-28T10:00:00Z');
         $secondary = match ($level) {
             AuthenticationAssuranceLevel::PRIMARY => null,
@@ -275,7 +305,7 @@ final class P2SecurityAuthorizationIntegrationTest extends MySqlIntegrationTestC
             AuthenticationAssuranceLevel::PHISHING_RESISTANT => AuthenticationMethod::PASSKEY,
         };
 
-        return AuthorizationSubject::fromAuthenticatedContext(new AuthenticatedAccountContext(
+        return new AuthenticatedAccountContext(
             $accountInternalId,
             $accountId,
             1,
@@ -291,7 +321,7 @@ final class P2SecurityAuthorizationIntegrationTest extends MySqlIntegrationTestC
                 $now,
                 $level === AuthenticationAssuranceLevel::PRIMARY ? null : $now,
             ),
-        ));
+        );
     }
 
     /** @param \Closure(): mixed $operation */

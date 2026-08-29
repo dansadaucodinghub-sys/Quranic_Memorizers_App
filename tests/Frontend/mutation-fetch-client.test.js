@@ -2,7 +2,7 @@ import test from 'node:test';
 import assert from 'node:assert/strict';
 import { installDom } from './test-dom.js';
 
-installDom('<!doctype html><form method="post" action="/register"><input name="email" value="person@example.test"><input type="hidden" name="csrf_token" value="csrf-value"><input type="hidden" name="registration_submission_id" value="01991f93-0b42-7abc-8abc-1234567890ab" data-qmdb-idempotency-key></form>');
+installDom('<!doctype html><meta name="qmdb-tenant-context-version" content="3"><form method="post" action="/register"><input name="email" value="person@example.test"><input type="hidden" name="csrf_token" value="csrf-value"><input type="hidden" name="registration_submission_id" value="01991f93-0b42-7abc-8abc-1234567890ab" data-qmdb-idempotency-key></form>');
 const { submitJsonMutation, submitMutationForm } = await import('../../public/assets/js/mutation-fetch-client.js');
 
 test('submits one same-origin URL-encoded mutation with CSRF and idempotency headers', async () => {
@@ -23,6 +23,7 @@ test('submits one same-origin URL-encoded mutation with CSRF and idempotency hea
     assert.equal(captured.options.credentials, 'same-origin');
     assert.equal(captured.options.headers['X-QMDB-CSRF'], 'csrf-value');
     assert.equal(captured.options.headers['Idempotency-Key'], '01991f93-0b42-7abc-8abc-1234567890ab');
+    assert.equal(captured.options.headers['X-QMDB-Tenant-Context-Version'], '3');
     assert.match(captured.options.body.toString(), /email=person%40example.test/);
     assert.equal(result.status, 202);
 });
@@ -93,6 +94,7 @@ test('submits same-origin JSON mutations once with CSRF and no retry', async () 
             assert.equal(options.credentials, 'same-origin');
             assert.equal(options.redirect, 'error');
             assert.equal(options.headers['X-QMDB-CSRF'], 'csrf-json');
+            assert.equal(options.headers['X-QMDB-Tenant-Context-Version'], '3');
             return new Response('{"status":"ok"}', {
                 status: 200,
                 headers: { 'Content-Type': 'application/json' },
@@ -111,4 +113,29 @@ test('rejects cross-origin JSON mutation before fetch', async () => {
         fetchImpl: async () => { calls += 1; },
     }));
     assert.equal(calls, 0);
+});
+
+test('surfaces stale tenant context once with safe navigation and no retry', async () => {
+    let calls = 0;
+    await assert.rejects(submitJsonMutation('/account/workspaces/switch', {
+        csrfToken: 'csrf-json',
+        body: { workspace_id: '01991f93-0b42-7abc-8abc-1234567890ab', tenant_context_version: 2 },
+        fetchImpl: async () => {
+            calls += 1;
+            return new Response(JSON.stringify({
+                code: 'TENANT_CONTEXT_STALE',
+                title: 'Conflict',
+                status: 409,
+                request_id: 'request_12345678',
+            }), {
+                status: 409,
+                headers: {
+                    'Content-Type': 'application/problem+json',
+                    'X-QMDB-Navigate': '/account/workspaces',
+                },
+            });
+        },
+    }), (error) => error?.code === 'TENANT_CONTEXT_STALE'
+        && error?.navigate === '/account/workspaces' && error?.requestId === 'request_12345678');
+    assert.equal(calls, 1);
 });

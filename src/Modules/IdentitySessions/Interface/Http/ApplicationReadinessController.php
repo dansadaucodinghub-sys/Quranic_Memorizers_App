@@ -12,6 +12,7 @@ use Qmdb\Modules\IdentityMultiFactor\Application\Readiness\IdentityMultiFactorRe
 use Qmdb\Modules\IdentitySecurityNotifications\Application\Readiness\IdentitySecurityNotificationReadinessCheck;
 use Qmdb\Modules\SecurityAuthorization\Application\AuthorizationReadinessCheck;
 use Qmdb\Modules\IdentitySessions\Application\Readiness\IdentitySessionReadinessCheck;
+use Qmdb\Modules\TenancyContext\Application\TenantContextReadinessCheck;
 use Qmdb\Shared\Database\Health\DatabaseHealthCheck;
 use Qmdb\Shared\Http\Contract\Controller;
 use Qmdb\Shared\Http\Message\JsonResponseFactory;
@@ -29,6 +30,7 @@ final readonly class ApplicationReadinessController implements Controller
         private IdentitySecurityNotificationReadinessCheck $notifications,
         private IdentityMultiFactorReadinessCheck $multiFactor,
         private AuthorizationReadinessCheck $authorization,
+        private TenantContextReadinessCheck $tenantContext,
     ) {
     }
 
@@ -42,6 +44,7 @@ final readonly class ApplicationReadinessController implements Controller
             && $this->notifications->isReady();
         $ready = $ready && $this->multiFactor->isReady();
         $ready = $ready && $this->authorization->isReady();
+        $ready = $ready && $this->tenantContext->isReady();
 
         return $this->responses->create(['status' => $ready ? 'ready' : 'not_ready'], $ready ? 200 : 503);
     }

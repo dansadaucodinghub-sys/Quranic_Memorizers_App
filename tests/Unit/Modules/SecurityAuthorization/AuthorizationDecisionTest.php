@@ -24,10 +24,10 @@ use Qmdb\Modules\SecurityAuthorization\Domain\PermissionCode;
 use Qmdb\Modules\SecurityAuthorization\Domain\PersistedPermission;
 use Qmdb\Modules\SecurityAuthorization\Domain\PlatformAuthorizationScope;
 use Qmdb\Modules\SecurityAuthorization\Domain\WorkspaceAuthorizationScope;
-use Qmdb\Modules\Tenancy\Application\TenantContext;
-use Qmdb\Modules\Tenancy\Domain\Value\WorkspaceId;
+use Qmdb\Modules\TenancyContext\Domain\AccountWorkspaceTenantContext;
 use Qmdb\Tests\Support\Observability\InMemoryEventLogger;
 use Qmdb\Tests\Support\SecurityAuthorization\ConfigurableEffectivePermissionRepository;
+use Qmdb\Tests\Support\TenancyContext\AccountWorkspaceTenantContextFactory;
 
 final class AuthorizationDecisionTest extends TestCase
 {
@@ -124,6 +124,26 @@ final class AuthorizationDecisionTest extends TestCase
         self::assertTrue($service->decide($request(AuthenticationAssuranceLevel::PHISHING_RESISTANT))->isAllowed());
     }
 
+    public function testWorkspaceContextMustBelongToTheExactAuthorizationAccountAndSession(): void
+    {
+        [$service, $repository] = $this->serviceFor('workspace.authorization.view');
+        $repository->authorizedWorkspaceInternalId = 41;
+        $subjectContext = $this->authenticated(AuthenticationAssuranceLevel::PRIMARY);
+        foreach ([[8, 11], [7, 12]] as [$accountInternalId, $sessionInternalId]) {
+            $otherContext = $this->authenticated(
+                AuthenticationAssuranceLevel::PRIMARY,
+                $accountInternalId,
+                $sessionInternalId,
+            );
+            $decision = $service->decide(new AuthorizationRequest(
+                AuthorizationSubject::fromAuthenticatedContext($subjectContext),
+                new PermissionCode('workspace.authorization.view'),
+                new WorkspaceAuthorizationScope(AccountWorkspaceTenantContextFactory::create($otherContext, 41)),
+            ));
+            self::assertSame(AuthorizationDecisionReason::DENIED_SCOPE_MISMATCH, $decision->reason);
+        }
+    }
+
     /** @return array{RoleBasedAuthorizationService, ConfigurableEffectivePermissionRepository} */
     private function serviceFor(string $permissionCode): array
     {
@@ -153,6 +173,14 @@ final class AuthorizationDecisionTest extends TestCase
 
     private function subject(AuthenticationAssuranceLevel $assurance): AuthorizationSubject
     {
+        return AuthorizationSubject::fromAuthenticatedContext($this->authenticated($assurance));
+    }
+
+    private function authenticated(
+        AuthenticationAssuranceLevel $assurance,
+        int $accountInternalId = 7,
+        int $sessionInternalId = 11,
+    ): AuthenticatedAccountContext {
         $authenticatedAt = new DateTimeImmutable('2026-08-28T08:00:00Z');
         $strongAuthenticatedAt = $assurance === AuthenticationAssuranceLevel::PRIMARY ? null : $authenticatedAt;
         $secondary = match ($assurance) {
@@ -161,10 +189,10 @@ final class AuthorizationDecisionTest extends TestCase
             AuthenticationAssuranceLevel::PHISHING_RESISTANT => AuthenticationMethod::PASSKEY,
         };
 
-        return AuthorizationSubject::fromAuthenticatedContext(new AuthenticatedAccountContext(
-            7,
+        return new AuthenticatedAccountContext(
+            $accountInternalId,
             AccountId::generate(),
-            11,
+            $sessionInternalId,
             SessionId::generate(),
             13,
             DeviceId::generate(),
@@ -177,11 +205,14 @@ final class AuthorizationDecisionTest extends TestCase
                 $authenticatedAt,
                 $strongAuthenticatedAt,
             ),
-        ));
+        );
     }
 
-    private function tenant(int $internalId): TenantContext
+    private function tenant(int $internalId): AccountWorkspaceTenantContext
     {
-        return TenantContext::trusted($internalId, WorkspaceId::generate());
+        return AccountWorkspaceTenantContextFactory::create(
+            $this->authenticated(AuthenticationAssuranceLevel::PRIMARY),
+            $internalId,
+        );
     }
 }

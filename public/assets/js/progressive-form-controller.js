@@ -53,6 +53,11 @@ export class ProgressiveFormController {
             this.focusManager.focus(target);
             this.liveRegion.announce(result.ok ? 'Request completed.' : 'Review the form errors.');
         } catch (error) {
+            if (error?.navigate && ['TENANT_CONTEXT_STALE', 'TENANT_CONTEXT_REQUIRED'].includes(error?.code)) {
+                globalThis.location.assign(error.navigate);
+                this.liveRegion.announce('Workspace context changed. Review the active workspace.');
+                return;
+            }
             const reference = error?.requestId ? ` Request reference: ${error.requestId}` : '';
             this.liveRegion.announce(`The request could not be completed.${reference}`);
             for (const password of form.querySelectorAll('input[type="password"]')) password.value = '';

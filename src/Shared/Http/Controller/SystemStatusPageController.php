@@ -36,6 +36,8 @@ final readonly class SystemStatusPageController implements Controller
             $context['nonce'],
             'title.status',
             $context['path'],
+            $context['tenant'],
+            $context['authenticated'],
         );
         $fragment = $this->views->render('fragments.system-status-card', $fragmentView, $context['translator']);
 

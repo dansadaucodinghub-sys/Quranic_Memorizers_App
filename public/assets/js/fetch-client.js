@@ -1,7 +1,7 @@
 import { parseSafeFragment } from './fragment-policy.js';
 
 export class QmdbFetchError extends Error {
-    constructor({ status = 0, code = 'FRAGMENT_REQUEST_FAILED', requestId = '', title = 'Request failed', retryable = false } = {}) {
+    constructor({ status = 0, code = 'FRAGMENT_REQUEST_FAILED', requestId = '', title = 'Request failed', retryable = false, navigate = '' } = {}) {
         super(title);
         this.name = 'QmdbFetchError';
         this.status = status;
@@ -9,6 +9,9 @@ export class QmdbFetchError extends Error {
         this.requestId = /^[A-Za-z0-9_-]{8,128}$/.test(requestId) ? requestId : '';
         this.title = title;
         this.retryable = retryable;
+        this.navigate = typeof navigate === 'string' && navigate.startsWith('/') && !navigate.startsWith('//')
+            ? navigate
+            : '';
     }
 }
 

@@ -108,3 +108,18 @@ must therefore reset only the explicitly named `_test`/`_ci` database after the 
 apply all migrations and the governed seed, and pass `security:authorization:verify` before release verification. The
 reset refuses non-test environments and database names and never drops a database. This prevents release readiness
 from depending on fixture execution order or stale tables.
+
+## P2-B07 Tenant Context regression gates
+
+The release must include `tenancy.context`, its explicitly registered migration, four workspace routes, selection and
+current-workspace views, Tenant Context JavaScript, tenant-bound job/cache/export contracts, and the
+`tenancy:context:verify` command. Tests and synthetic account/workspace/membership data remain excluded.
+
+Mandatory evidence covers composite account/workspace/membership integrity, all-or-none selection, positive context
+version, authorized selection, stale-version denial, invalid-state clearing, cross-session isolation, cross-account
+non-enumeration, tenant-scoped SQL, background revalidation, cache separation, CSRF, safe navigation, English/Arabic
+accessibility, no client workspace authority, and existing identity/authorization regressions. Standalone
+`composer test:mysql` uses the guarded lifecycle wrapper to restore migrations, the governed authorization seed,
+authorization and Tenant Context verification, and schema verification after destructive fixtures. Local CI repeats
+the guarded canonical rebuild and then explicitly runs authorization verification, Tenant Context verification, and
+schema verification before security, SBOM, licence, and release stages.

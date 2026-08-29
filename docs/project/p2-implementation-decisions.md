@@ -148,3 +148,44 @@ change control.
   workspace switching belongs to QMDB-P2-B07.
 - **Future review conditions:** Catalog expansion, explicit denies, inheritance, delegated administration, dual control,
   caching or emergency access require their owning approval, threat, privacy, migration and executable test evidence.
+
+## P2-ADR-008 — Session-authoritative Account Workspace Tenant Context
+
+- **Status:** Approved and implemented by QMDB-P2-B07.
+- **Context:** Workspace operations require one explicit, trustworthy tenant boundary without allowing a public ID,
+  browser state, device, or account-wide default to become authority.
+- **Session decision:** Store zero or one selected workspace/membership pair on each active `user_sessions` row. New
+  sessions start unselected. Selection and clearing use a dedicated positive optimistic context version and do not
+  change authentication token/version/assurance state.
+- **Integrity decision:** Enforce `(workspace_id, user_account_id, membership_id)` composition with a MySQL candidate
+  key and composite foreign key plus all-or-none selection checks.
+- **Resolution decision:** Resolve only ACTIVE account, session, workspace, and membership state after authentication.
+  Clear invalid stored selection, increment its version, and never choose a replacement workspace automatically.
+- **Client decision:** Workspace public ID is a bounded lookup selector only. No authoritative workspace cookie/header,
+  local/session storage, or BroadcastChannel payload exists; cross-tab signaling carries version only.
+- **Authorization decision:** Context selects the workspace scope but grants no role, permission, assurance, or platform
+  authority. Tenant-owned repositories retain exact `workspace_id` SQL scope.
+- **Deferred execution decision:** Future tenant jobs revalidate server-owned account/workspace/membership references.
+  Cache keys are tenant namespaced; no durable queue, production tenant job, persistent cache, or export engine is added.
+- **Boundary:** Workspace provisioning/defaults and P2-B08 temporary/support/break-glass controls are not implemented.
+
+Implemented decision profile:
+
+- Tenant Context is server-authoritative, bound to the authenticated session, and resolved after session
+  authentication.
+- New sessions begin without a selected workspace; selection is explicit, does not grant authorization, and never
+  falls back to the first workspace.
+- Device cookies do not restore context. Separate sessions retain separate selections, while tabs sharing a session
+  share that session's context.
+- Public workspace IDs are lookup selectors only. The stored workspace and membership use internal relational
+  identities protected by the account-aware composite foreign key.
+- Tenant Context versioning is independent from authentication and authorization and is used only to reject stale
+  mutations.
+- Invalid context is cleared, never replaced. Workspace switching is a primary POST-and-navigate transition and is
+  not a modal workflow.
+- Workspace authorization requires Account Workspace Tenant Context. Tenant-owned repositories require that context
+  and bind exact workspace scope in SQL.
+- Account workspace inventory is the explicit account-global exception needed to choose a workspace.
+- Tenant-bound background execution revalidates account, workspace, and membership. Cache keys require a workspace
+  namespace.
+- Persistent tenant cache and workspace provisioning remain deferred.

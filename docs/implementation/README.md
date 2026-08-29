@@ -6,13 +6,13 @@
 | Project Code | QMDB |
 | Source Baseline | QMDB-BL-001 |
 | Freeze ID | QMDB-P0-FRZ-001 |
-| Batch ID | QMDB-P2-B06 |
+| Batch ID | QMDB-P2-B07 |
 | Document Title | Implementation Entry Point |
 | Document Version | 1.0.0 |
-| Document Status | P1 COMPLETE; P2-B01 THROUGH P2-B06 COMPLETE |
+| Document Status | P1 COMPLETE; P2-B01 THROUGH P2-B07 COMPLETE |
 | Document Owner Role | Product, Architecture and Engineering Governance |
 | Last Updated | 2026-08-28 |
-| Approval Status | B01 through B06 accepted after complete executable gates; B07 not started |
+| Approval Status | B01 through B07 accepted after complete executable gates; B08 not started |
 | Related Documents | [Closeout entry point](../closeout/README.md); [freeze manifest](../closeout/qmdb-p0-baseline-freeze.yaml); [project state](../project/project-state.md) |
 
 ## Purpose
@@ -52,18 +52,22 @@ The artifacts cover phased implementation routing, readiness/completion policy, 
     implemented B06 catalog, decision, assignment, delegation, readiness and concurrency contract.
 20. [P2-B06 implementation report](reports/QMDB-P2-B06-implementation-report.md) — B06 implementation, schema,
     security, regression, release and closeout evidence.
+21. [Tenant Context, workspace switching, and data access standard](tenant-context-workspace-switching-and-data-access-standard.md)
+    — B07 session authority, relational integrity, HTTP, frontend, repository, job, cache, and export boundaries.
+22. [P2-B07 implementation report](reports/QMDB-P2-B07-implementation-report.md) — B07 implementation, prerequisite
+    correction, schema, isolation, regression, release, and closeout evidence.
 
 ## Current authorization
 
 P0 remains complete and frozen. P1-B01 through P1-B10 are complete and P1 is closed/frozen. The project-owner recovery
-authorization established conservative executable OD-051/OD-052 contracts, after which P2-B01 through P2-B05 passed
-their mandatory gates. The project owner separately authorized bounded B06 execution; its authorization, MySQL,
-security, release and engineering-freeze gates passed without starting B07.
+authorization established conservative executable OD-051/OD-052 contracts, after which P2-B01 through P2-B07 passed
+their mandatory gates. B07 preserved the B06 authorization boundary while adding server-authoritative session Tenant
+Context; it did not start B08.
 
 ## Exact next action
 
-`QMDB-P2-B07 — Tenant Context, Workspace Switching, and Tenant-Aware Data Access` is the next batch. B06 completion
-does not itself authorize B07 implementation.
+`QMDB-P2-B08 — Temporary Privileges, Support Access, and Break-Glass Controls` is the next batch. B07 completion does
+not itself authorize B08 implementation.
 
 ## Governance
 

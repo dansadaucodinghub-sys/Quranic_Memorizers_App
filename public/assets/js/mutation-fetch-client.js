@@ -1,5 +1,6 @@
 import { parseSafeFragment } from './fragment-policy.js';
 import { QmdbFetchError } from './fetch-client.js';
+import { adoptTenantContextResponse, tenantContextVersion } from './tenant-context-controller.js';
 
 const FRAGMENT_MEDIA_TYPE = 'text/vnd.qmdb.fragment+html';
 
@@ -34,6 +35,8 @@ export async function submitMutationForm(form, { signal, fetchImpl = globalThis.
         'X-QMDB-CSRF': typeof csrf === 'string' ? csrf : '',
     };
     if (idempotency) headers['Idempotency-Key'] = idempotency;
+    const contextVersion = tenantContextVersion();
+    if (contextVersion) headers['X-QMDB-Tenant-Context-Version'] = String(contextVersion);
     let response;
     try {
         response = await fetchImpl(target.href, {
@@ -49,7 +52,14 @@ export async function submitMutationForm(form, { signal, fetchImpl = globalThis.
         throw new QmdbFetchError();
     }
     const requestId = response.headers.get('X-Request-ID') ?? '';
-    const navigate = response.ok ? safeNavigation(response, base) : '';
+    const resolvedContextVersion = adoptTenantContextResponse(response);
+    if (resolvedContextVersion) {
+        const EventConstructor = document.defaultView?.CustomEvent ?? CustomEvent;
+        document.dispatchEvent(new EventConstructor('qmdb:tenant-context-response', {
+            detail: { tenant_context_version: resolvedContextVersion },
+        }));
+    }
+    const navigate = safeNavigation(response, base);
     const contentType = (response.headers.get('Content-Type') ?? '').toLowerCase();
     if (contentType.startsWith(FRAGMENT_MEDIA_TYPE) && response.headers.get('X-QMDB-Fragment') === '1') {
         const fragment = parseSafeFragment(await response.text(), base);
@@ -65,6 +75,7 @@ export async function submitMutationForm(form, { signal, fetchImpl = globalThis.
         code: typeof problem.code === 'string' ? problem.code : 'MUTATION_REQUEST_FAILED',
         title: typeof problem.title === 'string' ? problem.title : 'Request failed',
         retryable: false,
+        navigate,
     });
 }
 
@@ -88,6 +99,9 @@ export async function submitJsonMutation(
                 Accept: 'application/json, application/problem+json',
                 'Content-Type': 'application/json',
                 'X-QMDB-CSRF': csrfToken ?? '',
+                ...(tenantContextVersion() ? {
+                    'X-QMDB-Tenant-Context-Version': String(tenantContextVersion()),
+                } : {}),
             },
             body: JSON.stringify(body ?? {}),
         });
@@ -96,15 +110,24 @@ export async function submitJsonMutation(
         throw new QmdbFetchError();
     }
     const requestId = response.headers.get('X-Request-ID') ?? '';
+    const resolvedContextVersion = adoptTenantContextResponse(response);
+    if (resolvedContextVersion) {
+        const EventConstructor = document.defaultView?.CustomEvent ?? CustomEvent;
+        document.dispatchEvent(new EventConstructor('qmdb:tenant-context-response', {
+            detail: { tenant_context_version: resolvedContextVersion },
+        }));
+    }
     let payload = {};
     try { payload = await response.json(); } catch { payload = {}; }
     if (!response.ok) {
+        const navigate = safeNavigation(response, base);
         throw new QmdbFetchError({
             status: response.status,
             requestId: requestId || (typeof payload.request_id === 'string' ? payload.request_id : ''),
             code: typeof payload.code === 'string' ? payload.code : 'MUTATION_REQUEST_FAILED',
             title: typeof payload.title === 'string' ? payload.title : 'Request failed',
             retryable: false,
+            navigate,
         });
     }
 

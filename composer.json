@@ -42,7 +42,7 @@
   },
   "scripts": {
     "test": "php vendor/bin/phpunit --configuration phpunit.xml.dist",
-    "test:mysql": "php vendor/bin/phpunit --configuration phpunit.xml.dist --testsuite MySQL",
+    "test:mysql": "php tools/Ci/run-mysql-tests.php",
     "analyse": "php vendor/bin/phpstan analyse --configuration phpstan.neon.dist --no-progress --memory-limit=1G",
     "cs:check": "php vendor/bin/phpcs --standard=phpcs.xml.dist",
     "cs:fix": "php vendor/bin/phpcbf --standard=phpcs.xml.dist",

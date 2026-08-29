@@ -178,3 +178,10 @@ P2-B07 owns HTTP Tenant Context resolution, workspace switching, tenant-aware re
 and existence-leakage controls. Later governed work owns custom roles and naming, role/permission retirement authority,
 approval or dual-control workflows, temporary/support/break-glass grants, decision caching/analytics, retention,
 privilege review, business-module permissions, and the authoritative audit ledger. None is implied by this foundation.
+
+## P2-B07 Tenant Context authorization integration
+
+Account Workspace Tenant Context supplies the exact server-resolved workspace and membership boundary for runtime
+workspace operations. Selection grants no role or permission, raises no assurance, and provides no platform authority.
+Every decision still requires active account, workspace, membership, role assignment, role, permission, and declared
+assurance. A client workspace public ID is only a selection lookup and cannot override resolved context.

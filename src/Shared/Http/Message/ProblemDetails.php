@@ -14,6 +14,7 @@ final readonly class ProblemDetails
         403 => 'Forbidden',
         404 => 'Not Found',
         405 => 'Method Not Allowed',
+        409 => 'Conflict',
         500 => 'Internal Server Error',
     ];
 
@@ -23,13 +24,20 @@ final readonly class ProblemDetails
         403 => 'AUTHORIZATION_DENIED',
         404 => 'ROUTE_NOT_FOUND',
         405 => 'METHOD_NOT_ALLOWED',
+        409 => 'CONFLICT',
         500 => 'INTERNAL_SERVER_ERROR',
+    ];
+
+    /** @var array<string, string> */
+    private const CODE_TITLES = [
+        'TENANT_CONTEXT_STALE' => 'Workspace Context Changed',
     ];
 
     /** @param array<string, scalar|null> $extensions */
     public function __construct(
         private int $status,
         private array $extensions = [],
+        private ?string $code = null,
     ) {
         if (!isset(self::TITLES[$status])) {
             throw new InvalidArgumentException('Unsupported problem-details status.');
@@ -71,9 +79,18 @@ final readonly class ProblemDetails
         return new self(500);
     }
 
+    public static function safe(int $status, string $code): self
+    {
+        if (preg_match('/\A[A-Z][A-Z0-9_]{2,79}\z/', $code) !== 1) {
+            throw new InvalidArgumentException('Problem-details code is invalid.');
+        }
+
+        return new self($status, [], $code);
+    }
+
     public function withRequestId(string $requestId): self
     {
-        return new self($this->status, [...$this->extensions, 'request_id' => $requestId]);
+        return new self($this->status, [...$this->extensions, 'request_id' => $requestId], $this->code);
     }
 
     public function status(): int
@@ -86,9 +103,9 @@ final readonly class ProblemDetails
     {
         return [
             'type' => 'about:blank',
-            'title' => self::TITLES[$this->status],
+            'title' => self::CODE_TITLES[$this->code ?? ''] ?? self::TITLES[$this->status],
             'status' => $this->status,
-            'code' => self::CODES[$this->status],
+            'code' => $this->code ?? self::CODES[$this->status],
             ...$this->extensions,
         ];
     }
