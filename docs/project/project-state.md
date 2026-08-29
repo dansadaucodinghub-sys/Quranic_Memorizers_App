@@ -181,6 +181,19 @@ build reports.
 | Tenant-aware foundations | Repository marker, account-bound job resolver, tenant cache-key factory, future export marker; no production job/cache/export engine |
 | Prerequisite correction | Standalone MySQL test command now restores schema, seed, authorization, Tenant Context, and schema verification |
 | Deferred evidence | Hosted CI and manual browser/assistive-technology evidence remain external release gates; no mandatory local source gate is waived |
+| Production PHP files added / updated | 58 / 34, including 53 new and 27 updated files under `src/` |
+| Views / JavaScript module | 4 server-rendered views / 1 tenant-context controller |
+| B07-specific test methods | 31 direct methods across unit, architecture, frontend, HTTP and MySQL suites, plus inherited regressions |
+| Complete PHP suite | PASS — 932 tests, 60,501 assertions |
+| Complete MySQL suite | PASS — 76 tests, 1,352 assertions on MySQL 8.4.11; no skips; canonical 37-table pre/post restoration |
+| Frontend suite | PASS — 30 files syntax-valid, 51 tests, zero npm vulnerabilities on Node 24.19.0 |
+| Repository / workflows / links / lockfiles | PASS — 2,863 / 47 / 1,006 / 15 checks; P0 freeze 177 checks |
+| Static quality | PASS — PHPCS over 1,118 governed files and maximum-level PHPStan |
+| Security and supply chain | PASS — Gitleaks over 42 commits, Trivy, 269 SBOM checks, 52 runtime licences with zero unknown/review |
+| Release verification | PASS — 2,948 files verified, 2,722 PHP lints, readiness 200, archive SHA-256 `2175e83d67202c7419200eb5fdc91440eb1e02b26847cdbb68cb451ed42afe48` |
+| Local CI | PASS — direct runner 33/33 and independent `composer ci` 33/33 |
+| Engineering freeze | PASS — 1,287 governed files, 7,759 checks, source revision `071bd63d6ad5fbea66611cfa0a9946bef2fb40f8` |
+| Verified release source | Clean revision `1b652fbd17214fead17474957b5cc68cd5c56257`; artifact marked release-eligible |
 
 ## Deferred evidence that does not reopen P1
 

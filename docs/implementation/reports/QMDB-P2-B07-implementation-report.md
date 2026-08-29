@@ -10,7 +10,7 @@
 | Approved change | QMDB-CR-001 |
 | Engineering baseline | QMDB-P1-FRZ-001 |
 | Batch | QMDB-P2-B07 — Tenant Context, Workspace Switching, and Tenant-Aware Data Access |
-| Date | 2026-08-28 |
+| Date | 2026-08-29 |
 | Result | COMPLETE |
 
 ## Preflight and prerequisite correction
@@ -66,8 +66,26 @@ contracts only: no production tenant job, durable queue, Redis/persistent cache,
 The pinned toolchain executed migration plan/apply/status, schema verification, seed verification, authorization
 verification, Tenant Context verification, focused unit/architecture/frontend/MySQL isolation tests, maximum-level
 PHPStan, PHPCS, complete PHP/frontend/MySQL suites, scanner/SBOM/licence gates, local CI, release build/verification,
-freeze verification, Markdown link verification, and `git diff --check`. Exact final counts and artifact hashes are
-retained in generated `build/reports` evidence.
+freeze verification, Markdown link verification, and `git diff --check`.
+
+| Gate | Final result |
+| --- | --- |
+| Complete PHP suite | PASS — 932 tests, 60,501 assertions on PHP 8.5.10 |
+| Complete MySQL suite | PASS — 76 tests, 1,352 assertions on Oracle MySQL 8.4.11; no skips |
+| Frontend | PASS — 30 JavaScript files syntax-valid, 51 tests, zero npm vulnerabilities on Node 24.19.0 |
+| Static quality | PASS — PHPCS over 1,118 governed files and maximum-level PHPStan |
+| Repository / workflows / links / lockfiles | PASS — 2,863 / 47 / 1,006 / 15 checks; P0 freeze 177 checks |
+| MySQL lifecycle | PASS — all 20 migrations, one governed seed, B07 rollback/reapply, and canonical 37-table pre/post restoration |
+| Authorization / Tenant Context / schema | PASS — authorization catalog 10/7/27/0/0; both readiness verifiers pass |
+| Security and supply chain | PASS — Gitleaks over 42 commits, Trivy, Composer audit/platform, 269 SBOM checks, 52 runtime licences with zero unknown/review |
+| Local CI | PASS — direct runner 33/33 and independent `composer ci` 33/33 |
+| Release verification | PASS — 2,948 files verified, 2,722 PHP files linted, CLI/EN/AR/fragment/security/method/readiness checks pass |
+| Release artifact | `qmdb-0.1.0-dev-1b652fbd1721.tar.gz`; archive SHA-256 `2175e83d67202c7419200eb5fdc91440eb1e02b26847cdbb68cb451ed42afe48` |
+| Release manifest / SBOM | SHA-256 `50e620d9f61c40896bbfb378a2e37669be9f705a434fefeaccba222b1e5d1eea` / `46e44722988ef6aaa585a02a4798505b45efc8a43542a8604acd927a88ddd8c2` |
+| Engineering freeze | PASS — 1,287 governed files, 7,759 checks, source revision `071bd63d6ad5fbea66611cfa0a9946bef2fb40f8` |
+
+The release artifact was built from clean source revision `1b652fbd17214fead17474957b5cc68cd5c56257` and is
+release-eligible. The later documentation-only evidence commit does not alter that verified artifact.
 
 ## Deferred evidence assessment
 
