@@ -83,7 +83,7 @@ final class P2IdentityRecoveryHttpIntegrationTest extends MySqlIntegrationTestCa
         self::assertSame(503, $readiness->getStatusCode());
         self::assertSame('{"status":"not_ready"}', (string)$readiness->getBody());
 
-        self::assertCount(20, $this->migrationRegistry()->ordered());
+        self::assertCount(23, $this->migrationRegistry()->ordered());
         foreach (
             ['account_password_recovery_challenges', 'account_password_recovery_events',
                 'account_security_notifications', 'account_security_notification_events'] as $table
@@ -274,7 +274,8 @@ final class P2IdentityRecoveryHttpIntegrationTest extends MySqlIntegrationTestCa
         );
 
         $this->connection->exec(
-            "DELETE FROM qmdb_scheduled_task_runs WHERE task_id = 'identity.security_notifications.deliver'",
+            "DELETE FROM qmdb_scheduled_task_runs WHERE task_id IN ("
+            . "'identity.security_notifications.deliver', 'security.privileged_access.maintain')",
         );
         $schedule = ApplicationFactory::fromCurrentProcess()->createConsoleApplication()->run(['schedule:run']);
         self::assertSame(
@@ -282,7 +283,7 @@ final class P2IdentityRecoveryHttpIntegrationTest extends MySqlIntegrationTestCa
             $schedule->exitCode(),
             $schedule->standardOutput() . $schedule->standardError(),
         );
-        self::assertStringContainsString('Succeeded: 1', $schedule->standardOutput());
+        self::assertStringContainsString('Succeeded: 2', $schedule->standardOutput());
         self::assertSame('DELIVERED', $this->scalar('SELECT status FROM account_security_notifications'));
 
         $repeat = ApplicationFactory::fromCurrentProcess()->createConsoleApplication()->run(['schedule:run']);
@@ -635,6 +636,9 @@ final class P2IdentityRecoveryHttpIntegrationTest extends MySqlIntegrationTestCa
     private function identityTables(): array
     {
         return [
+            'privileged_access_reviews', 'privileged_access_events', 'privileged_access_activations',
+            'privileged_access_approvals', 'privileged_access_request_permissions',
+            'privileged_access_requests', 'privileged_access_permission_policies',
             'workspace_role_assignments',
             'platform_role_assignments',
             'authorization_role_permissions',

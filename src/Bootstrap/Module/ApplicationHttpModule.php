@@ -2,6 +2,8 @@
 
 declare(strict_types=1);
 
+// phpcs:disable Generic.Files.LineLength.TooLong
+
 namespace Qmdb\Bootstrap\Module;
 
 use Closure;
@@ -33,6 +35,9 @@ use Qmdb\Modules\TenancyContext\Application\TenantContextReadinessCheck;
 use Qmdb\Modules\TenancyContext\Interface\Http\AccountWorkspacesController;
 use Qmdb\Modules\TenancyContext\Interface\Http\CurrentWorkspaceController;
 use Qmdb\Modules\TenancyContext\Interface\Http\TenantContextMiddleware;
+use Qmdb\Modules\SecurityPrivilegedAccess\Interface\Http\PrivilegedAccessContextMiddleware;
+use Qmdb\Modules\SecurityPrivilegedAccess\Interface\Http\PrivilegedAccessController;
+use Qmdb\Modules\SecurityPrivilegedAccess\Application\PrivilegedAccessReadinessCheck;
 use Qmdb\Modules\TenancyContext\Interface\Http\WorkspaceClearController;
 use Qmdb\Modules\TenancyContext\Interface\Http\WorkspaceSwitchController;
 use Qmdb\Modules\IdentityMultiFactor\Interface\Http\IdentityMultiFactorController;
@@ -98,6 +103,7 @@ final readonly class ApplicationHttpModule implements Module
             new ModuleId('identity.multifactor'),
             new ModuleId('security.authorization'),
             new ModuleId('tenancy.context'),
+            new ModuleId('security.privileged_access'),
         ];
     }
 
@@ -117,6 +123,7 @@ final readonly class ApplicationHttpModule implements Module
                 IdentityMultiFactorReadinessCheck::class,
                 AuthorizationReadinessCheck::class,
                 TenantContextReadinessCheck::class,
+                PrivilegedAccessReadinessCheck::class,
             ],
             new ClosureServiceFactory(static fn (DependencyResolver $resolver): ApplicationReadinessController =>
                 new ApplicationReadinessController(
@@ -130,6 +137,7 @@ final readonly class ApplicationHttpModule implements Module
                     ServiceReference::get($resolver, IdentityMultiFactorReadinessCheck::class),
                     ServiceReference::get($resolver, AuthorizationReadinessCheck::class),
                     ServiceReference::get($resolver, TenantContextReadinessCheck::class),
+                    ServiceReference::get($resolver, PrivilegedAccessReadinessCheck::class),
                 )),
         ));
         $controllers = [
@@ -164,6 +172,7 @@ final readonly class ApplicationHttpModule implements Module
             WorkspaceSwitchController::class,
             WorkspaceClearController::class,
             CurrentWorkspaceController::class,
+            PrivilegedAccessController::class,
         ];
         $context->service(ServiceDefinition::factory(
             RouteCollection::class,
@@ -211,7 +220,7 @@ final readonly class ApplicationHttpModule implements Module
             [CorrelationIdMiddleware::class, CspNonceMiddleware::class, SecurityHeadersMiddleware::class,
                 HttpRequestLoggingMiddleware::class, ExceptionHandlingMiddleware::class,
                 RequestTargetValidationMiddleware::class, LocaleMiddleware::class,
-                SessionAuthenticationMiddleware::class, TenantContextMiddleware::class,
+                SessionAuthenticationMiddleware::class, PrivilegedAccessContextMiddleware::class, TenantContextMiddleware::class,
                 RoutingRequestHandler::class],
             new ClosureServiceFactory(static fn (DependencyResolver $resolver): HttpKernel => new HttpKernel(
                 [
@@ -223,6 +232,7 @@ final readonly class ApplicationHttpModule implements Module
                     ServiceReference::get($resolver, RequestTargetValidationMiddleware::class),
                     ServiceReference::get($resolver, LocaleMiddleware::class),
                     ServiceReference::get($resolver, SessionAuthenticationMiddleware::class),
+                    ServiceReference::get($resolver, PrivilegedAccessContextMiddleware::class),
                     ServiceReference::get($resolver, TenantContextMiddleware::class),
                 ],
                 ServiceReference::get($resolver, RoutingRequestHandler::class),

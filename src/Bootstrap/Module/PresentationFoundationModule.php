@@ -2,6 +2,8 @@
 
 declare(strict_types=1);
 
+// phpcs:disable Generic.Files.LineLength.TooLong
+
 namespace Qmdb\Bootstrap\Module;
 
 use Nyholm\Psr7\Factory\Psr17Factory;
@@ -112,6 +114,7 @@ final readonly class PresentationFoundationModule implements Module
                         $root . '/resources/views/pages/account-authentication-security.php',
                     'pages.account-workspaces' => $root . '/resources/views/pages/account-workspaces.php',
                     'pages.workspace' => $root . '/resources/views/pages/workspace.php',
+                    'pages.privileged-access' => $root . '/resources/views/pages/privileged-access.php',
                     'pages.totp-enrollment-start' => $root . '/resources/views/pages/totp-enrollment-start.php',
                     'pages.totp-enrollment-confirm' => $root . '/resources/views/pages/totp-enrollment-confirm.php',
                     'pages.recovery-codes-one-time' => $root . '/resources/views/pages/recovery-codes-one-time.php',
@@ -157,6 +160,7 @@ final readonly class PresentationFoundationModule implements Module
                     'fragments.account-workspaces-panel' =>
                         $root . '/resources/views/fragments/account-workspaces-panel.php',
                     'fragments.workspace-panel' => $root . '/resources/views/fragments/workspace-panel.php',
+                    'fragments.privileged-access-panel' => $root . '/resources/views/fragments/privileged-access-panel.php',
                     'fragments.totp-enrollment-confirm-form' =>
                         $root . '/resources/views/fragments/totp-enrollment-confirm-form.php',
                     'fragments.recovery-codes-one-time' =>

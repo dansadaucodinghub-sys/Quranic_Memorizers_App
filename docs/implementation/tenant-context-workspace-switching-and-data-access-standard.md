@@ -101,3 +101,16 @@ session identity in debug output.
 Workspace creation, provisioning, default selection, organizations, geography, competitions, custom roles, temporary
 privileges, support access, and break-glass access remain outside B07. P2-B08 owns temporary, support, and emergency
 privilege controls and may not weaken these tenant-resolution rules.
+
+## P2-B08 privileged Tenant Context replacement
+
+An exceptional workspace activation replaces, rather than supplements, a normal Account Workspace Tenant Context.
+Activation clears the stored normal selection and increments `tenant_context_version` in the same transaction. The
+privileged resolver admits only the activation's authenticated account and session, exact workspace when applicable,
+active account/session/workspace, and active ordinary membership where temporary workspace access requires one.
+It never accepts a URL, header, cookie, browser storage value, or a stale normal selection as evidence.
+
+End, revocation, and expiry leave the normal selection empty; no prior context is retained for restoration. Middleware
+detects a structurally conflicting normal/privileged context, clears the normal selection and safely revokes the
+exceptional activation. Tenant-aware repositories therefore retain the B07 exact-workspace rule even while a
+privileged workspace context supplies the scope.

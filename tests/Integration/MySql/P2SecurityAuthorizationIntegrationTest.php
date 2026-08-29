@@ -71,12 +71,12 @@ final class P2SecurityAuthorizationIntegrationTest extends MySqlIntegrationTestC
             self::assertSame(64, strlen($migrationChecksum->migrationHex($migration)));
             self::assertTrue($migration->reversible());
         }
-        self::assertCount(1, $seeds->ordered());
+        self::assertCount(2, $seeds->ordered());
         self::assertSame(64, strlen($seedChecksum->hexadecimal($seeds->ordered()[0])));
 
-        self::assertSame(10, $this->fixture->tableCount('authorization_permissions'));
-        self::assertSame(7, $this->fixture->tableCount('authorization_roles'));
-        self::assertSame(27, $this->fixture->tableCount('authorization_role_permissions'));
+        self::assertSame(27, $this->fixture->tableCount('authorization_permissions'));
+        self::assertSame(9, $this->fixture->tableCount('authorization_roles'));
+        self::assertSame(73, $this->fixture->tableCount('authorization_role_permissions'));
         self::assertSame(0, $this->fixture->tableCount('platform_role_assignments'));
         self::assertSame(0, $this->fixture->tableCount('workspace_role_assignments'));
         self::assertSame([
@@ -145,6 +145,34 @@ final class P2SecurityAuthorizationIntegrationTest extends MySqlIntegrationTestC
             $membershipA,
             $accountInternalId,
         ));
+    }
+
+    public function testPrivilegedAccessPolicyCatalogIsExactAndRejectsDuplicatePolicies(): void
+    {
+        self::assertSame(20, $this->countQuery('SELECT COUNT(*) FROM privileged_access_permission_policies'));
+        self::assertSame(0, $this->countQuery(<<<'SQL'
+SELECT COUNT(*)
+FROM privileged_access_permission_policies policy
+INNER JOIN authorization_permissions permission_definition ON permission_definition.id = policy.permission_id
+WHERE permission_definition.code IN ('platform.authorization.assign', 'workspace.authorization.assign')
+   OR permission_definition.code LIKE 'platform.temporary_privileges.%'
+   OR permission_definition.code LIKE 'workspace.temporary_privileges.%'
+   OR permission_definition.code LIKE 'platform.support_access.%'
+   OR permission_definition.code LIKE 'workspace.support_access.%'
+   OR permission_definition.code LIKE 'platform.break_glass.%'
+SQL));
+        $this->assertRejected(function (): void {
+            $this->connection->exec(<<<'SQL'
+INSERT INTO privileged_access_permission_policies
+    (access_type, permission_id, permission_scope_type, status, created_at, updated_at)
+SELECT access_type, permission_id, permission_scope_type, status, UTC_TIMESTAMP(6), UTC_TIMESTAMP(6)
+FROM privileged_access_permission_policies
+LIMIT 1
+SQL);
+        });
+        $definition = $this->tableDefinition('privileged_access_activations');
+        self::assertStringContainsString('uq_privileged_activations_active_session', $definition);
+        self::assertStringContainsString('uq_privileged_activations_active_subject', $definition);
     }
 
     public function testPlatformAuthorizationIsRoleBackedDenyByDefaultAndAssuranceAware(): void
@@ -281,6 +309,37 @@ final class P2SecurityAuthorizationIntegrationTest extends MySqlIntegrationTestC
             new AuthenticationAssuranceComparator(),
             new InMemoryEventLogger(),
         );
+    }
+
+    private function countQuery(string $sql): int
+    {
+        $statement = $this->connection->query($sql);
+        if ($statement === false) {
+            throw new \RuntimeException('Privileged-access test query failed.');
+        }
+        $value = $statement->fetchColumn();
+        if (is_int($value)) {
+            return $value;
+        }
+        if (is_string($value) && ctype_digit($value)) {
+            return (int) $value;
+        }
+
+        throw new \RuntimeException('Privileged-access test count is invalid.');
+    }
+
+    private function tableDefinition(string $table): string
+    {
+        $statement = $this->connection->query('SHOW CREATE TABLE ' . $table);
+        if ($statement === false) {
+            throw new \RuntimeException('Privileged-access table definition is unavailable.');
+        }
+        $row = $statement->fetch(PDO::FETCH_NUM);
+        if (!is_array($row) || !is_string($row[1] ?? null)) {
+            throw new \RuntimeException('Privileged-access table definition is invalid.');
+        }
+
+        return $row[1];
     }
 
     private function subject(

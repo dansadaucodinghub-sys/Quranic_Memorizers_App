@@ -25,6 +25,10 @@ use Qmdb\Modules\SecurityAuthorization\Infrastructure\Migration\CreateAuthorizat
 use Qmdb\Modules\SecurityAuthorization\Infrastructure\Migration\CreatePlatformRoleAssignmentFoundationMigration;
 use Qmdb\Modules\SecurityAuthorization\Infrastructure\Migration\CreateWorkspaceRoleAssignmentFoundationMigration;
 use Qmdb\Modules\SecurityAuthorization\Infrastructure\Seed\SeedFoundationalAuthorizationCatalog;
+use Qmdb\Modules\SecurityPrivilegedAccess\Infrastructure\Migration\CreatePrivilegedAccessActivationFoundationMigration;
+use Qmdb\Modules\SecurityPrivilegedAccess\Infrastructure\Migration\CreatePrivilegedAccessRequestFoundationMigration;
+use Qmdb\Modules\SecurityPrivilegedAccess\Infrastructure\Migration\ExtendPrivilegedAccessSecurityCatalogMigration;
+use Qmdb\Modules\SecurityPrivilegedAccess\Infrastructure\Seed\SeedPrivilegedAccessCatalog;
 use Qmdb\Shared\Background\Scheduler\Migration\CreateScheduledTaskRunsMigration;
 use Qmdb\Shared\Schema\Migration\Migration;
 use Qmdb\Shared\Schema\Migration\MigrationRegistry;
@@ -33,7 +37,7 @@ use SplFileInfo;
 
 final class SchemaFoundationArchitectureTest extends TestCase
 {
-    public function testProductionManifestsContainOnlyAuthorizedP1ThroughP2B07SchemaChanges(): void
+    public function testProductionManifestsContainOnlyAuthorizedP1ThroughP2B08SchemaChanges(): void
     {
         $migrationFactory = require dirname(__DIR__, 2) . '/database/migrations.php';
         $seedFactory = require dirname(__DIR__, 2) . '/database/seeds.php';
@@ -48,7 +52,7 @@ final class SchemaFoundationArchitectureTest extends TestCase
         }
 
         $ordered = $migrations->ordered();
-        self::assertCount(20, $ordered);
+        self::assertCount(23, $ordered);
         self::assertSame(
             [
                 CreateScheduledTaskRunsMigration::class,
@@ -71,6 +75,9 @@ final class SchemaFoundationArchitectureTest extends TestCase
                 CreatePlatformRoleAssignmentFoundationMigration::class,
                 CreateWorkspaceRoleAssignmentFoundationMigration::class,
                 AddSessionBoundTenantContextMigration::class,
+                ExtendPrivilegedAccessSecurityCatalogMigration::class,
+                CreatePrivilegedAccessRequestFoundationMigration::class,
+                CreatePrivilegedAccessActivationFoundationMigration::class,
             ],
             array_map(static fn (Migration $migration): string => $migration::class, $ordered),
         );
@@ -96,12 +103,15 @@ final class SchemaFoundationArchitectureTest extends TestCase
                 '20260826011700_create_platform_role_assignment_foundation',
                 '20260826011800_create_workspace_role_assignment_foundation',
                 '20260826011900_add_session_bound_tenant_context',
+                '20260826012000_extend_privileged_access_security_catalog',
+                '20260826012100_create_privileged_access_request_foundation',
+                '20260826012200_create_privileged_access_activation_foundation',
             ],
             array_map(static fn (Migration $migration): string => $migration->id()->value(), $ordered),
         );
-        self::assertCount(1, $seeds->ordered());
+        self::assertCount(2, $seeds->ordered());
         self::assertSame(
-            [SeedFoundationalAuthorizationCatalog::class],
+            [SeedFoundationalAuthorizationCatalog::class, SeedPrivilegedAccessCatalog::class],
             array_map(static fn (object $seed): string => $seed::class, $seeds->ordered()),
         );
     }

@@ -624,6 +624,9 @@ final class P2WebAuthnCeremonyIntegrationTest extends MySqlIntegrationTestCase
     {
         foreach (
             [
+                'privileged_access_reviews', 'privileged_access_events', 'privileged_access_activations',
+                'privileged_access_approvals', 'privileged_access_request_permissions',
+                'privileged_access_requests', 'privileged_access_permission_policies',
                 'workspace_role_assignments', 'platform_role_assignments', 'authorization_role_permissions',
                 'authorization_roles', 'authorization_permissions',
                 'account_webauthn_ceremonies', 'account_passkey_credentials', 'account_webauthn_user_handles',
@@ -644,6 +647,9 @@ final class P2WebAuthnCeremonyIntegrationTest extends MySqlIntegrationTestCase
     {
         foreach (
             [
+                'privileged_access_reviews', 'privileged_access_events', 'privileged_access_activations',
+                'privileged_access_approvals', 'privileged_access_request_permissions',
+                'privileged_access_requests', 'privileged_access_permission_policies',
                 'workspace_role_assignments', 'platform_role_assignments', 'authorization_role_permissions',
                 'authorization_roles', 'authorization_permissions', 'account_webauthn_ceremonies',
                 'account_passkey_credentials', 'account_webauthn_user_handles',

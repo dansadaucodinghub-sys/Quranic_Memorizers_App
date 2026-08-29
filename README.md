@@ -339,6 +339,10 @@ MFA, passkey, Redis, durable queue, transactional outbox, SSE, bearer token, or 
 P1 — Engineering and Repository Foundation is complete and frozen. P2-B01 supplies the workspace, account, credential
 and tenant schema foundation. P2-B02 supplies registration, email verification and password-authentication services.
 P2-B03 supplies secure login/logout, server-side sessions, device lifecycle, rotation, expiry, inventory, and revocation.
+P2-B04 supplies recovery and durable security notifications; P2-B05 supplies MFA, passkeys, recovery codes and
+action-bound step-up; P2-B06 supplies roles and scoped authorization; P2-B07 supplies session-bound Tenant Context;
+and P2-B08 supplies time-bounded temporary privileges, dual-approved support access, and tightly constrained
+break-glass access. See `docs/implementation/privileged-access-temporary-support-and-break-glass-standard.md`.
 The locked PHP 8.5 suite, isolated MySQL 8.4 LTS matrix, Node.js 24 frontend gates, pinned security scanners,
 SBOM/licence controls, deterministic release verification, P0 freeze and controlled-extension P1 freeze are mandatory
 completion evidence. Consult `docs/project/project-state.md` and the batch reports under
@@ -428,7 +432,12 @@ Console commands implement a typed contract and are registered explicitly; there
 
 The production job-handler registry is empty and `NullBackgroundJobSource` deliberately returns no work. `worker:run --once` is therefore a safe successful no-op. Continuous workers process one job at a time and stop at configured job, runtime, or memory bounds. PCNTL handles graceful `SIGTERM`/`SIGINT` where available; production-like continuous execution fails closed when PCNTL is required but unavailable. Unknown failures are permanent by default, and only the explicit retryable exception type receives bounded exponential release.
 
-The production scheduled-task registry is empty. `schedule:list` reports that state and `schedule:run` completes with zero due tasks. Future registered tasks use fixed UTC intervals, idempotent handlers, a MySQL `qmdb_scheduled_task_runs` ledger, task/slot uniqueness, short transactional claims, expiring leases, reclaim attempt increments, and optimistic execution/version ownership. This is at-least-once execution; it is not exactly-once delivery.
+The production scheduled-task registry contains the B04 notification delivery task and the B08
+`security.privileged_access.maintain` task, both on fixed 60-second UTC schedules. The latter performs bounded
+request/activation expiry and review maintenance; authorization and context resolution enforce expiry synchronously.
+Registered tasks use idempotent handlers, a MySQL `qmdb_scheduled_task_runs` ledger, task/slot uniqueness, short
+transactional claims, expiring leases, reclaim attempt increments, and optimistic execution/version ownership. This is
+at-least-once execution; it is not exactly-once delivery.
 
 Safe defaults are controlled by `WORKER_MAX_JOBS`, `WORKER_MAX_RUNTIME_SECONDS`, `WORKER_IDLE_SLEEP_MS`, `WORKER_MAX_MEMORY_MB`, `WORKER_REQUIRE_PCNTL_IN_PRODUCTION`, `SCHEDULER_RUN_LEASE_SECONDS`, and `SCHEDULER_LOCK_TIMEOUT_SECONDS`. Payloads and reservation tokens are excluded from console output and operational logs.
 

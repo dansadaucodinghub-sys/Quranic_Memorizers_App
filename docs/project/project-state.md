@@ -8,13 +8,13 @@
 | Product Freeze | QMDB-P0-FRZ-001 |
 | Approved Change | QMDB-CR-001 — Asynchronous Progressive Interaction and Modal UX Standard |
 | Engineering Freeze | QMDB-P1-FRZ-001 |
-| Document Version | 3.7.0 |
-| Last Updated | 2026-08-28 |
-| Status | P0 COMPLETE; P1 COMPLETE; P2-B01 through P2-B07 COMPLETE |
+| Document Version | 3.8.0 |
+| Last Updated | 2026-08-29 |
+| Status | P0 COMPLETE; P1 COMPLETE; P2-B01 through P2-B08 COMPLETE |
 | Current Phase | P2 — Identity, Security, and Tenant Isolation |
-| Current Batch | QMDB-P2-B07 — Tenant Context, Workspace Switching, and Tenant-Aware Data Access |
-| Batch Status | QMDB-P2-B07 COMPLETE |
-| Implementation Readiness | READY FOR NEXT BATCH — QMDB-P2-B08 is next, not implemented here |
+| Current Batch | QMDB-P2-B08 — Temporary Privileges, Support Access, and Break-Glass Controls |
+| Batch Status | QMDB-P2-B08 COMPLETE |
+| Implementation Readiness | READY FOR NEXT BATCH — QMDB-P2-B09 is next, not implemented here |
 | P2 Status | IN PROGRESS |
 
 ## Authoritative outcome
@@ -33,10 +33,10 @@ sequential execution of P2-B01 through P2-B05. P1 remains frozen; P2 changes use
 | --- | --- |
 | Recovery Run | QMDB-RECOVERY-RUN-001 |
 | Recovery Status | COMPLETE |
-| Last Fully Completed Batch | QMDB-P2-B07 |
-| Next Batch | QMDB-P2-B08 — Temporary Privileges, Support Access, and Break-Glass Controls |
-| Sequence Rule | B01 → B02 → B03 → B04 → B05 → B06 → B07; B08 was not implemented by B07 |
-| P2-B07 Status | COMPLETE |
+| Last Fully Completed Batch | QMDB-P2-B08 |
+| Next Batch | QMDB-P2-B09 — Security Events, Audit Integrity, and Account State Operations |
+| Sequence Rule | B01 → B02 → B03 → B04 → B05 → B06 → B07 → B08; B09 is not implemented by B08 |
+| P2-B08 Status | COMPLETE |
 
 ## P1 batch ledger
 
@@ -101,6 +101,7 @@ build reports.
 | QMDB-P2-B05 | COMPLETE | MFA, TOTP, recovery codes, passkeys, passwordless login, assurance, action-scoped step-up, concurrency, frontend, scanner, release and freeze gates pass |
 | QMDB-P2-B06 | COMPLETE | Deny-by-default platform/workspace authorization, explicit seeded catalog, assurance-aware decisions, atomic step-up-protected administration, delegation and concurrency controls pass |
 | QMDB-P2-B07 | COMPLETE | Session-authoritative Tenant Context, explicit workspace switching/clearing, composite membership integrity, tenant-scoped boundaries, stale-version and cross-session isolation controls pass |
+| QMDB-P2-B08 | COMPLETE | Time-bounded temporary privileges, dual-approved support access, atomic break-glass, session-bound authorization, post-use review, expiry/revocation and scheduler controls pass |
 
 ## QMDB-P2-B04 delivery and verification ledger
 
@@ -245,10 +246,11 @@ Completed P2 Batches:
 - QMDB-P2-B05
 - QMDB-P2-B06
 - QMDB-P2-B07
+- QMDB-P2-B08
 
-Completed Batch: QMDB-P2-B07 — Tenant Context, Workspace Switching, and Tenant-Aware Data Access
+Completed Batch: QMDB-P2-B08 — Temporary Privileges, Support Access, and Break-Glass Controls
 
-Next Batch: QMDB-P2-B08 — Temporary Privileges, Support Access, and Break-Glass Controls
+Next Batch: QMDB-P2-B09 — Security Events, Audit Integrity, and Account State Operations
 
 P1 Status: COMPLETE
 

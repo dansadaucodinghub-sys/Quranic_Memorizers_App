@@ -28,6 +28,7 @@ use Qmdb\Shared\Observability\Error\ErrorHandlingRuntime;
 use Qmdb\Shared\Schema\Console\SchemaConsoleApplication;
 use Qmdb\Modules\SecurityAuthorization\Interface\Console\AuthorizationVerifyConsoleCommand;
 use Qmdb\Modules\TenancyContext\Interface\Console\TenantContextVerifyConsoleCommand;
+use Qmdb\Modules\SecurityPrivilegedAccess\Interface\Console\PrivilegedAccessVerifyConsoleCommand;
 
 final readonly class ConsoleFoundationModule implements Module
 {
@@ -48,6 +49,7 @@ final readonly class ConsoleFoundationModule implements Module
             new ModuleId('foundation.background'),
             new ModuleId('security.authorization'),
             new ModuleId('tenancy.context'),
+            new ModuleId('security.privileged_access'),
         ];
     }
 
@@ -106,6 +108,7 @@ final readonly class ConsoleFoundationModule implements Module
             WorkerRunConsoleCommand::class,
             AuthorizationVerifyConsoleCommand::class,
             TenantContextVerifyConsoleCommand::class,
+            PrivilegedAccessVerifyConsoleCommand::class,
         ];
         $context->service(ServiceDefinition::factory(
             ConsoleCommandMap::class,
@@ -128,6 +131,7 @@ final readonly class ConsoleFoundationModule implements Module
                 $registry->register(ServiceReference::get($resolver, WorkerRunConsoleCommand::class));
                 $registry->register(ServiceReference::get($resolver, AuthorizationVerifyConsoleCommand::class));
                 $registry->register(ServiceReference::get($resolver, TenantContextVerifyConsoleCommand::class));
+                $registry->register(ServiceReference::get($resolver, PrivilegedAccessVerifyConsoleCommand::class));
 
                 return $registry->build();
             }),

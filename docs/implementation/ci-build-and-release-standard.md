@@ -123,3 +123,14 @@ accessibility, no client workspace authority, and existing identity/authorizatio
 authorization and Tenant Context verification, and schema verification after destructive fixtures. Local CI repeats
 the guarded canonical rebuild and then explicitly runs authorization verification, Tenant Context verification, and
 schema verification before security, SBOM, licence, and release stages.
+
+## P2-B08 privileged-access regression gates
+
+The release must include `security.privileged_access`, its three explicitly registered migrations, its governed
+catalog seed, `security:privileged-access:verify`, privileged-access routes and views, and the fixed maintenance task.
+Mandatory evidence covers exact 27/9/73 authorization catalog counts and 20 active policies; policy-prohibited
+permission denial; self-approval and self-review denial; dual distinct support approval; one-active account/session
+constraints; break-glass step-up and rate limit; immediate revocation; synchronous and scheduled expiry; review
+creation/overdue/completion; cross-session and cross-workspace denial; no role, membership, impersonation, or normal
+Tenant Context restoration; and existing authorization, Tenant Context, MFA, session, recovery, scheduler, frontend,
+security, release, and freeze regression gates.

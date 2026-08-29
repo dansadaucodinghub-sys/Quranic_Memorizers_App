@@ -105,3 +105,16 @@ Authenticated page headers expose a text workspace status and a link to `/accoun
 H1, named controls, explicit selected text, an accessible empty state, logical RTL ordering, visible focus inherited
 from the design system, and no positive tabindex or switch modal. Full-page POST redirects and enhanced safe
 navigation remain equivalent.
+
+## P2-B08 privileged-access presentation extension
+
+Privileged-access inventory, request, approval, activation, revocation, break-glass warning, and post-use review
+workflows remain server-rendered pages with authenticated no-store responses. They use semantic headings, associated
+labels, bounded guidance, error summaries, visible focus, keyboard operation, logical RTL, and localized English and
+Arabic strings. The active-access panel has a direct end-access form and presents only safe status information.
+
+State-changing actions use CSRF-protected ordinary forms and full-page confirmation fallback. Progressive enhancement
+may update an approved fragment after an authoritative success, but it never retries a mutation, stores a permission
+or privileged state in browser storage, or closes a confirmation modal until the server succeeds. Break-glass stays a
+full-page warning flow because its safety-critical justification, incident reference, assurance, and confirmation must
+remain available without JavaScript.

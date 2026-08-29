@@ -2,6 +2,8 @@
 
 declare(strict_types=1);
 
+// phpcs:disable Generic.Files.LineLength.TooLong
+
 use Qmdb\Shared\Http\Controller\LivenessController;
 use Qmdb\Modules\IdentitySessions\Interface\Http\ApplicationReadinessController;
 use Qmdb\Shared\Http\Controller\SystemAboutApiController;
@@ -33,6 +35,7 @@ use Qmdb\Modules\TenancyContext\Interface\Http\AccountWorkspacesController;
 use Qmdb\Modules\TenancyContext\Interface\Http\CurrentWorkspaceController;
 use Qmdb\Modules\TenancyContext\Interface\Http\WorkspaceClearController;
 use Qmdb\Modules\TenancyContext\Interface\Http\WorkspaceSwitchController;
+use Qmdb\Modules\SecurityPrivilegedAccess\Interface\Http\PrivilegedAccessController;
 use Qmdb\Shared\Http\Routing\HttpMethod;
 use Qmdb\Shared\Http\Routing\Route;
 use Qmdb\Shared\Http\Routing\RouteCollection;
@@ -70,6 +73,7 @@ return static function (
     WorkspaceSwitchController $workspaceSwitch,
     WorkspaceClearController $workspaceClear,
     CurrentWorkspaceController $currentWorkspace,
+    PrivilegedAccessController $privilegedAccess,
 ): RouteCollection {
     return new RouteCollection(
         new Route('system.home', [HttpMethod::GET], new RoutePattern('/'), $homeController),
@@ -158,6 +162,25 @@ return static function (
             $workspaceClear,
         ),
         new Route('workspace.current', [HttpMethod::GET], new RoutePattern('/workspace'), $currentWorkspace),
+        new Route('account.privileged_access.index', [HttpMethod::GET], new RoutePattern('/account/security/privileged-access'), $privilegedAccess),
+        new Route('account.privileged_access.temporary.request.form', [HttpMethod::GET], new RoutePattern('/account/security/privileged-access/temporary/request'), $privilegedAccess),
+        new Route('account.privileged_access.temporary.request.submit', [HttpMethod::POST], new RoutePattern('/account/security/privileged-access/temporary/request'), $privilegedAccess),
+        new Route('account.privileged_access.support.request.form', [HttpMethod::GET], new RoutePattern('/account/security/support-access/request'), $privilegedAccess),
+        new Route('account.privileged_access.support.request.submit', [HttpMethod::POST], new RoutePattern('/account/security/support-access/request'), $privilegedAccess),
+        new Route('account.privileged_access.detail', [HttpMethod::GET], new RoutePattern('/account/security/privileged-access/{requestId}'), $privilegedAccess),
+        new Route('account.privileged_access.approve.form', [HttpMethod::GET], new RoutePattern('/account/security/privileged-access/{requestId}/approve'), $privilegedAccess),
+        new Route('account.privileged_access.approve.submit', [HttpMethod::POST], new RoutePattern('/account/security/privileged-access/{requestId}/approve'), $privilegedAccess),
+        new Route('account.privileged_access.reject.submit', [HttpMethod::POST], new RoutePattern('/account/security/privileged-access/{requestId}/reject'), $privilegedAccess),
+        new Route('account.privileged_access.cancel.submit', [HttpMethod::POST], new RoutePattern('/account/security/privileged-access/{requestId}/cancel'), $privilegedAccess),
+        new Route('account.privileged_access.activate.submit', [HttpMethod::POST], new RoutePattern('/account/security/privileged-access/{requestId}/activate'), $privilegedAccess),
+        new Route('account.privileged_access.revoke.submit', [HttpMethod::POST], new RoutePattern('/account/security/privileged-access/{requestId}/revoke'), $privilegedAccess),
+        new Route('workspace.privileged_access.approve.form', [HttpMethod::GET], new RoutePattern('/workspace/security/support-access/{requestId}/approve'), $privilegedAccess),
+        new Route('workspace.privileged_access.approve.submit', [HttpMethod::POST], new RoutePattern('/workspace/security/support-access/{requestId}/approve'), $privilegedAccess),
+        new Route('account.privileged_access.active.end.submit', [HttpMethod::POST], new RoutePattern('/account/security/privileged-access/active/end'), $privilegedAccess),
+        new Route('account.privileged_access.break_glass.activate.form', [HttpMethod::GET], new RoutePattern('/account/security/break-glass/activate'), $privilegedAccess),
+        new Route('account.privileged_access.break_glass.activate.submit', [HttpMethod::POST], new RoutePattern('/account/security/break-glass/activate'), $privilegedAccess),
+        new Route('account.privileged_access.review.form', [HttpMethod::GET], new RoutePattern('/account/security/privileged-access/{requestId}/review'), $privilegedAccess),
+        new Route('account.privileged_access.review.submit', [HttpMethod::POST], new RoutePattern('/account/security/privileged-access/{requestId}/review'), $privilegedAccess),
         new Route(
             'account.security.sessions',
             [HttpMethod::GET],

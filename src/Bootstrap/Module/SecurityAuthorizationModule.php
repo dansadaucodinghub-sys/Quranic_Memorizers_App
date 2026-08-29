@@ -12,10 +12,9 @@ use Qmdb\Modules\IdentitySecurityNotifications\Domain\Repository\AccountSecurity
 use Qmdb\Modules\IdentitySecurityNotifications\Domain\SecurityNotificationDeduplicationKeyFactory;
 use Qmdb\Modules\SecurityAuthorization\Application\AuthenticationAssuranceComparator;
 use Qmdb\Modules\SecurityAuthorization\Application\AuthorizationCatalogVerifier;
-use Qmdb\Modules\SecurityAuthorization\Application\AuthorizationGuard;
+use Qmdb\Modules\SecurityAuthorization\Application\BaseRoleAuthorizationGuard;
 use Qmdb\Modules\SecurityAuthorization\Application\AuthorizationReadinessCheck;
 use Qmdb\Modules\SecurityAuthorization\Application\AuthorizationSecurityNotificationService;
-use Qmdb\Modules\SecurityAuthorization\Application\AuthorizationService;
 use Qmdb\Modules\SecurityAuthorization\Application\DelegationValidator;
 use Qmdb\Modules\SecurityAuthorization\Application\PlatformRoleAssignmentService;
 use Qmdb\Modules\SecurityAuthorization\Application\PlatformRoleRevocationService;
@@ -78,7 +77,7 @@ final readonly class SecurityAuthorizationModule implements Module
         $context->service(ServiceDefinition::instance(
             AuthorizationCatalog::class,
             self::ID,
-            AuthorizationCatalogRegistry::foundational(),
+            AuthorizationCatalogRegistry::withPrivilegedAccess(),
         ));
         $context->service(ServiceDefinition::instance(
             AuthenticationAssuranceComparator::class,
@@ -166,13 +165,12 @@ final readonly class SecurityAuthorizationModule implements Module
             ServiceReference::get($r, AuthenticationAssuranceComparator::class),
             ServiceReference::get($r, EventLogger::class),
         ));
-        $context->alias(AuthorizationService::class, RoleBasedAuthorizationService::class);
         $this->factory(
             $context,
-            AuthorizationGuard::class,
-            [AuthorizationService::class],
-            static fn (DependencyResolver $r): AuthorizationGuard => new AuthorizationGuard(
-                ServiceReference::get($r, AuthorizationService::class),
+            BaseRoleAuthorizationGuard::class,
+            [RoleBasedAuthorizationService::class],
+            static fn (DependencyResolver $r): BaseRoleAuthorizationGuard => new BaseRoleAuthorizationGuard(
+                ServiceReference::get($r, RoleBasedAuthorizationService::class),
             )
         );
         $this->factory($context, DelegationValidator::class, [
@@ -199,7 +197,7 @@ final readonly class SecurityAuthorizationModule implements Module
                 ServiceReference::get($r, SecurityNotificationConfiguration::class),
             ));
         $shared = [
-            AuthorizationGuard::class,
+            BaseRoleAuthorizationGuard::class,
             AuthorizationAdministrationRepository::class,
             DelegationValidator::class,
             StepUpGuard::class,
@@ -212,7 +210,7 @@ final readonly class SecurityAuthorizationModule implements Module
             ...$shared,
             PlatformRoleAssignmentRepository::class,
         ], static fn (DependencyResolver $r): PlatformRoleAssignmentService => new PlatformRoleAssignmentService(
-            ServiceReference::get($r, AuthorizationGuard::class),
+            ServiceReference::get($r, BaseRoleAuthorizationGuard::class),
             ServiceReference::get($r, AuthorizationAdministrationRepository::class),
             ServiceReference::get($r, PlatformRoleAssignmentRepository::class),
             ServiceReference::get($r, DelegationValidator::class),
@@ -226,7 +224,7 @@ final readonly class SecurityAuthorizationModule implements Module
             ...$shared,
             PlatformRoleAssignmentRepository::class,
         ], static fn (DependencyResolver $r): PlatformRoleRevocationService => new PlatformRoleRevocationService(
-            ServiceReference::get($r, AuthorizationGuard::class),
+            ServiceReference::get($r, BaseRoleAuthorizationGuard::class),
             ServiceReference::get($r, AuthorizationAdministrationRepository::class),
             ServiceReference::get($r, PlatformRoleAssignmentRepository::class),
             ServiceReference::get($r, DelegationValidator::class),
@@ -240,7 +238,7 @@ final readonly class SecurityAuthorizationModule implements Module
             ...$shared,
             WorkspaceRoleAssignmentRepository::class,
         ], static fn (DependencyResolver $r): WorkspaceRoleAssignmentService => new WorkspaceRoleAssignmentService(
-            ServiceReference::get($r, AuthorizationGuard::class),
+            ServiceReference::get($r, BaseRoleAuthorizationGuard::class),
             ServiceReference::get($r, AuthorizationAdministrationRepository::class),
             ServiceReference::get($r, WorkspaceRoleAssignmentRepository::class),
             ServiceReference::get($r, DelegationValidator::class),
@@ -254,7 +252,7 @@ final readonly class SecurityAuthorizationModule implements Module
             ...$shared,
             WorkspaceRoleAssignmentRepository::class,
         ], static fn (DependencyResolver $r): WorkspaceRoleRevocationService => new WorkspaceRoleRevocationService(
-            ServiceReference::get($r, AuthorizationGuard::class),
+            ServiceReference::get($r, BaseRoleAuthorizationGuard::class),
             ServiceReference::get($r, AuthorizationAdministrationRepository::class),
             ServiceReference::get($r, WorkspaceRoleAssignmentRepository::class),
             ServiceReference::get($r, DelegationValidator::class),

@@ -6,6 +6,7 @@ namespace Qmdb\Modules\SecurityAuthorization\Domain;
 
 use DateTimeImmutable;
 use Qmdb\Modules\IdentityMultiFactor\Domain\AuthenticationAssuranceLevel;
+use Qmdb\Modules\SecurityPrivilegedAccess\Domain\PrivilegedAccessAuthorizationCatalog;
 
 final readonly class AuthorizationCatalogRegistry
 {
@@ -62,6 +63,22 @@ final readonly class AuthorizationCatalogRegistry
     public static function foundational(): AuthorizationCatalog
     {
         $builder = new AuthorizationCatalogBuilder();
+        self::populateFoundational($builder);
+
+        return $builder->build();
+    }
+
+    public static function withPrivilegedAccess(): AuthorizationCatalog
+    {
+        $builder = new AuthorizationCatalogBuilder();
+        self::populateFoundational($builder);
+        PrivilegedAccessAuthorizationCatalog::extend($builder);
+
+        return $builder->build();
+    }
+
+    private static function populateFoundational(AuthorizationCatalogBuilder $builder): void
+    {
         $timestamp = new DateTimeImmutable('2026-08-28T00:00:00.000000Z');
         foreach (self::PERMISSIONS as [$id, $code, $scope, $assurance]) {
             $builder->permission(new PermissionDefinition(
@@ -93,7 +110,5 @@ final readonly class AuthorizationCatalogRegistry
                 $builder->map(new RoleCode($role), new PermissionCode($permission));
             }
         }
-
-        return $builder->build();
     }
 }

@@ -482,4 +482,6 @@ recovery-authorized B01 normalization contract.
 | Persistent tenant cache is absent | Only a collision-safe cache-key value contract exists | DEFERRED; no performance claim |
 | Tenant export is absent | Only a marker contract requires future trusted context | DEFERRED to export-owning batch |
 | Standalone MySQL suite leaves unusable schema | Guarded wrapper always restores migration/seed/readiness state | MITIGATED by CI orchestration correction |
-| Temporary/support/break-glass authority inferred from context | No such grant, route, job, or context exists in B07 | AVOIDED; P2-B08 owns future design |
+| Temporary/support/break-glass authority inferred from context | P2-B08 only evaluates an active, exact-scope, exact-policy, account/session-bound activation after base-role evaluation | MITIGATED by authorization/context/constraint tests; ordinary Tenant Context does not grant exceptional authority |
+| Exceptional access becomes durable or self-amplifying | No role/membership creation, no extension, base-role-only administration, policy-prohibited management permissions, synchronous expiry and revocation | MITIGATED by database constraints, policy verifier and authorization tests |
+| Support or emergency activity is unattributable | Actor account/session, request, activation, scope, reason and correlation are retained in privileged lifecycle records; impersonation is prohibited | MITIGATED in B08; tamper-evident audit integrity remains owned by P2-B09 |

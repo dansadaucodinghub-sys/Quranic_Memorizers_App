@@ -17,13 +17,30 @@ enum StepUpAction: string
     case AUTHORIZATION_PLATFORM_ROLE_REVOKE = 'AUTHORIZATION_PLATFORM_ROLE_REVOKE';
     case AUTHORIZATION_WORKSPACE_ROLE_ASSIGN = 'AUTHORIZATION_WORKSPACE_ROLE_ASSIGN';
     case AUTHORIZATION_WORKSPACE_ROLE_REVOKE = 'AUTHORIZATION_WORKSPACE_ROLE_REVOKE';
+    case TEMPORARY_PRIVILEGE_APPROVE = 'TEMPORARY_PRIVILEGE_APPROVE';
+    case TEMPORARY_PRIVILEGE_ACTIVATE = 'TEMPORARY_PRIVILEGE_ACTIVATE';
+    case TEMPORARY_PRIVILEGE_REVOKE = 'TEMPORARY_PRIVILEGE_REVOKE';
+    case SUPPORT_ACCESS_PLATFORM_APPROVE = 'SUPPORT_ACCESS_PLATFORM_APPROVE';
+    case SUPPORT_ACCESS_WORKSPACE_APPROVE = 'SUPPORT_ACCESS_WORKSPACE_APPROVE';
+    case SUPPORT_ACCESS_ACTIVATE = 'SUPPORT_ACCESS_ACTIVATE';
+    case SUPPORT_ACCESS_REVOKE = 'SUPPORT_ACCESS_REVOKE';
+    case SUPPORT_ACCESS_REVIEW = 'SUPPORT_ACCESS_REVIEW';
+    case BREAK_GLASS_ACTIVATE = 'BREAK_GLASS_ACTIVATE';
+    case BREAK_GLASS_REVIEW = 'BREAK_GLASS_REVIEW';
 
     public function requirement(): AuthenticationAssuranceLevel
     {
         return match ($this) {
             self::MFA_ENROLL_TOTP, self::MFA_REGISTER_PASSKEY => AuthenticationAssuranceLevel::PRIMARY,
             self::AUTHORIZATION_PLATFORM_ROLE_ASSIGN,
-            self::AUTHORIZATION_PLATFORM_ROLE_REVOKE => AuthenticationAssuranceLevel::PHISHING_RESISTANT,
+            self::AUTHORIZATION_PLATFORM_ROLE_REVOKE,
+            self::SUPPORT_ACCESS_PLATFORM_APPROVE,
+            self::SUPPORT_ACCESS_WORKSPACE_APPROVE,
+            self::SUPPORT_ACCESS_ACTIVATE,
+            self::SUPPORT_ACCESS_REVOKE,
+            self::SUPPORT_ACCESS_REVIEW,
+            self::BREAK_GLASS_ACTIVATE,
+            self::BREAK_GLASS_REVIEW => AuthenticationAssuranceLevel::PHISHING_RESISTANT,
             default => AuthenticationAssuranceLevel::MULTI_FACTOR,
         };
     }
@@ -34,6 +51,16 @@ enum StepUpAction: string
             self::MFA_ENROLL_TOTP => '/account/security/mfa/totp/enroll',
             self::MFA_REGISTER_PASSKEY => '/account/security/passkeys/register',
             self::MFA_DISABLE => '/account/security/mfa/disable',
+            self::TEMPORARY_PRIVILEGE_APPROVE,
+            self::TEMPORARY_PRIVILEGE_ACTIVATE,
+            self::TEMPORARY_PRIVILEGE_REVOKE,
+            self::SUPPORT_ACCESS_PLATFORM_APPROVE,
+            self::SUPPORT_ACCESS_WORKSPACE_APPROVE,
+            self::SUPPORT_ACCESS_ACTIVATE,
+            self::SUPPORT_ACCESS_REVOKE,
+            self::SUPPORT_ACCESS_REVIEW,
+            self::BREAK_GLASS_ACTIVATE,
+            self::BREAK_GLASS_REVIEW => '/account/security/privileged-access',
             default => '/account/security/authentication',
         };
     }

@@ -6,7 +6,7 @@ namespace Qmdb\Modules\SecurityAuthorization\Application;
 
 use Qmdb\Modules\SecurityAuthorization\Application\Exception\AuthorizationDeniedException;
 
-final readonly class AuthorizationGuard
+final readonly class AuthorizationGuard implements AuthorizationRequirementGuard
 {
     public function __construct(private AuthorizationService $authorization)
     {

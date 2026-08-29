@@ -23,7 +23,7 @@ final class ApplicationFactoryTest extends TestCase
         ])->create('8.5.0', ['json', 'mbstring']);
 
         self::assertSame(ApplicationEnvironment::TEST, $application->configuration()->environment());
-        self::assertSame('QMDB-P2-B07', $application->metadata()->currentBatch());
+        self::assertSame('QMDB-P2-B08', $application->metadata()->currentBatch());
     }
 
     public function testInvalidEnvironmentFailsBeforeBootstrapExecution(): void

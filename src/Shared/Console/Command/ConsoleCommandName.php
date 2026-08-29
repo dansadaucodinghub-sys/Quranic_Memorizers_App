@@ -9,7 +9,7 @@ use Stringable;
 
 final readonly class ConsoleCommandName implements Stringable
 {
-    private const PATTERN = '/\A[a-z][a-z0-9]*(?::[a-z][a-z0-9]*)+\z/';
+    private const PATTERN = '/\A[a-z][a-z0-9-]*(?::[a-z][a-z0-9-]*)+\z/';
 
     public function __construct(private string $value)
     {

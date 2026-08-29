@@ -25,7 +25,7 @@ final readonly class WorkspaceRoleRevocationService
     private const string PROTECTED_ROLE = 'workspace.owner';
 
     public function __construct(
-        private AuthorizationGuard $authorization,
+        private AuthorizationRequirementGuard $authorization,
         private AuthorizationAdministrationRepository $administration,
         private WorkspaceRoleAssignmentRepository $assignments,
         private DelegationValidator $delegation,

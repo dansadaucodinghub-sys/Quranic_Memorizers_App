@@ -15,6 +15,7 @@ final readonly class HmacIdentityFingerprintGenerator implements IdentityFingerp
         'idempotency-verification-resend',
         'recovery-request-email', 'recovery-request-peer', 'recovery-attempt', 'recovery-attempt-peer',
         'idempotency-recovery-request', 'idempotency-recovery-reset',
+        'privileged-access-account', 'privileged-access-peer', 'break-glass-account', 'break-glass-peer',
     ];
 
     public function __construct(#[SensitiveParameter] private string $key)

@@ -78,3 +78,11 @@ Future tenant jobs implement `AccountTenantBoundBackgroundJob` and carry server-
 Membership references. The execution resolver revalidates active and exact relational state before returning trusted
 context. Inactive or mismatched state resolves no context. B07 registers no production tenant job, does not replace the
 null job source, adds no durable queue, and does not log job payloads.
+
+## P2-B08 privileged-access maintenance
+
+P2-B08 registers `security.privileged_access.maintain` at a fixed 60-second UTC interval alongside the existing
+notification-delivery task. The handler executes bounded, transactional maintenance only: request expiry, activation
+expiry, required-review creation, and overdue-review marking. Authorization and context resolution remain the
+authoritative synchronous expiry control, so scheduler delay never extends access. Repeated runs are safe and do not
+create a browser, queue, polling, or email-delivery execution path.

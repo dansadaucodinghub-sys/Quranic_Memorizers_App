@@ -25,7 +25,7 @@ final readonly class PlatformRoleRevocationService
     private const string PROTECTED_ROLE = 'platform.security_administrator';
 
     public function __construct(
-        private AuthorizationGuard $authorization,
+        private AuthorizationRequirementGuard $authorization,
         private AuthorizationAdministrationRepository $administration,
         private PlatformRoleAssignmentRepository $assignments,
         private DelegationValidator $delegation,

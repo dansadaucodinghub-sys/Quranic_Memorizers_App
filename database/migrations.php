@@ -22,6 +22,9 @@ use Qmdb\Modules\SecurityAuthorization\Infrastructure\Migration\CreateWorkspaceR
 use Qmdb\Modules\Tenancy\Infrastructure\Migration\CreateWorkspaceMembershipsMigration;
 use Qmdb\Modules\Tenancy\Infrastructure\Migration\CreateWorkspacesMigration;
 use Qmdb\Modules\TenancyContext\Infrastructure\Migration\AddSessionBoundTenantContextMigration;
+use Qmdb\Modules\SecurityPrivilegedAccess\Infrastructure\Migration\ExtendPrivilegedAccessSecurityCatalogMigration;
+use Qmdb\Modules\SecurityPrivilegedAccess\Infrastructure\Migration\CreatePrivilegedAccessRequestFoundationMigration;
+use Qmdb\Modules\SecurityPrivilegedAccess\Infrastructure\Migration\CreatePrivilegedAccessActivationFoundationMigration;
 use Qmdb\Shared\Schema\Migration\MigrationRegistry;
 use Qmdb\Shared\Schema\Migration\MigrationRegistryBuilder;
 
@@ -47,5 +50,8 @@ return static function (): MigrationRegistry {
         ->register(new CreatePlatformRoleAssignmentFoundationMigration())
         ->register(new CreateWorkspaceRoleAssignmentFoundationMigration())
         ->register(new AddSessionBoundTenantContextMigration())
+        ->register(new ExtendPrivilegedAccessSecurityCatalogMigration())
+        ->register(new CreatePrivilegedAccessRequestFoundationMigration())
+        ->register(new CreatePrivilegedAccessActivationFoundationMigration())
         ->build();
 };

@@ -20,6 +20,7 @@ use Qmdb\Bootstrap\Module\IdentitySessionsModule;
 use Qmdb\Bootstrap\Module\IdentityRecoveryModule;
 use Qmdb\Bootstrap\Module\IdentityMultiFactorModule;
 use Qmdb\Bootstrap\Module\SecurityAuthorizationModule;
+use Qmdb\Bootstrap\Module\SecurityPrivilegedAccessModule;
 use Qmdb\Bootstrap\Module\IdentitySecurityNotificationsModule;
 use Qmdb\Bootstrap\Module\ObservabilityFoundationModule;
 use Qmdb\Bootstrap\Module\PresentationFoundationModule;
@@ -38,6 +39,7 @@ use Qmdb\Modules\IdentitySessions\Configuration\IdentitySessionConfigurationFact
 use Qmdb\Modules\IdentityRecovery\Configuration\IdentityRecoveryConfigurationFactory;
 use Qmdb\Modules\IdentitySecurityNotifications\Configuration\SecurityNotificationConfigurationFactory;
 use Qmdb\Modules\IdentityMultiFactor\Configuration\IdentityMultiFactorConfigurationFactory;
+use Qmdb\Modules\SecurityPrivilegedAccess\Configuration\PrivilegedAccessConfigurationFactory;
 use Qmdb\Shared\DependencyInjection\CompiledContainer;
 use Qmdb\Shared\DependencyInjection\ContainerBuilder;
 use Qmdb\Shared\Module\ModuleRegistry;
@@ -148,6 +150,9 @@ final readonly class ApplicationFactory
             $loadedEnvironment->variables(),
             $configuration,
         );
+        $privilegedAccessConfiguration = (new PrivilegedAccessConfigurationFactory())->create(
+            $loadedEnvironment->variables(),
+        );
 
         $registry = new ModuleRegistry([
             new CoreFoundationModule($configuration, $loadedEnvironment->variables(), $runtimeEnvironment),
@@ -174,6 +179,7 @@ final readonly class ApplicationFactory
             new IdentityMultiFactorModule(),
             new SecurityAuthorizationModule(),
             new TenancyContextModule($this->projectRoot),
+            new SecurityPrivilegedAccessModule($privilegedAccessConfiguration),
             new ApplicationHttpModule($this->projectRoot),
             new ConsoleFoundationModule(),
         ]);

@@ -33,4 +33,14 @@ enum CsrfAction: string
     case ACCOUNT_MFA_ENABLE = 'account.mfa.enable';
     case ACCOUNT_MFA_DISABLE = 'account.mfa.disable';
     case ACCOUNT_MFA_RECOVERY_CODES_REGENERATE = 'account.mfa.recovery_codes.regenerate';
+    case PRIVILEGED_ACCESS_TEMPORARY_REQUEST = 'privileged_access.temporary.request';
+    case PRIVILEGED_ACCESS_SUPPORT_REQUEST = 'privileged_access.support.request';
+    case PRIVILEGED_ACCESS_APPROVE = 'privileged_access.approve';
+    case PRIVILEGED_ACCESS_REJECT = 'privileged_access.reject';
+    case PRIVILEGED_ACCESS_CANCEL = 'privileged_access.cancel';
+    case PRIVILEGED_ACCESS_ACTIVATE = 'privileged_access.activate';
+    case PRIVILEGED_ACCESS_REVOKE = 'privileged_access.revoke';
+    case PRIVILEGED_ACCESS_END = 'privileged_access.end';
+    case PRIVILEGED_ACCESS_BREAK_GLASS_ACTIVATE = 'privileged_access.break_glass.activate';
+    case PRIVILEGED_ACCESS_REVIEW = 'privileged_access.review';
 }

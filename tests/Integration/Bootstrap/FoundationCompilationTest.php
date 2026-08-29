@@ -26,6 +26,7 @@ use Qmdb\Bootstrap\Module\PresentationFoundationModule;
 use Qmdb\Bootstrap\Module\SchemaFoundationModule;
 use Qmdb\Bootstrap\Module\SecurityWebModule;
 use Qmdb\Bootstrap\Module\SecurityAuthorizationModule;
+use Qmdb\Bootstrap\Module\SecurityPrivilegedAccessModule;
 use Qmdb\Bootstrap\Module\TenancyFoundationModule;
 use Qmdb\Bootstrap\Module\TenancyContextModule;
 use Qmdb\Bootstrap\RuntimeEnvironment;
@@ -43,6 +44,7 @@ use Qmdb\Modules\IdentityRecovery\Configuration\IdentityRecoveryConfigurationFac
 use Qmdb\Modules\IdentitySecurityNotifications\Configuration\SecurityNotificationConfigurationFactory;
 use Qmdb\Modules\IdentitySessions\Configuration\IdentitySessionConfigurationFactory;
 use Qmdb\Modules\IdentityMultiFactor\Configuration\IdentityMultiFactorConfigurationFactory;
+use Qmdb\Modules\SecurityPrivilegedAccess\Configuration\PrivilegedAccessConfigurationFactory;
 use Qmdb\Shared\DependencyInjection\CompiledContainer;
 use Qmdb\Shared\DependencyInjection\ContainerBuilder;
 use Qmdb\Shared\Module\ModuleRegistry;
@@ -72,6 +74,7 @@ final class FoundationCompilationTest extends TestCase
             'tenancy.workspaces',
             'security.authorization',
             'tenancy.context',
+            'security.privileged_access',
             'application.http',
             'foundation.console',
         ], $registry->orderedModuleIds());
@@ -95,7 +98,7 @@ final class FoundationCompilationTest extends TestCase
         $result = $queryBus->ask(new GetSystemInformation());
 
         self::assertInstanceOf(SystemInformation::class, $result);
-        self::assertSame('QMDB-P2-B07', $result->currentBatch());
+        self::assertSame('QMDB-P2-B08', $result->currentBatch());
     }
 
     public function testFoundationContainsNoDeferredInfrastructureService(): void
@@ -133,6 +136,7 @@ final class FoundationCompilationTest extends TestCase
         $identityRecovery = (new IdentityRecoveryConfigurationFactory())->create($variables);
         $securityNotifications = (new SecurityNotificationConfigurationFactory())->create($variables);
         $identityMultiFactor = (new IdentityMultiFactorConfigurationFactory())->create($variables, $configuration);
+        $privilegedAccess = (new PrivilegedAccessConfigurationFactory())->create($variables);
         $registry = new ModuleRegistry([
             new CoreFoundationModule(
                 $configuration,
@@ -162,6 +166,7 @@ final class FoundationCompilationTest extends TestCase
             new IdentityMultiFactorModule(),
             new SecurityAuthorizationModule(),
             new TenancyContextModule(dirname(__DIR__, 3)),
+            new SecurityPrivilegedAccessModule($privilegedAccess),
             new ApplicationHttpModule(dirname(__DIR__, 3)),
             new ConsoleFoundationModule(),
         ]);

@@ -185,3 +185,16 @@ Account Workspace Tenant Context supplies the exact server-resolved workspace an
 workspace operations. Selection grants no role or permission, raises no assurance, and provides no platform authority.
 Every decision still requires active account, workspace, membership, role assignment, role, permission, and declared
 assurance. A client workspace public ID is only a selection lookup and cannot override resolved context.
+
+## P2-B08 exceptional authorization integration
+
+P2-B08 adds a trusted internal decision source after normal B06 role evaluation: `TEMPORARY_PRIVILEGE`,
+`SUPPORT_ACCESS`, or `BREAK_GLASS`. It is available only from an active, unexpired, same-account, same-session
+privileged-access activation whose immutable permission snapshot exactly matches the requested scope. Normal roles
+remain separately evaluated. The public deny response remains generic and never exposes this source.
+
+All exceptional-access administration remains base-role-only through `BaseRoleAuthorizationGuard`. No temporary,
+support, or break-glass policy permits authorization assignment, role mutation, privileged request/approval/review
+administration, wildcard permission, or a policy-management action. The controlled seed has 27 permissions, 9 roles,
+73 mappings, and 20 exact exceptional permission policies; `security:authorization:verify` and
+`security:privileged-access:verify` fail closed on catalog or policy drift.

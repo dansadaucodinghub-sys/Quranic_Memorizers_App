@@ -29,7 +29,7 @@ final readonly class PlatformRoleAssignmentService
     private const string ASSIGN_PERMISSION = 'platform.authorization.assign';
 
     public function __construct(
-        private AuthorizationGuard $authorization,
+        private AuthorizationRequirementGuard $authorization,
         private AuthorizationAdministrationRepository $administration,
         private PlatformRoleAssignmentRepository $assignments,
         private DelegationValidator $delegation,

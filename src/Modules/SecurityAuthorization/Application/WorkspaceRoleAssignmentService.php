@@ -29,7 +29,7 @@ final readonly class WorkspaceRoleAssignmentService
     private const string ASSIGN_PERMISSION = 'workspace.authorization.assign';
 
     public function __construct(
-        private AuthorizationGuard $authorization,
+        private AuthorizationRequirementGuard $authorization,
         private AuthorizationAdministrationRepository $administration,
         private WorkspaceRoleAssignmentRepository $assignments,
         private DelegationValidator $delegation,
