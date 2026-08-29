@@ -23,6 +23,7 @@ if (-not (Test-Path -LiteralPath $resolvedTarget -PathType Container)) {
 New-Item -ItemType Directory -Force -Path $reportRoot | Out-Null
 
 & $binary filesystem --scanners vuln,secret,misconfig --severity HIGH,CRITICAL --exit-code 1 `
+    --timeout 15m `
     --format json --output (Join-Path $reportRoot "trivy-$Mode.json") `
     --skip-dirs .git --skip-dirs .runtime --skip-dirs .build `
     --skip-dirs .phpstan.cache --skip-dirs .phpunit.cache `
