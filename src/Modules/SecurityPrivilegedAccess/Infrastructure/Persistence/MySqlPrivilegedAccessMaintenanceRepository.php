@@ -221,7 +221,9 @@ SQL, $now, $limit);
     private function rows(PDO $pdo, string $sql, string $now, int $limit): array
     {
         $statement = $pdo->prepare($sql);
-        $statement->bindValue(':now', $now);
+        if (str_contains($sql, ':now')) {
+            $statement->bindValue(':now', $now);
+        }
         $statement->bindValue(':row_limit', $limit, PDO::PARAM_INT);
         $statement->execute();
         $rows = $statement->fetchAll(PDO::FETCH_ASSOC);

@@ -25,6 +25,7 @@ use Qmdb\Modules\SecurityAuthorization\Domain\PlatformAuthorizationScope;
 use Qmdb\Modules\SecurityAuthorization\Domain\WorkspaceAuthorizationScope;
 use Qmdb\Modules\SecurityAuthorization\Infrastructure\Persistence\MySqlEffectivePermissionRepository;
 use Qmdb\Modules\SecurityAuthorization\Infrastructure\Persistence\MySqlWorkspaceRoleAssignmentRepository;
+use Qmdb\Modules\SecurityPrivilegedAccess\Infrastructure\Persistence\MySqlPrivilegedAccessMaintenanceRepository;
 use Qmdb\Modules\TenancyContext\Domain\AccountWorkspaceTenantContext;
 use Qmdb\Shared\Schema\Checksum\CanonicalChecksum;
 use Qmdb\Shared\Schema\Migration\MigrationChecksum;
@@ -173,6 +174,22 @@ SQL);
         $definition = $this->tableDefinition('privileged_access_activations');
         self::assertStringContainsString('uq_privileged_activations_active_session', $definition);
         self::assertStringContainsString('uq_privileged_activations_active_subject', $definition);
+    }
+
+    public function testPrivilegedAccessMaintenanceAllowsEmptyCandidateSets(): void
+    {
+        $maintenance = new MySqlPrivilegedAccessMaintenanceRepository($this->provider());
+
+        $result = $maintenance->maintain(
+            new DateTimeImmutable('2026-08-29 00:00:00.000000 UTC'),
+            25,
+            86_400,
+        );
+
+        self::assertSame(0, $result->expiredRequests);
+        self::assertSame(0, $result->expiredActivations);
+        self::assertSame(0, $result->overdueReviews);
+        self::assertSame([], $result->notifications);
     }
 
     public function testPlatformAuthorizationIsRoleBackedDenyByDefaultAndAssuranceAware(): void
