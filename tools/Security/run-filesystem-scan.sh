@@ -22,6 +22,7 @@ mkdir -p "${report_root}"
   --scanners vuln,secret,misconfig \
   --severity HIGH,CRITICAL \
   --exit-code 1 \
+  --timeout 15m \
   --format json \
   --output "${report_root}/trivy-${mode}.json" \
   --skip-dirs .git \
