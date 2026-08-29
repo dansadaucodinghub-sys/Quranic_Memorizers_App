@@ -9,8 +9,8 @@ engineering_freeze:
   closeout_batch: QMDB-P1-CLOSE
   freeze_status: APPROVED
   readiness: P1_COMPLETE
-  generated_at_utc: "2026-08-29T08:47:31Z"
-  source_revision: "115300ece81aa40f6c61188a21a3049ecbff7c2d"
+  generated_at_utc: "2026-08-29T09:52:04Z"
+  source_revision: "47e19f19f0dd57c0f988d2366bd314529114c0ac"
   source_state: governed_clean
   completed_batches:
     - QMDB-P1-B01
@@ -1980,7 +1980,7 @@ engineering_freeze:
       sha256: 86d2e1470c40c59116fde105b9895201ac1ddf7cb0a7bdc511c53252f68ad013
     - path: "src/Modules/SecurityPrivilegedAccess/Infrastructure/Persistence/MySqlPrivilegedAccessMaintenanceRepository.php"
       category: FROZEN_ENGINEERING_FOUNDATION
-      sha256: f6975c6cc1927c781edd7610ad670815978404fd94f2e6f9bbd7de02503fab6a
+      sha256: 0afa1237e56ebee212330f2aa5f3863b29012b2e636fe992471769550357f7d7
     - path: "src/Modules/SecurityPrivilegedAccess/Infrastructure/Persistence/MySqlPrivilegedAccessRequestRepository.php"
       category: FROZEN_ENGINEERING_FOUNDATION
       sha256: 788a95f8a1340d2a6327d29d516824044c9dd555adfffc67bc237a91cda8798d
@@ -3432,7 +3432,7 @@ engineering_freeze:
       sha256: 8178949dbdf17eec8a2b00e8a87bfc6cc767ecfd60b5ff8c8daae96a9af496ce
     - path: "tests/Integration/MySql/P2SecurityAuthorizationIntegrationTest.php"
       category: FROZEN_ENGINEERING_FOUNDATION
-      sha256: 4a0fe35edf1c9a5505014f56008b442c1c22f5703b54792c5887ff00333c683a
+      sha256: 7ac73b6b48d4d17e5fc0e9cc77a22d6643f54f731d371ae05c912b3472719e00
     - path: "tests/Integration/MySql/P2TenantContextHttpIntegrationTest.php"
       category: FROZEN_ENGINEERING_FOUNDATION
       sha256: 6b93ae5a5c8e46c09426c154c8f291b2265c49c62aa19610e43f8793c84235b3
