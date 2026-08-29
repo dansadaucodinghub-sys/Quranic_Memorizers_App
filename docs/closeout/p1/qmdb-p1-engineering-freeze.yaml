@@ -9,8 +9,8 @@ engineering_freeze:
   closeout_batch: QMDB-P1-CLOSE
   freeze_status: APPROVED
   readiness: P1_COMPLETE
-  generated_at_utc: "2026-08-29T08:29:09Z"
-  source_revision: "f1be7c725b974fb106858b11a874fe9143043aeb"
+  generated_at_utc: "2026-08-29T08:47:31Z"
+  source_revision: "115300ece81aa40f6c61188a21a3049ecbff7c2d"
   source_state: governed_clean
   completed_batches:
     - QMDB-P1-B01
