@@ -134,3 +134,11 @@ constraints; break-glass step-up and rate limit; immediate revocation; synchrono
 creation/overdue/completion; cross-session and cross-workspace denial; no role, membership, impersonation, or normal
 Tenant Context restoration; and existing authorization, Tenant Context, MFA, session, recovery, scheduler, frontend,
 security, release, and freeze regression gates.
+
+## P2-B09 audit and account-state regression gates
+
+The release must include the `security.audit` and `identity.account_state` modules, five B09 migrations, the B09 seed,
+audit checkpoint and verification commands, the scheduler registration, account-state routes/views, and immutable MySQL
+controls. Required evidence includes hash-chain and checkpoint verification, event/checkpoint tamper rejection,
+authoritative rollback, account suspension/revocation, reactivation without session restoration, base-role and step-up
+authorization, English/Arabic progressive forms, and full prior P2 regression coverage.

@@ -8,6 +8,7 @@ use PHPUnit\Framework\Attributes\DataProvider;
 use PHPUnit\Framework\TestCase;
 use Qmdb\Shared\Http\Request\RequestTargetValidator;
 
+#[\PHPUnit\Framework\Attributes\Group('InputFuzz')]
 final class RequestTargetValidatorTest extends TestCase
 {
     #[DataProvider('validTargets')]

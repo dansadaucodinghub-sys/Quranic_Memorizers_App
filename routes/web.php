@@ -36,6 +36,8 @@ use Qmdb\Modules\TenancyContext\Interface\Http\CurrentWorkspaceController;
 use Qmdb\Modules\TenancyContext\Interface\Http\WorkspaceClearController;
 use Qmdb\Modules\TenancyContext\Interface\Http\WorkspaceSwitchController;
 use Qmdb\Modules\SecurityPrivilegedAccess\Interface\Http\PrivilegedAccessController;
+use Qmdb\Modules\IdentityAccountState\Interface\Http\AccountStateSecurityController;
+use Qmdb\Modules\IdentityAccountState\Interface\Http\SecurityAuditViewerController;
 use Qmdb\Shared\Http\Routing\HttpMethod;
 use Qmdb\Shared\Http\Routing\Route;
 use Qmdb\Shared\Http\Routing\RouteCollection;
@@ -74,6 +76,8 @@ return static function (
     WorkspaceClearController $workspaceClear,
     CurrentWorkspaceController $currentWorkspace,
     PrivilegedAccessController $privilegedAccess,
+    AccountStateSecurityController $accountState,
+    SecurityAuditViewerController $securityAudit,
 ): RouteCollection {
     return new RouteCollection(
         new Route('system.home', [HttpMethod::GET], new RoutePattern('/'), $homeController),
@@ -162,6 +166,13 @@ return static function (
             $workspaceClear,
         ),
         new Route('workspace.current', [HttpMethod::GET], new RoutePattern('/workspace'), $currentWorkspace),
+        new Route('platform.security.accounts.detail', [HttpMethod::GET], new RoutePattern('/platform/security/accounts/{accountId}'), $accountState),
+        new Route('platform.security.accounts.suspend', [HttpMethod::GET, HttpMethod::POST], new RoutePattern('/platform/security/accounts/{accountId}/suspend'), $accountState),
+        new Route('platform.security.accounts.reactivate', [HttpMethod::GET, HttpMethod::POST], new RoutePattern('/platform/security/accounts/{accountId}/reactivate'), $accountState),
+        new Route('account.security.events', [HttpMethod::GET], new RoutePattern('/account/security/events'), $securityAudit),
+        new Route('platform.security.events', [HttpMethod::GET], new RoutePattern('/platform/security/events'), $securityAudit),
+        new Route('platform.security.events.detail', [HttpMethod::GET], new RoutePattern('/platform/security/events/{eventId}'), $securityAudit),
+        new Route('platform.security.audit', [HttpMethod::GET], new RoutePattern('/platform/security/audit'), $securityAudit),
         new Route('account.privileged_access.index', [HttpMethod::GET], new RoutePattern('/account/security/privileged-access'), $privilegedAccess),
         new Route('account.privileged_access.temporary.request.form', [HttpMethod::GET], new RoutePattern('/account/security/privileged-access/temporary/request'), $privilegedAccess),
         new Route('account.privileged_access.temporary.request.submit', [HttpMethod::POST], new RoutePattern('/account/security/privileged-access/temporary/request'), $privilegedAccess),

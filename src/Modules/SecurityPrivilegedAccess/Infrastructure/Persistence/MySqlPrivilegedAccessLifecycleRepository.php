@@ -38,8 +38,11 @@ final readonly class MySqlPrivilegedAccessLifecycleRepository implements Privile
     public function requestSnapshot(PrivilegedAccessRequestId $requestId): ?PrivilegedAccessRequestSnapshot
     {
         $statement = $this->pdo()->prepare(
-            'SELECT public_id, access_type, scope_type, status, subject_account_id, requested_by_account_id, '
-            . 'workspace_id, subject_membership_id FROM privileged_access_requests WHERE public_id = :public_id LIMIT 1',
+            'SELECT request_record.public_id, request_record.access_type, request_record.scope_type, request_record.status, '
+            . 'request_record.subject_account_id, request_record.requested_by_account_id, request_record.workspace_id, '
+            . 'request_record.subject_membership_id, workspace.public_id AS workspace_public_id '
+            . 'FROM privileged_access_requests request_record LEFT JOIN workspaces workspace ON workspace.id = request_record.workspace_id '
+            . 'WHERE request_record.public_id = :public_id LIMIT 1',
         );
         $statement->bindValue(':public_id', $requestId->toBinary(), PDO::PARAM_LOB);
         $statement->execute();
@@ -161,6 +164,7 @@ final readonly class MySqlPrivilegedAccessLifecycleRepository implements Privile
             $snapshot->requestedByAccountInternalId,
             $snapshot->workspaceInternalId,
             $snapshot->subjectMembershipInternalId,
+            $snapshot->workspacePublicId,
         );
     }
 
@@ -171,8 +175,10 @@ final readonly class MySqlPrivilegedAccessLifecycleRepository implements Privile
     ): ?PrivilegedAccessRequestSnapshot {
         $statement = $this->pdo()->prepare(
             'SELECT a.id AS activation_id, a.status AS activation_status, r.id, r.public_id, r.access_type, r.scope_type, '
-            . 'r.workspace_id, r.subject_account_id, r.subject_membership_id, r.requested_by_account_id, r.status '
+            . 'r.workspace_id, workspace.public_id AS workspace_public_id, r.subject_account_id, r.subject_membership_id, '
+            . 'r.requested_by_account_id, r.status '
             . 'FROM privileged_access_activations a INNER JOIN privileged_access_requests r ON r.id = a.request_id '
+            . 'LEFT JOIN workspaces workspace ON workspace.id = r.workspace_id '
             . "WHERE a.subject_account_id = :account_id AND a.session_id = :session_id AND a.status = 'ACTIVE' "
             . 'LIMIT 1 FOR UPDATE',
         );
@@ -224,6 +230,7 @@ final readonly class MySqlPrivilegedAccessLifecycleRepository implements Privile
             $snapshot->requestedByAccountInternalId,
             $snapshot->workspaceInternalId,
             $snapshot->subjectMembershipInternalId,
+            $snapshot->workspacePublicId,
         );
     }
 
@@ -282,14 +289,17 @@ final readonly class MySqlPrivilegedAccessLifecycleRepository implements Privile
             $snapshot->requestedByAccountInternalId,
             $snapshot->workspaceInternalId,
             $snapshot->subjectMembershipInternalId,
+            $snapshot->workspacePublicId,
         );
     }
 
     public function reviewSnapshot(\Qmdb\Modules\SecurityPrivilegedAccess\Domain\PrivilegedAccessReviewId $reviewId): ?\Qmdb\Modules\SecurityPrivilegedAccess\Application\PrivilegedAccessReviewSnapshot
     {
         $statement = $this->pdo()->prepare(
-            'SELECT v.public_id, v.status, r.access_type, r.subject_account_id FROM privileged_access_reviews v '
-            . 'INNER JOIN privileged_access_requests r ON r.id = v.request_id WHERE v.public_id = :public_id LIMIT 1',
+            'SELECT v.public_id, v.status, r.access_type, r.subject_account_id, r.scope_type, '
+            . 'workspace.public_id AS workspace_public_id FROM privileged_access_reviews v '
+            . 'INNER JOIN privileged_access_requests r ON r.id = v.request_id '
+            . 'LEFT JOIN workspaces workspace ON workspace.id = r.workspace_id WHERE v.public_id = :public_id LIMIT 1',
         );
         $statement->bindValue(':public_id', $reviewId->toBinary(), PDO::PARAM_LOB);
         $statement->execute();
@@ -303,6 +313,8 @@ final readonly class MySqlPrivilegedAccessLifecycleRepository implements Privile
             \Qmdb\Modules\SecurityPrivilegedAccess\Domain\PrivilegedAccessReviewStatus::from(self::string($row, 'status')),
             PrivilegedAccessType::from(self::string($row, 'access_type')),
             self::integer($row, 'subject_account_id'),
+            AuthorizationScopeType::from(self::string($row, 'scope_type')),
+            self::nullableUuid($row, 'workspace_public_id'),
         );
     }
 
@@ -515,9 +527,12 @@ SQL);
     private function lockedRequest(PrivilegedAccessRequestId $requestId): array
     {
         $statement = $this->pdo()->prepare(
-            'SELECT id, public_id, access_type, scope_type, workspace_id, subject_account_id, subject_membership_id, '
-            . 'requested_by_account_id, status, requested_duration_seconds, request_expires_at FROM privileged_access_requests '
-            . 'WHERE public_id = :public_id LIMIT 1 FOR UPDATE',
+            'SELECT request_record.id, request_record.public_id, request_record.access_type, request_record.scope_type, '
+            . 'request_record.workspace_id, request_record.subject_account_id, request_record.subject_membership_id, '
+            . 'request_record.requested_by_account_id, request_record.status, request_record.requested_duration_seconds, '
+            . 'request_record.request_expires_at, workspace.public_id AS workspace_public_id '
+            . 'FROM privileged_access_requests request_record LEFT JOIN workspaces workspace ON workspace.id = request_record.workspace_id '
+            . 'WHERE request_record.public_id = :public_id LIMIT 1 FOR UPDATE',
         );
         $statement->bindValue(':public_id', $requestId->toBinary(), PDO::PARAM_LOB);
         $statement->execute();
@@ -577,6 +592,7 @@ SQL);
             self::integer($row, 'requested_by_account_id'),
             self::nullableInteger($row, 'workspace_id'),
             self::nullableInteger($row, 'subject_membership_id'),
+            self::nullableUuid($row, 'workspace_public_id'),
         );
     }
 
@@ -636,5 +652,13 @@ SQL);
     private static function nullableInteger(array $row, string $column): ?int
     {
         return ($row[$column] ?? null) === null ? null : self::integer($row, $column);
+    }
+
+    /** @param array<string, mixed> $row */
+    private static function nullableUuid(array $row, string $column): ?string
+    {
+        return ($row[$column] ?? null) === null
+            ? null
+            : UuidV7::fromBinary(self::string($row, $column))->toString();
     }
 }

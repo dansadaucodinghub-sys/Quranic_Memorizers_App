@@ -15,6 +15,7 @@ use Qmdb\Modules\IdentityRecovery\Application\Mail\PasswordRecoveryMessageFactor
 use Qmdb\Modules\IdentityRecovery\Application\Mail\PasswordRecoveryNotifier;
 use Qmdb\Modules\IdentityRecovery\Application\PasswordRecoveryRequestService;
 use Qmdb\Modules\IdentityRecovery\Application\PasswordResetService;
+use Qmdb\Modules\SecurityAudit\Application\SecurityAuditEventAppender;
 use Qmdb\Modules\IdentityRecovery\Application\Readiness\IdentityRecoveryReadinessCheck;
 use Qmdb\Modules\IdentityRecovery\Configuration\IdentityRecoveryConfiguration;
 use Qmdb\Modules\IdentityRecovery\Domain\PasswordRecoveryTokenGenerator;
@@ -89,6 +90,7 @@ final readonly class IdentityRecoveryModule implements Module
             new ModuleId('identity.access'),
             new ModuleId('identity.sessions'),
             new ModuleId('identity.security_notifications'),
+            new ModuleId('security.audit'),
         ];
     }
 
@@ -207,6 +209,7 @@ final readonly class IdentityRecoveryModule implements Module
                 SecurityNotificationDeduplicationKeyFactory::class,
                 IdentityRecoveryConfiguration::class,
                 SecurityNotificationConfiguration::class,
+                SecurityAuditEventAppender::class,
                 Clock::class,
             ],
             new ClosureServiceFactory(static fn (DependencyResolver $resolver): PasswordResetService =>
@@ -223,6 +226,7 @@ final readonly class IdentityRecoveryModule implements Module
                     ServiceReference::get($resolver, SecurityNotificationDeduplicationKeyFactory::class),
                     ServiceReference::get($resolver, IdentityRecoveryConfiguration::class),
                     ServiceReference::get($resolver, SecurityNotificationConfiguration::class),
+                    ServiceReference::get($resolver, SecurityAuditEventAppender::class),
                     ServiceReference::get($resolver, Clock::class),
                 )),
         ));

@@ -86,3 +86,10 @@ notification-delivery task. The handler executes bounded, transactional maintena
 expiry, required-review creation, and overdue-review marking. Authorization and context resolution remain the
 authoritative synchronous expiry control, so scheduler delay never extends access. Repeated runs are safe and do not
 create a browser, queue, polling, or email-delivery execution path.
+
+## P2-B09 audit checkpoint task
+
+`security.audit.checkpoint` runs at the configured UTC interval. It takes a bounded advisory lock, snapshots current
+stream heads, and creates a checkpoint only when the ledger has changed. It performs no full-ledger verification,
+does not publish externally without a separately configured publisher, returns normally to the scheduler, and exposes
+neither event metadata nor the audit integrity key in scheduler output or logs.

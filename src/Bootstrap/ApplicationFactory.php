@@ -16,11 +16,13 @@ use Qmdb\Bootstrap\Module\DatabaseFoundationModule;
 use Qmdb\Bootstrap\Module\HttpFoundationModule;
 use Qmdb\Bootstrap\Module\IdentityFoundationModule;
 use Qmdb\Bootstrap\Module\IdentityAccessModule;
+use Qmdb\Bootstrap\Module\IdentityAccountStateModule;
 use Qmdb\Bootstrap\Module\IdentitySessionsModule;
 use Qmdb\Bootstrap\Module\IdentityRecoveryModule;
 use Qmdb\Bootstrap\Module\IdentityMultiFactorModule;
 use Qmdb\Bootstrap\Module\SecurityAuthorizationModule;
 use Qmdb\Bootstrap\Module\SecurityPrivilegedAccessModule;
+use Qmdb\Bootstrap\Module\SecurityAuditModule;
 use Qmdb\Bootstrap\Module\IdentitySecurityNotificationsModule;
 use Qmdb\Bootstrap\Module\ObservabilityFoundationModule;
 use Qmdb\Bootstrap\Module\PresentationFoundationModule;
@@ -40,6 +42,8 @@ use Qmdb\Modules\IdentityRecovery\Configuration\IdentityRecoveryConfigurationFac
 use Qmdb\Modules\IdentitySecurityNotifications\Configuration\SecurityNotificationConfigurationFactory;
 use Qmdb\Modules\IdentityMultiFactor\Configuration\IdentityMultiFactorConfigurationFactory;
 use Qmdb\Modules\SecurityPrivilegedAccess\Configuration\PrivilegedAccessConfigurationFactory;
+use Qmdb\Modules\SecurityAudit\Configuration\SecurityAuditConfigurationFactory;
+use Qmdb\Modules\IdentityAccountState\Configuration\AccountStateConfigurationFactory;
 use Qmdb\Shared\DependencyInjection\CompiledContainer;
 use Qmdb\Shared\DependencyInjection\ContainerBuilder;
 use Qmdb\Shared\Module\ModuleRegistry;
@@ -153,6 +157,13 @@ final readonly class ApplicationFactory
         $privilegedAccessConfiguration = (new PrivilegedAccessConfigurationFactory())->create(
             $loadedEnvironment->variables(),
         );
+        $securityAuditConfiguration = (new SecurityAuditConfigurationFactory())->create(
+            $loadedEnvironment->variables(),
+            $configuration,
+        );
+        $accountStateConfiguration = (new AccountStateConfigurationFactory())->create(
+            $loadedEnvironment->variables(),
+        );
 
         $registry = new ModuleRegistry([
             new CoreFoundationModule($configuration, $loadedEnvironment->variables(), $runtimeEnvironment),
@@ -180,6 +191,8 @@ final readonly class ApplicationFactory
             new SecurityAuthorizationModule(),
             new TenancyContextModule($this->projectRoot),
             new SecurityPrivilegedAccessModule($privilegedAccessConfiguration),
+            new SecurityAuditModule($securityAuditConfiguration),
+            new IdentityAccountStateModule($accountStateConfiguration),
             new ApplicationHttpModule($this->projectRoot),
             new ConsoleFoundationModule(),
         ]);

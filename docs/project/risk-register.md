@@ -483,3 +483,31 @@ recovery-authorized B01 normalization contract.
 | Tenant export is absent | Only a marker contract requires future trusted context | DEFERRED to export-owning batch |
 | Standalone MySQL suite leaves unusable schema | Guarded wrapper always restores migration/seed/readiness state | MITIGATED by CI orchestration correction |
 | Temporary/support/break-glass authority inferred from context | No such grant, route, job, or context exists in B07 | AVOIDED; P2-B08 owns future design |
+
+## P2-B09 Security Audit and Account State risk treatment
+
+| Risk | Implemented treatment | Current disposition |
+| --- | --- | --- |
+| Audit event is absent after a committed security mutation | Audit append is inside the same authoritative transaction; an append failure aborts the mutation | MITIGATED by transactional integration tests |
+| Event or checkpoint record is altered through ordinary database access | MySQL triggers reject update/delete; application repositories expose no mutation path | MITIGATED for application and ordinary database paths; privileged database administration remains an operational residual |
+| Audit stream sequence forks under concurrency | Per-stream row locking, monotonic sequence heads, optimistic head update, and transactional retry boundary | MITIGATED by MySQL append-concurrency tests |
+| Checkpoint creation races or produces duplicate heads | Advisory lock plus one transaction and deterministic ordered snapshot | MITIGATED by checkpoint tests |
+| Sensitive or arbitrary metadata enters the ledger | Strict event-specific allowlist, canonical serializer, bounded size, and no justification payload | MITIGATED by unit and integration tests |
+| Database and integrity key are jointly compromised | Integrity key is externally supplied and versioned; verifier detects ordinary tampering | REDUCED; independent key custody and external checkpoint publication remain OPEN |
+| Suspension leaves active access usable | Suspension revokes sessions, transactions, step-up grants, ceremonies, recovery challenges, active privileged access, and pending requests transactionally | MITIGATED by account-state MySQL tests |
+| Reactivation silently restores elevated or stale access | Reactivation changes account state only; sessions and assurance must be freshly established | MITIGATED by account-state service tests |
+| Final platform security administrator is suspended | Locked last-usable-administrator protection rejects the operation | MITIGATED by concurrency and authorization tests |
+| Security evidence is disclosed by a viewer | Viewer authorization is base-role scoped, responses are bounded/no-store, and routes do not export raw records | MITIGATED locally; disclosure/export policy remains OPEN |
+| Integrity verification is ignored operationally | CLI returns failure on invalid evidence and readiness has no external-witness claim | DETECTABLE; incident-response runbook remains OPEN |
+
+## P2-B10 Identity and Tenant Security Hardening risk treatment
+
+| Risk | Implemented treatment | Current disposition |
+| --- | --- | --- |
+| Audit key, immutable trigger, or inspection index drift is invisible to runtime health | Bounded audit-control verifier checks the configured key, triggers, and all audit-listing indexes through readiness | MITIGATED locally; independent key custody and incident response remain OPEN |
+| Health probes become an audit-history denial-of-service vector | Readiness consumes only control verification; full keyed-chain replay remains an explicit CLI/release action | MITIGATED by architecture and unit tests |
+| A newly registered protected route lacks an anonymous denial test | Route-derived matrix defaults every non-allowlisted route to protected and tests normal plus fragment requests | MITIGATED by 61-route executable HTTP matrix |
+| CSRF-first denial is mistaken for an authorization bypass | Matrix accepts only safe 403 mutation denial or authentication redirect/401; no protected action is reached | MITIGATED by route-security regression |
+| Audit inspection regresses to unbounded or unindexed retrieval | Maximum page size is 100 and stream/code/actor/subject/workspace/severity indexes are verified | MITIGATED structurally; OD-036 capacity targets remain OPEN |
+| Route or tenant-repository scope drifts without an executable inventory | Closed route/security and tenant-repository inventories fail on missing classification, missing scope predicate or unregistered exception | MITIGATED for the P2 inventory; future repositories require registration in their owning batch |
+| P2 closeout is claimed without a committed governed revision | B09/B10 records retain the engineering-freeze blocker and do not authorize P2 closeout | OPEN OWNER ACTION |

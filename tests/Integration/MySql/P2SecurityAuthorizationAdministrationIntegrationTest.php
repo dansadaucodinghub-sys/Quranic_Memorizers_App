@@ -35,6 +35,12 @@ use Qmdb\Modules\SecurityAuthorization\Infrastructure\Persistence\MySqlAuthoriza
 use Qmdb\Modules\SecurityAuthorization\Infrastructure\Persistence\MySqlEffectivePermissionRepository;
 use Qmdb\Modules\SecurityAuthorization\Infrastructure\Persistence\MySqlPlatformRoleAssignmentRepository;
 use Qmdb\Modules\SecurityAuthorization\Infrastructure\Persistence\MySqlWorkspaceRoleAssignmentRepository;
+use Qmdb\Modules\SecurityAudit\Infrastructure\Persistence\HashChainedSecurityAuditRecorder;
+use Qmdb\Modules\SecurityAudit\Application\SecurityAuditEventAppender;
+use Qmdb\Modules\SecurityAudit\Application\SecurityAuditHashChain;
+use Qmdb\Modules\SecurityAudit\Configuration\SecurityAuditConfiguration;
+use Qmdb\Modules\SecurityAudit\Domain\CanonicalSecurityEventMetadataSerializer;
+use Qmdb\Modules\SecurityAudit\Domain\SecurityAuditIntegrityKeyProvider;
 use Qmdb\Shared\Infrastructure\Persistence\MySql\Connection\MySqlConnectionProvider;
 use Qmdb\Shared\Observability\Correlation\CorrelationId;
 use Qmdb\Tests\Support\IdentityAccess\FixedIdentityClock;
@@ -344,6 +350,7 @@ final class P2SecurityAuthorizationAdministrationIntegrationTest extends MySqlIn
             $delegation,
             $stepUp,
             $notifications,
+            $this->auditAppender(),
             $transactions,
             $logger,
             $clock,
@@ -355,6 +362,7 @@ final class P2SecurityAuthorizationAdministrationIntegrationTest extends MySqlIn
             $delegation,
             $stepUp,
             $notifications,
+            $this->auditAppender(),
             $transactions,
             $logger,
             $clock,
@@ -366,6 +374,7 @@ final class P2SecurityAuthorizationAdministrationIntegrationTest extends MySqlIn
             $delegation,
             $stepUp,
             $notifications,
+            $this->auditAppender(),
             $transactions,
             $logger,
             $clock,
@@ -377,6 +386,7 @@ final class P2SecurityAuthorizationAdministrationIntegrationTest extends MySqlIn
             $delegation,
             $stepUp,
             $notifications,
+            $this->auditAppender(),
             $transactions,
             $logger,
             $clock,
@@ -386,5 +396,28 @@ final class P2SecurityAuthorizationAdministrationIntegrationTest extends MySqlIn
     private static function correlation(int $sequence): CorrelationId
     {
         return new CorrelationId(str_pad(dechex($sequence), CorrelationId::LENGTH, '0', STR_PAD_LEFT));
+    }
+
+    private function auditAppender(): SecurityAuditEventAppender
+    {
+        $configuration = new SecurityAuditConfiguration(false, 4096, 1000, 3600, 10000, 1);
+        $keys = new class implements SecurityAuditIntegrityKeyProvider {
+            public function keyForVersion(int $version): string
+            {
+                if ($version !== 1) {
+                    throw new \RuntimeException('Unexpected test integrity-key version.');
+                }
+
+                return hash('sha256', 'QMDB-NON-PRODUCTION-SECURITY-AUDIT-KEY-V1', true);
+            }
+        };
+
+        return new SecurityAuditEventAppender(new HashChainedSecurityAuditRecorder(
+            $this->database,
+            new CanonicalSecurityEventMetadataSerializer(4096),
+            $keys,
+            $configuration,
+            new SecurityAuditHashChain(),
+        ));
     }
 }

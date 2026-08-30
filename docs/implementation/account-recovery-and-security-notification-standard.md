@@ -81,3 +81,9 @@ configuration. Secrets remain supplied through the existing secrets provider. Op
 terminal notification failures, mail-provider availability, recovery-request pressure, and recovery/history retention.
 Final retention, CAPTCHA/trusted-proxy policy, provider selection, and future MFA recovery are intentionally deferred to
 their owning decisions.
+
+## P2-B09 audit integration
+
+Successful password reset remains a single authoritative transaction and now appends a keyed account audit event
+without including a password, password hash, token, contact value, or recovery challenge secret. The durable security
+notification is still delivered only after commit by the existing scheduler path.

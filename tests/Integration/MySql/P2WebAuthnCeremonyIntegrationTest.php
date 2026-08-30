@@ -28,6 +28,12 @@ use Qmdb\Modules\IdentitySecurityNotifications\Configuration\SecurityNotificatio
 use Qmdb\Modules\IdentitySecurityNotifications\Domain\SecurityNotificationDeduplicationKeyFactory;
 use Qmdb\Modules\IdentitySecurityNotifications\Infrastructure\Persistence\MySqlAccountSecurityNotificationRepository;
 use Qmdb\Modules\IdentitySessions\Application\AuthenticatedAccountContext;
+use Qmdb\Modules\SecurityAudit\Infrastructure\Persistence\HashChainedSecurityAuditRecorder;
+use Qmdb\Modules\SecurityAudit\Application\SecurityAuditEventAppender;
+use Qmdb\Modules\SecurityAudit\Application\SecurityAuditHashChain;
+use Qmdb\Modules\SecurityAudit\Configuration\SecurityAuditConfiguration;
+use Qmdb\Modules\SecurityAudit\Domain\CanonicalSecurityEventMetadataSerializer;
+use Qmdb\Modules\SecurityAudit\Domain\SecurityAuditIntegrityKeyProvider;
 use Qmdb\Modules\IdentitySessions\Domain\DeviceId;
 use Qmdb\Modules\IdentitySessions\Domain\SessionId;
 use Qmdb\Shared\Identifier\UuidV7;
@@ -37,6 +43,7 @@ use Qmdb\Tests\Support\IdentityAccess\FixedIdentityClock;
 use Qmdb\Tests\Support\MySql\MySqlIntegrationTestCase;
 
 #[Group('mysql')]
+#[Group('WebAuthnAbuse')]
 final class P2WebAuthnCeremonyIntegrationTest extends MySqlIntegrationTestCase
 {
     private const NOW = '2026-08-27T12:00:00Z';
@@ -69,8 +76,10 @@ final class P2WebAuthnCeremonyIntegrationTest extends MySqlIntegrationTestCase
             $this->repository,
             new StepUpGuard($this->repository, $clock),
             $notifications,
+            $this->repository,
             $this->transactionManager($this->provider),
             $this->mfaConfiguration(),
+            $this->auditAppender(),
             $clock,
         );
     }
@@ -643,10 +652,35 @@ final class P2WebAuthnCeremonyIntegrationTest extends MySqlIntegrationTestCase
         }
     }
 
+    private function auditAppender(): SecurityAuditEventAppender
+    {
+        $configuration = new SecurityAuditConfiguration(false, 4096, 1000, 3600, 10000, 1);
+        $keys = new class implements SecurityAuditIntegrityKeyProvider {
+            public function keyForVersion(int $version): string
+            {
+                if ($version !== 1) {
+                    throw new \RuntimeException('Unexpected test integrity-key version.');
+                }
+
+                return hash('sha256', 'QMDB-NON-PRODUCTION-SECURITY-AUDIT-KEY-V1', true);
+            }
+        };
+
+        return new SecurityAuditEventAppender(new HashChainedSecurityAuditRecorder(
+            $this->provider,
+            new CanonicalSecurityEventMetadataSerializer(4096),
+            $keys,
+            $configuration,
+            new SecurityAuditHashChain(),
+        ));
+    }
+
     private function rebuildSchema(): void
     {
         foreach (
             [
+                'account_state_operations', 'security_audit_checkpoint_heads', 'security_audit_checkpoints',
+                'security_audit_events', 'security_audit_streams',
                 'privileged_access_reviews', 'privileged_access_events', 'privileged_access_activations',
                 'privileged_access_approvals', 'privileged_access_request_permissions',
                 'privileged_access_requests', 'privileged_access_permission_policies',

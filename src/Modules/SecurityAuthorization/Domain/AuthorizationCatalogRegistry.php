@@ -77,6 +77,16 @@ final readonly class AuthorizationCatalogRegistry
         return $builder->build();
     }
 
+    public static function withAuditAccountState(): AuthorizationCatalog
+    {
+        $builder = new AuthorizationCatalogBuilder();
+        self::populateFoundational($builder);
+        PrivilegedAccessAuthorizationCatalog::extend($builder);
+        AccountStateAuthorizationCatalog::extend($builder);
+
+        return $builder->build();
+    }
+
     private static function populateFoundational(AuthorizationCatalogBuilder $builder): void
     {
         $timestamp = new DateTimeImmutable('2026-08-28T00:00:00.000000Z');

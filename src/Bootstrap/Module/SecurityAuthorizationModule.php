@@ -10,6 +10,7 @@ use Qmdb\Modules\IdentityMultiFactor\Domain\Repository\MultiFactorNotificationTa
 use Qmdb\Modules\IdentitySecurityNotifications\Configuration\SecurityNotificationConfiguration;
 use Qmdb\Modules\IdentitySecurityNotifications\Domain\Repository\AccountSecurityNotificationRepository;
 use Qmdb\Modules\IdentitySecurityNotifications\Domain\SecurityNotificationDeduplicationKeyFactory;
+use Qmdb\Modules\SecurityAudit\Application\SecurityAuditEventAppender;
 use Qmdb\Modules\SecurityAuthorization\Application\AuthenticationAssuranceComparator;
 use Qmdb\Modules\SecurityAuthorization\Application\AuthorizationCatalogVerifier;
 use Qmdb\Modules\SecurityAuthorization\Application\BaseRoleAuthorizationGuard;
@@ -68,6 +69,7 @@ final readonly class SecurityAuthorizationModule implements Module
             new ModuleId('identity.sessions'),
             new ModuleId('identity.multifactor'),
             new ModuleId('identity.security_notifications'),
+            new ModuleId('security.audit'),
             new ModuleId('tenancy.workspaces'),
         ];
     }
@@ -77,7 +79,7 @@ final readonly class SecurityAuthorizationModule implements Module
         $context->service(ServiceDefinition::instance(
             AuthorizationCatalog::class,
             self::ID,
-            AuthorizationCatalogRegistry::withPrivilegedAccess(),
+            AuthorizationCatalogRegistry::withAuditAccountState(),
         ));
         $context->service(ServiceDefinition::instance(
             AuthenticationAssuranceComparator::class,
@@ -202,6 +204,7 @@ final readonly class SecurityAuthorizationModule implements Module
             DelegationValidator::class,
             StepUpGuard::class,
             AuthorizationSecurityNotificationService::class,
+            SecurityAuditEventAppender::class,
             TransactionManager::class,
             EventLogger::class,
             Clock::class,
@@ -216,6 +219,7 @@ final readonly class SecurityAuthorizationModule implements Module
             ServiceReference::get($r, DelegationValidator::class),
             ServiceReference::get($r, StepUpGuard::class),
             ServiceReference::get($r, AuthorizationSecurityNotificationService::class),
+            ServiceReference::get($r, SecurityAuditEventAppender::class),
             ServiceReference::get($r, TransactionManager::class),
             ServiceReference::get($r, EventLogger::class),
             ServiceReference::get($r, Clock::class),
@@ -230,6 +234,7 @@ final readonly class SecurityAuthorizationModule implements Module
             ServiceReference::get($r, DelegationValidator::class),
             ServiceReference::get($r, StepUpGuard::class),
             ServiceReference::get($r, AuthorizationSecurityNotificationService::class),
+            ServiceReference::get($r, SecurityAuditEventAppender::class),
             ServiceReference::get($r, TransactionManager::class),
             ServiceReference::get($r, EventLogger::class),
             ServiceReference::get($r, Clock::class),
@@ -244,6 +249,7 @@ final readonly class SecurityAuthorizationModule implements Module
             ServiceReference::get($r, DelegationValidator::class),
             ServiceReference::get($r, StepUpGuard::class),
             ServiceReference::get($r, AuthorizationSecurityNotificationService::class),
+            ServiceReference::get($r, SecurityAuditEventAppender::class),
             ServiceReference::get($r, TransactionManager::class),
             ServiceReference::get($r, EventLogger::class),
             ServiceReference::get($r, Clock::class),
@@ -258,6 +264,7 @@ final readonly class SecurityAuthorizationModule implements Module
             ServiceReference::get($r, DelegationValidator::class),
             ServiceReference::get($r, StepUpGuard::class),
             ServiceReference::get($r, AuthorizationSecurityNotificationService::class),
+            ServiceReference::get($r, SecurityAuditEventAppender::class),
             ServiceReference::get($r, TransactionManager::class),
             ServiceReference::get($r, EventLogger::class),
             ServiceReference::get($r, Clock::class),

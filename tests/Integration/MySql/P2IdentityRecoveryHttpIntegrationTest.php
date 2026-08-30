@@ -83,7 +83,7 @@ final class P2IdentityRecoveryHttpIntegrationTest extends MySqlIntegrationTestCa
         self::assertSame(503, $readiness->getStatusCode());
         self::assertSame('{"status":"not_ready"}', (string)$readiness->getBody());
 
-        self::assertCount(23, $this->migrationRegistry()->ordered());
+        self::assertCount(28, $this->migrationRegistry()->ordered());
         foreach (
             ['account_password_recovery_challenges', 'account_password_recovery_events',
                 'account_security_notifications', 'account_security_notification_events'] as $table
@@ -283,7 +283,7 @@ final class P2IdentityRecoveryHttpIntegrationTest extends MySqlIntegrationTestCa
             $schedule->exitCode(),
             $schedule->standardOutput() . $schedule->standardError(),
         );
-        self::assertStringContainsString('Succeeded: 2', $schedule->standardOutput());
+        self::assertStringContainsString('Succeeded: 3', $schedule->standardOutput());
         self::assertSame('DELIVERED', $this->scalar('SELECT status FROM account_security_notifications'));
 
         $repeat = ApplicationFactory::fromCurrentProcess()->createConsoleApplication()->run(['schedule:run']);
@@ -612,6 +612,7 @@ final class P2IdentityRecoveryHttpIntegrationTest extends MySqlIntegrationTestCa
 
     private function rebuildIdentityTables(): void
     {
+        $this->connection->exec('DROP TABLE IF EXISTS account_state_operations');
         $this->connection->exec('DROP TABLE IF EXISTS qmdb_scheduled_task_runs');
         foreach ($this->identityTables() as $table) {
             $this->connection->exec('DROP TABLE IF EXISTS ' . $table);

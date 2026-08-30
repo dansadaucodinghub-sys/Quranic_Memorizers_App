@@ -23,6 +23,7 @@ use Qmdb\Shared\Schema\Migration\MigrationRegistry;
 use Qmdb\Tests\Support\MySql\MySqlIntegrationTestCase;
 
 #[Group('mysql')]
+#[Group('MfaAbuse')]
 final class P2IdentityMultiFactorIntegrationTest extends MySqlIntegrationTestCase
 {
     private PDO $connection;
@@ -410,7 +411,9 @@ final class P2IdentityMultiFactorIntegrationTest extends MySqlIntegrationTestCas
     {
         foreach (
             [
-            'privileged_access_reviews', 'privileged_access_events', 'privileged_access_activations',
+                'account_state_operations', 'security_audit_checkpoint_heads', 'security_audit_checkpoints',
+                'security_audit_events', 'security_audit_streams',
+                'privileged_access_reviews', 'privileged_access_events', 'privileged_access_activations',
             'privileged_access_approvals', 'privileged_access_request_permissions',
             'privileged_access_requests', 'privileged_access_permission_policies',
             'workspace_role_assignments', 'platform_role_assignments', 'authorization_role_permissions',

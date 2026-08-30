@@ -25,6 +25,7 @@ use Qmdb\Modules\TenancyContext\Infrastructure\Migration\AddSessionBoundTenantCo
 use Qmdb\Shared\Presentation\Response\FragmentRequestDetector;
 use Qmdb\Tests\Support\MySql\MySqlIntegrationTestCase;
 
+#[\PHPUnit\Framework\Attributes\Group('SessionAbuse')]
 final class P2IdentitySessionHttpIntegrationTest extends MySqlIntegrationTestCase
 {
     private const PASSWORD = 'Strong passphrase 123!';
@@ -40,6 +41,7 @@ final class P2IdentitySessionHttpIntegrationTest extends MySqlIntegrationTestCas
         $this->originalMaximumActiveSessions = getenv('AUTH_SESSION_MAX_ACTIVE_PER_ACCOUNT');
         putenv('AUTH_SESSION_MAX_ACTIVE_PER_ACCOUNT=5');
         $this->connection = $this->provider()->connection();
+        $this->connection->exec('DROP TABLE IF EXISTS account_state_operations');
         foreach (
             [
             'privileged_access_reviews', 'privileged_access_events', 'privileged_access_activations',

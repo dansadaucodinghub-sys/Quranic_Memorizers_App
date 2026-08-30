@@ -11,6 +11,8 @@ use Qmdb\Modules\IdentityMultiFactor\Domain\StepUpAction;
 use Qmdb\Modules\IdentityMultiFactor\Domain\TotpAuthenticatorStatus;
 use Qmdb\Modules\IdentitySecurityNotifications\Domain\AccountSecurityNotificationType;
 use Qmdb\Modules\IdentitySessions\Application\AuthenticatedAccountContext;
+use Qmdb\Modules\SecurityAudit\Application\SecurityAuditEventAppender;
+use Qmdb\Modules\SecurityAudit\Domain\SecurityEventCode;
 use Qmdb\Shared\Database\Transaction\TransactionManager;
 use Qmdb\Shared\Time\Clock;
 
@@ -22,6 +24,7 @@ final readonly class TotpAuthenticatorRevocationService
         private StepUpGuard $stepUp,
         private MultiFactorNotificationService $notifications,
         private TransactionManager $transactions,
+        private SecurityAuditEventAppender $audit,
         private Clock $clock,
     ) {
     }
@@ -66,6 +69,7 @@ final readonly class TotpAuthenticatorRevocationService
                 $authenticator->publicId,
                 $now,
             );
+            $this->audit->account(SecurityEventCode::TOTP_REMOVED, $context->accountId->toString(), $context->accountId->toString(), $context->sessionId->toString(), $now, ['authenticator_public_id' => $authenticator->publicId]);
         });
     }
 }

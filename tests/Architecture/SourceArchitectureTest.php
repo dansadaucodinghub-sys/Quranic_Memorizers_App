@@ -109,12 +109,15 @@ final class SourceArchitectureTest extends TestCase
                 str_contains($path, '/Shared/Infrastructure/Persistence/MySql/')
                 || str_contains($path, '/Modules/Identity/Infrastructure/Persistence/')
                 || str_contains($path, '/Modules/IdentityAccess/Infrastructure/Persistence/')
+                || str_contains($path, '/Modules/IdentityAccountState/Infrastructure/Persistence/')
+                || str_contains($path, '/Modules/IdentityAccountState/Infrastructure/Seed/')
                 || str_contains($path, '/Modules/IdentityMultiFactor/Infrastructure/Persistence/')
                 || str_contains($path, '/Modules/IdentityRecovery/Infrastructure/Persistence/')
                 || str_contains($path, '/Modules/IdentitySecurityNotifications/Infrastructure/Persistence/')
                 || str_contains($path, '/Modules/IdentitySessions/Infrastructure/Persistence/')
                 || str_contains($path, '/Modules/SecurityAuthorization/Infrastructure/Persistence/')
                 || str_contains($path, '/Modules/SecurityAuthorization/Infrastructure/Seed/')
+                || str_contains($path, '/Modules/SecurityAudit/Infrastructure/Persistence/')
                 || str_contains($path, '/Modules/SecurityPrivilegedAccess/Infrastructure/Persistence/')
                 || str_contains($path, '/Modules/SecurityPrivilegedAccess/Infrastructure/Seed/')
                 || str_contains($path, '/Modules/Tenancy/Infrastructure/Persistence/')
@@ -135,10 +138,12 @@ final class SourceArchitectureTest extends TestCase
             [
                 'Identity',
                 'IdentityAccess',
+                'IdentityAccountState',
                 'IdentityMultiFactor',
                 'IdentityRecovery',
                 'IdentitySecurityNotifications',
                 'IdentitySessions',
+                'SecurityAudit',
                 'SecurityAuthorization',
                 'SecurityPrivilegedAccess',
                 'SecurityWeb',

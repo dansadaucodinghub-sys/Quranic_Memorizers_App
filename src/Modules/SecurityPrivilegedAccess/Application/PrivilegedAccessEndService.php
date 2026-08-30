@@ -8,6 +8,9 @@ namespace Qmdb\Modules\SecurityPrivilegedAccess\Application;
 
 use Qmdb\Modules\IdentitySessions\Application\AuthenticatedAccountContext;
 use Qmdb\Modules\IdentitySecurityNotifications\Domain\AccountSecurityNotificationType;
+use Qmdb\Modules\SecurityAudit\Application\SecurityAuditEventAppender;
+use Qmdb\Modules\SecurityAudit\Domain\SecurityEventCode;
+use Qmdb\Modules\SecurityAudit\Domain\SecurityEventSubjectKind;
 use Qmdb\Modules\SecurityPrivilegedAccess\Domain\PrivilegedAccessType;
 use Qmdb\Modules\TenancyContext\Domain\Repository\SessionTenantContextRepository;
 use Qmdb\Shared\Database\Transaction\TransactionManager;
@@ -20,6 +23,7 @@ final readonly class PrivilegedAccessEndService
         private PrivilegedAccessLifecycleRepository $lifecycle,
         private SessionTenantContextRepository $tenantContexts,
         private PrivilegedAccessNotificationService $notifications,
+        private SecurityAuditEventAppender $audit,
         private TransactionManager $transactions,
         private Clock $clock,
     ) {
@@ -46,6 +50,22 @@ final readonly class PrivilegedAccessEndService
                 },
                 $ended->id->toString(),
                 $now,
+            );
+            $this->audit->privilegedAccess(
+                match ($ended->type) {
+                    PrivilegedAccessType::TEMPORARY_PRIVILEGE => SecurityEventCode::TEMPORARY_ENDED,
+                    PrivilegedAccessType::SUPPORT_ACCESS => SecurityEventCode::SUPPORT_ENDED,
+                    PrivilegedAccessType::BREAK_GLASS => SecurityEventCode::BREAK_GLASS_ENDED,
+                },
+                $ended->scope->value === 'WORKSPACE',
+                $ended->workspacePublicId,
+                SecurityEventSubjectKind::PRIVILEGED_ACCESS,
+                $ended->id->toString(),
+                $actor->accountId->toString(),
+                $now,
+                ['access_type' => $ended->type->value, 'scope_type' => $ended->scope->value],
+                null,
+                $correlationId->value(),
             );
 
             return $ended;

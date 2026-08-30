@@ -15,6 +15,9 @@ use Qmdb\Modules\IdentityMultiFactor\Application\StepUpGuard;
 use Qmdb\Modules\IdentityMultiFactor\Domain\AuthenticationAssuranceLevel;
 use Qmdb\Modules\IdentityMultiFactor\Domain\StepUpAction;
 use Qmdb\Modules\IdentitySecurityNotifications\Domain\AccountSecurityNotificationType;
+use Qmdb\Modules\SecurityAudit\Application\SecurityAuditEventAppender;
+use Qmdb\Modules\SecurityAudit\Domain\SecurityEventCode;
+use Qmdb\Modules\SecurityAudit\Domain\SecurityEventSubjectKind;
 use Qmdb\Modules\SecurityAuthorization\Application\AuthorizationRequest;
 use Qmdb\Modules\SecurityAuthorization\Application\AuthorizationSubject;
 use Qmdb\Modules\SecurityAuthorization\Application\BaseRoleAuthorizationGuard;
@@ -39,6 +42,7 @@ final readonly class BreakGlassActivationService
         private IdentityRateLimiter $rateLimiter,
         private IdentityFingerprintGenerator $fingerprints,
         private PrivilegedAccessNotificationService $notifications,
+        private SecurityAuditEventAppender $audit,
         private PrivilegedAccessConfiguration $configuration,
         private TransactionManager $transactions,
         private Clock $clock,
@@ -86,6 +90,10 @@ final readonly class BreakGlassActivationService
                 $now,
                 $now->modify('+' . $this->configuration->requestTtlSeconds . ' seconds'),
             );
+            $auditRequest = $this->lifecycle->requestSnapshot($requestId);
+            if ($auditRequest === null) {
+                throw new \UnexpectedValueException('Break-glass request is unavailable for audit routing.');
+            }
             $activation = $this->activations->activate(
                 $request->actor,
                 $requestId,
@@ -100,6 +108,18 @@ final readonly class BreakGlassActivationService
                 AccountSecurityNotificationType::BREAK_GLASS_ACTIVATED,
                 $activation->toString(),
                 $now,
+            );
+            $this->audit->privilegedAccess(
+                SecurityEventCode::BREAK_GLASS_ACTIVATED,
+                $auditRequest->scope->value === 'WORKSPACE',
+                $auditRequest->workspacePublicId,
+                SecurityEventSubjectKind::PRIVILEGED_ACCESS,
+                $activation->toString(),
+                $request->actor->accountId->toString(),
+                $now,
+                ['access_type' => PrivilegedAccessType::BREAK_GLASS->value],
+                null,
+                $request->correlationId->value(),
             );
 
             return new BreakGlassActivationResult($requestId, $activation);

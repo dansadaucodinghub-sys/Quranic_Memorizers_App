@@ -1,8 +1,10 @@
 # Qur’an Memorizer DB
 
 QMDB is the governed Qur’an Memorizer Database platform. This repository contains the frozen P1 Core PHP engineering
-foundation and the active P2 identity and tenancy implementation. `QMDB-P2-B01` through `QMDB-P2-B07` are complete.
-P2 remains in progress; B08 is the next bounded batch and has not been started.
+foundation and the active P2 identity and tenancy implementation. `QMDB-P2-B01` through `QMDB-P2-B08` are complete.
+`QMDB-P2-B09` remains a closeout-blocked implementation candidate because the required engineering freeze has not
+been committed. The project owner has explicitly authorized the bounded `QMDB-P2-B10` security-hardening extension;
+P2 cannot close until both B09 and B10 pass committed engineering-freeze verification.
 
 ## Project identity
 
@@ -11,9 +13,9 @@ P2 remains in progress; B08 is the next bounded batch and has not been started.
 - Source baseline: QMDB-BL-001
 - Frozen baseline: QMDB-P0-FRZ-001
 - Phase: P2 — Identity, Security, and Tenant Isolation
-- Completed batch: QMDB-P2-B07 — Tenant Context, Workspace Switching, and Tenant-Aware Data Access
-- Next batch: QMDB-P2-B08 — Temporary Privileges, Support Access, and Break-Glass Controls
-- Readiness: READY_FOR_NEXT_BATCH
+- Completed batch: QMDB-P2-B08 — Temporary Privileges, Support Access, and Break-Glass Controls
+- Current batch: QMDB-P2-B10 — Identity and Tenant Security Hardening
+- Readiness: CLOSEOUT_PENDING_OWNER_COMMIT
 - Engineering freeze: QMDB-P1-FRZ-001
 - Development version: 0.1.0-dev
 
@@ -127,8 +129,9 @@ Workspace permissions require a trusted TenantContext and active membership.
 Implemented now: the permission/role catalog, platform and workspace assignments, deny-by-default decisions, assurance
 enforcement, step-up-protected changes, delegation restrictions, last-administrator/owner protections, durable access-
 change notifications, readiness, and CLI verification. P2-B07 now supplies session-bound Tenant Context and workspace
-switching; custom roles, role-management UI, temporary privileges, support/break-glass access, business-module
-permissions, and geography/organization scopes remain in their owning future batches. The next batch is `QMDB-P2-B08`.
+switching; P2-B08 supplies controlled exceptional access; and P2-B09 adds security evidence and account-state
+administration. Custom roles, business-module permissions, and geography/organization scopes remain in their owning
+future batches.
 
 ## Multi-factor authentication
 
@@ -401,6 +404,49 @@ composer quality
 Transactions default to `READ COMMITTED`, distinguish read-only/read-write operation, use deterministic savepoints for nesting, and retry only verified deadlock/serialization failures through bounded jitter. Retried callbacks must not perform irreversible external side effects. No transaction may span a modal, user think time, upload, external HTTP request, or SSE stream.
 
 Future interfaces follow QMDB-CR-001: server-rendered progressive enhancement, native Fetch, partial region updates, controlled accessible modals, server-authoritative mutations, SSE for one-way live updates, and practical non-JavaScript fallbacks for competition-critical workflows.
+
+## Security Audit and Account State
+
+P2-B09 adds a keyed, tamper-evident Security Audit ledger. Platform, Account, and Workspace streams use deterministic
+stream keys, monotonic per-stream sequence numbers, HMAC-SHA-256 event chaining, and strictly allowlisted canonical
+metadata. An event is appended only inside the same authoritative database transaction as its security mutation. MySQL
+triggers reject audit-event and checkpoint updates/deletes, while stream heads remain mutable solely to advance a
+successful append. This is tamper-evident evidence, not a claim that a database administrator who controls both the
+database and the integrity key cannot rewrite history.
+
+Deterministic checkpoint snapshots are chained and can be verified locally:
+
+```powershell
+php bin/console security:audit:checkpoint:create
+php bin/console security:audit:verify
+```
+
+`SecurityAuditCheckpointPublisher` is a provider-neutral contract only. No external checkpoint publisher or external
+publication claim is configured.
+
+Platform security administrators can suspend or reactivate an account only through base-role authorization and
+phishing-resistant step-up. Self-operation and suspension of the final usable platform security administrator are
+rejected. Suspension revokes active sessions, authentication transactions, step-up grants, pending WebAuthn ceremonies,
+pending recovery challenges, active privileged access, and pending privileged-access requests. Reactivation restores
+none of that access: the account must sign in and establish new assurance. Both operations preserve account history,
+write notification intent, and append Audit evidence transactionally.
+
+Bounded, no-store security evidence pages are available at:
+
+```text
+/account/security/events
+/platform/security/events
+/platform/security/audit
+```
+
+Account-state confirmation links retain full-page behavior without JavaScript and use the global accessible dialog only
+when the browser supports it. Mutation controls are CSRF-bound, include a server-issued submission identity and expected
+account version, block duplicate browser submission, and never retry a state change automatically.
+
+Current scope includes the Security Audit ledger, verification/checkpoints, critical security-mutation evidence, account
+suspension/reactivation, and suspension-time session and privileged-access revocation. Account closure/deletion,
+automated risk scoring or suspension, SIEM integration, and an external checkpoint provider remain outside this batch.
+The next authorized batch is `QMDB-P2-B10 — Identity and Tenant Security Hardening`.
 
 ## Structured logging
 

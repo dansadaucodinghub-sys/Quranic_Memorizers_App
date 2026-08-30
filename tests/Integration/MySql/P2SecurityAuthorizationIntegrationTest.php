@@ -37,6 +37,7 @@ use Qmdb\Tests\Support\MySql\MySqlIntegrationTestCase;
 use Qmdb\Tests\Support\Observability\InMemoryEventLogger;
 use Qmdb\Tests\Support\TenancyContext\AccountWorkspaceTenantContextFactory;
 
+#[\PHPUnit\Framework\Attributes\Group('AuthorizationMatrix')]
 final class P2SecurityAuthorizationIntegrationTest extends MySqlIntegrationTestCase
 {
     private PDO $connection;
@@ -72,12 +73,12 @@ final class P2SecurityAuthorizationIntegrationTest extends MySqlIntegrationTestC
             self::assertSame(64, strlen($migrationChecksum->migrationHex($migration)));
             self::assertTrue($migration->reversible());
         }
-        self::assertCount(2, $seeds->ordered());
+        self::assertCount(3, $seeds->ordered());
         self::assertSame(64, strlen($seedChecksum->hexadecimal($seeds->ordered()[0])));
 
-        self::assertSame(27, $this->fixture->tableCount('authorization_permissions'));
+        self::assertSame(32, $this->fixture->tableCount('authorization_permissions'));
         self::assertSame(9, $this->fixture->tableCount('authorization_roles'));
-        self::assertSame(73, $this->fixture->tableCount('authorization_role_permissions'));
+        self::assertSame(83, $this->fixture->tableCount('authorization_role_permissions'));
         self::assertSame(0, $this->fixture->tableCount('platform_role_assignments'));
         self::assertSame(0, $this->fixture->tableCount('workspace_role_assignments'));
         self::assertSame([

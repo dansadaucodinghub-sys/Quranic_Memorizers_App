@@ -11,6 +11,8 @@ use Qmdb\Modules\IdentityMultiFactor\Domain\StepUpAction;
 use Qmdb\Modules\IdentityMultiFactor\Domain\SensitiveRecoveryCode;
 use Qmdb\Modules\IdentitySecurityNotifications\Domain\AccountSecurityNotificationType;
 use Qmdb\Modules\IdentitySessions\Application\AuthenticatedAccountContext;
+use Qmdb\Modules\SecurityAudit\Application\SecurityAuditEventAppender;
+use Qmdb\Modules\SecurityAudit\Domain\SecurityEventCode;
 use Qmdb\Shared\Database\Transaction\TransactionManager;
 use Qmdb\Shared\Time\Clock;
 use SensitiveParameter;
@@ -25,6 +27,7 @@ final readonly class RecoveryCodeRegenerationService
         private MultiFactorNotificationService $notifications,
         private TransactionManager $transactions,
         #[SensitiveParameter] private string $identityHmacKey,
+        private SecurityAuditEventAppender $audit,
         private Clock $clock,
     ) {
     }
@@ -50,6 +53,7 @@ final readonly class RecoveryCodeRegenerationService
                 $set->publicId,
                 $now,
             );
+            $this->audit->account(SecurityEventCode::RECOVERY_CODES_REGENERATED, $context->accountId->toString(), $context->accountId->toString(), $context->sessionId->toString(), $now);
         });
 
         return new RecoveryCodesOneTimeResult(array_map(

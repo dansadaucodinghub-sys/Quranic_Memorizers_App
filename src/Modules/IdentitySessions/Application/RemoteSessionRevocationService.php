@@ -7,12 +7,19 @@ namespace Qmdb\Modules\IdentitySessions\Application;
 use Qmdb\Modules\IdentitySessions\Domain\Repository\UserSessionRepository;
 use Qmdb\Modules\IdentitySessions\Domain\SessionId;
 use Qmdb\Modules\IdentitySessions\Domain\SessionRevocationReason;
+use Qmdb\Modules\SecurityAudit\Application\SecurityAuditEventAppender;
+use Qmdb\Modules\SecurityAudit\Domain\SecurityEventCode;
+use Qmdb\Shared\Database\Transaction\TransactionManager;
 use Qmdb\Shared\Time\Clock;
 
 final readonly class RemoteSessionRevocationService
 {
-    public function __construct(private UserSessionRepository $sessions, private Clock $clock)
-    {
+    public function __construct(
+        private UserSessionRepository $sessions,
+        private SecurityAuditEventAppender $audit,
+        private TransactionManager $transactions,
+        private Clock $clock,
+    ) {
     }
 
     public function revoke(
@@ -40,12 +47,28 @@ final readonly class RemoteSessionRevocationService
             return RevocationOutcome::VERSION_CONFLICT;
         }
 
-        return $this->sessions->revokeOwned(
-            $context->accountInternalId,
-            $target,
-            $expectedVersion,
-            SessionRevocationReason::REMOTE_SESSION_REVOCATION,
-            $this->clock->now(),
-        ) ? RevocationOutcome::REVOKED : RevocationOutcome::VERSION_CONFLICT;
+        return $this->transactions->transactional(function () use ($context, $target, $expectedVersion): RevocationOutcome {
+            $now = $this->clock->now();
+            if (
+                !$this->sessions->revokeOwned(
+                    $context->accountInternalId,
+                    $target,
+                    $expectedVersion,
+                    SessionRevocationReason::REMOTE_SESSION_REVOCATION,
+                    $now,
+                )
+            ) {
+                return RevocationOutcome::VERSION_CONFLICT;
+            }
+            $this->audit->account(
+                SecurityEventCode::SESSION_REMOTE_REVOKED,
+                $context->accountId->toString(),
+                $context->accountId->toString(),
+                $context->sessionId->toString(),
+                $now,
+            );
+
+            return RevocationOutcome::REVOKED;
+        });
     }
 }

@@ -9,6 +9,9 @@ namespace Qmdb\Modules\SecurityPrivilegedAccess\Application;
 use Qmdb\Modules\IdentityMultiFactor\Application\StepUpGuard;
 use Qmdb\Modules\IdentityMultiFactor\Domain\StepUpAction;
 use Qmdb\Modules\IdentitySecurityNotifications\Domain\AccountSecurityNotificationType;
+use Qmdb\Modules\SecurityAudit\Application\SecurityAuditEventAppender;
+use Qmdb\Modules\SecurityAudit\Domain\SecurityEventCode;
+use Qmdb\Modules\SecurityAudit\Domain\SecurityEventSubjectKind;
 use Qmdb\Modules\SecurityAuthorization\Application\AuthorizationRequest;
 use Qmdb\Modules\SecurityAuthorization\Application\AuthorizationSubject;
 use Qmdb\Modules\SecurityAuthorization\Application\BaseRoleAuthorizationGuard;
@@ -28,6 +31,7 @@ final readonly class PrivilegedAccessReviewService
         private StepUpGuard $stepUp,
         private PrivilegedAccessNotificationService $notifications,
         private PrivilegedAccessConfiguration $configuration,
+        private SecurityAuditEventAppender $audit,
         private TransactionManager $transactions,
         private Clock $clock,
     ) {
@@ -67,6 +71,20 @@ final readonly class PrivilegedAccessReviewService
                     : AccountSecurityNotificationType::BREAK_GLASS_REVIEW_COMPLETED,
                 $result->reviewId->toString(),
                 $this->clock->now(),
+            );
+            $now = $this->clock->now();
+            $this->audit->privilegedAccess(
+                $review->type === PrivilegedAccessType::SUPPORT_ACCESS
+                    ? SecurityEventCode::SUPPORT_REVIEW_COMPLETED : SecurityEventCode::BREAK_GLASS_REVIEW_COMPLETED,
+                $review->scope->value === 'WORKSPACE',
+                $review->workspacePublicId,
+                SecurityEventSubjectKind::PRIVILEGED_ACCESS,
+                $result->reviewId->toString(),
+                $command->actor->accountId->toString(),
+                $now,
+                ['access_type' => $review->type->value],
+                null,
+                $command->correlationId->value(),
             );
 
             return $result;

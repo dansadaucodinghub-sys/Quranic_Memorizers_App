@@ -27,6 +27,8 @@ use Qmdb\Modules\IdentitySecurityNotifications\Domain\Repository\AccountSecurity
 use Qmdb\Modules\IdentitySecurityNotifications\Domain\SecurityNotificationDeduplicationKeyFactory;
 use Qmdb\Modules\IdentitySessions\Domain\Repository\UserSessionRepository;
 use Qmdb\Modules\IdentitySessions\Domain\SessionRevocationReason;
+use Qmdb\Modules\SecurityAudit\Application\SecurityAuditEventAppender;
+use Qmdb\Modules\SecurityAudit\Domain\SecurityEventCode;
 use Qmdb\Shared\Database\Transaction\TransactionManager;
 use Qmdb\Shared\Time\Clock;
 
@@ -45,6 +47,7 @@ final readonly class PasswordResetService
         private SecurityNotificationDeduplicationKeyFactory $deduplicationKeys,
         private IdentityRecoveryConfiguration $configuration,
         private SecurityNotificationConfiguration $notificationConfiguration,
+        private SecurityAuditEventAppender $audit,
         private Clock $clock,
     ) {
     }
@@ -99,6 +102,13 @@ final readonly class PasswordResetService
             $this->sessions->revokeAllForAccount(
                 $locked->accountInternalId,
                 SessionRevocationReason::PASSWORD_RESET,
+                $now,
+            );
+            $this->audit->account(
+                SecurityEventCode::PASSWORD_RESET_COMPLETED,
+                $locked->accountId->toString(),
+                null,
+                null,
                 $now,
             );
             $this->notifications->createPendingIntent(

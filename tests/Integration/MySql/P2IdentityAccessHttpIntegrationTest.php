@@ -42,6 +42,7 @@ use Qmdb\Shared\Presentation\Response\FragmentRequestDetector;
 use Qmdb\Shared\Schema\Migration\Migration;
 use Qmdb\Tests\Support\MySql\MySqlIntegrationTestCase;
 
+#[\PHPUnit\Framework\Attributes\Group('AuthenticationAbuse')]
 final class P2IdentityAccessHttpIntegrationTest extends MySqlIntegrationTestCase
 {
     private PDO $connection;
@@ -437,6 +438,8 @@ final class P2IdentityAccessHttpIntegrationTest extends MySqlIntegrationTestCase
     {
         foreach (
             [
+                'account_state_operations', 'security_audit_checkpoint_heads', 'security_audit_checkpoints',
+                'security_audit_events', 'security_audit_streams',
                 'privileged_access_reviews', 'privileged_access_events', 'privileged_access_activations',
                 'privileged_access_approvals', 'privileged_access_request_permissions',
                 'privileged_access_requests', 'privileged_access_permission_policies',

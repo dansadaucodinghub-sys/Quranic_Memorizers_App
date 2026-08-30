@@ -70,6 +70,7 @@ use Qmdb\Modules\IdentityAccess\Security\Fingerprint\IdentityFingerprintGenerato
 use Qmdb\Modules\IdentitySecurityNotifications\Configuration\SecurityNotificationConfiguration;
 use Qmdb\Modules\IdentitySecurityNotifications\Domain\Repository\AccountSecurityNotificationRepository;
 use Qmdb\Modules\IdentitySecurityNotifications\Domain\SecurityNotificationDeduplicationKeyFactory;
+use Qmdb\Modules\SecurityAudit\Application\SecurityAuditEventAppender;
 use Qmdb\Modules\TenancyContext\Domain\Repository\SessionTenantContextRepository;
 
 final readonly class SecurityPrivilegedAccessModule implements Module
@@ -90,6 +91,7 @@ final readonly class SecurityPrivilegedAccessModule implements Module
         return [
             new ModuleId('foundation.core'), new ModuleId('foundation.database'), new ModuleId('foundation.schema'),
             new ModuleId('security.authorization'), new ModuleId('tenancy.context'),
+            new ModuleId('security.audit'),
             new ModuleId('identity.sessions'), new ModuleId('identity.multifactor'),
             new ModuleId('identity.security_notifications'),
         ];
@@ -172,7 +174,7 @@ final readonly class SecurityPrivilegedAccessModule implements Module
             self::ID,
             [PrivilegedAccessActivationRepository::class, SessionTenantContextRepository::class,
                 BaseRoleAuthorizationGuard::class, PrivilegedAccessLifecycleRepository::class, StepUpGuard::class, PrivilegedAccessConfiguration::class,
-                PrivilegedAccessNotificationService::class, TransactionManager::class, Clock::class],
+                PrivilegedAccessNotificationService::class, SecurityAuditEventAppender::class, TransactionManager::class, Clock::class],
             new ClosureServiceFactory(static fn (DependencyResolver $r): PrivilegedAccessActivationService =>
                 new PrivilegedAccessActivationService(
                     ServiceReference::get($r, PrivilegedAccessActivationRepository::class),
@@ -182,6 +184,7 @@ final readonly class SecurityPrivilegedAccessModule implements Module
                     ServiceReference::get($r, StepUpGuard::class),
                     ServiceReference::get($r, PrivilegedAccessConfiguration::class),
                     ServiceReference::get($r, PrivilegedAccessNotificationService::class),
+                    ServiceReference::get($r, SecurityAuditEventAppender::class),
                     ServiceReference::get($r, TransactionManager::class),
                     ServiceReference::get($r, Clock::class),
                 )),
@@ -265,12 +268,13 @@ final readonly class SecurityPrivilegedAccessModule implements Module
             PrivilegedAccessEndService::class,
             self::ID,
             [PrivilegedAccessLifecycleRepository::class, SessionTenantContextRepository::class,
-                PrivilegedAccessNotificationService::class, TransactionManager::class, Clock::class],
+                PrivilegedAccessNotificationService::class, SecurityAuditEventAppender::class, TransactionManager::class, Clock::class],
             new ClosureServiceFactory(static fn (DependencyResolver $r): PrivilegedAccessEndService =>
                 new PrivilegedAccessEndService(
                     ServiceReference::get($r, PrivilegedAccessLifecycleRepository::class),
                     ServiceReference::get($r, SessionTenantContextRepository::class),
                     ServiceReference::get($r, PrivilegedAccessNotificationService::class),
+                    ServiceReference::get($r, SecurityAuditEventAppender::class),
                     ServiceReference::get($r, TransactionManager::class),
                     ServiceReference::get($r, Clock::class),
                 )),
@@ -279,13 +283,14 @@ final readonly class SecurityPrivilegedAccessModule implements Module
             PrivilegedAccessRevocationService::class,
             self::ID,
             [BaseRoleAuthorizationGuard::class, PrivilegedAccessLifecycleRepository::class, StepUpGuard::class,
-                PrivilegedAccessNotificationService::class, TransactionManager::class, Clock::class],
+                PrivilegedAccessNotificationService::class, SecurityAuditEventAppender::class, TransactionManager::class, Clock::class],
             new ClosureServiceFactory(static fn (DependencyResolver $r): PrivilegedAccessRevocationService =>
                 new PrivilegedAccessRevocationService(
                     ServiceReference::get($r, BaseRoleAuthorizationGuard::class),
                     ServiceReference::get($r, PrivilegedAccessLifecycleRepository::class),
                     ServiceReference::get($r, StepUpGuard::class),
                     ServiceReference::get($r, PrivilegedAccessNotificationService::class),
+                    ServiceReference::get($r, SecurityAuditEventAppender::class),
                     ServiceReference::get($r, TransactionManager::class),
                     ServiceReference::get($r, Clock::class),
                 )),
@@ -294,7 +299,7 @@ final readonly class SecurityPrivilegedAccessModule implements Module
             PrivilegedAccessReviewService::class,
             self::ID,
             [BaseRoleAuthorizationGuard::class, PrivilegedAccessLifecycleRepository::class, StepUpGuard::class,
-                PrivilegedAccessNotificationService::class, PrivilegedAccessConfiguration::class,
+                PrivilegedAccessNotificationService::class, PrivilegedAccessConfiguration::class, SecurityAuditEventAppender::class,
                 TransactionManager::class, Clock::class],
             new ClosureServiceFactory(static fn (DependencyResolver $r): PrivilegedAccessReviewService =>
                 new PrivilegedAccessReviewService(
@@ -303,6 +308,7 @@ final readonly class SecurityPrivilegedAccessModule implements Module
                     ServiceReference::get($r, StepUpGuard::class),
                     ServiceReference::get($r, PrivilegedAccessNotificationService::class),
                     ServiceReference::get($r, PrivilegedAccessConfiguration::class),
+                    ServiceReference::get($r, SecurityAuditEventAppender::class),
                     ServiceReference::get($r, TransactionManager::class),
                     ServiceReference::get($r, Clock::class),
                 )),
@@ -313,7 +319,7 @@ final readonly class SecurityPrivilegedAccessModule implements Module
             [BaseRoleAuthorizationGuard::class, PrivilegedAccessRequestRepository::class,
                 PrivilegedAccessActivationRepository::class, PrivilegedAccessLifecycleRepository::class,
                 SessionTenantContextRepository::class, StepUpGuard::class, IdentityRateLimiter::class,
-                IdentityFingerprintGenerator::class, PrivilegedAccessNotificationService::class,
+                IdentityFingerprintGenerator::class, PrivilegedAccessNotificationService::class, SecurityAuditEventAppender::class,
                 PrivilegedAccessConfiguration::class, TransactionManager::class, Clock::class],
             new ClosureServiceFactory(static fn (DependencyResolver $r): BreakGlassActivationService =>
                 new BreakGlassActivationService(
@@ -326,6 +332,7 @@ final readonly class SecurityPrivilegedAccessModule implements Module
                     ServiceReference::get($r, IdentityRateLimiter::class),
                     ServiceReference::get($r, IdentityFingerprintGenerator::class),
                     ServiceReference::get($r, PrivilegedAccessNotificationService::class),
+                    ServiceReference::get($r, SecurityAuditEventAppender::class),
                     ServiceReference::get($r, PrivilegedAccessConfiguration::class),
                     ServiceReference::get($r, TransactionManager::class),
                     ServiceReference::get($r, Clock::class),
@@ -393,13 +400,14 @@ final readonly class SecurityPrivilegedAccessModule implements Module
             PrivilegedAccessMaintenanceService::class,
             self::ID,
             [PrivilegedAccessMaintenanceRepository::class, PrivilegedAccessNotificationService::class,
-                PrivilegedAccessConfiguration::class,
+                PrivilegedAccessConfiguration::class, SecurityAuditEventAppender::class,
                 TransactionManager::class, Clock::class],
             new ClosureServiceFactory(static fn (DependencyResolver $r): PrivilegedAccessMaintenanceService =>
                 new PrivilegedAccessMaintenanceService(
                     ServiceReference::get($r, PrivilegedAccessMaintenanceRepository::class),
                     ServiceReference::get($r, PrivilegedAccessNotificationService::class),
                     ServiceReference::get($r, PrivilegedAccessConfiguration::class),
+                    ServiceReference::get($r, SecurityAuditEventAppender::class),
                     ServiceReference::get($r, TransactionManager::class),
                     ServiceReference::get($r, Clock::class),
                 )),

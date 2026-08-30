@@ -7,6 +7,9 @@ namespace Qmdb\Modules\SecurityAuthorization\Application;
 use Qmdb\Modules\IdentityMultiFactor\Application\StepUpGuard;
 use Qmdb\Modules\IdentityMultiFactor\Domain\StepUpAction;
 use Qmdb\Modules\IdentitySecurityNotifications\Domain\AccountSecurityNotificationType;
+use Qmdb\Modules\SecurityAudit\Application\SecurityAuditEventAppender;
+use Qmdb\Modules\SecurityAudit\Domain\SecurityEventCode;
+use Qmdb\Modules\SecurityAudit\Domain\SecurityEventSubjectKind;
 use Qmdb\Modules\SecurityAuthorization\Domain\AuthorizationScopeType;
 use Qmdb\Modules\SecurityAuthorization\Domain\PermissionCode;
 use Qmdb\Modules\SecurityAuthorization\Domain\PlatformAuthorizationScope;
@@ -31,6 +34,7 @@ final readonly class PlatformRoleRevocationService
         private DelegationValidator $delegation,
         private StepUpGuard $stepUp,
         private AuthorizationSecurityNotificationService $notifications,
+        private SecurityAuditEventAppender $audit,
         private TransactionManager $transactions,
         private EventLogger $logger,
         private Clock $clock,
@@ -86,6 +90,20 @@ final readonly class PlatformRoleRevocationService
                 AccountSecurityNotificationType::PLATFORM_ROLE_REVOKED,
                 $revoked->id->toString(),
                 $now,
+            );
+            $this->audit->platform(
+                SecurityEventCode::PLATFORM_ROLE_REVOKED,
+                SecurityEventSubjectKind::ROLE_ASSIGNMENT,
+                $revoked->id->toString(),
+                $command->actor->accountId->toString(),
+                $now,
+                [
+                    'assignment_public_id' => $revoked->id->toString(),
+                    'role_code' => $revoked->roleCode->value(),
+                    'scope_type' => AuthorizationScopeType::PLATFORM->value,
+                ],
+                $command->reason->value,
+                $command->correlationId->value(),
             );
 
             return $revoked;

@@ -10,6 +10,9 @@ use Qmdb\Modules\IdentityMultiFactor\Application\StepUpGuard;
 use Qmdb\Modules\IdentityMultiFactor\Domain\StepUpAction;
 use Qmdb\Modules\IdentitySessions\Application\AuthenticatedAccountContext;
 use Qmdb\Modules\IdentitySecurityNotifications\Domain\AccountSecurityNotificationType;
+use Qmdb\Modules\SecurityAudit\Application\SecurityAuditEventAppender;
+use Qmdb\Modules\SecurityAudit\Domain\SecurityEventCode;
+use Qmdb\Modules\SecurityAudit\Domain\SecurityEventSubjectKind;
 use Qmdb\Modules\SecurityAuthorization\Application\AuthorizationRequest;
 use Qmdb\Modules\SecurityAuthorization\Application\AuthorizationSubject;
 use Qmdb\Modules\SecurityAuthorization\Application\BaseRoleAuthorizationGuard;
@@ -31,6 +34,7 @@ final readonly class PrivilegedAccessRevocationService
         private PrivilegedAccessLifecycleRepository $lifecycle,
         private StepUpGuard $stepUp,
         private PrivilegedAccessNotificationService $notifications,
+        private SecurityAuditEventAppender $audit,
         private TransactionManager $transactions,
         private Clock $clock,
     ) {
@@ -68,6 +72,22 @@ final readonly class PrivilegedAccessRevocationService
                 },
                 $revoked->id->toString(),
                 $now,
+            );
+            $this->audit->privilegedAccess(
+                match ($revoked->type) {
+                    PrivilegedAccessType::TEMPORARY_PRIVILEGE => SecurityEventCode::TEMPORARY_REVOKED,
+                    PrivilegedAccessType::SUPPORT_ACCESS => SecurityEventCode::SUPPORT_REVOKED,
+                    PrivilegedAccessType::BREAK_GLASS => SecurityEventCode::BREAK_GLASS_REVOKED,
+                },
+                $revoked->scope->value === 'WORKSPACE',
+                $revoked->workspacePublicId,
+                SecurityEventSubjectKind::PRIVILEGED_ACCESS,
+                $revoked->id->toString(),
+                $actor->accountId->toString(),
+                $now,
+                ['access_type' => $revoked->type->value, 'scope_type' => $revoked->scope->value],
+                null,
+                $correlationId->value(),
             );
 
             return $revoked;

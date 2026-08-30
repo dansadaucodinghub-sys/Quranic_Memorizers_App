@@ -37,6 +37,7 @@ use Qmdb\Modules\IdentityMultiFactor\Domain\TotpSecretEncryptor;
 use Qmdb\Modules\IdentityMultiFactor\Domain\AuthenticationTransactionCookieParser;
 use Qmdb\Modules\IdentityMultiFactor\Infrastructure\Security\SodiumTotpSecretEncryptor;
 use Qmdb\Modules\IdentityMultiFactor\Interface\Http\IdentityMultiFactorController;
+use Qmdb\Modules\SecurityAudit\Application\SecurityAuditEventAppender;
 use Qmdb\Modules\IdentityMultiFactor\Interface\Http\MultiFactorRequestInput;
 use Qmdb\Modules\IdentitySecurityNotifications\Configuration\SecurityNotificationConfiguration;
 use Qmdb\Modules\IdentitySecurityNotifications\Domain\Repository\AccountSecurityNotificationRepository;
@@ -87,6 +88,7 @@ final readonly class IdentityMultiFactorModule implements Module
             new ModuleId('identity.access'),
             new ModuleId('identity.sessions'),
             new ModuleId('identity.security_notifications'),
+            new ModuleId('security.audit'),
         ];
     }
 
@@ -176,7 +178,7 @@ final readonly class IdentityMultiFactorModule implements Module
             RecoveryCodeSetRepository::class, MultiFactorNotificationTargetRepository::class,
             TotpSecretEncryptor::class, TotpVerifier::class, StrongSessionIssuanceService::class,
             MultiFactorNotificationService::class, TransactionManager::class,
-            AuthenticationTransactionCookieFactory::class, SecretsProvider::class, Clock::class,
+            AuthenticationTransactionCookieFactory::class, SecretsProvider::class, SecurityAuditEventAppender::class, Clock::class,
         ], static fn (DependencyResolver $r): MfaLoginService => new MfaLoginService(
             ServiceReference::get($r, AuthenticationTransactionRepository::class),
             ServiceReference::get($r, TotpAuthenticatorRepository::class),
@@ -189,6 +191,7 @@ final readonly class IdentityMultiFactorModule implements Module
             ServiceReference::get($r, TransactionManager::class),
             ServiceReference::get($r, AuthenticationTransactionCookieFactory::class),
             self::secret($r, 'AUTH_IDENTITY_HMAC_KEY'),
+            ServiceReference::get($r, SecurityAuditEventAppender::class),
             ServiceReference::get($r, Clock::class),
         ));
         $this->simple($context, StepUpAuthenticationService::class, [
@@ -221,7 +224,7 @@ final readonly class IdentityMultiFactorModule implements Module
         $this->simple($context, TotpEnrollmentService::class, [
             TotpAuthenticatorRepository::class, TotpSecretEncryptor::class, TotpVerifier::class,
             StepUpGuard::class, MultiFactorNotificationService::class, TransactionManager::class,
-            IdentityMultiFactorConfiguration::class, Clock::class,
+            IdentityMultiFactorConfiguration::class, SecurityAuditEventAppender::class, Clock::class,
         ], static fn (DependencyResolver $r): TotpEnrollmentService => new TotpEnrollmentService(
             ServiceReference::get($r, TotpAuthenticatorRepository::class),
             ServiceReference::get($r, TotpSecretEncryptor::class),
@@ -230,12 +233,13 @@ final readonly class IdentityMultiFactorModule implements Module
             ServiceReference::get($r, MultiFactorNotificationService::class),
             ServiceReference::get($r, TransactionManager::class),
             ServiceReference::get($r, IdentityMultiFactorConfiguration::class),
+            ServiceReference::get($r, SecurityAuditEventAppender::class),
             ServiceReference::get($r, Clock::class),
         ));
         $this->simple($context, AccountMfaEnablementService::class, [
             AccountMfaPolicyRepository::class, RecoveryCodeSetRepository::class,
             SecureRecoveryCodeGenerator::class, StepUpGuard::class, UserSessionRepository::class,
-            MultiFactorNotificationService::class, TransactionManager::class, SecretsProvider::class, Clock::class,
+            MultiFactorNotificationService::class, TransactionManager::class, SecretsProvider::class, SecurityAuditEventAppender::class, Clock::class,
         ], static fn (DependencyResolver $r): AccountMfaEnablementService => new AccountMfaEnablementService(
             ServiceReference::get($r, AccountMfaPolicyRepository::class),
             ServiceReference::get($r, RecoveryCodeSetRepository::class),
@@ -245,12 +249,13 @@ final readonly class IdentityMultiFactorModule implements Module
             ServiceReference::get($r, MultiFactorNotificationService::class),
             ServiceReference::get($r, TransactionManager::class),
             self::secret($r, 'AUTH_IDENTITY_HMAC_KEY'),
+            ServiceReference::get($r, SecurityAuditEventAppender::class),
             ServiceReference::get($r, Clock::class),
         ));
         $this->simple($context, AccountMfaDisablementService::class, [
             AccountMfaPolicyRepository::class, RecoveryCodeSetRepository::class, StepUpGuard::class,
             UserSessionRepository::class, MultiFactorNotificationService::class, TransactionManager::class,
-            Clock::class,
+            SecurityAuditEventAppender::class, Clock::class,
         ], static fn (DependencyResolver $r): AccountMfaDisablementService => new AccountMfaDisablementService(
             ServiceReference::get($r, AccountMfaPolicyRepository::class),
             ServiceReference::get($r, RecoveryCodeSetRepository::class),
@@ -258,12 +263,13 @@ final readonly class IdentityMultiFactorModule implements Module
             ServiceReference::get($r, UserSessionRepository::class),
             ServiceReference::get($r, MultiFactorNotificationService::class),
             ServiceReference::get($r, TransactionManager::class),
+            ServiceReference::get($r, SecurityAuditEventAppender::class),
             ServiceReference::get($r, Clock::class),
         ));
         $this->simple($context, RecoveryCodeRegenerationService::class, [
             AccountMfaPolicyRepository::class, RecoveryCodeSetRepository::class,
             SecureRecoveryCodeGenerator::class, StepUpGuard::class, MultiFactorNotificationService::class,
-            TransactionManager::class, SecretsProvider::class, Clock::class,
+            TransactionManager::class, SecretsProvider::class, SecurityAuditEventAppender::class, Clock::class,
         ], static fn (DependencyResolver $r): RecoveryCodeRegenerationService => new RecoveryCodeRegenerationService(
             ServiceReference::get($r, AccountMfaPolicyRepository::class),
             ServiceReference::get($r, RecoveryCodeSetRepository::class),
@@ -272,11 +278,12 @@ final readonly class IdentityMultiFactorModule implements Module
             ServiceReference::get($r, MultiFactorNotificationService::class),
             ServiceReference::get($r, TransactionManager::class),
             self::secret($r, 'AUTH_IDENTITY_HMAC_KEY'),
+            ServiceReference::get($r, SecurityAuditEventAppender::class),
             ServiceReference::get($r, Clock::class),
         ));
         $this->simple($context, TotpAuthenticatorRevocationService::class, [
             TotpAuthenticatorRepository::class, AccountMfaPolicyRepository::class, StepUpGuard::class,
-            MultiFactorNotificationService::class, TransactionManager::class, Clock::class,
+            MultiFactorNotificationService::class, TransactionManager::class, SecurityAuditEventAppender::class, Clock::class,
         ], static fn (DependencyResolver $r): TotpAuthenticatorRevocationService =>
             new TotpAuthenticatorRevocationService(
                 ServiceReference::get($r, TotpAuthenticatorRepository::class),
@@ -284,31 +291,36 @@ final readonly class IdentityMultiFactorModule implements Module
                 ServiceReference::get($r, StepUpGuard::class),
                 ServiceReference::get($r, MultiFactorNotificationService::class),
                 ServiceReference::get($r, TransactionManager::class),
+                ServiceReference::get($r, SecurityAuditEventAppender::class),
                 ServiceReference::get($r, Clock::class),
             ));
         $this->simple($context, PasskeyRevocationService::class, [
             PasskeyCredentialRepository::class, AccountMfaPolicyRepository::class, StepUpGuard::class,
-            MultiFactorNotificationService::class, TransactionManager::class, Clock::class,
+            MultiFactorNotificationService::class, TransactionManager::class, SecurityAuditEventAppender::class, Clock::class,
         ], static fn (DependencyResolver $r): PasskeyRevocationService => new PasskeyRevocationService(
             ServiceReference::get($r, PasskeyCredentialRepository::class),
             ServiceReference::get($r, AccountMfaPolicyRepository::class),
             ServiceReference::get($r, StepUpGuard::class),
             ServiceReference::get($r, MultiFactorNotificationService::class),
             ServiceReference::get($r, TransactionManager::class),
+            ServiceReference::get($r, SecurityAuditEventAppender::class),
             ServiceReference::get($r, Clock::class),
         ));
         $this->simple($context, WebAuthnService::class, [
             WebAuthnCeremonyRepository::class, WebAuthnUserHandleRepository::class,
             PasskeyCredentialRepository::class, StepUpGuard::class, MultiFactorNotificationService::class,
-            TransactionManager::class, IdentityMultiFactorConfiguration::class, Clock::class,
+            MultiFactorNotificationTargetRepository::class, TransactionManager::class, IdentityMultiFactorConfiguration::class,
+            SecurityAuditEventAppender::class, Clock::class,
         ], static fn (DependencyResolver $r): WebAuthnService => new WebAuthnService(
             ServiceReference::get($r, WebAuthnCeremonyRepository::class),
             ServiceReference::get($r, WebAuthnUserHandleRepository::class),
             ServiceReference::get($r, PasskeyCredentialRepository::class),
             ServiceReference::get($r, StepUpGuard::class),
             ServiceReference::get($r, MultiFactorNotificationService::class),
+            ServiceReference::get($r, MultiFactorNotificationTargetRepository::class),
             ServiceReference::get($r, TransactionManager::class),
             ServiceReference::get($r, IdentityMultiFactorConfiguration::class),
+            ServiceReference::get($r, SecurityAuditEventAppender::class),
             ServiceReference::get($r, Clock::class),
         ));
     }

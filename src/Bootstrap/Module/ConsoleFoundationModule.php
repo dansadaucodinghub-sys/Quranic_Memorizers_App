@@ -5,7 +5,14 @@ declare(strict_types=1);
 namespace Qmdb\Bootstrap\Module;
 
 use Qmdb\Bootstrap\Application;
+use Qmdb\Bootstrap\Console\P2SecurityHardeningVerifyConsoleCommand;
 use Qmdb\Bootstrap\Console\ConsoleApplication;
+use Qmdb\Bootstrap\Security\P2SecurityHardeningVerifier;
+use Qmdb\Modules\SecurityAudit\Application\SecurityAuditControlVerifier;
+use Qmdb\Modules\SecurityAuthorization\Application\AuthorizationCatalogVerifier;
+use Qmdb\Modules\SecurityPrivilegedAccess\Application\PrivilegedAccessSchemaVerifier;
+use Qmdb\Modules\TenancyContext\Application\TenantContextSchemaVerifier;
+use Qmdb\Modules\TenancyContext\Application\TenantRepositorySecurityVerifier;
 use Qmdb\Shared\Background\Console\ScheduleListConsoleCommand;
 use Qmdb\Shared\Background\Console\ScheduleRunConsoleCommand;
 use Qmdb\Shared\Background\Console\WorkerRunConsoleCommand;
@@ -25,10 +32,16 @@ use Qmdb\Shared\Module\Module;
 use Qmdb\Shared\Module\ModuleId;
 use Qmdb\Shared\Module\ModuleRegistrationContext;
 use Qmdb\Shared\Observability\Error\ErrorHandlingRuntime;
+use Qmdb\Shared\Http\Routing\RouteCollection;
+use Qmdb\Shared\Http\Routing\Security\RouteSecurityVerifier;
 use Qmdb\Shared\Schema\Console\SchemaConsoleApplication;
 use Qmdb\Modules\SecurityAuthorization\Interface\Console\AuthorizationVerifyConsoleCommand;
 use Qmdb\Modules\TenancyContext\Interface\Console\TenantContextVerifyConsoleCommand;
+use Qmdb\Modules\TenancyContext\Interface\Console\TenantRepositorySecurityVerifyConsoleCommand;
 use Qmdb\Modules\SecurityPrivilegedAccess\Interface\Console\PrivilegedAccessVerifyConsoleCommand;
+use Qmdb\Modules\SecurityAudit\Interface\Console\SecurityAuditCheckpointConsoleCommand;
+use Qmdb\Modules\SecurityAudit\Interface\Console\SecurityAuditVerifyConsoleCommand;
+use Qmdb\Shared\Http\Routing\Security\RouteSecurityVerifyConsoleCommand;
 
 final readonly class ConsoleFoundationModule implements Module
 {
@@ -50,6 +63,8 @@ final readonly class ConsoleFoundationModule implements Module
             new ModuleId('security.authorization'),
             new ModuleId('tenancy.context'),
             new ModuleId('security.privileged_access'),
+            new ModuleId('security.audit'),
+            new ModuleId('application.http'),
         ];
     }
 
@@ -96,6 +111,32 @@ final readonly class ConsoleFoundationModule implements Module
                     dispatcher: ServiceReference::get($resolver, ConsoleCommandDispatcher::class),
                 )),
         ));
+        $context->service(ServiceDefinition::factory(
+            P2SecurityHardeningVerifier::class,
+            self::ID,
+            [AuthorizationCatalogVerifier::class, TenantContextSchemaVerifier::class,
+                TenantRepositorySecurityVerifier::class, PrivilegedAccessSchemaVerifier::class,
+                SecurityAuditControlVerifier::class, RouteSecurityVerifier::class, RouteCollection::class],
+            new ClosureServiceFactory(static fn (DependencyResolver $resolver): P2SecurityHardeningVerifier =>
+                new P2SecurityHardeningVerifier(
+                    ServiceReference::get($resolver, AuthorizationCatalogVerifier::class),
+                    ServiceReference::get($resolver, TenantContextSchemaVerifier::class),
+                    ServiceReference::get($resolver, TenantRepositorySecurityVerifier::class),
+                    ServiceReference::get($resolver, PrivilegedAccessSchemaVerifier::class),
+                    ServiceReference::get($resolver, SecurityAuditControlVerifier::class),
+                    ServiceReference::get($resolver, RouteSecurityVerifier::class),
+                    ServiceReference::get($resolver, RouteCollection::class),
+                )),
+        ));
+        $context->service(ServiceDefinition::factory(
+            P2SecurityHardeningVerifyConsoleCommand::class,
+            self::ID,
+            [P2SecurityHardeningVerifier::class],
+            new ClosureServiceFactory(static fn (DependencyResolver $resolver): P2SecurityHardeningVerifyConsoleCommand =>
+                new P2SecurityHardeningVerifyConsoleCommand(
+                    ServiceReference::get($resolver, P2SecurityHardeningVerifier::class),
+                )),
+        ));
     }
 
     private function registerCommandMap(ModuleRegistrationContext $context): void
@@ -108,7 +149,12 @@ final readonly class ConsoleFoundationModule implements Module
             WorkerRunConsoleCommand::class,
             AuthorizationVerifyConsoleCommand::class,
             TenantContextVerifyConsoleCommand::class,
+            TenantRepositorySecurityVerifyConsoleCommand::class,
             PrivilegedAccessVerifyConsoleCommand::class,
+            SecurityAuditVerifyConsoleCommand::class,
+            RouteSecurityVerifyConsoleCommand::class,
+            P2SecurityHardeningVerifyConsoleCommand::class,
+            SecurityAuditCheckpointConsoleCommand::class,
         ];
         $context->service(ServiceDefinition::factory(
             ConsoleCommandMap::class,
@@ -131,7 +177,12 @@ final readonly class ConsoleFoundationModule implements Module
                 $registry->register(ServiceReference::get($resolver, WorkerRunConsoleCommand::class));
                 $registry->register(ServiceReference::get($resolver, AuthorizationVerifyConsoleCommand::class));
                 $registry->register(ServiceReference::get($resolver, TenantContextVerifyConsoleCommand::class));
+                $registry->register(ServiceReference::get($resolver, TenantRepositorySecurityVerifyConsoleCommand::class));
                 $registry->register(ServiceReference::get($resolver, PrivilegedAccessVerifyConsoleCommand::class));
+                $registry->register(ServiceReference::get($resolver, SecurityAuditVerifyConsoleCommand::class));
+                $registry->register(ServiceReference::get($resolver, RouteSecurityVerifyConsoleCommand::class));
+                $registry->register(ServiceReference::get($resolver, P2SecurityHardeningVerifyConsoleCommand::class));
+                $registry->register(ServiceReference::get($resolver, SecurityAuditCheckpointConsoleCommand::class));
 
                 return $registry->build();
             }),

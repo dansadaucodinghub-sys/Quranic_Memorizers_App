@@ -526,3 +526,15 @@ elsewhere or authorize permissions owned by future business modules.
 | Break-glass access | Security Governance / Operations / Privacy | P2-B08 | BLOCKS_BREAK_GLASS | No emergency context, role, bypass, or impersonation path exists |
 | Support and emergency context | Security / Privacy / Support Governance | P2-B08 | BLOCKS_P2_B08 | No support, temporary, impersonation, or break-glass context exists |
 | Cross-tab refresh UX | Product / Accessibility | Browser release review | NON_BLOCKING_B07 | Broadcast only a bounded version and navigate safely; server remains authoritative |
+
+## P2-B09 Security Audit and Account State decisions
+
+| Decision | Owner role | Required point | Classification | Implemented disposition |
+| --- | --- | --- | --- | --- |
+| Audit integrity-key custody and rotation procedure | Security Operations / Key Management | Before production audit enablement | BLOCKS_DEPLOYMENT | Source supports versioned key selection only; keys are never stored in MySQL or source control |
+| External checkpoint publisher and evidence destination | Security Operations / Compliance | Before an external-witness claim | BLOCKS_DEPLOYMENT | Provider-neutral boundary only; no publisher, witness, or publication claim is configured |
+| Audit retention, legal hold, and deletion authority | Privacy / Data Governance / Legal | Before automated cleanup | BLOCKS_RETENTION_AUTOMATION | Events and checkpoints are append-only; no retention deletion job exists |
+| Audit-viewer disclosure, export, and search policy | Privacy / Security / Product | Before wider access or export | BLOCKS_AUDIT_EXPORT | B09 provides bounded authorized viewers only; no export, cross-tenant search, or unrestricted detail endpoint exists |
+| Integrity-verification failure incident response | Security Operations / Incident Response | Before production rollout | BLOCKS_DEPLOYMENT | CLI verifies and fails closed; containment, notification, and escalation runbook remain external decisions |
+| Account-state reason taxonomy and suspension duration policy | Product / Security / Legal | Before automated or duration-based state changes | BLOCKS_ACCOUNT_STATE_AUTOMATION | B09 accepts governed reason codes and bounded confidential justification; it creates no automated scoring or expiry action |
+| Production action-rate and TTL values | Security / Operations | Before production configuration | BLOCKS_DEPLOYMENT | Typed bounds exist; final operational values require deployment approval |

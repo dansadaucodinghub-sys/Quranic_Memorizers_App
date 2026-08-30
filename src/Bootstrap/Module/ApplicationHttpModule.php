@@ -31,6 +31,7 @@ use Qmdb\Modules\IdentityRecovery\Application\Readiness\IdentityRecoveryReadines
 use Qmdb\Modules\IdentitySecurityNotifications\Application\Readiness\IdentitySecurityNotificationReadinessCheck;
 use Qmdb\Modules\IdentityMultiFactor\Application\Readiness\IdentityMultiFactorReadinessCheck;
 use Qmdb\Modules\SecurityAuthorization\Application\AuthorizationReadinessCheck;
+use Qmdb\Modules\SecurityAudit\Application\SecurityAuditReadinessCheck;
 use Qmdb\Modules\TenancyContext\Application\TenantContextReadinessCheck;
 use Qmdb\Modules\TenancyContext\Interface\Http\AccountWorkspacesController;
 use Qmdb\Modules\TenancyContext\Interface\Http\CurrentWorkspaceController;
@@ -38,6 +39,8 @@ use Qmdb\Modules\TenancyContext\Interface\Http\TenantContextMiddleware;
 use Qmdb\Modules\SecurityPrivilegedAccess\Interface\Http\PrivilegedAccessContextMiddleware;
 use Qmdb\Modules\SecurityPrivilegedAccess\Interface\Http\PrivilegedAccessController;
 use Qmdb\Modules\SecurityPrivilegedAccess\Application\PrivilegedAccessReadinessCheck;
+use Qmdb\Modules\IdentityAccountState\Interface\Http\AccountStateSecurityController;
+use Qmdb\Modules\IdentityAccountState\Interface\Http\SecurityAuditViewerController;
 use Qmdb\Modules\TenancyContext\Interface\Http\WorkspaceClearController;
 use Qmdb\Modules\TenancyContext\Interface\Http\WorkspaceSwitchController;
 use Qmdb\Modules\IdentityMultiFactor\Interface\Http\IdentityMultiFactorController;
@@ -71,6 +74,9 @@ use Qmdb\Shared\Http\Middleware\SecurityHeadersMiddleware;
 use Qmdb\Shared\Http\Request\NativeServerRequestFactory;
 use Qmdb\Shared\Http\Response\ResponseEmitter;
 use Qmdb\Shared\Http\Routing\RouteCollection;
+use Qmdb\Shared\Http\Routing\Security\ProductionRouteSecurityPolicyCatalog;
+use Qmdb\Shared\Http\Routing\Security\RouteSecurityVerifier;
+use Qmdb\Shared\Http\Routing\Security\RouteSecurityVerifyConsoleCommand;
 use Qmdb\Shared\Http\Routing\Router;
 use Qmdb\Shared\Http\Routing\RoutingRequestHandler;
 use Qmdb\Shared\Module\Module;
@@ -102,13 +108,20 @@ final readonly class ApplicationHttpModule implements Module
             new ModuleId('identity.recovery'),
             new ModuleId('identity.multifactor'),
             new ModuleId('security.authorization'),
+            new ModuleId('security.audit'),
             new ModuleId('tenancy.context'),
             new ModuleId('security.privileged_access'),
+            new ModuleId('identity.account_state'),
         ];
     }
 
     public function register(ModuleRegistrationContext $context): void
     {
+        $context->service(ServiceDefinition::instance(
+            ProductionRouteSecurityPolicyCatalog::class,
+            self::ID,
+            new ProductionRouteSecurityPolicyCatalog(),
+        ));
         $context->service(ServiceDefinition::factory(
             ApplicationReadinessController::class,
             self::ID,
@@ -121,7 +134,7 @@ final readonly class ApplicationHttpModule implements Module
                 IdentityRecoveryReadinessCheck::class,
                 IdentitySecurityNotificationReadinessCheck::class,
                 IdentityMultiFactorReadinessCheck::class,
-                AuthorizationReadinessCheck::class,
+                AuthorizationReadinessCheck::class, SecurityAuditReadinessCheck::class,
                 TenantContextReadinessCheck::class,
                 PrivilegedAccessReadinessCheck::class,
             ],
@@ -136,6 +149,7 @@ final readonly class ApplicationHttpModule implements Module
                     ServiceReference::get($resolver, IdentitySecurityNotificationReadinessCheck::class),
                     ServiceReference::get($resolver, IdentityMultiFactorReadinessCheck::class),
                     ServiceReference::get($resolver, AuthorizationReadinessCheck::class),
+                    ServiceReference::get($resolver, SecurityAuditReadinessCheck::class),
                     ServiceReference::get($resolver, TenantContextReadinessCheck::class),
                     ServiceReference::get($resolver, PrivilegedAccessReadinessCheck::class),
                 )),
@@ -173,6 +187,8 @@ final readonly class ApplicationHttpModule implements Module
             WorkspaceClearController::class,
             CurrentWorkspaceController::class,
             PrivilegedAccessController::class,
+            AccountStateSecurityController::class,
+            SecurityAuditViewerController::class,
         ];
         $context->service(ServiceDefinition::factory(
             RouteCollection::class,
@@ -194,6 +210,23 @@ final readonly class ApplicationHttpModule implements Module
 
                 return $routes;
             }),
+        ));
+        $context->service(ServiceDefinition::factory(
+            RouteSecurityVerifier::class,
+            self::ID,
+            [ProductionRouteSecurityPolicyCatalog::class],
+            new ClosureServiceFactory(static fn (DependencyResolver $resolver): RouteSecurityVerifier =>
+                new RouteSecurityVerifier(ServiceReference::get($resolver, ProductionRouteSecurityPolicyCatalog::class))),
+        ));
+        $context->service(ServiceDefinition::factory(
+            RouteSecurityVerifyConsoleCommand::class,
+            self::ID,
+            [RouteCollection::class, RouteSecurityVerifier::class],
+            new ClosureServiceFactory(static fn (DependencyResolver $resolver): RouteSecurityVerifyConsoleCommand =>
+                new RouteSecurityVerifyConsoleCommand(
+                    ServiceReference::get($resolver, RouteCollection::class),
+                    ServiceReference::get($resolver, RouteSecurityVerifier::class),
+                )),
         ));
         $context->service(ServiceDefinition::factory(
             Router::class,

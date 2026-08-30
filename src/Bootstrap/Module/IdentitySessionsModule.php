@@ -19,6 +19,7 @@ use Qmdb\Modules\IdentitySessions\Application\DeviceCookieFactory;
 use Qmdb\Modules\IdentitySessions\Application\DummySessionTokenHashProvider;
 use Qmdb\Modules\IdentitySessions\Application\RemoteDeviceRevocationService;
 use Qmdb\Modules\IdentitySessions\Application\RemoteSessionRevocationService;
+use Qmdb\Modules\SecurityAudit\Application\SecurityAuditEventAppender;
 use Qmdb\Modules\IdentitySessions\Application\Readiness\IdentitySessionReadinessCheck;
 use Qmdb\Modules\IdentitySessions\Application\SessionAuthenticationService;
 use Qmdb\Modules\IdentitySessions\Application\SessionCookieFactory;
@@ -92,6 +93,7 @@ final readonly class IdentitySessionsModule implements Module
             new ModuleId('security.web'),
             new ModuleId('identity.accounts'),
             new ModuleId('identity.access'),
+            new ModuleId('security.audit'),
         ];
     }
 
@@ -264,22 +266,25 @@ final readonly class IdentitySessionsModule implements Module
         $context->service(ServiceDefinition::factory(
             RemoteSessionRevocationService::class,
             self::ID,
-            [UserSessionRepository::class, Clock::class],
+            [UserSessionRepository::class, SecurityAuditEventAppender::class, TransactionManager::class, Clock::class],
             new ClosureServiceFactory(static fn (DependencyResolver $r): RemoteSessionRevocationService =>
                 new RemoteSessionRevocationService(
                     ServiceReference::get($r, UserSessionRepository::class),
+                    ServiceReference::get($r, SecurityAuditEventAppender::class),
+                    ServiceReference::get($r, TransactionManager::class),
                     ServiceReference::get($r, Clock::class),
                 )),
         ));
         $context->service(ServiceDefinition::factory(
             RemoteDeviceRevocationService::class,
             self::ID,
-            [UserDeviceRepository::class, UserSessionRepository::class, TransactionManager::class, Clock::class],
+            [UserDeviceRepository::class, UserSessionRepository::class, TransactionManager::class, SecurityAuditEventAppender::class, Clock::class],
             new ClosureServiceFactory(static fn (DependencyResolver $r): RemoteDeviceRevocationService =>
                 new RemoteDeviceRevocationService(
                     ServiceReference::get($r, UserDeviceRepository::class),
                     ServiceReference::get($r, UserSessionRepository::class),
                     ServiceReference::get($r, TransactionManager::class),
+                    ServiceReference::get($r, SecurityAuditEventAppender::class),
                     ServiceReference::get($r, Clock::class),
                 )),
         ));

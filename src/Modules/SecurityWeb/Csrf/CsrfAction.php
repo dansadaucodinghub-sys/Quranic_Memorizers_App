@@ -43,4 +43,6 @@ enum CsrfAction: string
     case PRIVILEGED_ACCESS_END = 'privileged_access.end';
     case PRIVILEGED_ACCESS_BREAK_GLASS_ACTIVATE = 'privileged_access.break_glass.activate';
     case PRIVILEGED_ACCESS_REVIEW = 'privileged_access.review';
+    case ACCOUNT_STATE_SUSPEND = 'account.state.suspend';
+    case ACCOUNT_STATE_REACTIVATE = 'account.state.reactivate';
 }

@@ -160,3 +160,9 @@ assurance does not create a role, permission, Tenant Context, or authorization d
 Wrong-action, expired, consumed, cross-account, and cross-session grants deny. Independent-process tests verify one
 winner when a grant is consumed concurrently. Production administrator bootstrap, organization-enforced MFA, assisted
 factor recovery, and final production recency/attempt parameters remain governed open decisions.
+
+## P2-B09 audit integration
+
+MFA enablement/disablement, TOTP and passkey lifecycle changes, recovery-code use/regeneration, and passkey counter
+suspension append safe account audit evidence in their existing authoritative transactions. Audit metadata is an
+allowlisted canonical map and never contains a secret, assertion, recovery code, authenticator material, or contact data.

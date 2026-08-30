@@ -9,6 +9,8 @@ use Qmdb\Modules\IdentitySessions\Domain\DeviceStatus;
 use Qmdb\Modules\IdentitySessions\Domain\Repository\UserDeviceRepository;
 use Qmdb\Modules\IdentitySessions\Domain\Repository\UserSessionRepository;
 use Qmdb\Modules\IdentitySessions\Domain\SessionRevocationReason;
+use Qmdb\Modules\SecurityAudit\Application\SecurityAuditEventAppender;
+use Qmdb\Modules\SecurityAudit\Domain\SecurityEventCode;
 use Qmdb\Shared\Database\Transaction\TransactionManager;
 use Qmdb\Shared\Time\Clock;
 
@@ -18,6 +20,7 @@ final readonly class RemoteDeviceRevocationService
         private UserDeviceRepository $devices,
         private UserSessionRepository $sessions,
         private TransactionManager $transactions,
+        private SecurityAuditEventAppender $audit,
         private Clock $clock,
     ) {
     }
@@ -55,6 +58,13 @@ final readonly class RemoteDeviceRevocationService
                 $context->accountInternalId,
                 $device->internalId,
                 SessionRevocationReason::DEVICE_REVOCATION,
+                $now,
+            );
+            $this->audit->account(
+                SecurityEventCode::DEVICE_REVOKED,
+                $context->accountId->toString(),
+                $context->accountId->toString(),
+                $context->sessionId->toString(),
                 $now,
             );
 

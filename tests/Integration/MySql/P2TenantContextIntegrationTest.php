@@ -26,6 +26,7 @@ use Qmdb\Tests\Support\MySql\MySqlIntegrationTestCase;
 use Qmdb\Tests\Support\Observability\InMemoryEventLogger;
 use Qmdb\Tests\Support\TenancyContext\TestAccountTenantBoundBackgroundJob;
 
+#[\PHPUnit\Framework\Attributes\Group('TenantIsolation')]
 final class P2TenantContextIntegrationTest extends MySqlIntegrationTestCase
 {
     private PDO $connection;

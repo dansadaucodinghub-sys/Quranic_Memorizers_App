@@ -9,6 +9,8 @@ use Qmdb\Modules\Identity\Infrastructure\Migration\CreateAccountSecurityFoundati
 use Qmdb\Modules\Identity\Infrastructure\Migration\CreateUserAccountsMigration;
 use Qmdb\Modules\IdentityAccess\Infrastructure\Migration\CreateIdentityRateLimitFoundationMigration;
 use Qmdb\Modules\IdentityAccess\Infrastructure\Migration\CreateIdentityVerificationFoundationMigration;
+use Qmdb\Modules\IdentityAccountState\Infrastructure\Migration\CreateAccountStateOperationsMigration;
+use Qmdb\Modules\IdentityAccountState\Infrastructure\Seed\SeedAccountStateAuthorizationCatalog;
 use Qmdb\Modules\IdentityRecovery\Infrastructure\Migration\CreatePasswordRecoveryFoundationMigration;
 use Qmdb\Modules\IdentityRecovery\Infrastructure\Migration\ExtendIdentityRecoveryConstraintsMigration;
 use Qmdb\Modules\IdentitySecurityNotifications\Infrastructure\Migration\CreateSecurityNotificationFoundationMigration;
@@ -25,6 +27,10 @@ use Qmdb\Modules\SecurityAuthorization\Infrastructure\Migration\CreateAuthorizat
 use Qmdb\Modules\SecurityAuthorization\Infrastructure\Migration\CreatePlatformRoleAssignmentFoundationMigration;
 use Qmdb\Modules\SecurityAuthorization\Infrastructure\Migration\CreateWorkspaceRoleAssignmentFoundationMigration;
 use Qmdb\Modules\SecurityAuthorization\Infrastructure\Seed\SeedFoundationalAuthorizationCatalog;
+use Qmdb\Modules\SecurityAudit\Infrastructure\Migration\CreateSecurityAuditCheckpointsMigration;
+use Qmdb\Modules\SecurityAudit\Infrastructure\Migration\CreateSecurityAuditStreamsMigration;
+use Qmdb\Modules\SecurityAudit\Infrastructure\Migration\ExtendAccountStateSecurityCatalogMigration;
+use Qmdb\Modules\SecurityAudit\Infrastructure\Migration\PreserveCanonicalAuditMetadataMigration;
 use Qmdb\Modules\SecurityPrivilegedAccess\Infrastructure\Migration\CreatePrivilegedAccessActivationFoundationMigration;
 use Qmdb\Modules\SecurityPrivilegedAccess\Infrastructure\Migration\CreatePrivilegedAccessRequestFoundationMigration;
 use Qmdb\Modules\SecurityPrivilegedAccess\Infrastructure\Migration\ExtendPrivilegedAccessSecurityCatalogMigration;
@@ -37,7 +43,7 @@ use SplFileInfo;
 
 final class SchemaFoundationArchitectureTest extends TestCase
 {
-    public function testProductionManifestsContainOnlyAuthorizedP1ThroughP2B08SchemaChanges(): void
+    public function testProductionManifestsContainOnlyAuthorizedP1ThroughP2B09SchemaChanges(): void
     {
         $migrationFactory = require dirname(__DIR__, 2) . '/database/migrations.php';
         $seedFactory = require dirname(__DIR__, 2) . '/database/seeds.php';
@@ -52,7 +58,7 @@ final class SchemaFoundationArchitectureTest extends TestCase
         }
 
         $ordered = $migrations->ordered();
-        self::assertCount(23, $ordered);
+        self::assertCount(28, $ordered);
         self::assertSame(
             [
                 CreateScheduledTaskRunsMigration::class,
@@ -78,6 +84,11 @@ final class SchemaFoundationArchitectureTest extends TestCase
                 ExtendPrivilegedAccessSecurityCatalogMigration::class,
                 CreatePrivilegedAccessRequestFoundationMigration::class,
                 CreatePrivilegedAccessActivationFoundationMigration::class,
+                ExtendAccountStateSecurityCatalogMigration::class,
+                CreateSecurityAuditStreamsMigration::class,
+                CreateSecurityAuditCheckpointsMigration::class,
+                CreateAccountStateOperationsMigration::class,
+                PreserveCanonicalAuditMetadataMigration::class,
             ],
             array_map(static fn (Migration $migration): string => $migration::class, $ordered),
         );
@@ -106,12 +117,21 @@ final class SchemaFoundationArchitectureTest extends TestCase
                 '20260826012000_extend_privileged_access_security_catalog',
                 '20260826012100_create_privileged_access_request_foundation',
                 '20260826012200_create_privileged_access_activation_foundation',
+                '20260826012300_extend_account_state_security_catalog',
+                '20260826012400_create_security_audit_streams',
+                '20260826012500_create_security_audit_checkpoints',
+                '20260826012600_create_account_state_operations',
+                '20260826012700_preserve_canonical_audit_metadata',
             ],
             array_map(static fn (Migration $migration): string => $migration->id()->value(), $ordered),
         );
-        self::assertCount(2, $seeds->ordered());
+        self::assertCount(3, $seeds->ordered());
         self::assertSame(
-            [SeedFoundationalAuthorizationCatalog::class, SeedPrivilegedAccessCatalog::class],
+            [
+                SeedFoundationalAuthorizationCatalog::class,
+                SeedPrivilegedAccessCatalog::class,
+                SeedAccountStateAuthorizationCatalog::class,
+            ],
             array_map(static fn (object $seed): string => $seed::class, $seeds->ordered()),
         );
     }

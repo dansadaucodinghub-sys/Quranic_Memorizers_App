@@ -17,6 +17,8 @@ use Qmdb\Modules\IdentityMultiFactor\Domain\Repository\TotpAuthenticatorReposito
 use Qmdb\Modules\IdentityMultiFactor\Domain\SessionAuthenticationAssurance;
 use Qmdb\Modules\IdentityMultiFactor\Domain\TotpSecretEncryptor;
 use Qmdb\Modules\IdentitySecurityNotifications\Domain\AccountSecurityNotificationType;
+use Qmdb\Modules\SecurityAudit\Application\SecurityAuditEventAppender;
+use Qmdb\Modules\SecurityAudit\Domain\SecurityEventCode;
 use Qmdb\Shared\Database\Transaction\TransactionManager;
 use Qmdb\Shared\Time\Clock;
 use SensitiveParameter;
@@ -35,6 +37,7 @@ final readonly class MfaLoginService
         private TransactionManager $transactions,
         private AuthenticationTransactionCookieFactory $cookies,
         #[SensitiveParameter] private string $identityHmacKey,
+        private SecurityAuditEventAppender $audit,
         private Clock $clock,
     ) {
     }
@@ -183,6 +186,17 @@ final readonly class MfaLoginService
                 $transaction->accountInternalId,
                 AccountSecurityNotificationType::RECOVERY_CODE_USED,
                 $set->publicId,
+                $now,
+            );
+            $target = $this->targets->notificationTarget($transaction->accountInternalId);
+            if ($target === null) {
+                throw new \UnexpectedValueException('Recovery-code audit account identity is unavailable.');
+            }
+            $this->audit->account(
+                SecurityEventCode::RECOVERY_CODE_USED,
+                $target['account_public_id'],
+                $target['account_public_id'],
+                null,
                 $now,
             );
             $instructions[] = $this->cookies->clear();

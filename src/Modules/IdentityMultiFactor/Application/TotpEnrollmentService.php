@@ -14,6 +14,8 @@ use Qmdb\Modules\IdentityMultiFactor\Domain\TotpSecret;
 use Qmdb\Modules\IdentityMultiFactor\Domain\TotpSecretEncryptor;
 use Qmdb\Modules\IdentitySecurityNotifications\Domain\AccountSecurityNotificationType;
 use Qmdb\Modules\IdentitySessions\Application\AuthenticatedAccountContext;
+use Qmdb\Modules\SecurityAudit\Application\SecurityAuditEventAppender;
+use Qmdb\Modules\SecurityAudit\Domain\SecurityEventCode;
 use Qmdb\Shared\Database\Transaction\TransactionManager;
 use Qmdb\Shared\Identifier\UuidV7;
 use Qmdb\Shared\Time\Clock;
@@ -29,6 +31,7 @@ final readonly class TotpEnrollmentService
         private MultiFactorNotificationService $notifications,
         private TransactionManager $transactions,
         private IdentityMultiFactorConfiguration $configuration,
+        private SecurityAuditEventAppender $audit,
         private Clock $clock,
     ) {
     }
@@ -107,6 +110,7 @@ final readonly class TotpEnrollmentService
                 $locked->publicId,
                 $now,
             );
+            $this->audit->account(SecurityEventCode::TOTP_ADDED, $context->accountId->toString(), $context->accountId->toString(), $context->sessionId->toString(), $now, ['authenticator_public_id' => $locked->publicId]);
 
             return true;
         });

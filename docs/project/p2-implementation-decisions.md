@@ -189,3 +189,55 @@ Implemented decision profile:
 - Tenant-bound background execution revalidates account, workspace, and membership. Cache keys require a workspace
   namespace.
 - Persistent tenant cache and workspace provisioning remain deferred.
+
+## P2-ADR-009 — Keyed security-audit and account-state control boundary
+
+- **Status:** Approved and implemented by QMDB-P2-B09; formal closeout remains pending committed freeze verification.
+- **Audit decision:** Maintain independent `PLATFORM`, `ACCOUNT`, and `WORKSPACE` streams with canonical allowlisted
+  metadata, SHA-256 metadata digests, versioned HMAC-SHA-256 event chains, per-stream sequence heads, append-only
+  database enforcement, and deterministic checkpoint snapshots. Every event is appended inside the authoritative
+  mutation transaction; no best-effort post-commit append exists.
+- **Scope decision:** Workspace role and exceptional-access events use workspace streams. Platform role and
+  platform-scoped exceptional-access events use the platform stream. Account-centric events use the affected account
+  stream.
+- **Account-state decision:** Suspension and reactivation require base-role authorization plus phishing-resistant
+  step-up, reject self-operation and final usable platform-security-administrator loss, record account-state history,
+  and create notification intent transactionally. Reactivation restores no sessions, ceremonies, grants, or privileged
+  access.
+- **Integrity boundary:** This is keyed, tamper-evident, append-oriented evidence, not a claim of tamper-proof or
+  externally witnessed history. An administrator who controls both database and integrity key remains a residual risk.
+- **Boundary:** No external checkpoint publisher, audit export, retention purge, automated suspension, risk scoring,
+  account closure, or B10 hardening work is implemented.
+- **Future review conditions:** Key custody/rotation, checkpoint publication, retention/legal hold, disclosure/export,
+  verification incident response, account-state policy, and deployment values require their owning approvals and
+  executable evidence.
+
+## P2-ADR-010 — Bounded audit-control readiness and route-derived denial assurance
+
+- **Status:** Approved and implemented by QMDB-P2-B10; final batch closeout remains subject to committed
+  engineering-freeze verification.
+- **Context:** The B09 audit verifier proved hash-chain and checkpoint integrity only through its explicit console/test
+  path. Readiness did not verify that the integrity key, immutable triggers, or the indexes supporting bounded audit
+  inspection were present. The route set also lacked one executable, derived negative matrix covering every protected
+  method.
+- **Decision:** Introduce an application-level audit-control verifier port. Its MySQL adapter verifies the current key,
+  required immutable controls and bounded-query indexes; the readiness controller consumes only that bounded result.
+  Historical hash-chain verification remains `security:audit:verify`, not a per-probe scan. Derive anonymous full-page
+  and fragment denial tests from the registered route definitions, with a deliberately explicit public allowlist.
+- **Consequences:** Missing audit controls fail readiness without exposing their cause. New protected routes are tested
+  by default. B10 does not invent a numeric capacity target, external checkpoint publisher, risk scorer, or account
+  automation; OD-036 and B09 open decisions remain authoritative.
+
+## P2-ADR-011 — Closed route and tenant-repository security inventories
+
+- **Status:** Approved and implemented by QMDB-P2-B10; batch completion remains subject to committed
+  engineering-freeze verification.
+- **Context:** Anonymous HTTP denial coverage did not itself prove that every route had security metadata, and tenant
+  repository scope was enforced by implementation conventions without a dedicated inventory verifier.
+- **Decision:** Maintain a closed production-route policy catalog and a closed P2 tenant-repository inventory. Verify
+  both from executable source and route metadata. The aggregate `security:p2:verify` command composes those checks
+  with the existing authorization, tenant-context, privileged-access and audit-control verifiers without mutating
+  data or replaying the full audit ledger.
+- **Consequences:** Adding a route or tenant-owned repository requires explicit security classification before
+  verification can pass. Global repositories remain explicit exceptions. The inventory is not an authorization
+  engine and does not replace controller/service-level semantic authorization tests.

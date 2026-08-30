@@ -11,6 +11,8 @@ use Qmdb\Modules\IdentityMultiFactor\Domain\Repository\PasskeyCredentialReposito
 use Qmdb\Modules\IdentityMultiFactor\Domain\StepUpAction;
 use Qmdb\Modules\IdentitySecurityNotifications\Domain\AccountSecurityNotificationType;
 use Qmdb\Modules\IdentitySessions\Application\AuthenticatedAccountContext;
+use Qmdb\Modules\SecurityAudit\Application\SecurityAuditEventAppender;
+use Qmdb\Modules\SecurityAudit\Domain\SecurityEventCode;
 use Qmdb\Shared\Database\Transaction\TransactionManager;
 use Qmdb\Shared\Time\Clock;
 
@@ -22,6 +24,7 @@ final readonly class PasskeyRevocationService
         private StepUpGuard $stepUp,
         private MultiFactorNotificationService $notifications,
         private TransactionManager $transactions,
+        private SecurityAuditEventAppender $audit,
         private Clock $clock,
     ) {
     }
@@ -62,6 +65,7 @@ final readonly class PasskeyRevocationService
                 $passkey->publicId,
                 $now,
             );
+            $this->audit->account(SecurityEventCode::PASSKEY_REMOVED, $context->accountId->toString(), $context->accountId->toString(), $context->sessionId->toString(), $now, ['authenticator_public_id' => $passkey->publicId]);
         });
     }
 }

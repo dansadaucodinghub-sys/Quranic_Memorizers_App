@@ -2,7 +2,7 @@
 
 This map routes the frozen P0 requirements into executable P2 ownership. It does not change requirement meaning.
 `QMDB-RECOVERY-RUN-001` resolved the historical entry block conservatively and authorizes only sequential B01–B05
-execution. B01 through B06 are complete; B07 is the next bounded batch.
+execution. B01 through B08 are complete; B09 is the active implementation candidate pending closeout verification.
 
 | Capability | Requirement IDs | Batch | Owning module | Migration group | Security controls | Acceptance scenarios/invariants | Test type |
 | --- | --- | --- | --- | --- | --- | --- | --- |
@@ -26,7 +26,7 @@ execution. B01 through B06 are complete; B07 is the next bounded batch.
 | Security events | QMDB-FR-SEC-001/002 | B09 | Security Operations | Security event/incident records | QMDB-CTL-020/022 | INV-001/024/025 | Detection, containment, correlation and privacy |
 | Audit history | QMDB-FR-AUD-001/002 | B09 | Audit | Hash-linked audit/checkpoints | QMDB-CTL-014/020 | INV-004/013/025 | Append-only, chain, tamper and export tests |
 | Suspension/reactivation | QMDB-FR-IAM-006 | B09 | Identity | Account status events | QMDB-CTL-002/003/004 | QMDB-AS-001/002; INV-003/026 | Authorization, stale version, revocation and history |
-| Security hardening | All preceding P2 requirements | B10 | Cross-module | Bounded remediation only | QMDB-CTL-001–008/014/020–022/030 | All IAM/tenant scenarios | Abuse, concurrency, performance and penetration regression |
+| Security hardening | All preceding P2 requirements | B10 | Cross-module | Bounded audit-readiness, module-dependency and denial-assurance remediation | QMDB-CTL-001–008/014/020–022/030 | All IAM/tenant scenarios | Executable route-denial, MySQL isolation/concurrency, bounded audit-listing and full regression evidence; committed freeze required |
 
 ## Historical preconditions and current disposition
 

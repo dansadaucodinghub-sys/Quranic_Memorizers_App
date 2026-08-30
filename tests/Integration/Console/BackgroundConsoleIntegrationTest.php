@@ -31,7 +31,7 @@ final class BackgroundConsoleIntegrationTest extends TestCase
     public static function successfulCommands(): iterable
     {
         yield 'help' => [['help'], 'schedule:list'];
-        yield 'about' => [['app:about'], 'QMDB-P2-B08'];
+        yield 'about' => [['app:about'], 'QMDB-P2-B10'];
         yield 'schedule list' => [['schedule:list'], 'identity.security_notifications.deliver'];
         yield 'worker once' => [['worker:run', '--once'], 'NO_WORK_ONCE'];
         yield 'bounded worker' => [[
@@ -48,7 +48,7 @@ final class BackgroundConsoleIntegrationTest extends TestCase
         $result = $this->console()->run(['schedule:run'], '8.5.0', ['json', 'mbstring']);
 
         self::assertSame(ExitCode::FAILURE, $result->exitCode());
-        self::assertStringContainsString('Failed: 2', $result->standardOutput());
+        self::assertStringContainsString('Failed: 3', $result->standardOutput());
         self::assertStringNotContainsString('password', strtolower($result->standardError()));
     }
 
@@ -90,12 +90,24 @@ final class BackgroundConsoleIntegrationTest extends TestCase
     {
         return (new ApplicationFactory(
             dirname(__DIR__, 3),
-            new DotenvEnvironmentLoader([
-                'APP_ENV' => 'test',
-                'APP_DEBUG' => 'false',
-                'APP_TIMEZONE' => 'UTC',
-            ]),
+            new DotenvEnvironmentLoader($this->testEnvironment()),
             new ApplicationConfigurationFactory(),
         ))->createConsoleApplication('8.5.0', ['json', 'mbstring']);
+    }
+
+    /** @return array<string, string> */
+    private function testEnvironment(): array
+    {
+        return [
+            'APP_ENV' => 'test',
+            'APP_DEBUG' => 'false',
+            'APP_TIMEZONE' => 'UTC',
+            'AUTH_CSRF_SIGNING_KEY' => str_repeat('c', 64),
+            'AUTH_IDENTITY_HMAC_KEY' => str_repeat('i', 64),
+            'AUTH_CONTACT_ENCRYPTION_KEY' => base64_encode(str_repeat('k', 32)),
+            'AUTH_MFA_ENCRYPTION_KEY' => base64_encode(str_repeat('m', 32)),
+            'AUTH_SECURITY_AUDIT_HMAC_KEY' => str_repeat('a', 64),
+            'MAILER_DSN' => 'null://null',
+        ];
     }
 }

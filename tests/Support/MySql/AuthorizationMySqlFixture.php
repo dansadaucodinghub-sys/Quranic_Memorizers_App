@@ -62,6 +62,8 @@ final readonly class AuthorizationMySqlFixture
     {
         foreach (
             [
+            'account_state_operations', 'security_audit_checkpoint_heads', 'security_audit_checkpoints',
+            'security_audit_events', 'security_audit_streams',
             'privileged_access_reviews', 'privileged_access_events', 'privileged_access_activations',
             'privileged_access_approvals', 'privileged_access_request_permissions',
             'privileged_access_requests', 'privileged_access_permission_policies',

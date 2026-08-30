@@ -13,6 +13,7 @@ use Qmdb\Modules\SecurityPrivilegedAccess\Domain\PrivilegedAccessPermissionPolic
 use Qmdb\Modules\SecurityPrivilegedAccess\Domain\PrivilegedAccessRequestStatus;
 use Qmdb\Modules\SecurityPrivilegedAccess\Domain\PrivilegedAccessType;
 
+#[\PHPUnit\Framework\Attributes\Group('PrivilegedAccessAbuse')]
 final class PrivilegedAccessDomainTest extends TestCase
 {
     public function testPrivilegedCatalogExtensionIsFixedAndMappedWithoutWildcardPermissions(): void

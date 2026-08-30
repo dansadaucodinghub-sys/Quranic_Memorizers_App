@@ -6,13 +6,13 @@
 | Project Code | QMDB |
 | Source Baseline | QMDB-BL-001 |
 | Freeze ID | QMDB-P0-FRZ-001 |
-| Batch ID | QMDB-P2-B07 |
+| Batch ID | QMDB-P2-B10 |
 | Document Title | Implementation Entry Point |
-| Document Version | 1.0.0 |
-| Document Status | P1 COMPLETE; P2-B01 THROUGH P2-B07 COMPLETE |
+| Document Version | 1.3.0 |
+| Document Status | P1 COMPLETE; P2-B01 THROUGH P2-B08 COMPLETE; P2-B09 AND P2-B10 REMAIN INCOMPLETE PENDING ENGINEERING-FREEZE VERIFICATION |
 | Document Owner Role | Product, Architecture and Engineering Governance |
-| Last Updated | 2026-08-28 |
-| Approval Status | B01 through B07 accepted after complete executable gates; B08 not started |
+| Last Updated | 2026-08-30 |
+| Approval Status | B10 execution is authorized; B10 and P2 closeout remain incomplete until the committed engineering-freeze gate passes |
 | Related Documents | [Closeout entry point](../closeout/README.md); [freeze manifest](../closeout/qmdb-p0-baseline-freeze.yaml); [project state](../project/project-state.md) |
 
 ## Purpose
@@ -56,18 +56,31 @@ The artifacts cover phased implementation routing, readiness/completion policy, 
     — B07 session authority, relational integrity, HTTP, frontend, repository, job, cache, and export boundaries.
 22. [P2-B07 implementation report](reports/QMDB-P2-B07-implementation-report.md) — B07 implementation, prerequisite
     correction, schema, isolation, regression, release, and closeout evidence.
+23. [Temporary privilege, support-access, and break-glass standard](privileged-access-temporary-support-and-break-glass-standard.md)
+    — B08 controlled exceptional-access contract.
+24. [P2-B08 implementation report](reports/QMDB-P2-B08-implementation-report.md) — B08 executable evidence.
+25. [Security events, audit integrity, and account-state standard](security-events-audit-integrity-and-account-state-standard.md)
+    — B09 tamper-evident audit and account-state contract.
+26. [P2-B09 implementation report](reports/QMDB-P2-B09-implementation-report.md) — B09 implementation and closeout state.
+27. [Identity and tenant security hardening standard](identity-and-tenant-security-hardening-standard.md) — B10 bounded hardening, denial assurance and audit-readiness contract.
+28. [P2-B10 implementation report](reports/QMDB-P2-B10-implementation-report.md) — B10 implementation and final validation evidence.
+29. [P2 threat-model reconciliation](../security/P2-threat-model-reconciliation.md) — B10 control-to-evidence reconciliation.
+30. [P2 route-security matrix](../security/P2-route-security-matrix.md) — closed route classification and browser security policy.
+31. [P2 security performance baseline](../operations/P2-security-performance-baseline.md) — bounded local performance evidence.
+32. [P2-B10 security defect register](reports/QMDB-P2-B10-security-defect-register.md) — discovered defects and resolved corrections.
 
 ## Current authorization
 
 P0 remains complete and frozen. P1-B01 through P1-B10 are complete and P1 is closed/frozen. The project-owner recovery
-authorization established conservative executable OD-051/OD-052 contracts, after which P2-B01 through P2-B07 passed
-their mandatory gates. B07 preserved the B06 authorization boundary while adding server-authoritative session Tenant
-Context; it did not start B08.
+authorization established conservative executable OD-051/OD-052 contracts, after which P2-B01 through P2-B08 passed
+their mandatory gates. B09 supplies the audit and account-state implementation candidate, but its committed
+engineering-freeze verification remains pending. The project owner has explicitly authorized B10 as a bounded
+hardening extension; that does not waive the freeze requirement for B09, B10, or P2 closeout.
 
 ## Exact next action
 
-`QMDB-P2-B08 — Temporary Privileges, Support Access, and Break-Glass Controls` is the next batch. B07 completion does
-not itself authorize B08 implementation.
+Complete the bounded `QMDB-P2-B10` security-hardening validation, then obtain a clean committed engineering-freeze
+verification covering the cumulative B09 and B10 changes before requesting P2 closeout.
 
 ## Governance
 

@@ -25,6 +25,11 @@ use Qmdb\Modules\TenancyContext\Infrastructure\Migration\AddSessionBoundTenantCo
 use Qmdb\Modules\SecurityPrivilegedAccess\Infrastructure\Migration\ExtendPrivilegedAccessSecurityCatalogMigration;
 use Qmdb\Modules\SecurityPrivilegedAccess\Infrastructure\Migration\CreatePrivilegedAccessRequestFoundationMigration;
 use Qmdb\Modules\SecurityPrivilegedAccess\Infrastructure\Migration\CreatePrivilegedAccessActivationFoundationMigration;
+use Qmdb\Modules\SecurityAudit\Infrastructure\Migration\ExtendAccountStateSecurityCatalogMigration;
+use Qmdb\Modules\SecurityAudit\Infrastructure\Migration\CreateSecurityAuditStreamsMigration;
+use Qmdb\Modules\SecurityAudit\Infrastructure\Migration\CreateSecurityAuditCheckpointsMigration;
+use Qmdb\Modules\IdentityAccountState\Infrastructure\Migration\CreateAccountStateOperationsMigration;
+use Qmdb\Modules\SecurityAudit\Infrastructure\Migration\PreserveCanonicalAuditMetadataMigration;
 use Qmdb\Shared\Schema\Migration\MigrationRegistry;
 use Qmdb\Shared\Schema\Migration\MigrationRegistryBuilder;
 
@@ -53,5 +58,10 @@ return static function (): MigrationRegistry {
         ->register(new ExtendPrivilegedAccessSecurityCatalogMigration())
         ->register(new CreatePrivilegedAccessRequestFoundationMigration())
         ->register(new CreatePrivilegedAccessActivationFoundationMigration())
+        ->register(new ExtendAccountStateSecurityCatalogMigration())
+        ->register(new CreateSecurityAuditStreamsMigration())
+        ->register(new CreateSecurityAuditCheckpointsMigration())
+        ->register(new CreateAccountStateOperationsMigration())
+        ->register(new PreserveCanonicalAuditMetadataMigration())
         ->build();
 };

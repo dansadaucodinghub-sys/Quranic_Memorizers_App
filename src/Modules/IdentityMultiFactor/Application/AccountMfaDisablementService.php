@@ -12,6 +12,8 @@ use Qmdb\Modules\IdentitySecurityNotifications\Domain\AccountSecurityNotificatio
 use Qmdb\Modules\IdentitySessions\Application\AuthenticatedAccountContext;
 use Qmdb\Modules\IdentitySessions\Domain\Repository\UserSessionRepository;
 use Qmdb\Modules\IdentitySessions\Domain\SessionRevocationReason;
+use Qmdb\Modules\SecurityAudit\Application\SecurityAuditEventAppender;
+use Qmdb\Modules\SecurityAudit\Domain\SecurityEventCode;
 use Qmdb\Shared\Database\Transaction\TransactionManager;
 use Qmdb\Shared\Identifier\UuidV7;
 use Qmdb\Shared\Time\Clock;
@@ -25,6 +27,7 @@ final readonly class AccountMfaDisablementService
         private UserSessionRepository $sessions,
         private MultiFactorNotificationService $notifications,
         private TransactionManager $transactions,
+        private SecurityAuditEventAppender $audit,
         private Clock $clock,
     ) {
     }
@@ -47,6 +50,14 @@ final readonly class AccountMfaDisablementService
                 $context->sessionInternalId,
                 SessionRevocationReason::MFA_POLICY_CHANGED,
                 $now,
+            );
+            $this->audit->account(
+                SecurityEventCode::MFA_DISABLED,
+                $context->accountId->toString(),
+                $context->accountId->toString(),
+                $context->sessionId->toString(),
+                $now,
+                ['assurance_level' => $context->assurance->level->value],
             );
             $this->notifications->create(
                 $context->accountInternalId,

@@ -10,6 +10,7 @@ use DateTimeImmutable;
 use DateTimeZone;
 use PDO;
 use Qmdb\Modules\IdentitySecurityNotifications\Domain\AccountSecurityNotificationType;
+use Qmdb\Modules\SecurityAuthorization\Domain\AuthorizationScopeType;
 use Qmdb\Modules\SecurityPrivilegedAccess\Application\PrivilegedAccessMaintenanceNotification;
 use Qmdb\Modules\SecurityPrivilegedAccess\Application\PrivilegedAccessMaintenanceRepository;
 use Qmdb\Modules\SecurityPrivilegedAccess\Application\PrivilegedAccessMaintenanceResult;
@@ -75,9 +76,11 @@ SQL, $now, $limit);
     {
         $rows = $this->rows($pdo, <<<'SQL'
 SELECT activation.id AS activation_id, activation.session_id, request_record.id AS request_id,
-       request_record.public_id AS request_public_id, request_record.access_type, request_record.subject_account_id
+       request_record.public_id AS request_public_id, request_record.access_type, request_record.scope_type,
+       request_record.subject_account_id, workspace.public_id AS workspace_public_id
 FROM privileged_access_activations activation
 INNER JOIN privileged_access_requests request_record ON request_record.id = activation.request_id
+LEFT JOIN workspaces workspace ON workspace.id = request_record.workspace_id
 WHERE activation.status = 'ACTIVE' AND request_record.status = 'ACTIVE' AND activation.expires_at <= :now
 ORDER BY activation.id
 LIMIT :row_limit
@@ -127,6 +130,8 @@ SQL);
                     PrivilegedAccessType::BREAK_GLASS => AccountSecurityNotificationType::BREAK_GLASS_EXPIRED,
                 },
                 $source,
+                AuthorizationScopeType::from(self::string($row['scope_type'] ?? null)),
+                self::nullableUuid($row, 'workspace_public_id'),
             );
         }
 
@@ -287,6 +292,14 @@ SQL);
         }
 
         return $value;
+    }
+
+    /** @param array<string, mixed> $row */
+    private static function nullableUuid(array $row, string $column): ?string
+    {
+        $value = $row[$column] ?? null;
+
+        return $value === null ? null : UuidV7::fromBinary(self::string($value))->toString();
     }
 
     private function schemaIsAvailable(PDO $pdo): bool

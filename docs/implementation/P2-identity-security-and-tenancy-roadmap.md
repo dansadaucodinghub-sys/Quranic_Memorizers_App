@@ -3,7 +3,9 @@
 ## Governance status
 
 This roadmap was prepared by `QMDB-P1-CLOSE`. `QMDB-RECOVERY-RUN-001` subsequently authorized strict sequential local
-execution through B05. The project owner separately authorized B06, which is complete. B07 is next and has not begun.
+execution through B05. The project owner separately authorized B06 through B09, then explicitly authorized B10 as a
+bounded hardening extension. B09 remains pending owner-controlled committed engineering-freeze closeout; that
+requirement also governs B10 and P2 closeout.
 
 Every P2 batch preserves Core PHP 8.5, MySQL/InnoDB, the modular monolith, server-derived tenant authority, explicit
 transactions, migration checksums, structured logging, request IDs, server rendering and `QMDB-CR-001`. Each batch must
@@ -22,7 +24,7 @@ update traceability, risks, decisions and state only after its executable gates 
 | QMDB-P2-B07 | Tenant context, workspace switching and tenant-aware data access. Depends on B06. | Immutable TenantContext and tenant-aware repository/job/cache/export boundaries. | Authorized switching only; active workspace is always explicit. | Client identifiers never establish authority; composite tenant relationships. | Repository mutation/read, cache, job, export and existence-leakage tests. |
 | QMDB-P2-B08 | Temporary privilege, support access and break-glass controls. Depends on B05–B07. | Expiring grants, approval and review records. | Scoped support/emergency workflows with clear warnings. | Step-up, independent approval, notification, expiry and post-use review. | Expiry, self-approval, excessive scope, emergency abuse and review tests. |
 | QMDB-P2-B09 | Security events, audit integrity and account-state operations. Depends on B03–B08. | Security Event and Audit modules; hash-linked records and checkpoints. | Suspension/reactivation and audit inspection surfaces. | Append-only evidence, before/after state, correlation and external checkpoint boundary. | Chain verification, tamper, suspension, reactivation, privilege-history and privacy tests. |
-| QMDB-P2-B10 | Identity and tenant security hardening. Depends on B01–B09. | No new broad capability; bounded hardening migrations only if proven necessary. | Full interaction/security regression. | Threat/control reconciliation and abuse containment. | Authorization, cross-tenant, authentication, session, MFA, audit, performance and concurrency gates. |
+| QMDB-P2-B10 | Identity and tenant security hardening. Depends on B01–B09. | No new broad capability; bounded audit-readiness and dependency hardening only, unless a migration is proven necessary. | Full interaction/security regression. | Threat/control reconciliation, route-derived denial assurance and abuse containment. | Authorization, cross-tenant, authentication, session, MFA, audit, performance and concurrency gates; committed freeze still required. |
 | QMDB-P2-CLOSE | Verify identity lifecycle and authorize P3. Depends on B01–B10 complete. | Freeze verified P2 baseline. | End-to-end accessible/RTL/no-JS verification. | Independent security, privacy and tenant-isolation assessment. | All local/MySQL/CI/release/security/manual gates plus zero unresolved P3 blockers. |
 
 ## Batch documentation contract

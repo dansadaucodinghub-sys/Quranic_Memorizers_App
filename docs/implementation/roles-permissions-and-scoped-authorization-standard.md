@@ -198,3 +198,12 @@ support, or break-glass policy permits authorization assignment, role mutation, 
 administration, wildcard permission, or a policy-management action. The controlled seed has 27 permissions, 9 roles,
 73 mappings, and 20 exact exceptional permission policies; `security:authorization:verify` and
 `security:privileged-access:verify` fail closed on catalog or policy drift.
+
+## P2-B09 security-audit integration
+
+P2-B09 extends the governed catalog to 32 permissions, 9 roles, and 83 mappings. Platform and Workspace role
+assignment and revocation append an authoritative, keyed audit event inside the same transaction as the role mutation,
+step-up consumption, and notification intent. The event uses the Platform or exact Workspace stream respectively and
+contains only the assignment public ID, role code, scope, reason, and opaque correlation ID. No exceptional access
+source can authorize account suspension or reactivation; those operations use the base-role guard and phishing-resistant
+action-bound step-up only.

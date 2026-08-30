@@ -7,6 +7,9 @@ namespace Qmdb\Modules\SecurityAuthorization\Application;
 use Qmdb\Modules\IdentityMultiFactor\Application\StepUpGuard;
 use Qmdb\Modules\IdentityMultiFactor\Domain\StepUpAction;
 use Qmdb\Modules\IdentitySecurityNotifications\Domain\AccountSecurityNotificationType;
+use Qmdb\Modules\SecurityAudit\Application\SecurityAuditEventAppender;
+use Qmdb\Modules\SecurityAudit\Domain\SecurityEventCode;
+use Qmdb\Modules\SecurityAudit\Domain\SecurityEventSubjectKind;
 use Qmdb\Modules\SecurityAuthorization\Domain\AuthorizationScopeType;
 use Qmdb\Modules\SecurityAuthorization\Domain\PermissionCode;
 use Qmdb\Modules\SecurityAuthorization\Domain\Repository\AuthorizationAdministrationRepository;
@@ -35,6 +38,7 @@ final readonly class WorkspaceRoleAssignmentService
         private DelegationValidator $delegation,
         private StepUpGuard $stepUp,
         private AuthorizationSecurityNotificationService $notifications,
+        private SecurityAuditEventAppender $audit,
         private TransactionManager $transactions,
         private EventLogger $logger,
         private Clock $clock,
@@ -125,6 +129,21 @@ final readonly class WorkspaceRoleAssignmentService
                 AccountSecurityNotificationType::WORKSPACE_ROLE_ASSIGNED,
                 $assignment->id->toString(),
                 $now,
+            );
+            $this->audit->workspace(
+                SecurityEventCode::WORKSPACE_ROLE_ASSIGNED,
+                $command->tenantContext->workspaceId->toString(),
+                SecurityEventSubjectKind::ROLE_ASSIGNMENT,
+                $assignment->id->toString(),
+                $command->actor->accountId->toString(),
+                $now,
+                [
+                    'assignment_public_id' => $assignment->id->toString(),
+                    'role_code' => $assignment->roleCode->value(),
+                    'scope_type' => AuthorizationScopeType::WORKSPACE->value,
+                ],
+                $command->reason->value,
+                $command->correlationId->value(),
             );
 
             return new WorkspaceRoleAssignmentResult(

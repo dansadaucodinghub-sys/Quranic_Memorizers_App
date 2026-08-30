@@ -87,6 +87,13 @@ P1-B09 implements the first server-rendered presentation boundary. English and A
 The system-status card refreshes only its bounded target. System information may open in one global native dialog with an ordinary page link as fallback. Loading, failure, request reference, focus entry, close, Escape, restoration, and nested-modal prevention are controlled. Theme switching stores only an allowlisted `qmdb.theme` value; no identity, locale, workspace, cookie, or token is read or stored.
 
 P1-B09 deliberately defers mutation forms, CSRF, idempotency transport, optimistic-concurrency responses, validation fragments, user preference persistence, SSE, polling fallback, background-job progress, and business-module modals. No state-changing request may be intercepted until its owning controls are approved and implemented.
+
+## P2-B09 account-state interaction
+
+Account suspension and reactivation retain CSRF-protected full-page forms. Same-origin enhancement may load one
+allowlisted form fragment in a controlled modal and replace only the account-state panel after authoritative success.
+It sends the server-issued submission value, blocks duplicate submission, never retries, keeps focus on failure, and
+stores no account-state, audit, permission, role, or cookie data in browser storage.
 ## P2-B04 recovery mutation protocol
 
 Forgot-password and password-reset forms use the native progressive controller while retaining ordinary full-page POST

@@ -10,6 +10,9 @@ use Qmdb\Modules\IdentityMultiFactor\Application\StepUpGuard;
 use Qmdb\Modules\IdentityMultiFactor\Domain\StepUpAction;
 use Qmdb\Modules\IdentitySessions\Application\AuthenticatedAccountContext;
 use Qmdb\Modules\IdentitySecurityNotifications\Domain\AccountSecurityNotificationType;
+use Qmdb\Modules\SecurityAudit\Application\SecurityAuditEventAppender;
+use Qmdb\Modules\SecurityAudit\Domain\SecurityEventCode;
+use Qmdb\Modules\SecurityAudit\Domain\SecurityEventSubjectKind;
 use Qmdb\Modules\SecurityAuthorization\Application\AuthorizationRequest;
 use Qmdb\Modules\SecurityAuthorization\Application\AuthorizationSubject;
 use Qmdb\Modules\SecurityAuthorization\Application\BaseRoleAuthorizationGuard;
@@ -34,6 +37,7 @@ final readonly class PrivilegedAccessActivationService
         private StepUpGuard $stepUp,
         private PrivilegedAccessConfiguration $configuration,
         private PrivilegedAccessNotificationService $notifications,
+        private SecurityAuditEventAppender $audit,
         private TransactionManager $transactions,
         private Clock $clock,
     ) {
@@ -65,6 +69,10 @@ final readonly class PrivilegedAccessActivationService
         $now = $this->clock->now();
 
         return $this->transactions->transactional(function () use ($actor, $requestId, $type, $action, $correlationId, $now): PrivilegedAccessActivationId {
+            $auditRequest = $this->lifecycle->requestSnapshot($requestId);
+            if ($auditRequest === null) {
+                throw new \UnexpectedValueException('Activated privileged-access request is unavailable for audit routing.');
+            }
             $state = $this->tenantContexts->state($actor, true);
             if (!$this->tenantContexts->clear($actor, $state->version, $now)) {
                 throw new \DomainException('The selected workspace context changed; retry from current session state.');
@@ -90,6 +98,19 @@ final readonly class PrivilegedAccessActivationService
                 },
                 $activation->toString(),
                 $now,
+            );
+            $this->audit->privilegedAccess(
+                $type === PrivilegedAccessType::TEMPORARY_PRIVILEGE
+                    ? SecurityEventCode::TEMPORARY_ACTIVATED : SecurityEventCode::SUPPORT_ACTIVATED,
+                $auditRequest->scope->value === 'WORKSPACE',
+                $auditRequest->workspacePublicId,
+                SecurityEventSubjectKind::PRIVILEGED_ACCESS,
+                $activation->toString(),
+                $actor->accountId->toString(),
+                $now,
+                ['access_type' => $type->value],
+                null,
+                $correlationId->value(),
             );
 
             return $activation;

@@ -10,11 +10,14 @@ use Qmdb\Modules\IdentityMultiFactor\Domain\PasskeyCredentialStatus;
 use Qmdb\Modules\IdentityMultiFactor\Domain\Repository\PasskeyCredentialRepository;
 use Qmdb\Modules\IdentityMultiFactor\Domain\Repository\WebAuthnCeremonyRepository;
 use Qmdb\Modules\IdentityMultiFactor\Domain\Repository\WebAuthnUserHandleRepository;
+use Qmdb\Modules\IdentityMultiFactor\Domain\Repository\MultiFactorNotificationTargetRepository;
 use Qmdb\Modules\IdentityMultiFactor\Domain\StepUpAction;
 use Qmdb\Modules\IdentityMultiFactor\Domain\WebAuthnCeremonyPurpose;
 use Qmdb\Modules\IdentityMultiFactor\Domain\WebAuthnChallenge;
 use Qmdb\Modules\IdentityMultiFactor\Infrastructure\Security\PasskeyCounterChecker;
 use Qmdb\Modules\IdentitySecurityNotifications\Domain\AccountSecurityNotificationType;
+use Qmdb\Modules\SecurityAudit\Application\SecurityAuditEventAppender;
+use Qmdb\Modules\SecurityAudit\Domain\SecurityEventCode;
 use Qmdb\Modules\IdentitySessions\Application\AuthenticatedAccountContext;
 use Qmdb\Shared\Database\Transaction\TransactionManager;
 use Qmdb\Shared\Identifier\UuidV7;
@@ -50,8 +53,10 @@ final readonly class WebAuthnService
         private PasskeyCredentialRepository $passkeys,
         private StepUpGuard $stepUp,
         private MultiFactorNotificationService $notifications,
+        private MultiFactorNotificationTargetRepository $targets,
         private TransactionManager $transactions,
         private IdentityMultiFactorConfiguration $configuration,
+        private SecurityAuditEventAppender $audit,
         private Clock $clock,
     ) {
         $serializer = (new WebauthnSerializerFactory(AttestationStatementSupportManager::create()))->create();
@@ -175,6 +180,14 @@ final readonly class WebAuthnService
                 AccountSecurityNotificationType::PASSKEY_ADDED,
                 $passkey->publicId,
                 $now,
+            );
+            $this->audit->account(
+                SecurityEventCode::PASSKEY_ADDED,
+                $context->accountId->toString(),
+                $context->accountId->toString(),
+                $context->sessionId->toString(),
+                $now,
+                ['authenticator_public_id' => $passkey->publicId],
             );
 
             return $passkey;
@@ -456,6 +469,18 @@ final readonly class WebAuthnService
                     AccountSecurityNotificationType::PASSKEY_SUSPENDED,
                     $locked->publicId,
                     $now,
+                );
+                $target = $this->targets->notificationTarget($locked->accountInternalId);
+                if ($target === null) {
+                    throw new \UnexpectedValueException('Passkey audit account identity is unavailable.');
+                }
+                $this->audit->account(
+                    SecurityEventCode::PASSKEY_SUSPENDED,
+                    $target['account_public_id'],
+                    null,
+                    null,
+                    $now,
+                    ['authenticator_public_id' => $locked->publicId],
                 );
             }
         });

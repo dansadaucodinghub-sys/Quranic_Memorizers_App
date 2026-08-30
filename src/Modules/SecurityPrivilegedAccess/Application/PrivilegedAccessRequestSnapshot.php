@@ -21,6 +21,7 @@ final readonly class PrivilegedAccessRequestSnapshot
         public int $requestedByAccountInternalId,
         public ?int $workspaceInternalId,
         public ?int $subjectMembershipInternalId,
+        public ?string $workspacePublicId = null,
     ) {
     }
 }

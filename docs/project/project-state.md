@@ -8,24 +8,29 @@
 | Product Freeze | QMDB-P0-FRZ-001 |
 | Approved Change | QMDB-CR-001 — Asynchronous Progressive Interaction and Modal UX Standard |
 | Engineering Freeze | QMDB-P1-FRZ-001 |
-| Document Version | 3.8.0 |
-| Last Updated | 2026-08-29 |
-| Status | P0 COMPLETE; P1 COMPLETE; P2-B01 through P2-B08 COMPLETE |
+| Document Version | 4.1.0 |
+| Last Updated | 2026-08-30 |
+| Status | P0 COMPLETE; P1 COMPLETE; P2-B01 through P2-B08 COMPLETE; P2-B09 AND P2-B10 INCOMPLETE PENDING ENGINEERING-FREEZE VERIFICATION |
 | Current Phase | P2 — Identity, Security, and Tenant Isolation |
-| Current Batch | QMDB-P2-B08 — Temporary Privileges, Support Access, and Break-Glass Controls |
-| Batch Status | QMDB-P2-B08 COMPLETE |
-| Implementation Readiness | READY FOR NEXT BATCH — QMDB-P2-B09 is next, not implemented here |
-| P2 Status | IN PROGRESS |
+| Current Batch | QMDB-P2-B09 — Security Events, Audit Integrity, and Account State Operations |
+| Batch Status | INCOMPLETE — REQUIRED COMMITTED ENGINEERING-FREEZE VERIFICATION HAS NOT PASSED |
+| Implementation Readiness | RESOLUTION REQUIRED — OWNER COMMIT AND CLEAN ENGINEERING-FREEZE VERIFICATION REQUIRED |
+| P2 Status | BLOCKED |
 
 ## Authoritative outcome
 
-P1 is complete. All ten implementation batches and the closeout batch satisfy their engineering acceptance criteria.
+P1 is complete. P2-B01 through P2-B08 satisfy their engineering acceptance criteria; B09 and B10 remain
+incomplete until their committed engineering-freeze verification passes.
 `QMDB-P1-FRZ-001` governs the resulting repository foundation. The original product and requirements freeze
 `QMDB-P0-FRZ-001` remains intact.
 
 `QMDB-RECOVERY-RUN-001` is an explicit project-owner authorization that supersedes the prior P2 execution block. It
 requires toolchain recovery, repository-truth verification, conservative resolution of `OD-051`/`OD-052`, and strict
 sequential execution of P2-B01 through P2-B05. P1 remains frozen; P2 changes use its controlled extension points.
+
+The latest project-owner instruction returns the active batch to `QMDB-P2-B09` until its committed engineering-freeze
+closeout passes. Existing B10 hardening evidence remains in the working tree, but B10 is not authorized to advance or
+close until B09 is formally complete. The committed-freeze requirement is not waived for either batch or P2 closeout.
 
 ## Recovery execution ledger
 
@@ -34,9 +39,11 @@ sequential execution of P2-B01 through P2-B05. P1 remains frozen; P2 changes use
 | Recovery Run | QMDB-RECOVERY-RUN-001 |
 | Recovery Status | COMPLETE |
 | Last Fully Completed Batch | QMDB-P2-B08 |
-| Next Batch | QMDB-P2-B09 — Security Events, Audit Integrity, and Account State Operations |
-| Sequence Rule | B01 → B02 → B03 → B04 → B05 → B06 → B07 → B08; B09 is not implemented by B08 |
+| Current Batch | QMDB-P2-B09 — Security Events, Audit Integrity, and Account State Operations (explicit project-owner authorization) |
+| Sequence Rule | B01 → B02 → B03 → B04 → B05 → B06 → B07 → B08 → B09 → B10; B09/B10 must both satisfy the committed engineering-freeze verification before P2 closeout |
 | P2-B08 Status | COMPLETE |
+| P2-B09 Status | INCOMPLETE; committed engineering-freeze verification pending |
+| P2-B10 Status | BLOCKED pending completed B09 engineering-freeze verification |
 
 ## P1 batch ledger
 
@@ -102,6 +109,8 @@ build reports.
 | QMDB-P2-B06 | COMPLETE | Deny-by-default platform/workspace authorization, explicit seeded catalog, assurance-aware decisions, atomic step-up-protected administration, delegation and concurrency controls pass |
 | QMDB-P2-B07 | COMPLETE | Session-authoritative Tenant Context, explicit workspace switching/clearing, composite membership integrity, tenant-scoped boundaries, stale-version and cross-session isolation controls pass |
 | QMDB-P2-B08 | COMPLETE | Time-bounded temporary privileges, dual-approved support access, atomic break-glass, session-bound authorization, post-use review, expiry/revocation and scheduler controls pass |
+| QMDB-P2-B09 | INCOMPLETE | Security Audit ledger, account-state controls, MySQL and focused regression evidence are implemented; the mandatory committed engineering-freeze verification has not passed |
+| QMDB-P2-B10 | BLOCKED | Route, tenant-repository and aggregate verifiers, bounded performance evidence, focused tests and the 83-test real-MySQL suite pass; B09 must first complete its committed engineering-freeze verification |
 
 ## QMDB-P2-B04 delivery and verification ledger
 
@@ -250,12 +259,16 @@ Completed P2 Batches:
 
 Completed Batch: QMDB-P2-B08 — Temporary Privileges, Support Access, and Break-Glass Controls
 
-Next Batch: QMDB-P2-B09 — Security Events, Audit Integrity, and Account State Operations
+Current Batch: QMDB-P2-B09 — Security Events, Audit Integrity, and Account State Operations
+
+Next Batch: QMDB-P2-B10 — Identity and Tenant Security Hardening (blocked until B09 committed engineering-freeze verification passes)
 
 P1 Status: COMPLETE
 
-P2 Status: IN PROGRESS
+P2 Status: BLOCKED
 
-Batch Status: COMPLETE
+Batch Status: INCOMPLETE
 
-Implementation Status: READY FOR NEXT BATCH
+P2-CLOSE Status: BLOCKED
+
+Implementation Status: RESOLUTION REQUIRED

@@ -118,3 +118,10 @@ may update an approved fragment after an authoritative success, but it never ret
 or privileged state in browser storage, or closes a confirmation modal until the server succeeds. Break-glass stays a
 full-page warning flow because its safety-critical justification, incident reference, assurance, and confirmation must
 remain available without JavaScript.
+
+## P2-B09 audit and account-state presentation
+
+Security-event lists, platform audit views, and integrity status remain bounded, private, no-store, server-rendered
+pages. Severity and outcome are textual as well as visual; raw metadata, integrity keys, justification, internal IDs,
+and mutation controls are never rendered. Account-state confirmation uses explicit destructive language, associated
+reason and justification guidance, an accessible modal title, and an equivalent English/Arabic RTL full-page flow.

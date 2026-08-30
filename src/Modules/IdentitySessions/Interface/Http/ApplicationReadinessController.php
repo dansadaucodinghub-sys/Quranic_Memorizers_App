@@ -11,6 +11,7 @@ use Qmdb\Modules\IdentityRecovery\Application\Readiness\IdentityRecoveryReadines
 use Qmdb\Modules\IdentityMultiFactor\Application\Readiness\IdentityMultiFactorReadinessCheck;
 use Qmdb\Modules\IdentitySecurityNotifications\Application\Readiness\IdentitySecurityNotificationReadinessCheck;
 use Qmdb\Modules\SecurityAuthorization\Application\AuthorizationReadinessCheck;
+use Qmdb\Modules\SecurityAudit\Application\SecurityAuditReadinessCheck;
 use Qmdb\Modules\IdentitySessions\Application\Readiness\IdentitySessionReadinessCheck;
 use Qmdb\Modules\TenancyContext\Application\TenantContextReadinessCheck;
 use Qmdb\Modules\SecurityPrivilegedAccess\Application\PrivilegedAccessReadinessCheck;
@@ -31,6 +32,7 @@ final readonly class ApplicationReadinessController implements Controller
         private IdentitySecurityNotificationReadinessCheck $notifications,
         private IdentityMultiFactorReadinessCheck $multiFactor,
         private AuthorizationReadinessCheck $authorization,
+        private SecurityAuditReadinessCheck $securityAudit,
         private TenantContextReadinessCheck $tenantContext,
         private PrivilegedAccessReadinessCheck $privilegedAccess,
     ) {
@@ -46,6 +48,7 @@ final readonly class ApplicationReadinessController implements Controller
             && $this->notifications->isReady();
         $ready = $ready && $this->multiFactor->isReady();
         $ready = $ready && $this->authorization->isReady();
+        $ready = $ready && $this->securityAudit->isReady();
         $ready = $ready && $this->tenantContext->isReady();
         $ready = $ready && $this->privilegedAccess->isReady();
 

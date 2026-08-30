@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace Qmdb\Modules\SecurityPrivilegedAccess\Application;
 
 use Qmdb\Modules\IdentitySecurityNotifications\Domain\AccountSecurityNotificationType;
+use Qmdb\Modules\SecurityAuthorization\Domain\AuthorizationScopeType;
 
 /** Safe, post-state notification intent created by one bounded maintenance transition. */
 final readonly class PrivilegedAccessMaintenanceNotification
@@ -13,6 +14,8 @@ final readonly class PrivilegedAccessMaintenanceNotification
         public int $accountInternalId,
         public AccountSecurityNotificationType $type,
         public string $requestPublicId,
+        public AuthorizationScopeType $scope = AuthorizationScopeType::PLATFORM,
+        public ?string $workspacePublicId = null,
     ) {
         if (
             $accountInternalId < 1

@@ -27,6 +27,8 @@ enum StepUpAction: string
     case SUPPORT_ACCESS_REVIEW = 'SUPPORT_ACCESS_REVIEW';
     case BREAK_GLASS_ACTIVATE = 'BREAK_GLASS_ACTIVATE';
     case BREAK_GLASS_REVIEW = 'BREAK_GLASS_REVIEW';
+    case ACCOUNT_SUSPEND = 'ACCOUNT_SUSPEND';
+    case ACCOUNT_REACTIVATE = 'ACCOUNT_REACTIVATE';
 
     public function requirement(): AuthenticationAssuranceLevel
     {
@@ -41,6 +43,7 @@ enum StepUpAction: string
             self::SUPPORT_ACCESS_REVIEW,
             self::BREAK_GLASS_ACTIVATE,
             self::BREAK_GLASS_REVIEW => AuthenticationAssuranceLevel::PHISHING_RESISTANT,
+            self::ACCOUNT_SUSPEND, self::ACCOUNT_REACTIVATE => AuthenticationAssuranceLevel::PHISHING_RESISTANT,
             default => AuthenticationAssuranceLevel::MULTI_FACTOR,
         };
     }
@@ -61,6 +64,7 @@ enum StepUpAction: string
             self::SUPPORT_ACCESS_REVIEW,
             self::BREAK_GLASS_ACTIVATE,
             self::BREAK_GLASS_REVIEW => '/account/security/privileged-access',
+            self::ACCOUNT_SUSPEND, self::ACCOUNT_REACTIVATE => '/platform/security/accounts',
             default => '/account/security/authentication',
         };
     }
