@@ -104,7 +104,7 @@ final class FoundationCompilationTest extends TestCase
         $result = $queryBus->ask(new GetSystemInformation());
 
         self::assertInstanceOf(SystemInformation::class, $result);
-        self::assertSame('QMDB-P2-B10', $result->currentBatch());
+        self::assertSame('QMDB-P2-B09', $result->currentBatch());
     }
 
     public function testFoundationContainsNoDeferredInfrastructureService(): void

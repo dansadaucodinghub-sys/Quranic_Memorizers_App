@@ -3,8 +3,7 @@
 QMDB is the governed Qur’an Memorizer Database platform. This repository contains the frozen P1 Core PHP engineering
 foundation and the active P2 identity and tenancy implementation. `QMDB-P2-B01` through `QMDB-P2-B08` are complete.
 `QMDB-P2-B09` remains a closeout-blocked implementation candidate because the required engineering freeze has not
-been committed. The project owner has explicitly authorized the bounded `QMDB-P2-B10` security-hardening extension;
-P2 cannot close until both B09 and B10 pass committed engineering-freeze verification.
+been committed. `QMDB-P2-B10` is the next batch and is not implemented in the current source.
 
 ## Project identity
 
@@ -14,8 +13,8 @@ P2 cannot close until both B09 and B10 pass committed engineering-freeze verific
 - Frozen baseline: QMDB-P0-FRZ-001
 - Phase: P2 — Identity, Security, and Tenant Isolation
 - Completed batch: QMDB-P2-B08 — Temporary Privileges, Support Access, and Break-Glass Controls
-- Current batch: QMDB-P2-B10 — Identity and Tenant Security Hardening
-- Readiness: CLOSEOUT_PENDING_OWNER_COMMIT
+- Current batch: QMDB-P2-B09 — Security Events, Audit Integrity, and Account State Operations
+- Readiness: B09_CLOSEOUT_PENDING_COMMITTED_FREEZE
 - Engineering freeze: QMDB-P1-FRZ-001
 - Development version: 0.1.0-dev
 
@@ -446,7 +445,7 @@ account version, block duplicate browser submission, and never retry a state cha
 Current scope includes the Security Audit ledger, verification/checkpoints, critical security-mutation evidence, account
 suspension/reactivation, and suspension-time session and privileged-access revocation. Account closure/deletion,
 automated risk scoring or suspension, SIEM integration, and an external checkpoint provider remain outside this batch.
-The next authorized batch is `QMDB-P2-B10 — Identity and Tenant Security Hardening`.
+The next batch is `QMDB-P2-B10 — Identity and Tenant Security Hardening`; it remains blocked until B09 closes.
 
 ## Structured logging
 

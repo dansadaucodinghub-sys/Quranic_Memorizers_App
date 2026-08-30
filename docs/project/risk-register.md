@@ -499,15 +499,3 @@ recovery-authorized B01 normalization contract.
 | Final platform security administrator is suspended | Locked last-usable-administrator protection rejects the operation | MITIGATED by concurrency and authorization tests |
 | Security evidence is disclosed by a viewer | Viewer authorization is base-role scoped, responses are bounded/no-store, and routes do not export raw records | MITIGATED locally; disclosure/export policy remains OPEN |
 | Integrity verification is ignored operationally | CLI returns failure on invalid evidence and readiness has no external-witness claim | DETECTABLE; incident-response runbook remains OPEN |
-
-## P2-B10 Identity and Tenant Security Hardening risk treatment
-
-| Risk | Implemented treatment | Current disposition |
-| --- | --- | --- |
-| Audit key, immutable trigger, or inspection index drift is invisible to runtime health | Bounded audit-control verifier checks the configured key, triggers, and all audit-listing indexes through readiness | MITIGATED locally; independent key custody and incident response remain OPEN |
-| Health probes become an audit-history denial-of-service vector | Readiness consumes only control verification; full keyed-chain replay remains an explicit CLI/release action | MITIGATED by architecture and unit tests |
-| A newly registered protected route lacks an anonymous denial test | Route-derived matrix defaults every non-allowlisted route to protected and tests normal plus fragment requests | MITIGATED by 61-route executable HTTP matrix |
-| CSRF-first denial is mistaken for an authorization bypass | Matrix accepts only safe 403 mutation denial or authentication redirect/401; no protected action is reached | MITIGATED by route-security regression |
-| Audit inspection regresses to unbounded or unindexed retrieval | Maximum page size is 100 and stream/code/actor/subject/workspace/severity indexes are verified | MITIGATED structurally; OD-036 capacity targets remain OPEN |
-| Route or tenant-repository scope drifts without an executable inventory | Closed route/security and tenant-repository inventories fail on missing classification, missing scope predicate or unregistered exception | MITIGATED for the P2 inventory; future repositories require registration in their owning batch |
-| P2 closeout is claimed without a committed governed revision | B09/B10 records retain the engineering-freeze blocker and do not authorize P2 closeout | OPEN OWNER ACTION |

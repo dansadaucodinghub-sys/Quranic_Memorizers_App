@@ -3,9 +3,9 @@
 ## Governance status
 
 This roadmap was prepared by `QMDB-P1-CLOSE`. `QMDB-RECOVERY-RUN-001` subsequently authorized strict sequential local
-execution through B05. The project owner separately authorized B06 through B09, then explicitly authorized B10 as a
-bounded hardening extension. B09 remains pending owner-controlled committed engineering-freeze closeout; that
-requirement also governs B10 and P2 closeout.
+execution through B05. The project owner separately authorized B06 through B09. B09 remains pending
+owner-controlled committed engineering-freeze closeout. B10 is a planned next batch and is not implemented in the
+current source.
 
 Every P2 batch preserves Core PHP 8.5, MySQL/InnoDB, the modular monolith, server-derived tenant authority, explicit
 transactions, migration checksums, structured logging, request IDs, server rendering and `QMDB-CR-001`. Each batch must
