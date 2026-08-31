@@ -84,7 +84,7 @@ final class P2IdentityRecoveryHttpIntegrationTest extends MySqlIntegrationTestCa
         self::assertSame(503, $readiness->getStatusCode());
         self::assertSame('{"status":"not_ready"}', (string)$readiness->getBody());
 
-        self::assertCount(28, $this->migrationRegistry()->ordered());
+        self::assertCount(30, $this->migrationRegistry()->ordered());
         foreach (
             ['account_password_recovery_challenges', 'account_password_recovery_events',
                 'account_security_notifications', 'account_security_notification_events'] as $table

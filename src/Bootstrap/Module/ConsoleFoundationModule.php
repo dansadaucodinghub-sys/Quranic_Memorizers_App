@@ -42,6 +42,7 @@ use Qmdb\Modules\TenancyContext\Interface\Console\TenantRepositorySecurityVerify
 use Qmdb\Modules\SecurityPrivilegedAccess\Interface\Console\PrivilegedAccessVerifyConsoleCommand;
 use Qmdb\Modules\SecurityAudit\Interface\Console\SecurityAuditCheckpointConsoleCommand;
 use Qmdb\Modules\SecurityAudit\Interface\Console\SecurityAuditVerifyConsoleCommand;
+use Qmdb\Modules\Geography\Interface\Console\GeographyReferenceVerifyConsoleCommand;
 
 final readonly class ConsoleFoundationModule implements Module
 {
@@ -65,6 +66,7 @@ final readonly class ConsoleFoundationModule implements Module
             new ModuleId('security.privileged_access'),
             new ModuleId('security.audit'),
             new ModuleId('application.http'),
+            new ModuleId('reference.geography'),
         ];
     }
 
@@ -161,6 +163,7 @@ final readonly class ConsoleFoundationModule implements Module
             RouteSecurityVerifyConsoleCommand::class,
             P2SecurityHardeningVerifyConsoleCommand::class,
             SecurityAuditCheckpointConsoleCommand::class,
+            GeographyReferenceVerifyConsoleCommand::class,
         ];
         $context->service(ServiceDefinition::factory(
             ConsoleCommandMap::class,
@@ -189,6 +192,7 @@ final readonly class ConsoleFoundationModule implements Module
                 $registry->register(ServiceReference::get($resolver, RouteSecurityVerifyConsoleCommand::class));
                 $registry->register(ServiceReference::get($resolver, P2SecurityHardeningVerifyConsoleCommand::class));
                 $registry->register(ServiceReference::get($resolver, SecurityAuditCheckpointConsoleCommand::class));
+                $registry->register(ServiceReference::get($resolver, GeographyReferenceVerifyConsoleCommand::class));
 
                 return $registry->build();
             }),

@@ -6,13 +6,13 @@
 | Project Code | QMDB |
 | Source Baseline | QMDB-BL-001 |
 | Freeze ID | QMDB-P0-FRZ-001 |
-| Batch ID | QMDB-P2-B10 |
+| Batch ID | QMDB-P3-B01 |
 | Document Title | Implementation Entry Point |
-| Document Version | 1.4.0 |
-| Document Status | P1 COMPLETE; P2-B01 THROUGH P2-B10 COMPLETE; P2-CLOSE NEXT |
+| Document Version | 1.5.0 |
+| Document Status | P1 COMPLETE / FROZEN; P2 COMPLETE / FROZEN; P3-B01 COMPLETE |
 | Document Owner Role | Product, Architecture and Engineering Governance |
 | Last Updated | 2026-08-31 |
-| Approval Status | B10 is complete after committed local, clean-install, release, and freeze evidence; P2-CLOSE remains separate |
+| Approval Status | P3-B01 is complete under the separately authorized Nigerian geography-only scope |
 | Related Documents | [Closeout entry point](../closeout/README.md); [freeze manifest](../closeout/qmdb-p0-baseline-freeze.yaml); [project state](../project/project-state.md) |
 
 ## Purpose
@@ -68,18 +68,23 @@ The artifacts cover phased implementation routing, readiness/completion policy, 
 29. [P2 threat-model reconciliation](../security/P2-threat-model-reconciliation.md) — B10 control-to-evidence record.
 30. [P2 route-security matrix](../security/P2-route-security-matrix.md) — closed production route inventory.
 31. [P2-B10 security defect register](reports/QMDB-P2-B10-security-defect-register.md) — discovered hardening defects and disposition.
+32. [Nigerian administrative geography standard](nigerian-administrative-geography-standard.md) — P3-B01 data,
+    public-read, caching, accessibility, and future-release boundary.
+33. [Nigeria dataset provenance](../data/nigeria-administrative-geography-provenance.md) — source, checksum,
+    canonicalization, and known limitations for the first governed release.
+34. [P3-B01 implementation report](reports/QMDB-P3-B01-implementation-report.md) — executable delivery,
+    public-interface, performance, phase-control, and validation evidence.
 
 ## Current authorization
 
-P0 remains complete and frozen. P1-B01 through P1-B10 are complete and P1 is closed/frozen. The project-owner recovery
-authorization established conservative executable OD-051/OD-052 contracts, after which P2-B01 through P2-B08 passed
-their mandatory gates. B09 supplies the completed audit and account-state boundary with committed Engineering Freeze
-evidence. B10 has completed its committed local, clean-install, release, and Engineering Freeze evidence. P2-CLOSE
-is the next separately governed verification-and-freeze batch.
+P0, P1, and P2 remain frozen. `QMDB-P3-OPEN-B01` separately authorizes only the completed Nigeria administrative
+geography reference registry. P3-B02 and every organization, person, guardianship, consent, competition, and
+tenant-scoped capability remain unstarted and require separate project-owner authorization.
 
 ## Exact next action
 
-Execute only the separately authorized P2-CLOSE verification-and-freeze batch; do not begin P3 from this entry point.
+Do not begin P3-B02. The next action requires a separate authorization and must preserve the P3-B01 public-id,
+dataset-version, provenance, and isolation contracts.
 
 ## Governance
 

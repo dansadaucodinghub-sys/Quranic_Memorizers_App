@@ -85,6 +85,8 @@ final readonly class PresentationFoundationModule implements Module
                     'pages.home' => $root . '/resources/views/pages/home.php',
                     'pages.system-about' => $root . '/resources/views/pages/system-about.php',
                     'pages.system-status' => $root . '/resources/views/pages/system-status.php',
+                    'pages.nigeria-geography-directory' => $root . '/resources/views/pages/nigeria-geography-directory.php',
+                    'pages.nigeria-administrative-area' => $root . '/resources/views/pages/nigeria-administrative-area.php',
                     'pages.account-register' => $root . '/resources/views/pages/account-register.php',
                     'pages.account-registration-accepted' =>
                         $root . '/resources/views/pages/account-registration-accepted.php',
@@ -125,6 +127,7 @@ final readonly class PresentationFoundationModule implements Module
                     'pages.totp-revoke-confirm' => $root . '/resources/views/pages/totp-revoke-confirm.php',
                     'fragments.system-about-dialog' => $root . '/resources/views/fragments/system-about-dialog.php',
                     'fragments.system-status-card' => $root . '/resources/views/fragments/system-status-card.php',
+                    'fragments.geography-child-select' => $root . '/resources/views/fragments/geography-child-select.php',
                     'fragments.account-register-form' =>
                         $root . '/resources/views/fragments/account-register-form.php',
                     'fragments.account-registration-accepted' =>
@@ -195,6 +198,10 @@ final readonly class PresentationFoundationModule implements Module
                     'components.form-field-error' => $root . '/resources/views/components/form-field-error.php',
                     'components.password-requirements' =>
                         $root . '/resources/views/components/password-requirements.php',
+                    'components.geography-level-one-select' =>
+                        $root . '/resources/views/components/geography-level-one-select.php',
+                    'components.geography-level-two-select' =>
+                        $root . '/resources/views/components/geography-level-two-select.php',
                 ])),
         ));
         $context->service(ServiceDefinition::factory(

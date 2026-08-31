@@ -33,6 +33,33 @@ final class P2FreezePolicy
         '.git/', '.runtime/', '.phpstan.cache/', 'build/', 'coverage/', 'node_modules/', 'vendor/',
     ];
 
+    /** @var list<string> */
+    private const P3_B01_EXTENSION_PREFIXES = [
+        'src/Modules/Geography/',
+        'src/Bootstrap/Module/GeographyReferenceModule.php',
+        'database/reference/nigeria-administrative-areas-v1.json',
+        'resources/views/components/geography-',
+        'resources/views/fragments/geography-',
+        'resources/views/pages/nigeria-',
+        'public/assets/js/geography-',
+        'tests/Geography/',
+        'tests/Unit/Modules/Geography/',
+        'tests/Integration/MySql/Geography',
+        'tests/Architecture/Geography',
+        'tests/Frontend/geography-',
+    ];
+
+    /** @var list<string> */
+    private const P3_B01_MUTABLE_EXISTING_PATHS = [
+        'src/Bootstrap/ApplicationFactory.php',
+        'src/Bootstrap/ApplicationMetadata.php',
+        'src/Bootstrap/Module/ApplicationHttpModule.php',
+        'src/Bootstrap/Module/ConsoleFoundationModule.php',
+        'src/Bootstrap/Module/PresentationFoundationModule.php',
+        'src/Modules/IdentitySessions/Interface/Http/ApplicationReadinessController.php',
+        'src/Shared/Http/Routing/Security/ProductionRouteSecurityPolicyCatalog.php',
+    ];
+
     public function __construct(private readonly PathPolicy $pathPolicy = new PathPolicy())
     {
     }
@@ -67,6 +94,9 @@ final class P2FreezePolicy
     public function isIncluded(string $path): bool
     {
         $path = PathPolicy::normalize($path);
+        if ($this->isP3B01Extension($path)) {
+            return false;
+        }
         if ($path === 'docs/closeout/p2/qmdb-p2-identity-security-tenancy-freeze.yaml') {
             return false;
         }
@@ -104,6 +134,22 @@ final class P2FreezePolicy
             'docs/implementation/requirements-to-implementation-map.md',
             'docs/implementation/definition-of-ready-and-done.md',
         ], true);
+    }
+
+    public function isP3B01Extension(string $path): bool
+    {
+        foreach (self::P3_B01_EXTENSION_PREFIXES as $prefix) {
+            if (str_starts_with(PathPolicy::normalize($path), $prefix)) {
+                return true;
+            }
+        }
+
+        return false;
+    }
+
+    public function isP3B01MutableExistingPath(string $path): bool
+    {
+        return in_array(PathPolicy::normalize($path), self::P3_B01_MUTABLE_EXISTING_PATHS, true);
     }
 
     public function category(string $path): string

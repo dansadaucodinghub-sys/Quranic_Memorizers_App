@@ -14,6 +14,7 @@ use Qmdb\Bootstrap\Module\BackgroundExecutionFoundationModule;
 use Qmdb\Bootstrap\Module\ConsoleFoundationModule;
 use Qmdb\Bootstrap\Module\CoreFoundationModule;
 use Qmdb\Bootstrap\Module\DatabaseFoundationModule;
+use Qmdb\Bootstrap\Module\GeographyReferenceModule;
 use Qmdb\Bootstrap\Module\HttpFoundationModule;
 use Qmdb\Bootstrap\Module\IdentityAccessModule;
 use Qmdb\Bootstrap\Module\IdentityAccountStateModule;
@@ -81,6 +82,7 @@ final class FoundationCompilationTest extends TestCase
             'tenancy.context',
             'security.privileged_access',
             'identity.account_state',
+            'reference.geography',
             'application.http',
             'foundation.console',
         ], $registry->orderedModuleIds());
@@ -104,7 +106,7 @@ final class FoundationCompilationTest extends TestCase
         $result = $queryBus->ask(new GetSystemInformation());
 
         self::assertInstanceOf(SystemInformation::class, $result);
-        self::assertSame('QMDB-P2-B10', $result->currentBatch());
+        self::assertSame('QMDB-P3-B01', $result->currentBatch());
     }
 
     public function testFoundationContainsNoDeferredInfrastructureService(): void
@@ -167,6 +169,7 @@ final class FoundationCompilationTest extends TestCase
             ),
             new PresentationFoundationModule(dirname(__DIR__, 3)),
             new HttpFoundationModule(dirname(__DIR__, 3)),
+            new GeographyReferenceModule(dirname(__DIR__, 3)),
             new SecurityWebModule($identityAccess),
             new IdentityAccessModule($identityAccess),
             new IdentitySessionsModule($identitySessions, $identityMultiFactor),

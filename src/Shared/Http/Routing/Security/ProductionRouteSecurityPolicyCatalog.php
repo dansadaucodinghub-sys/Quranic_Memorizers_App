@@ -25,6 +25,7 @@ final class ProductionRouteSecurityPolicyCatalog
         'account.password_recovery.reset.completed', 'account.mfa.login.form', 'account.mfa.login.totp',
         'account.mfa.login.recovery_code', 'account.mfa.login.passkey.options',
         'account.mfa.login.passkey.verify', 'account.passkey.login.options', 'account.passkey.login.verify',
+        'geography.nigeria.index', 'geography.nigeria.area', 'geography.lookup.children',
     ];
 
     /** @var list<string> */
@@ -168,7 +169,7 @@ final class ProductionRouteSecurityPolicyCatalog
             $policies[$route] = $this->policy(RouteSecurityClassification::BASE_ROLE_REQUIRED, $route);
         }
 
-        if (count($policies) !== 88) {
+        if (count($policies) !== 91) {
             throw new LogicException('The closed production route-security catalog is incomplete.');
         }
 

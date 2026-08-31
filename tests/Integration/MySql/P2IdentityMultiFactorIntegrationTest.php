@@ -411,6 +411,7 @@ final class P2IdentityMultiFactorIntegrationTest extends MySqlIntegrationTestCas
     {
         foreach (
             [
+                'geography_administrative_areas', 'geography_dataset_versions', 'geography_countries',
                 'account_state_operations', 'security_audit_checkpoint_heads', 'security_audit_checkpoints',
                 'security_audit_events', 'security_audit_streams',
                 'privileged_access_reviews', 'privileged_access_events', 'privileged_access_activations',

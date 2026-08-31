@@ -19,6 +19,10 @@ final class P2FreezeTest extends TestCase
         self::assertSame(P2FreezePolicy::EXTENSION, $policy->category('routes/web.php'));
         self::assertTrue($policy->isIncluded('docs/closeout/p2/01-executive-closeout-summary.md'));
         self::assertFalse($policy->isIncluded('build/release/qmdb.tar.gz'));
+        self::assertFalse($policy->isIncluded('src/Modules/Geography/Domain/GeographyAreaType.php'));
+        self::assertTrue($policy->isP3B01MutableExistingPath('src/Bootstrap/ApplicationFactory.php'));
+        self::assertTrue($policy->isP3B01MutableExistingPath('src/Bootstrap/ApplicationMetadata.php'));
+        self::assertTrue($policy->isP3B01Extension('public/assets/js/geography-dependent-select.js'));
         self::assertFalse($policy->isIncluded('docs/closeout/p2/qmdb-p2-identity-security-tenancy-freeze.yaml'));
     }
 

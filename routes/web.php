@@ -38,6 +38,9 @@ use Qmdb\Modules\TenancyContext\Interface\Http\WorkspaceSwitchController;
 use Qmdb\Modules\SecurityPrivilegedAccess\Interface\Http\PrivilegedAccessController;
 use Qmdb\Modules\IdentityAccountState\Interface\Http\AccountStateSecurityController;
 use Qmdb\Modules\IdentityAccountState\Interface\Http\SecurityAuditViewerController;
+use Qmdb\Modules\Geography\Interface\Http\GeographyChildrenLookupController;
+use Qmdb\Modules\Geography\Interface\Http\NigeriaGeographyAreaController;
+use Qmdb\Modules\Geography\Interface\Http\NigeriaGeographyDirectoryController;
 use Qmdb\Shared\Http\Routing\HttpMethod;
 use Qmdb\Shared\Http\Routing\Route;
 use Qmdb\Shared\Http\Routing\RouteCollection;
@@ -78,11 +81,32 @@ return static function (
     PrivilegedAccessController $privilegedAccess,
     AccountStateSecurityController $accountState,
     SecurityAuditViewerController $securityAudit,
+    NigeriaGeographyDirectoryController $geographyDirectory,
+    NigeriaGeographyAreaController $geographyArea,
+    GeographyChildrenLookupController $geographyChildren,
 ): RouteCollection {
     return new RouteCollection(
         new Route('system.home', [HttpMethod::GET], new RoutePattern('/'), $homeController),
         new Route('system.about.page', [HttpMethod::GET], new RoutePattern('/system/about'), $aboutPageController),
         new Route('system.status.page', [HttpMethod::GET], new RoutePattern('/system/status'), $statusPageController),
+        new Route(
+            'geography.nigeria.index',
+            [HttpMethod::GET],
+            new RoutePattern('/locations/nigeria'),
+            $geographyDirectory,
+        ),
+        new Route(
+            'geography.nigeria.area',
+            [HttpMethod::GET],
+            new RoutePattern('/locations/nigeria/{levelOneSlug}'),
+            $geographyArea,
+        ),
+        new Route(
+            'geography.lookup.children',
+            [HttpMethod::GET],
+            new RoutePattern('/lookups/geography/children'),
+            $geographyChildren,
+        ),
         new Route(
             'system.health.live',
             [HttpMethod::GET],

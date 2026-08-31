@@ -30,6 +30,8 @@ use Qmdb\Modules\SecurityAudit\Infrastructure\Migration\CreateSecurityAuditStrea
 use Qmdb\Modules\SecurityAudit\Infrastructure\Migration\CreateSecurityAuditCheckpointsMigration;
 use Qmdb\Modules\IdentityAccountState\Infrastructure\Migration\CreateAccountStateOperationsMigration;
 use Qmdb\Modules\SecurityAudit\Infrastructure\Migration\PreserveCanonicalAuditMetadataMigration;
+use Qmdb\Modules\Geography\Infrastructure\Migration\CreateGeographyCountryAndDatasetFoundationMigration;
+use Qmdb\Modules\Geography\Infrastructure\Migration\CreateGeographyAdministrativeAreaHierarchyMigration;
 use Qmdb\Shared\Schema\Migration\MigrationRegistry;
 use Qmdb\Shared\Schema\Migration\MigrationRegistryBuilder;
 
@@ -63,5 +65,7 @@ return static function (): MigrationRegistry {
         ->register(new CreateSecurityAuditCheckpointsMigration())
         ->register(new CreateAccountStateOperationsMigration())
         ->register(new PreserveCanonicalAuditMetadataMigration())
+        ->register(new CreateGeographyCountryAndDatasetFoundationMigration())
+        ->register(new CreateGeographyAdministrativeAreaHierarchyMigration())
         ->build();
 };

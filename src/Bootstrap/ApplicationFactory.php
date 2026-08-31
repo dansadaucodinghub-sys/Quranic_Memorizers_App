@@ -14,6 +14,7 @@ use Qmdb\Bootstrap\Module\ConsoleFoundationModule;
 use Qmdb\Bootstrap\Module\CoreFoundationModule;
 use Qmdb\Bootstrap\Module\DatabaseFoundationModule;
 use Qmdb\Bootstrap\Module\HttpFoundationModule;
+use Qmdb\Bootstrap\Module\GeographyReferenceModule;
 use Qmdb\Bootstrap\Module\IdentityFoundationModule;
 use Qmdb\Bootstrap\Module\IdentityAccessModule;
 use Qmdb\Bootstrap\Module\IdentityAccountStateModule;
@@ -176,6 +177,7 @@ final readonly class ApplicationFactory
             new BackgroundExecutionFoundationModule($backgroundConfiguration),
             new PresentationFoundationModule($this->projectRoot),
             new HttpFoundationModule($this->projectRoot),
+            new GeographyReferenceModule($this->projectRoot),
             new SecurityWebModule($identityAccessConfiguration),
             new IdentityAccessModule($identityAccessConfiguration),
             new IdentitySessionsModule($identitySessionConfiguration, $identityMultiFactorConfiguration),

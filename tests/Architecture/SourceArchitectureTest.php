@@ -108,6 +108,8 @@ final class SourceArchitectureTest extends TestCase
             self::assertTrue(
                 str_contains($path, '/Shared/Infrastructure/Persistence/MySql/')
                 || str_contains($path, '/Modules/Identity/Infrastructure/Persistence/')
+                || str_contains($path, '/Modules/Geography/Infrastructure/Persistence/')
+                || str_contains($path, '/Modules/Geography/Infrastructure/Seed/')
                 || str_contains($path, '/Modules/IdentityAccess/Infrastructure/Persistence/')
                 || str_contains($path, '/Modules/IdentityAccountState/Infrastructure/Persistence/')
                 || str_contains($path, '/Modules/IdentityAccountState/Infrastructure/Seed/')
@@ -130,12 +132,13 @@ final class SourceArchitectureTest extends TestCase
         }
     }
 
-    public function testOnlyAuthorizedP2DomainModulesExist(): void
+    public function testOnlyAuthorizedP2AndP3B01DomainModulesExist(): void
     {
         $modules = glob($this->projectRoot() . '/src/Modules/*', GLOB_ONLYDIR);
         self::assertIsArray($modules);
         self::assertSame(
             [
+                'Geography',
                 'Identity',
                 'IdentityAccess',
                 'IdentityAccountState',

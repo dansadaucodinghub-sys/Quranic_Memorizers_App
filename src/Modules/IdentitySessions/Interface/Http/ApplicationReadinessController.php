@@ -15,6 +15,7 @@ use Qmdb\Modules\SecurityAudit\Application\SecurityAuditReadinessCheck;
 use Qmdb\Modules\IdentitySessions\Application\Readiness\IdentitySessionReadinessCheck;
 use Qmdb\Modules\TenancyContext\Application\TenantContextReadinessCheck;
 use Qmdb\Modules\SecurityPrivilegedAccess\Application\PrivilegedAccessReadinessCheck;
+use Qmdb\Modules\Geography\Application\GeographyReferenceReadinessCheck;
 use Qmdb\Shared\Database\Health\DatabaseHealthCheck;
 use Qmdb\Shared\Http\Contract\Controller;
 use Qmdb\Shared\Http\Message\JsonResponseFactory;
@@ -35,6 +36,7 @@ final readonly class ApplicationReadinessController implements Controller
         private SecurityAuditReadinessCheck $securityAudit,
         private TenantContextReadinessCheck $tenantContext,
         private PrivilegedAccessReadinessCheck $privilegedAccess,
+        private GeographyReferenceReadinessCheck $geography,
     ) {
     }
 
@@ -51,6 +53,7 @@ final readonly class ApplicationReadinessController implements Controller
         $ready = $ready && $this->securityAudit->isReady();
         $ready = $ready && $this->tenantContext->isReady();
         $ready = $ready && $this->privilegedAccess->isReady();
+        $ready = $ready && $this->geography->isReady();
 
         return $this->responses->create(['status' => $ready ? 'ready' : 'not_ready'], $ready ? 200 : 503);
     }

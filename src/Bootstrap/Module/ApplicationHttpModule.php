@@ -50,6 +50,10 @@ use Qmdb\Modules\IdentityRecovery\Interface\Http\PasswordRecoveryRequestSubmitCo
 use Qmdb\Modules\IdentityRecovery\Interface\Http\PasswordResetCompletedController;
 use Qmdb\Modules\IdentityRecovery\Interface\Http\PasswordResetFormController;
 use Qmdb\Modules\IdentityRecovery\Interface\Http\PasswordResetSubmitController;
+use Qmdb\Modules\Geography\Application\GeographyReferenceReadinessCheck;
+use Qmdb\Modules\Geography\Interface\Http\GeographyChildrenLookupController;
+use Qmdb\Modules\Geography\Interface\Http\NigeriaGeographyAreaController;
+use Qmdb\Modules\Geography\Interface\Http\NigeriaGeographyDirectoryController;
 use Qmdb\Shared\DependencyInjection\ClosureServiceFactory;
 use Qmdb\Shared\DependencyInjection\DependencyResolver;
 use Qmdb\Shared\DependencyInjection\ServiceDefinition;
@@ -112,6 +116,7 @@ final readonly class ApplicationHttpModule implements Module
             new ModuleId('tenancy.context'),
             new ModuleId('security.privileged_access'),
             new ModuleId('identity.account_state'),
+            new ModuleId('reference.geography'),
         ];
     }
 
@@ -138,6 +143,7 @@ final readonly class ApplicationHttpModule implements Module
                 SecurityAuditReadinessCheck::class,
                 TenantContextReadinessCheck::class,
                 PrivilegedAccessReadinessCheck::class,
+                GeographyReferenceReadinessCheck::class,
             ],
             new ClosureServiceFactory(static fn (DependencyResolver $resolver): ApplicationReadinessController =>
                 new ApplicationReadinessController(
@@ -153,6 +159,7 @@ final readonly class ApplicationHttpModule implements Module
                     ServiceReference::get($resolver, SecurityAuditReadinessCheck::class),
                     ServiceReference::get($resolver, TenantContextReadinessCheck::class),
                     ServiceReference::get($resolver, PrivilegedAccessReadinessCheck::class),
+                    ServiceReference::get($resolver, GeographyReferenceReadinessCheck::class),
                 )),
         ));
         $controllers = [
@@ -190,6 +197,9 @@ final readonly class ApplicationHttpModule implements Module
             PrivilegedAccessController::class,
             AccountStateSecurityController::class,
             SecurityAuditViewerController::class,
+            NigeriaGeographyDirectoryController::class,
+            NigeriaGeographyAreaController::class,
+            GeographyChildrenLookupController::class,
         ];
         $context->service(ServiceDefinition::factory(
             RouteCollection::class,

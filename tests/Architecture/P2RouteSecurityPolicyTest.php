@@ -26,8 +26,8 @@ final class P2RouteSecurityPolicyTest extends TestCase
         $report = $this->verifier()->verify($this->productionRoutes());
 
         self::assertTrue($report->isValid(), implode(', ', $report->errors));
-        self::assertSame(88, $report->routeCount);
-        self::assertSame(88, $report->classifiedRouteCount);
+        self::assertSame(91, $report->routeCount);
+        self::assertSame(91, $report->classifiedRouteCount);
         self::assertSame(44, $report->mutationRouteCount);
         self::assertSame(44, $report->csrfProtectedMutationCount);
     }
@@ -62,7 +62,7 @@ final class P2RouteSecurityPolicyTest extends TestCase
             $matches,
             PREG_SET_ORDER,
         );
-        self::assertCount(88, $matches);
+        self::assertCount(91, $matches);
         $routes = [];
         foreach ($matches as $match) {
             preg_match_all('/HttpMethod::([A-Z]+)/', $match['methods'], $methods);

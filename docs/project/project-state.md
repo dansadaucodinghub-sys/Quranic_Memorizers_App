@@ -9,13 +9,14 @@
 | Approved Change | QMDB-CR-001 — Asynchronous Progressive Interaction and Modal UX Standard |
 | Engineering Freeze | QMDB-P1-FRZ-001 |
 | Identity and Tenant Security Freeze | QMDB-P2-FRZ-001 |
-| Document Version | 5.0.0 |
+| Document Version | 5.1.0 |
 | Last Updated | 2026-08-31 |
-| Status | P0 COMPLETE / FROZEN; P1 COMPLETE / FROZEN; P2 COMPLETE / FROZEN |
+| Status | P0 COMPLETE / FROZEN; P1 COMPLETE / FROZEN; P2 COMPLETE / FROZEN; P3-B01 COMPLETE |
 | Completed Closeout | QMDB-P2-CLOSE — Identity, Security, and Tenant Isolation Verification and Freeze |
-| Next Phase | P3 — Nigerian Geography, Organizations, People, and Guardianship |
+| Current Phase | P3 — Nigerian Geography, Organizations, People, and Guardianship |
+| Current Batch | QMDB-P3-B01 — Nigerian Administrative Geography and Jurisdiction Registry |
 | Batch Status | COMPLETE |
-| Implementation Readiness | READY FOR P3 AUTHORIZATION |
+| Implementation Readiness | READY FOR NEXT BATCH |
 | P2 Status | COMPLETE / FROZEN |
 
 ## Authoritative outcome
@@ -33,8 +34,8 @@ requires toolchain recovery, repository-truth verification, conservative resolut
 sequential execution of P2-B01 through P2-B05. P1 remains frozen; P2 changes use its controlled extension points.
 
 `QMDB-P2-CLOSE` records the final P2 verification and `QMDB-P2-FRZ-001` governs the Identity, Security and Tenant
-Isolation baseline. P3 remains not started and not authorized; the repository is ready only for a later project-owner
-P3 authorization decision.
+Isolation baseline. `QMDB-P3-OPEN-B01` authorizes the isolated Nigerian Administrative Geography and Jurisdiction
+Registry only; Organizations, People, and Guardianship remain out of scope until their separately authorized batches.
 
 ## Recovery execution ledger
 
@@ -279,6 +280,12 @@ P2 Freeze: QMDB-P2-FRZ-001
 
 Next Phase: P3 — Nigerian Geography, Organizations, People, and Guardianship
 
-P3 Status: NOT STARTED / NOT AUTHORIZED
+Current Phase: P3 — Nigerian Geography, Organizations, People, and Guardianship
 
-Implementation Status: READY FOR P3 AUTHORIZATION
+Current Batch: QMDB-P3-B01 — Nigerian Administrative Geography and Jurisdiction Registry
+
+P3 Status: IN PROGRESS
+
+Batch Status: COMPLETE
+
+Implementation Status: READY FOR NEXT BATCH

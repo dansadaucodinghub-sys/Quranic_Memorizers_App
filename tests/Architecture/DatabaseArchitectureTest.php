@@ -20,6 +20,7 @@ final class DatabaseArchitectureTest extends TestCase
             self::assertTrue(
                 str_contains($normalized, '/Shared/Infrastructure/Persistence/MySql/')
                 || str_contains($normalized, '/Modules/Identity/Infrastructure/Persistence/')
+                || str_contains($normalized, '/Modules/Geography/Infrastructure/Persistence/')
                 || str_contains($normalized, '/Modules/IdentityAccess/Infrastructure/Persistence/')
                 || str_contains($normalized, '/Modules/IdentityAccountState/Infrastructure/Persistence/')
                 || str_contains($normalized, '/Modules/IdentityMultiFactor/Infrastructure/Persistence/')

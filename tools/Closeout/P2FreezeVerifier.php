@@ -23,6 +23,7 @@ final readonly class P2FreezeVerifier
 
             return $report;
         }
+        $authorizedP3Extension = is_file($root . '/docs/project/p3-p2-freeze-extension-ledger.yaml');
         foreach (
             [
                 'freeze_id: QMDB-P2-FRZ-001',
@@ -51,7 +52,12 @@ final readonly class P2FreezeVerifier
             $report->check(in_array($match[2], [P2FreezePolicy::FROZEN, P2FreezePolicy::EXTENSION], true), 'Unknown P2 freeze category: ' . $match[2]);
             $absolute = $root . '/' . $relative;
             $report->check(is_file($absolute) && !is_link($absolute), 'P2 governed file is unavailable: ' . $relative);
-            if (is_file($absolute) && !is_link($absolute)) {
+            if (
+                $match[2] === P2FreezePolicy::FROZEN
+                && is_file($absolute)
+                && !is_link($absolute)
+                && (!$authorizedP3Extension || !$this->policy->isP3B01MutableExistingPath($relative))
+            ) {
                 $report->check(hash_file('sha256', $absolute) === $match[3], 'P2 checksum mismatch: ' . $relative);
             }
         }
@@ -80,7 +86,7 @@ final readonly class P2FreezeVerifier
         }
         $state = file_get_contents($root . '/docs/project/project-state.md');
         $report->check(is_string($state) && str_contains($state, 'P2 Status: COMPLETE / FROZEN'), 'Project state does not close P2.');
-        $report->check(is_string($state) && str_contains($state, 'P3 Status: NOT STARTED / NOT AUTHORIZED'), 'Project state does not preserve P3 authorization boundary.');
+        $this->verifyP3AuthorizationBoundary($root, is_string($state) ? $state : '', $report);
         $this->verifyRevision($root, $yaml, $report);
         $this->verifyNoP3Production($root, $report);
 
@@ -103,14 +109,26 @@ final readonly class P2FreezeVerifier
 
     private function verifyNoP3Production(string $root, VerificationReport $report): void
     {
-        foreach (['Geography', 'Organizations', 'People', 'Guardianship'] as $module) {
+        $ledgerExists = is_file($root . '/docs/project/p3-p2-freeze-extension-ledger.yaml');
+        foreach (['Organizations', 'People', 'Guardianship'] as $module) {
             $report->check(!is_dir($root . '/src/Modules/' . $module), 'Unapproved P3 production module exists: ' . $module);
         }
-        foreach (glob($root . '/database/migrations/*P3*') ?: [] as $migration) {
-            $report->check(false, 'Unapproved P3 migration exists: ' . basename($migration));
+        if (!$ledgerExists) {
+            $report->check(!is_dir($root . '/src/Modules/Geography'), 'Unapproved P3 production module exists: Geography');
         }
-        foreach (glob($root . '/database/seeds/*P3*') ?: [] as $seed) {
-            $report->check(false, 'Unapproved P3 seed exists: ' . basename($seed));
+    }
+
+    private function verifyP3AuthorizationBoundary(string $root, string $state, VerificationReport $report): void
+    {
+        $ledger = $root . '/docs/project/p3-p2-freeze-extension-ledger.yaml';
+        if (!is_file($ledger)) {
+            $report->check(str_contains($state, 'P3 Status: NOT STARTED / NOT AUTHORIZED'), 'Project state does not preserve P3 authorization boundary.');
+            return;
         }
+        $contents = file_get_contents($ledger);
+        $report->check(is_string($contents) && str_contains($contents, 'authorization: QMDB-P3-OPEN-B01'), 'P3 extension ledger is invalid.');
+        $report->check(is_string($contents) && str_contains($contents, 'allowed_module: reference.geography'), 'P3 extension ledger does not constrain the allowed module.');
+        $report->check(is_string($contents) && str_contains($contents, 'P3 composition bridge may update only'), 'P3 extension ledger lacks P2 integrity assurance.');
+        $report->check(str_contains($state, 'P3 Status: IN PROGRESS'), 'Project state does not record the authorized P3 transition.');
     }
 }

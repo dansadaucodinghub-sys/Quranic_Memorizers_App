@@ -1,0 +1,24 @@
+ledger_id: QMDB-P3-P2-EXT-001
+authorization: QMDB-P3-OPEN-B01
+authorized_on: 2026-08-31
+expected_p2_freeze_id: QMDB-P2-FRZ-001
+expected_p2_freeze_manifest: docs/closeout/p2/qmdb-p2-identity-security-tenancy-freeze.yaml
+allowed_module: reference.geography
+allowed_scope:
+  - Nigerian country and administrative-reference data
+  - geography migrations and seed registration
+  - public read-only routes and route-security classification
+  - readiness, verification CLI, views, fragments, and progressive enhancement
+prohibited_modules:
+  - Organizations
+  - People
+  - Guardianship
+  - Competitions
+assurance:
+  - QMDB-P2-FRZ-001 remains unmodified as the historical P2 baseline.
+  - P2 controlled-extension entries remain inventoried without rewriting QMDB-P2-FRZ-001.
+  - New P3 geography source is excluded only from the P2 inventory by the explicit policy prefix list.
+  - The P3 composition bridge may update only ApplicationFactory, ApplicationMetadata, ApplicationHttpModule,
+    ConsoleFoundationModule, PresentationFoundationModule, ApplicationReadinessController, and
+    ProductionRouteSecurityPolicyCatalog; each is verified as a named authorization exception rather than silently
+    rewriting the P2 manifest.

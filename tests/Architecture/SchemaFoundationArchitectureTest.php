@@ -7,6 +7,9 @@ namespace Qmdb\Tests\Architecture;
 use PHPUnit\Framework\TestCase;
 use Qmdb\Modules\Identity\Infrastructure\Migration\CreateAccountSecurityFoundationMigration;
 use Qmdb\Modules\Identity\Infrastructure\Migration\CreateUserAccountsMigration;
+use Qmdb\Modules\Geography\Infrastructure\Migration\CreateGeographyAdministrativeAreaHierarchyMigration;
+use Qmdb\Modules\Geography\Infrastructure\Migration\CreateGeographyCountryAndDatasetFoundationMigration;
+use Qmdb\Modules\Geography\Infrastructure\Seed\SeedNigeriaAdministrativeGeography;
 use Qmdb\Modules\IdentityAccess\Infrastructure\Migration\CreateIdentityRateLimitFoundationMigration;
 use Qmdb\Modules\IdentityAccess\Infrastructure\Migration\CreateIdentityVerificationFoundationMigration;
 use Qmdb\Modules\IdentityAccountState\Infrastructure\Migration\CreateAccountStateOperationsMigration;
@@ -43,7 +46,7 @@ use SplFileInfo;
 
 final class SchemaFoundationArchitectureTest extends TestCase
 {
-    public function testProductionManifestsContainOnlyAuthorizedP1ThroughP2B09SchemaChanges(): void
+    public function testProductionManifestsContainAuthorizedP1ThroughP3B01SchemaChanges(): void
     {
         $migrationFactory = require dirname(__DIR__, 2) . '/database/migrations.php';
         $seedFactory = require dirname(__DIR__, 2) . '/database/seeds.php';
@@ -58,7 +61,7 @@ final class SchemaFoundationArchitectureTest extends TestCase
         }
 
         $ordered = $migrations->ordered();
-        self::assertCount(28, $ordered);
+        self::assertCount(30, $ordered);
         self::assertSame(
             [
                 CreateScheduledTaskRunsMigration::class,
@@ -89,6 +92,8 @@ final class SchemaFoundationArchitectureTest extends TestCase
                 CreateSecurityAuditCheckpointsMigration::class,
                 CreateAccountStateOperationsMigration::class,
                 PreserveCanonicalAuditMetadataMigration::class,
+                CreateGeographyCountryAndDatasetFoundationMigration::class,
+                CreateGeographyAdministrativeAreaHierarchyMigration::class,
             ],
             array_map(static fn (Migration $migration): string => $migration::class, $ordered),
         );
@@ -122,15 +127,18 @@ final class SchemaFoundationArchitectureTest extends TestCase
                 '20260826012500_create_security_audit_checkpoints',
                 '20260826012600_create_account_state_operations',
                 '20260826012700_preserve_canonical_audit_metadata',
+                '20260831000100_create_geography_country_and_dataset_foundation',
+                '20260831000200_create_geography_administrative_area_hierarchy',
             ],
             array_map(static fn (Migration $migration): string => $migration->id()->value(), $ordered),
         );
-        self::assertCount(3, $seeds->ordered());
+        self::assertCount(4, $seeds->ordered());
         self::assertSame(
             [
                 SeedFoundationalAuthorizationCatalog::class,
                 SeedPrivilegedAccessCatalog::class,
                 SeedAccountStateAuthorizationCatalog::class,
+                SeedNigeriaAdministrativeGeography::class,
             ],
             array_map(static fn (object $seed): string => $seed::class, $seeds->ordered()),
         );
