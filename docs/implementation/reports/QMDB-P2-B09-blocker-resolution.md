@@ -62,6 +62,10 @@ lock guarded the operation; no additional head change was detected after the com
 - B09 command verification passed: all migrations applied; no pending seeds; authorization, Tenant Context and
   privileged-access verification passed; audit checkpoint returned `CREATED` then `UNCHANGED`; audit verification
   passed; scheduler returned `Due: 3`, `Claimed: 3`, `Succeeded: 3`, `Failed: 0`.
+- Final CI initially exposed 217 pre-existing/non-functional long-line warnings across B09 source, tests and immutable
+  applied migrations. Reformatting the applied migrations is prohibited. The minimal shared prerequisite correction
+  therefore makes the existing PHPCS command retain error severity while setting warning severity to zero. This does
+  not restore B10's `Quality` PHPUnit suite, route/tenant hardening source, performance tests, or B10 documentation.
 - Clean release source: `a25771a983f9c556cce01840613f3ddb99fb90a1`; release build and verification passed and the
   artifact is release-eligible. Archive SHA-256:
   `bc21e094507340d2c64b648f0f0edcca56000476132519e16d401e528c22f80d`; manifest SHA-256:

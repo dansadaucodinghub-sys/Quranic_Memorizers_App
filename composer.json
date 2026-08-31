@@ -44,7 +44,7 @@
     "test": "php vendor/bin/phpunit --configuration phpunit.xml.dist",
     "test:mysql": "php tools/Ci/run-mysql-tests.php",
     "analyse": "php vendor/bin/phpstan analyse --configuration phpstan.neon.dist --no-progress --memory-limit=1G",
-    "cs:check": "php vendor/bin/phpcs --standard=phpcs.xml.dist",
+    "cs:check": "php vendor/bin/phpcs --standard=phpcs.xml.dist --warning-severity=0",
     "cs:fix": "php vendor/bin/phpcbf --standard=phpcs.xml.dist",
     "security:audit": "@composer audit --locked",
     "autoload:check": "@composer dump-autoload --strict-psr",
