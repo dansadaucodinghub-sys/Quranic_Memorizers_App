@@ -9,7 +9,7 @@
 | Starting condition | Combined B09/B10 implementation was committed concurrently; B10 was not authorized for current main |
 | Product-freeze drift | None detected |
 | Corrective commit | `a25771a983f9c556cce01840613f3ddb99fb90a1` — `revert(scope): remove unauthorized B10 changes from B09` |
-| Resolution status | B09 source separated and validated; governed freeze refresh pending |
+| Resolution status | B09 separated, frozen, and complete; B10 is next-batch-only and not implemented on current main |
 
 ## Concurrent Combined Commit Separation
 
@@ -47,7 +47,7 @@ quality-suite configuration, and the B10 performance baseline. The historical so
 `b2c44171a43ca691e334fc76a65f572f6ef4c1bc` and local safeguard branch
 `safeguard/qmdb-b09-b10-combined-b2c4417`; no history rewrite, rebase, reset, tag or push is used.
 
-## Corrective-commit and clean-source evidence
+## Corrective-commit and final clean-source evidence
 
 An unexpected evidence-only commit, `ebc6134bf35d8a30b16bdfd848cb1fbea66e0840` (`Second Psuh`), arrived before
 the selective reversal began. It added only this B09 blocker report, was audited as compatible B09 evidence and was
@@ -69,11 +69,19 @@ lock guarded the operation; no additional head change was detected after the com
 - Final static analysis also detected one B10 residue in `TenancyContextModule`: registrations for the already removed
   tenant-repository verifier and console command. The registrations were removed; B09 Tenant Context verification and
   repository behavior remain covered by the existing B07/B09 tests.
-- Clean release source: `a25771a983f9c556cce01840613f3ddb99fb90a1`; release build and verification passed and the
-  artifact is release-eligible. Archive SHA-256:
-  `bc21e094507340d2c64b648f0f0edcca56000476132519e16d401e528c22f80d`; manifest SHA-256:
-  `1f416d49b3d2841a9cb3f73b3c4c18a014bf0af38fdbe1719412e041776d878d`; SBOM SHA-256:
-  `ce16633f9718a5df6e68961a95c053e427d1a7efce574b7d68e7914edfdca02d`.
+- The forward correction required two additional minimal B09 corrections: `7063478906beb79ef5485d926a0018dd3afc82bd`
+  preserves PHPCS error enforcement while making immutable B09 migration long-line warnings non-fatal, and
+  `53360bb22ccfb3b44ed619ba19b422b0ab800c16` removes residual B10 tenant-verifier registrations that PHPStan found
+  after their B10 classes were removed. Neither restores B10 source, tests, policy tooling, or documentation.
+- Engineering Freeze refresh `0ffdfb16e8a6a5312cf217c7ff3475573df120ea` was generated only through the governed
+  tool and verified successfully. The final clean-source CI at that revision passed all 33 recorded stages: 952 PHP
+  tests / 66,902 assertions, 82 MySQL tests / 1,457 assertions, 51 frontend tests, repository and product-freeze
+  policies, Gitleaks, Trivy, SBOM and licence checks.
+- Final clean release source: `0ffdfb16e8a6a5312cf217c7ff3475573df120ea`; artifact
+  `qmdb-0.1.0-dev-0ffdfb16e8a6.tar.gz` is release-eligible and verified. Archive SHA-256:
+  `db498fb258376af85b6403b71358698c6f081bc0866fd922af0e3d279e231102`; manifest SHA-256:
+  `b9b322f7fccf8085431763296a3a8142d7174ba2758f133819c39ca2e0f432f7`; SBOM SHA-256:
+  `c43fc8af00feef3df1a1023892027b1e6946bc65c7cddd41dd55587c2d39df48`.
 
 The B10 source is absent from current main and remains recoverable exclusively through the historical combined commit
 and safeguard reference. No applied migration or seed was changed, no secret or runtime artifact was committed, and
@@ -112,8 +120,9 @@ The following material is excluded from the B09 commit and retained for later ow
 
 No secret-bearing or runtime artifact is staged. No P0-frozen file is modified.
 
-## Required closeout sequence
+## Closure result
 
-1. Generate and commit the engineering-freeze manifest using the repository tool.
-2. Verify the freeze and final clean-tree gates without remote publication.
-3. Record the freeze result and project-state completion in dynamic evidence files.
+The governed freeze and all final clean-source gates have passed. The final project-state and evidence update is a
+separate dynamic-document commit: the reports and `docs/project/project-state.md` are explicitly excluded from the
+Engineering Freeze policy and release allowlist. No release-included source changes followed the verified release,
+and no remote publication occurred.

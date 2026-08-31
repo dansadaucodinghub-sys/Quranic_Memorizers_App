@@ -7,7 +7,7 @@
 | Product freeze | QMDB-P0-FRZ-001 |
 | Engineering freeze | QMDB-P1-FRZ-001 |
 | Batch | QMDB-P2-B09 — Security Events, Audit Integrity, and Account State Operations |
-| Scope status | B09 source active; final closeout pending governed engineering-freeze refresh |
+| Scope status | COMPLETE — B09 source active, governed Engineering Freeze verified, and B10 absent from current main |
 | Date | 2026-08-31 |
 
 ## Delivered scope
@@ -47,18 +47,26 @@ audit-readiness prerequisites. No history was rewritten and no push occurred.
 
 - Focused B09 unit/domain evidence: **10 tests, 29 assertions passed**.
 - Focused B09 bootstrap, console, HTTP and metadata evidence: **42 tests, 169 assertions passed**.
-- Final guarded MySQL matrix: **82 tests, 1,457 assertions passed** in **11:14.939**. The runner applied all 28
+- Final guarded MySQL matrix: **82 tests, 1,457 assertions passed** in **7:31.927**. The runner applied all 28
   migrations and three governed seeds, then restored and verified the canonical schema afterward.
 - Command-level verification passed: authorization, Tenant Context, privileged access and audit verification; checkpoint
   `CREATED`/`UNCHANGED`; and a 3/3 successful scheduler run.
-- The clean release from `a25771a983f9c556cce01840613f3ddb99fb90a1` is
-  `qmdb-0.1.0-dev-a25771a983f9.tar.gz`, is release-eligible, and passed artifact verification including secret scans,
-  Gitleaks, Trivy, CLI, English/Arabic/fragment HTTP, security headers and live MySQL readiness.
+- Final clean release source `0ffdfb16e8a6a5312cf217c7ff3475573df120ea` produced
+  `qmdb-0.1.0-dev-0ffdfb16e8a6.tar.gz`, is release-eligible, and passed artifact verification including secret scans,
+  Gitleaks, Trivy, CLI, English/Arabic/fragment HTTP, security headers and live MySQL readiness. Archive SHA-256:
+  `db498fb258376af85b6403b71358698c6f081bc0866fd922af0e3d279e231102`; manifest SHA-256:
+  `b9b322f7fccf8085431763296a3a8142d7174ba2758f133819c39ca2e0f432f7`; SBOM SHA-256:
+  `c43fc8af00feef3df1a1023892027b1e6946bc65c7cddd41dd55587c2d39df48`.
+- The governed Engineering Freeze commit `0ffdfb16e8a6a5312cf217c7ff3475573df120ea` verifies successfully. Its
+  final clean-source CI passed 33 stages, including 952 PHP tests / 66,902 assertions, 82 MySQL tests / 1,457
+  assertions, 51 frontend tests, product-freeze checks, supply-chain scans and release verification.
 
 ## Closeout condition
 
-B09 source and release gates are complete. The remaining closure step is the governed engineering-freeze refresh and
-its final clean-tree verification. B10 is not implemented on current main and remains the next batch only.
+B09 is complete. The combined commit is retained in history and the correction remains forward-only. B10 is not
+implemented on current main, has not been executed or validated as a batch, and is ready for separate owner
+authorization only. This report and the project-state transition are dynamic closeout evidence excluded from the
+governed release source and Engineering Freeze.
 
 ## Open operational decisions
 
