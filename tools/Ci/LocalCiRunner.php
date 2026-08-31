@@ -92,6 +92,12 @@ final class LocalCiRunner
             }
         }
 
+        if (is_file($this->root . '/docs/closeout/p2/qmdb-p2-identity-security-tenancy-freeze.yaml')) {
+            if (!$this->execute('p2-freeze-verify', ['php', 'tools/Closeout/verify-p2-freeze.php'])) {
+                return $this->finish(1);
+            }
+        }
+
         return $this->finish(0);
     }
 

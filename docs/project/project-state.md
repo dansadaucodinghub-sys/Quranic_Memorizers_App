@@ -8,19 +8,19 @@
 | Product Freeze | QMDB-P0-FRZ-001 |
 | Approved Change | QMDB-CR-001 — Asynchronous Progressive Interaction and Modal UX Standard |
 | Engineering Freeze | QMDB-P1-FRZ-001 |
-| Document Version | 4.5.0 |
+| Identity and Tenant Security Freeze | QMDB-P2-FRZ-001 |
+| Document Version | 5.0.0 |
 | Last Updated | 2026-08-31 |
-| Status | P0 COMPLETE; P1 COMPLETE; P2-B01 through P2-B10 COMPLETE; P2-CLOSE NEXT |
-| Current Phase | P2 — Identity, Security, and Tenant Isolation |
-| Completed Batch | QMDB-P2-B10 — Identity and Tenant Security Hardening |
-| Next Batch | QMDB-P2-CLOSE — Identity, Security, and Tenant Isolation Verification and Freeze |
+| Status | P0 COMPLETE / FROZEN; P1 COMPLETE / FROZEN; P2 COMPLETE / FROZEN |
+| Completed Closeout | QMDB-P2-CLOSE — Identity, Security, and Tenant Isolation Verification and Freeze |
+| Next Phase | P3 — Nigerian Geography, Organizations, People, and Guardianship |
 | Batch Status | COMPLETE |
-| Implementation Readiness | READY FOR P2 CLOSEOUT |
-| P2 Status | IN PROGRESS |
+| Implementation Readiness | READY FOR P3 AUTHORIZATION |
+| P2 Status | COMPLETE / FROZEN |
 
 ## Authoritative outcome
 
-P1 Status: COMPLETE
+P1 Status: COMPLETE / FROZEN
 
 P1 is complete. P2-B01 through P2-B09 satisfy their engineering acceptance criteria. B09 is separated from the
 concurrent B09/B10 commit, frozen, and complete. B10 source was forward-reconciled, passed direct local CI, Composer
@@ -32,9 +32,9 @@ CI, Git-aware clean-install, release, and committed Engineering Freeze validatio
 requires toolchain recovery, repository-truth verification, conservative resolution of `OD-051`/`OD-052`, and strict
 sequential execution of P2-B01 through P2-B05. P1 remains frozen; P2 changes use its controlled extension points.
 
-The latest project-owner instruction authorizes `QMDB-P2-B10`. The previous combined B09/B10 commit is preserved in
-local history behind its safeguard reference. Only classified B10 paths/hunks were forward-reconciled into current
-main; B09-complete source, status, and freeze material were not restored from the historical combined commit.
+`QMDB-P2-CLOSE` records the final P2 verification and `QMDB-P2-FRZ-001` governs the Identity, Security and Tenant
+Isolation baseline. P3 remains not started and not authorized; the repository is ready only for a later project-owner
+P3 authorization decision.
 
 ## Recovery execution ledger
 
@@ -42,12 +42,13 @@ main; B09-complete source, status, and freeze material were not restored from th
 | --- | --- |
 | Recovery Run | QMDB-RECOVERY-RUN-001 |
 | Recovery Status | COMPLETE |
-| Last Fully Completed Batch | QMDB-P2-B10 |
-| Next Batch | QMDB-P2-CLOSE — Identity, Security, and Tenant Isolation Verification and Freeze |
-| Sequence Rule | B01 → B02 → B03 → B04 → B05 → B06 → B07 → B08 → B09 → B10 complete → P2-CLOSE separately governed |
+| Last Fully Completed Batch | QMDB-P2-CLOSE |
+| Next Phase | P3 — Nigerian Geography, Organizations, People, and Guardianship |
+| Sequence Rule | B01 → B02 → B03 → B04 → B05 → B06 → B07 → B08 → B09 → B10 → P2-CLOSE complete; P3 requires separate authorization |
 | P2-B08 Status | COMPLETE |
 | P2-B09 Status | COMPLETE — concurrent scope separation, final CI and Engineering Freeze verified |
 | P2-B10 Status | COMPLETE |
+| P2 Closeout Status | COMPLETE / FROZEN |
 
 ## P1 batch ledger
 
@@ -244,11 +245,14 @@ Approved Change: QMDB-CR-001
 
 Frozen Engineering Baseline: QMDB-P1-FRZ-001
 
+Frozen Identity and Tenant Security Baseline: QMDB-P2-FRZ-001
+
 Recovery Run: QMDB-RECOVERY-RUN-001 — COMPLETE
 
-Completed Phase: P1 — Engineering and Repository Foundation
+Completed Phases:
 
-Current Phase: P2 — Identity, Security, and Tenant Isolation
+- P1 — Engineering and Repository Foundation
+- P2 — Identity, Security, and Tenant Isolation
 
 Completed P2 Batches:
 
@@ -263,14 +267,18 @@ Completed P2 Batches:
 - QMDB-P2-B09
 - QMDB-P2-B10
 
-Completed Batch: QMDB-P2-B10
+Completed Closeout: QMDB-P2-CLOSE
 
-Next Batch: QMDB-P2-CLOSE
+P1 Status: COMPLETE / FROZEN
 
-Next Batch Title: Identity, Security, and Tenant Isolation Verification and Freeze
+P2 Status: COMPLETE / FROZEN
 
-P2 Status: IN PROGRESS
+P2 Closeout Status: COMPLETE
 
-Batch Status: COMPLETE
+P2 Freeze: QMDB-P2-FRZ-001
 
-Implementation Status: READY FOR P2 CLOSEOUT
+Next Phase: P3 — Nigerian Geography, Organizations, People, and Guardianship
+
+P3 Status: NOT STARTED / NOT AUTHORIZED
+
+Implementation Status: READY FOR P3 AUTHORIZATION

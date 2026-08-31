@@ -5,7 +5,8 @@
 This roadmap was prepared by `QMDB-P1-CLOSE`. `QMDB-RECOVERY-RUN-001` subsequently authorized strict sequential local
 execution through B05. The project owner separately authorized B06 through B09, and B09 is complete with committed
 Engineering Freeze and release evidence. B10 is complete with committed local CI, clean-install, release, and freeze
-evidence. P2-CLOSE is the next separate P2 verification-and-freeze batch.
+evidence. P2-CLOSE has verified the complete P2 foundation and frozen `QMDB-P2-FRZ-001`; P3 remains separately
+not started and not authorized.
 
 Every P2 batch preserves Core PHP 8.5, MySQL/InnoDB, the modular monolith, server-derived tenant authority, explicit
 transactions, migration checksums, structured logging, request IDs, server rendering and `QMDB-CR-001`. Each batch must
@@ -25,7 +26,7 @@ update traceability, risks, decisions and state only after its executable gates 
 | QMDB-P2-B08 | Temporary privilege, support access and break-glass controls. Depends on B05–B07. | Expiring grants, approval and review records. | Scoped support/emergency workflows with clear warnings. | Step-up, independent approval, notification, expiry and post-use review. | Expiry, self-approval, excessive scope, emergency abuse and review tests. |
 | QMDB-P2-B09 | Security events, audit integrity and account-state operations. Depends on B03–B08. | Security Event and Audit modules; hash-linked records and checkpoints. | Suspension/reactivation and audit inspection surfaces. | Append-only evidence, before/after state, correlation and external checkpoint boundary. | Chain verification, tamper, suspension, reactivation, privilege-history and privacy tests. |
 | QMDB-P2-B10 | Identity and tenant security hardening. Depends on B01–B09. | COMPLETE — bounded audit-readiness and dependency hardening; no migration was required. | Full interaction/security regression passed. | Threat/control reconciliation, route-derived denial assurance and abuse containment verified. | Direct local CI, Composer CI, clean-install, release, and committed freeze passed. |
-| QMDB-P2-CLOSE | Verify identity lifecycle and authorize P3. Depends on B01–B10 complete. | Freeze verified P2 baseline. | End-to-end accessible/RTL/no-JS verification. | Independent security, privacy and tenant-isolation assessment. | All local/MySQL/CI/release/security/manual gates plus zero unresolved P3 blockers. |
+| QMDB-P2-CLOSE | Verify and freeze the identity lifecycle. Depends on B01–B10 complete. | COMPLETE — QMDB-P2-FRZ-001 generated and verified. | Automated accessible/RTL/progressive verification passed; manual evidence deferred explicitly. | Local security, privacy and tenant-isolation assessment passed; external assessment remains a release gate. | Full local/MySQL/CI/release/security gates pass; P3 remains not started/not authorized. |
 
 ## Batch documentation contract
 

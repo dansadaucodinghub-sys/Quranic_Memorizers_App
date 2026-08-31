@@ -63,6 +63,8 @@
     "release:verify": "php tools/build/verify-release.php",
     "closeout:freeze:generate": "php tools/Closeout/generate-engineering-freeze.php",
     "closeout:freeze:verify": "php tools/Closeout/verify-engineering-freeze.php",
+    "closeout:p2-freeze:generate": "php tools/Closeout/generate-p2-freeze.php",
+    "closeout:p2-freeze:verify": "php tools/Closeout/verify-p2-freeze.php",
     "quality": [
       "@composer validate --strict",
       "@security:audit",

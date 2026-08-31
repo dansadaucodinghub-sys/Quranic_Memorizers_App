@@ -509,3 +509,13 @@ recovery-authorized B01 normalization contract.
 | Aggregate P2 health incorrectly replays audit history or mutates state | `security:p2:verify` composes bounded read-only controls; full audit replay remains explicit | MITIGATED locally; production monitoring policy remains OPEN |
 | Recovery-code UI persists or transmits one-time codes | Deterministic client test prohibits browser storage, cookie, and network sinks in the display controller | MITIGATED locally; user-side handling remains an operational risk |
 | Local performance evidence is misrepresented as production capacity | Tests enforce bounded operation regression tripwires and documentation records caveats | MITIGATED against false local claims; production capacity testing remains BLOCKS_DEPLOYMENT |
+
+## P2 closeout risk disposition
+
+| Risk | Current evidence | Owner / required gate | P2 closeout disposition |
+| --- | --- | --- | --- |
+| Unresolved Critical or High P2 code defect | Full PHP, MySQL, frontend, verifier, scanner and release gates pass; B10 defect register has no unresolved Critical/High item | Engineering and Security | RESOLVED_FOR_P2 |
+| P2 field-classification decision was stale | P2 encrypted/hash-only/redaction controls are implemented and verified; OD-058 remains open only for future data classes | Privacy and Security Governance / before future sensitive DDL | RESOLVED_FOR_P2_SCOPE |
+| P2 authorization-catalog decision was stale | 32 permissions, 9 roles, 83 mappings and 20 privileged policies pass verifier and seed checks; OD-062 controls future extension | Security and Product Governance / before future catalog extension | RESOLVED_FOR_P2 |
+| Hosted, physical-device, browser/AT, key-custody and penetration-test evidence is absent | Deferred-evidence register records owner, phase/release gate and compensating controls | Owning operational governance / before production activation or publication | NON_BLOCKING_P2_CLOSEOUT; BLOCKS_AFFECTED_PRODUCTION_RELEASE |
+| P3 product-policy decisions remain open | No P3 source exists; P3 assessment names exact decisions and prevents implied authorization | Product, Privacy, Child-Safety and Domain Governance / before affected P3 capability | NOT_A_P2_BLOCKER |
