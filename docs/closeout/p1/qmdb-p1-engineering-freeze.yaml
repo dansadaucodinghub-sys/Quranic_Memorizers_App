@@ -9,8 +9,8 @@ engineering_freeze:
   closeout_batch: QMDB-P1-CLOSE
   freeze_status: APPROVED
   readiness: P1_COMPLETE
-  generated_at_utc: "2026-08-31T16:32:16Z"
-  source_revision: "a8888fe014430b3d943fd70bb9fbfd4b49ea171a"
+  generated_at_utc: "2026-08-31T21:45:37Z"
+  source_revision: "0e1366189b44199388c3a77219d90b1f4f969791"
   source_state: governed_clean
   completed_batches:
     - QMDB-P1-B01
@@ -99,13 +99,16 @@ engineering_freeze:
       sha256: cb98982c4e2fcfe6ca1d26d22290b33b2b9c69b4fd1f553f9330c3bcfb0f29cc
     - path: "database/migrations.php"
       category: CONTROLLED_EXTENSION_POINT
-      sha256: 99b52437f1c133057bf09db67239b359461bb719acfd0ecc30e000032f055cf5
+      sha256: 90899da8981148f85009d139e21955282e5a0dda13e74c01208b9711ac7ccfde
     - path: "database/migrations/README.md"
       category: CONTROLLED_EXTENSION_POINT
       sha256: a898aff7e83f7f2108cc273051ec27182a02c84a09e8b084530518c40227a4d3
+    - path: "database/reference/nigeria-administrative-areas-v1.json"
+      category: CONTROLLED_EXTENSION_POINT
+      sha256: 3ecc6e8910c5f0c0ca99c0f54ade69b7432e94060836549c72ccadf681a4bc87
     - path: "database/seeds.php"
       category: CONTROLLED_EXTENSION_POINT
-      sha256: 191dea31fa600320610423873086df42e20c42509a8bec3894fdd52a45aee5c8
+      sha256: f5b3cf5774ee3b1e78876f0af48032d1d1df034f92c70fd3f8f1f30098018056
     - path: "database/seeds/README.md"
       category: CONTROLLED_EXTENSION_POINT
       sha256: 789072f6dc4cbbdc43d1b1d3678b7e01ba8e5632a81540ac9c01a80b12b93b1d
@@ -114,7 +117,7 @@ engineering_freeze:
       sha256: 38e17177df134c056f8e28d39f99da9e1fdd5cf16b054be42793d9700daa17a2
     - path: "docs/implementation/README.md"
       category: FROZEN_ENGINEERING_FOUNDATION
-      sha256: 81f44f271519f4626fc0a5ed0a44c99b2ef2ba00bb3641c98ddd1a39409c43bd
+      sha256: 08508244f12d8100f4de5e545918d9bb4b2feea052991146636c1fed882849ff
     - path: "docs/implementation/account-recovery-and-security-notification-standard.md"
       category: FROZEN_ENGINEERING_FOUNDATION
       sha256: 4e79b2e719b78e1fb78f6345e2dfa9566c55b5a8dd90805730c909ffa6047b81
@@ -139,6 +142,9 @@ engineering_freeze:
     - path: "docs/implementation/mfa-passkey-recovery-code-and-step-up-standard.md"
       category: FROZEN_ENGINEERING_FOUNDATION
       sha256: c41b476b5909de2877bf7960b72374d64d95094b4ee9f42b54392c1a00eb1d56
+    - path: "docs/implementation/nigerian-administrative-geography-standard.md"
+      category: FROZEN_ENGINEERING_FOUNDATION
+      sha256: c7b749bb2af448e36cdbf9afcb635448aaf2b3449914676e3a438c7e737cb973
     - path: "docs/implementation/phase-and-batch-roadmap.md"
       category: FROZEN_ENGINEERING_FOUNDATION
       sha256: 873abc3a179ed5df62d3bf8547a93aa0813198f090554c36ae925124299a0512
@@ -201,7 +207,7 @@ engineering_freeze:
       sha256: 0e98f27dfe78065debe79dc3c64e7247940cc3241727e9e3e5f0853b2e6a8535
     - path: "public/assets/js/app.js"
       category: FROZEN_ENGINEERING_FOUNDATION
-      sha256: bd53499b2e33578874cdecc9040cc4451398cd0a16b5a4d21fe7309eb03c3ae1
+      sha256: fb641ce25cec4576420d727f22830a7e0e6e73066657623abd8465441c1fa81a
     - path: "public/assets/js/fetch-client.js"
       category: FROZEN_ENGINEERING_FOUNDATION
       sha256: 4d43c240f5c60f7cab4c95857a799ef90750252724af0ff452816e2a2b58b0ae
@@ -211,6 +217,9 @@ engineering_freeze:
     - path: "public/assets/js/fragment-policy.js"
       category: FROZEN_ENGINEERING_FOUNDATION
       sha256: 72ec87ff7c6f0df366d37a0a7f43b869d4d3751a2174fba4250bcc3e43103382
+    - path: "public/assets/js/geography-dependent-select.js"
+      category: FROZEN_ENGINEERING_FOUNDATION
+      sha256: edc04521152bfa56151634e856cb8a97bb7a8d6b9bd3d0bfe7fad0ece5193128
     - path: "public/assets/js/live-region.js"
       category: FROZEN_ENGINEERING_FOUNDATION
       sha256: 754c63bc3aa326eafb40d59e85b5898e4805f3a4b38a5fbeadeb9b9373e8e4f8
@@ -255,10 +264,10 @@ engineering_freeze:
       sha256: 5ce0074151f7a5e1ff098aac93dd0b762ae71a539a471e88044299ab72120cbd
     - path: "resources/translations/ar.php"
       category: CONTROLLED_EXTENSION_POINT
-      sha256: 55ec9092d1dc56ad6eee50e9dfe05f2a6f6ffa6f147e63dde649f0c7583a57fe
+      sha256: 7dd1303189ce6ff25d1d15fd68553420bf57bb9fb4d0cdeb94606ed4f9ecf3d1
     - path: "resources/translations/en.php"
       category: CONTROLLED_EXTENSION_POINT
-      sha256: 5376347f62bfae6326cd6f11e60611d299df518eac39690bc28b17d1f1508d8c
+      sha256: ceeb34240e8be2861b7db7fcee5360d48009c9fbaf467b8dedae042a4f5fef68
     - path: "resources/views/components/application-footer.php"
       category: CONTROLLED_EXTENSION_POINT
       sha256: e5df10c1064e9d1c591ede775dd03ec3198113ee4de8d0c28f701f21b70194b0
@@ -271,6 +280,12 @@ engineering_freeze:
     - path: "resources/views/components/form-field-error.php"
       category: CONTROLLED_EXTENSION_POINT
       sha256: 23d847138778c8119eb7fe7e2ca611ebe9adc1dbc2ec690438da1db81784a42b
+    - path: "resources/views/components/geography-level-one-select.php"
+      category: CONTROLLED_EXTENSION_POINT
+      sha256: 30768118ca7dbbbd42b106000353febc9e0c48c05de4716b74f6e5e288c7608b
+    - path: "resources/views/components/geography-level-two-select.php"
+      category: CONTROLLED_EXTENSION_POINT
+      sha256: 22eb85b5ac963667c7be665414b187b2f176961d786abc7ad1b42cdee3df1e79
     - path: "resources/views/components/language-switcher.php"
       category: CONTROLLED_EXTENSION_POINT
       sha256: 97ea408ecff561ee270ef0dc5664d846648c0ecb006820f20b76f41ec8a3cfd8
@@ -352,6 +367,9 @@ engineering_freeze:
     - path: "resources/views/fragments/email-verification-resend-form.php"
       category: CONTROLLED_EXTENSION_POINT
       sha256: 9e5052259d6164f5fc1ae15e0789ff0cfd4b62e43f4a21a6524ceb66984b3265
+    - path: "resources/views/fragments/geography-child-select.php"
+      category: CONTROLLED_EXTENSION_POINT
+      sha256: 8266dc41189e57b1c4abc7e5ac682226d89a932e53c1f5563f61540dc6959d6f
     - path: "resources/views/fragments/login-form.php"
       category: CONTROLLED_EXTENSION_POINT
       sha256: 3bcd951519c8a8a2339c70a51d18288082626551b3c05f3b1c04050868c47eec
@@ -466,6 +484,12 @@ engineering_freeze:
     - path: "resources/views/pages/mfa-disable-confirm.php"
       category: CONTROLLED_EXTENSION_POINT
       sha256: e68e977e2860b03a4cc0fc9fd7800bc607ac834e37f92415794284e17d05a5b9
+    - path: "resources/views/pages/nigeria-administrative-area.php"
+      category: CONTROLLED_EXTENSION_POINT
+      sha256: a598fd64dd4cbe6246cf0ca860022ca20c961cc44bc9663e8cf7f2cc1682df00
+    - path: "resources/views/pages/nigeria-geography-directory.php"
+      category: CONTROLLED_EXTENSION_POINT
+      sha256: 8ebaca50672cc4796a80551036e35cd01eedbb2675edf88f6f5f2865b28659d6
     - path: "resources/views/pages/passkey-registration.php"
       category: CONTROLLED_EXTENSION_POINT
       sha256: 888b6839bea6880aa06ec1284b91ee06fdf64d0958778825801d402b4a907016
@@ -522,7 +546,7 @@ engineering_freeze:
       sha256: 49ae9a8fcb1f0883b5a411dc8f6ccd85a0daec254dd06610ef3daa9c95d4505b
     - path: "routes/web.php"
       category: CONTROLLED_EXTENSION_POINT
-      sha256: 3b3afb1ad426db2d7addcedf9b51dc1698eb6093ecbb857f0328693c8cf682be
+      sha256: b54d8d1d4264899a3421cd2e8d634f92ecb576936f3e52dc26f90dcaea866a69
     - path: "scripts/check-javascript-syntax.js"
       category: FROZEN_ENGINEERING_FOUNDATION
       sha256: f76d7bbeafa7f6ab1e2281e1ab969c55a87ea16bd22f0c4d429b5d8f9056fb23
@@ -531,10 +555,10 @@ engineering_freeze:
       sha256: 969803b7460bcb5e8fa9edab5df9e624b991679fd3c6fed9750fc374bfe1770d
     - path: "src/Bootstrap/ApplicationFactory.php"
       category: FROZEN_ENGINEERING_FOUNDATION
-      sha256: 4465c97e21229f74b4ac55e5f067baf0d4a0369d1b3a92e5230e2aef0b0d2757
+      sha256: 1702e8676d48d526c6679baa37b5d62b2418bb086d5fc7d47dea24bf83a403a6
     - path: "src/Bootstrap/ApplicationMetadata.php"
       category: FROZEN_ENGINEERING_FOUNDATION
-      sha256: c7d3885494e9d2d11e4a99ad7d4058f546cb4f12dc95c143de14b71a6ac925fc
+      sha256: b715ee7f0e2f1c236cdd3eddc52d53a8169858a27b8fb6f95b1fb52d843450fa
     - path: "src/Bootstrap/Console/ConsoleApplication.php"
       category: FROZEN_ENGINEERING_FOUNDATION
       sha256: 7601ecef31d6b87f6bfa5fbcffbdab7e4ae6f7f0929bbb8950818ad1a643d889
@@ -552,7 +576,7 @@ engineering_freeze:
       sha256: 4c5e0413b748d8117b01bc717fa57a3370838e62f4189daf2d9f08947e1d36da
     - path: "src/Bootstrap/Module/ApplicationHttpModule.php"
       category: CONTROLLED_EXTENSION_POINT
-      sha256: 0bbd8fa4f81d9590a7dad038477c471d73d21c3eb672b544ffafeff8e1c3b645
+      sha256: 819ae8b03c81b669c2a5c0c2d30763c40129252b756d06cb0257480713817942
     - path: "src/Bootstrap/Module/ApplicationServicesFoundationModule.php"
       category: CONTROLLED_EXTENSION_POINT
       sha256: 7978111e4091aae34958daee1bb79ec53d79ef254a0aed3eaa66d35697b6373e
@@ -561,13 +585,16 @@ engineering_freeze:
       sha256: 8f38912317e654f7ee9b10c0bb0176d6ead00c25b60213964ac504b5cf1f24a7
     - path: "src/Bootstrap/Module/ConsoleFoundationModule.php"
       category: CONTROLLED_EXTENSION_POINT
-      sha256: 48eb486a01f8009ef28ceedc63e426b1fb91c32b28187148c00985d985b6aaca
+      sha256: ca2b043217be409d898c479148d7074befa89e2f0ffa7d1fc9abd10022d8914c
     - path: "src/Bootstrap/Module/CoreFoundationModule.php"
       category: CONTROLLED_EXTENSION_POINT
       sha256: 6231d95d0ed92125043b50b49c9620e280cb0bebefec00c0bac9deabae38ebdd
     - path: "src/Bootstrap/Module/DatabaseFoundationModule.php"
       category: CONTROLLED_EXTENSION_POINT
       sha256: 165c959c395b3ce10c0d78b4d5738fe17eb12c054e96468f6a9f72f62b413133
+    - path: "src/Bootstrap/Module/GeographyReferenceModule.php"
+      category: CONTROLLED_EXTENSION_POINT
+      sha256: 45088f56a74354c039c8a3c7438f612956ebaab2cd43ed5251e7b589534dcba7
     - path: "src/Bootstrap/Module/HttpFoundationModule.php"
       category: CONTROLLED_EXTENSION_POINT
       sha256: 58c1366773fce57d6961810276499ed1d6de80206f9bde216d622cd5e7d17afd
@@ -597,7 +624,7 @@ engineering_freeze:
       sha256: 7a0f50fafad48de1e723d479fde13e048f8ffc6829efffb3570812046dc5b94f
     - path: "src/Bootstrap/Module/PresentationFoundationModule.php"
       category: CONTROLLED_EXTENSION_POINT
-      sha256: be637b18a44fb2f0bc9aa88c062004a738c6e0776bfd192aab99707ec7b25be8
+      sha256: d44d29bef3776ddd66b99925292127cfb830fddd2baffffaa4f3b6a79b067bbf
     - path: "src/Bootstrap/Module/SchemaFoundationModule.php"
       category: CONTROLLED_EXTENSION_POINT
       sha256: 5f601e55daca4e64610340b8720ccc8f4637948ee313ee61a5a330bc7d0c88dd
@@ -640,6 +667,108 @@ engineering_freeze:
     - path: "src/Bootstrap/Shared/ExitCode.php"
       category: FROZEN_ENGINEERING_FOUNDATION
       sha256: b897c87b06cccf3cdab32a522d96f586c6118cd424a6837119101d101330f7f4
+    - path: "src/Modules/Geography/Application/AdministrativeAreaChildrenHandler.php"
+      category: FROZEN_ENGINEERING_FOUNDATION
+      sha256: 5336b7abdc934472f6ff6fc1c438737fd4ba4388f82a21ec735744d19feeb02b
+    - path: "src/Modules/Geography/Application/AdministrativeAreaChildrenQuery.php"
+      category: FROZEN_ENGINEERING_FOUNDATION
+      sha256: ead25c3daf10c2e9b0afe6adc27f0e3f2c11366144225c27862fa2938441a1d1
+    - path: "src/Modules/Geography/Application/AdministrativeAreaSearchHandler.php"
+      category: FROZEN_ENGINEERING_FOUNDATION
+      sha256: bb87bf1c745c7e20a6bb7b2cf134b7287c72a5b142fa1123b9de33b541d731db
+    - path: "src/Modules/Geography/Application/AdministrativeAreaSearchQuery.php"
+      category: FROZEN_ENGINEERING_FOUNDATION
+      sha256: 58f4d6e8cb1f2c07145c56cda9bebe8c93555cd925919c2bc76fee0df839d230
+    - path: "src/Modules/Geography/Application/GeographyReferenceReadinessCheck.php"
+      category: FROZEN_ENGINEERING_FOUNDATION
+      sha256: 93705c6f8cfe2d5ce1360767813fdc2eda6fbdf3cf78111d2a9764289f1faf8c
+    - path: "src/Modules/Geography/Application/GeographyReferenceReadinessProbe.php"
+      category: FROZEN_ENGINEERING_FOUNDATION
+      sha256: 2f9267db95d66be1fb7a5f520e4935c4c1bf55693c27032932365b7d91203e07
+    - path: "src/Modules/Geography/Application/NigeriaGeographyDirectoryHandler.php"
+      category: FROZEN_ENGINEERING_FOUNDATION
+      sha256: 63af9a1672d51e41c7781bd20ec4e06a80db2fb3d94016fee7f7e007a9d14dff
+    - path: "src/Modules/Geography/Application/NigeriaGeographyDirectoryQuery.php"
+      category: FROZEN_ENGINEERING_FOUNDATION
+      sha256: 5000eadfc898f062b91e2289cef203e751ca8134bdd5c166901a150b538379c4
+    - path: "src/Modules/Geography/Domain/AdministrativeAreaCode.php"
+      category: FROZEN_ENGINEERING_FOUNDATION
+      sha256: 33f0e30fce5201bb3852a368bba4d206beb8d6d672a2c9ca0c446317e49957ec
+    - path: "src/Modules/Geography/Domain/AdministrativeAreaName.php"
+      category: FROZEN_ENGINEERING_FOUNDATION
+      sha256: 85df7699f1760b521b323b606045b1d8aef0db4a5a1beec7f081014b3c2a6fda
+    - path: "src/Modules/Geography/Domain/CanonicalAreaSlug.php"
+      category: FROZEN_ENGINEERING_FOUNDATION
+      sha256: 19a73d94bb9af9ffddc1653443b88c8ccb4d5091b5d5d964f9e7eb7cbeddf144
+    - path: "src/Modules/Geography/Domain/GeographyAreaType.php"
+      category: FROZEN_ENGINEERING_FOUNDATION
+      sha256: 652d4dab819b9538dee7103fff27520097c2651c3d1e1f3b5bec4ed16abe1458
+    - path: "src/Modules/Geography/Domain/GeographyDatasetStatus.php"
+      category: FROZEN_ENGINEERING_FOUNDATION
+      sha256: fa337996d144650b72a729d33523951c7f3c6ed84ddbe81d267b5f01f6822185
+    - path: "src/Modules/Geography/Domain/GeographyPublicId.php"
+      category: FROZEN_ENGINEERING_FOUNDATION
+      sha256: 5e49b1a51392c79c456c036b3bc57e15d4caa7730253ac0b2a33cd0be835df09
+    - path: "src/Modules/Geography/Domain/GeographyStatus.php"
+      category: FROZEN_ENGINEERING_FOUNDATION
+      sha256: d6e18463d48eb168304cd540ec087db02383141511bf70e5302c39db25023592
+    - path: "src/Modules/Geography/Domain/Repository/AdministrativeAreaRepository.php"
+      category: FROZEN_ENGINEERING_FOUNDATION
+      sha256: 5febfb44a85c97a7e8e43f27f0abb5385f17b7ccdbf5130741bc8f0766e18195
+    - path: "src/Modules/Geography/Domain/Repository/CountryRepository.php"
+      category: FROZEN_ENGINEERING_FOUNDATION
+      sha256: 7e562dd90922a14beef16b7ead079d65e8d61ffabc23b878b28425e4d8243c3f
+    - path: "src/Modules/Geography/Domain/Repository/GeographyDatasetRepository.php"
+      category: FROZEN_ENGINEERING_FOUNDATION
+      sha256: 4007124773f992ca257a916b4a7f3153b9a0c3330a2db337cc235a581750350c
+    - path: "src/Modules/Geography/Infrastructure/Dataset/GeographyDatasetValidationReport.php"
+      category: FROZEN_ENGINEERING_FOUNDATION
+      sha256: 7931d08b0412fd2816312e8f5347f577a0c924545c28815110e276224249a5ae
+    - path: "src/Modules/Geography/Infrastructure/Dataset/NigeriaAdministrativeGeographyDataset.php"
+      category: FROZEN_ENGINEERING_FOUNDATION
+      sha256: 48c7ca449a70edbb9c1c86a97a4985027341ce226dd8f5e10175e2eb1a538316
+    - path: "src/Modules/Geography/Infrastructure/Dataset/NigeriaAdministrativeGeographyDatasetLoader.php"
+      category: FROZEN_ENGINEERING_FOUNDATION
+      sha256: 0444a75eacd44a1b6446ccf8ea5265efc3c6d0c5da28ace6fb6dd9434d17ba7f
+    - path: "src/Modules/Geography/Infrastructure/Dataset/NigeriaAdministrativeGeographyDatasetValidator.php"
+      category: FROZEN_ENGINEERING_FOUNDATION
+      sha256: 9488d585bdb91d045363310b41bc9d5b3b884f02a67c6c2abf15883684a18b51
+    - path: "src/Modules/Geography/Infrastructure/Migration/CreateGeographyAdministrativeAreaHierarchyMigration.php"
+      category: FROZEN_ENGINEERING_FOUNDATION
+      sha256: 216827adf93519a19cc9c4dcbf12fb0bab4ac1480078bf1054c08687d2df2aec
+    - path: "src/Modules/Geography/Infrastructure/Migration/CreateGeographyCountryAndDatasetFoundationMigration.php"
+      category: FROZEN_ENGINEERING_FOUNDATION
+      sha256: d8893c9bfd56d5390c0aae96306acca0693ba9b4a894e2d7d6846476f4c83051
+    - path: "src/Modules/Geography/Infrastructure/Persistence/MySqlAdministrativeAreaRepository.php"
+      category: FROZEN_ENGINEERING_FOUNDATION
+      sha256: 4c328328e1b359f44dce00b29c2b28dd55782b7d8f8929aa67fc6e07b9f92a18
+    - path: "src/Modules/Geography/Infrastructure/Persistence/MySqlCountryRepository.php"
+      category: FROZEN_ENGINEERING_FOUNDATION
+      sha256: 4447419b271420ed1263a42bd1b2b3f21536348d1f7443d2f023c05a258b8c6e
+    - path: "src/Modules/Geography/Infrastructure/Persistence/MySqlGeographyDatasetRepository.php"
+      category: FROZEN_ENGINEERING_FOUNDATION
+      sha256: a7f25cb45e882187afa04c7d4cd2cc9952f7d614bb0be65099046782f48083fe
+    - path: "src/Modules/Geography/Infrastructure/Persistence/MySqlGeographyReferenceReadinessProbe.php"
+      category: FROZEN_ENGINEERING_FOUNDATION
+      sha256: 4bc26e4034a8179b316732fd6edfdfee27c99eabe590e51f8d4048122805d45b
+    - path: "src/Modules/Geography/Infrastructure/Seed/SeedNigeriaAdministrativeGeography.php"
+      category: FROZEN_ENGINEERING_FOUNDATION
+      sha256: 92b7d4c3821ee61fe8b9b1e53e08ed25118763cdf234d433e9121124e669f551
+    - path: "src/Modules/Geography/Interface/Console/GeographyReferenceVerifyConsoleCommand.php"
+      category: FROZEN_ENGINEERING_FOUNDATION
+      sha256: e8a3cb4352ac24fbcc293a36e4e2fa208cd8de2b478f9ca1f4ff0132ee8782a6
+    - path: "src/Modules/Geography/Interface/Http/GeographyChildrenLookupController.php"
+      category: FROZEN_ENGINEERING_FOUNDATION
+      sha256: bd1f684c4379629c30d482bbd8dfd32d3a1a1f84599176e8ce8785afed8e2c1c
+    - path: "src/Modules/Geography/Interface/Http/GeographyPublicResponseCache.php"
+      category: FROZEN_ENGINEERING_FOUNDATION
+      sha256: 7e13a9fe181adb9019d2d7d05274539b4b73d681e04c07f560b74472aa18a700
+    - path: "src/Modules/Geography/Interface/Http/NigeriaGeographyAreaController.php"
+      category: FROZEN_ENGINEERING_FOUNDATION
+      sha256: 528ea39941af98471c0f5799ae8560c2f4fd99528bd9c3b7d690809e07b318f8
+    - path: "src/Modules/Geography/Interface/Http/NigeriaGeographyDirectoryController.php"
+      category: FROZEN_ENGINEERING_FOUNDATION
+      sha256: a9721535937eeaef874764d1e0b2dc8e45cb2fadc1b2f1d5caa6a0c9ff0a415c
     - path: "src/Modules/Identity/Domain/AccountAuthenticationRecord.php"
       category: FROZEN_ENGINEERING_FOUNDATION
       sha256: ee4e69f176d83cb9395c210fe9ef8607b30a24b2af2d7a370dbca1826378490e
@@ -1629,7 +1758,7 @@ engineering_freeze:
       sha256: 83cd4acad73edb161a76fe72906d40399136199488d1e87dc5ea248c6373c620
     - path: "src/Modules/IdentitySessions/Interface/Http/ApplicationReadinessController.php"
       category: FROZEN_ENGINEERING_FOUNDATION
-      sha256: be3c5678de2c02dc4a421e4b3345f4e762ce501c8b556c3e4ff01aeb1fe08d1d
+      sha256: 00879d39f2c3afad038466026e854b4d73ae34fdb8dd25d65a446914c0e84bf2
     - path: "src/Modules/IdentitySessions/Interface/Http/AuthenticatedRequestGuard.php"
       category: FROZEN_ENGINEERING_FOUNDATION
       sha256: 2fdf60a15e1ca5a52e445abb73aec7114d2a2cfb7965ccf420273b766203ce3a
@@ -3057,7 +3186,7 @@ engineering_freeze:
       sha256: 760dae2fcb313dbb8f484ecac052258e08a9f9bc7a427cbd8b0fbca833d6bf87
     - path: "src/Shared/Http/Routing/Security/ProductionRouteSecurityPolicyCatalog.php"
       category: FROZEN_ENGINEERING_FOUNDATION
-      sha256: e57b6fc9fd7c2f51d04cbc04956c3c0bc58b92479a8ca3fc33d24497e444685f
+      sha256: 253404cc81bc45279d9d19d6935d595a9cb4e988e154cb998d941312e5dd7e1c
     - path: "src/Shared/Http/Routing/Security/RouteSecurityClassification.php"
       category: FROZEN_ENGINEERING_FOUNDATION
       sha256: b03281215e5ad71d56147d11d3adcedb6f8e0d568ab137d8047494ee15882521
@@ -3540,10 +3669,13 @@ engineering_freeze:
       sha256: 690e433b9074ad849b0111f19f08c99df0db78fda482fdf4255ee34dc5dac249
     - path: "tests/Architecture/DatabaseArchitectureTest.php"
       category: FROZEN_ENGINEERING_FOUNDATION
-      sha256: a111e0d5b9c2df3054fbaf17d3b56d49c1cca0c6a12d8782c0875389d3a771ab
+      sha256: 7fb1c3cc87b4cbb70051dad1efbfb0cecfada8ecd357ba38342a15295b77aa8b
     - path: "tests/Architecture/DatabaseSecurityTest.php"
       category: FROZEN_ENGINEERING_FOUNDATION
       sha256: 04b86fc1def47c403b1c698257ee5dfe5b02149c19859c39de6e0ac5e36900d6
+    - path: "tests/Architecture/GeographyArchitectureTest.php"
+      category: FROZEN_ENGINEERING_FOUNDATION
+      sha256: 2781194f54c87f2a23d6b618c6df7a80bf8ed656d2705c62796243a151f2889d
     - path: "tests/Architecture/HttpArchitectureTest.php"
       category: FROZEN_ENGINEERING_FOUNDATION
       sha256: 65a00fcbbf0701cd768ea6778058251c23f6adba4b6f27e6b3cb900306e0a2b6
@@ -3561,7 +3693,7 @@ engineering_freeze:
       sha256: 0b55009b8c47874577dc816e4cedeb1d8d948f921701a4317581910409319725
     - path: "tests/Architecture/P2RouteSecurityPolicyTest.php"
       category: FROZEN_ENGINEERING_FOUNDATION
-      sha256: 15c6d065b4f70b8c03aed0a63dab611489f4c9cf4e12591f4c6c5956ccf559bb
+      sha256: 73a636fa3ac435681653768b9298e5f35a639dde477a0f62a8ee4ba7a83a7ced
     - path: "tests/Architecture/P2SecurityHardeningArchitectureTest.php"
       category: FROZEN_ENGINEERING_FOUNDATION
       sha256: 86f404077758452c1fecd62f14d72d7ea84b4b623ca39a9df39724184be7b622
@@ -3573,13 +3705,13 @@ engineering_freeze:
       sha256: 96ab4bda4d0ec0ccc5367b07670ec60e30e71b45f7632e5c7f892b0e2dc24a40
     - path: "tests/Architecture/SchemaFoundationArchitectureTest.php"
       category: FROZEN_ENGINEERING_FOUNDATION
-      sha256: ff17e10ef42998c6c8de89142a8f86b7c787f561184529c1381809324fd465df
+      sha256: eeefc4dc1681b522a354064550cabea6236119daaaade8da94d8ab7998f7ac24
     - path: "tests/Architecture/SecurityAuthorizationArchitectureTest.php"
       category: FROZEN_ENGINEERING_FOUNDATION
       sha256: 5fa0326480fa326d491b2e7cc69dd6e811562e2effdbcb64ce7fb51c552370b8
     - path: "tests/Architecture/SourceArchitectureTest.php"
       category: FROZEN_ENGINEERING_FOUNDATION
-      sha256: fcab46fc7175cf9ec1135f14d94b9aeb9d0ae98622cb5a808e9aa5578cde3232
+      sha256: 865811ec9a3df55d908deb06429eb00bbd9895337ce133bf5070af43d9c8c4f1
     - path: "tests/Architecture/SupplyChainArchitectureTest.php"
       category: FROZEN_ENGINEERING_FOUNDATION
       sha256: 534ab742cd70dd0857c3154b9679b969a0d6661ca11ab723c19ac1c250e7dbef
@@ -3589,6 +3721,9 @@ engineering_freeze:
     - path: "tests/Frontend/fragment-policy.test.js"
       category: FROZEN_ENGINEERING_FOUNDATION
       sha256: 2ad2c598c07ac8356f68fb531b2de4621b8e62e733b34ebc28f8ecf5acdbca93
+    - path: "tests/Frontend/geography-dependent-select.test.js"
+      category: FROZEN_ENGINEERING_FOUNDATION
+      sha256: ae396c33d785a42a992a6f9515b4c70f51cef365c40018d780486c1963123dd9
     - path: "tests/Frontend/modal-controller.test.js"
       category: FROZEN_ENGINEERING_FOUNDATION
       sha256: 3477f69cf4d5a00714a0b5e0ac6dd1251cf3d421ba0b01aafc5031f778ab6015
@@ -3612,7 +3747,7 @@ engineering_freeze:
       sha256: ad4099c92132ea04ad850ced936bce6a797000273bf6908cf74a4c76c838b4a7
     - path: "tests/Frontend/test-dom.js"
       category: FROZEN_ENGINEERING_FOUNDATION
-      sha256: 6aa58578a3417490d7b7defb33a3fcc43dea930afb40433c2947ef1c5cfe8a42
+      sha256: 2113e0886e0c671bc90b20a9b82eb134d3be27085214ae172bbb1a5dfece39ce
     - path: "tests/Frontend/theme-controller.test.js"
       category: FROZEN_ENGINEERING_FOUNDATION
       sha256: 7560f102a53e59d723def2eefba704ca80c5e03fdb03e4f26f416b14c7823970
@@ -3624,7 +3759,7 @@ engineering_freeze:
       sha256: ecbda2b76a30c6b13ebf7a788308747d4b8b15995589fc8be2025c8c69382c60
     - path: "tests/Integration/Bootstrap/FoundationCompilationTest.php"
       category: FROZEN_ENGINEERING_FOUNDATION
-      sha256: 27204e806673ef1c2cba716b8c14e0f19f9694006754871b1c9459c9bfca4332
+      sha256: 8e248cac47162a9adb66116e6fc29815efd8403f8983cb05b5d5ed6cf6004f02
     - path: "tests/Integration/Configuration/DotenvEnvironmentLoaderTest.php"
       category: FROZEN_ENGINEERING_FOUNDATION
       sha256: e41bee1cac94757fd9466c39b5999fa146f2228b22fbe32003dae0b614a791eb
@@ -3657,7 +3792,7 @@ engineering_freeze:
       sha256: 3b6036876b0a9976261fb837314657305473a3afc62a2a52b71f6572785c72ea
     - path: "tests/Integration/Http/P2RouteSecurityHardeningTest.php"
       category: FROZEN_ENGINEERING_FOUNDATION
-      sha256: 5aa539a658a62ff3aa99c0bf3fd956c3f1e55aeb486a98f4773c54f85d0c469f
+      sha256: d4a69b6be1ffa9f3f8448e5a30403d9549781a85944e5344a172a5dfaba4eef1
     - path: "tests/Integration/Http/ParameterizedRoutingTest.php"
       category: FROZEN_ENGINEERING_FOUNDATION
       sha256: cecf60d2ab0bdfb0e98def48e0c2cbc5182d29125b0abd8281243f4528aa467c
@@ -3667,6 +3802,9 @@ engineering_freeze:
     - path: "tests/Integration/Http/SapiResponseEmitterTest.php"
       category: FROZEN_ENGINEERING_FOUNDATION
       sha256: f883d292dac9a263cb5010e9bde6db527b9c63f15f91748d08c0c8e324ac2856
+    - path: "tests/Integration/MySql/GeographyReferenceIntegrationTest.php"
+      category: FROZEN_ENGINEERING_FOUNDATION
+      sha256: 6d007c65aa2f27878933d7c4598b363a759c0fdf219e9f05772c12e1678a8d2a
     - path: "tests/Integration/MySql/IdentityTenancyFoundationIntegrationTest.php"
       category: FROZEN_ENGINEERING_FOUNDATION
       sha256: a631739f9224844e8ea8bf303cdacb0878045c8ce343a91c507fa18f9aebd662
@@ -3696,10 +3834,10 @@ engineering_freeze:
       sha256: 14bb130f0096e0803948e8ba5e0939b6e8d5237ccfed7a270eb02bcc993d9b6c
     - path: "tests/Integration/MySql/P2IdentityMultiFactorIntegrationTest.php"
       category: FROZEN_ENGINEERING_FOUNDATION
-      sha256: c4fa6f915696b1188471dc18edb28197211ae9e45bf6c33bc4eeff44efc2bfc0
+      sha256: 189f0fe2f147c520de5aa06a842e75c48d14eda53ff1d6464555f06408daf727
     - path: "tests/Integration/MySql/P2IdentityRecoveryHttpIntegrationTest.php"
       category: FROZEN_ENGINEERING_FOUNDATION
-      sha256: 9cc4414ebca19e0fce37f394ecf69a2ffb6d2599f1883f7b8d78ce0694f296f2
+      sha256: bbf4033e23462023f174c70674af1d9526c290c8461bd0ef03bd2bb544016e08
     - path: "tests/Integration/MySql/P2IdentitySessionHttpIntegrationTest.php"
       category: FROZEN_ENGINEERING_FOUNDATION
       sha256: d10793ff1e3d7a4ccb1363bb05449e1f1778464dfda5dee071d040a4f18b4247
@@ -3714,7 +3852,7 @@ engineering_freeze:
       sha256: 5c4af88b3ef16cb70adcd22a091463e1c72ad4ebaf5258463e16c8489901dc50
     - path: "tests/Integration/MySql/P2SecurityAuthorizationIntegrationTest.php"
       category: FROZEN_ENGINEERING_FOUNDATION
-      sha256: 5c838ca072b37e9bbcdd6d086524a4ef663c73dfd4024f1695d1072bf88ba76b
+      sha256: 0a1919b78a3fd3bc1bf1bb36673a0eb809e0f7d08b24489747de7fa695204082
     - path: "tests/Integration/MySql/P2TenantContextHttpIntegrationTest.php"
       category: FROZEN_ENGINEERING_FOUNDATION
       sha256: 822aeca32d9552562d663c782a758c0f7d67d49b216dbd074330dfb5540b03b3
@@ -3723,7 +3861,7 @@ engineering_freeze:
       sha256: e65402f4c73ec4e3cfb64c647ebd4839d0985aa16dae0949bf7ff02d3d37f8d4
     - path: "tests/Integration/MySql/P2WebAuthnCeremonyIntegrationTest.php"
       category: FROZEN_ENGINEERING_FOUNDATION
-      sha256: 8c1cc32f57750669fc75c443bf19597f0ad1d7297d6fe5c8c0eb7d3f0b34a122
+      sha256: 427cb3d2767e755f5ddc586887c80eb560bbbc94781da0770236a1c795662aba
     - path: "tests/Integration/MySql/SchedulerClaimIntegrationTest.php"
       category: FROZEN_ENGINEERING_FOUNDATION
       sha256: 43e0b9a80ab49edc8251dd3a91b37ee5f8f8ac19fb76bd52ab2c5466f5fdb751
@@ -3900,7 +4038,7 @@ engineering_freeze:
       sha256: 81671d02977a2686438a26af07d4378b73c722801caa215c6b87c2c241c46edd
     - path: "tests/Support/MySql/AuthorizationMySqlFixture.php"
       category: FROZEN_ENGINEERING_FOUNDATION
-      sha256: c6c735da9bcc1cda5aa143376744407769957430c685fcf00f8423a282dbdcde
+      sha256: 529423e8e312fd39390c6f802851690d8866d912fd555afb63666d00ee924d76
     - path: "tests/Support/MySql/DeterministicRetryDelayStrategy.php"
       category: FROZEN_ENGINEERING_FOUNDATION
       sha256: 9db01251c54956c10476fd17be0535bf7cd6e934dacc60367460b1cac5e41e4c
@@ -4023,7 +4161,7 @@ engineering_freeze:
       sha256: 512e65d1aed6d4bdea01250f3bb911967a30b3ee437700c5a4623259e7fea3f8
     - path: "tests/Tools/Closeout/P2FreezeTest.php"
       category: FROZEN_ENGINEERING_FOUNDATION
-      sha256: 9dfd34f741d7c854c935a1a8f8504847374afcca3b6583c393e50132395b5f36
+      sha256: 4434e57acb0f604ad5b04ac58448dc7b1bac455549566204a2a4787c4289c9fe
     - path: "tests/Tools/Sbom/ProductionSbomTest.php"
       category: FROZEN_ENGINEERING_FOUNDATION
       sha256: 8a67a0cedbbf8f2c6004bcfb8373f5dcd7eb051e4663b4acd8825e68cc456477
@@ -4054,6 +4192,9 @@ engineering_freeze:
     - path: "tests/Unit/IdentityMultiFactor/PasskeyCounterCheckerTest.php"
       category: FROZEN_ENGINEERING_FOUNDATION
       sha256: 490967dfbb12f2ad69283ec2b30ddcea6e972fec45cd706b4989d5b7b1bcfba6
+    - path: "tests/Unit/Modules/Geography/NigeriaAdministrativeGeographyDatasetTest.php"
+      category: FROZEN_ENGINEERING_FOUNDATION
+      sha256: d31c6c9f3895eaa2890d12ba84492100fd80a803b17157d5bded00f26e3cf38a
     - path: "tests/Unit/Modules/Identity/Domain/IdentityValueObjectsTest.php"
       category: FROZEN_ENGINEERING_FOUNDATION
       sha256: d3f2fa1f6394035bcfbe224e2e502969b137a6319cb4b2710fae099bef0a518e
@@ -4356,10 +4497,10 @@ engineering_freeze:
       sha256: 8a2410706d4a318f3209a199a9b5061dfcb07290f73483f9fe10b7739fa6cdd4
     - path: "tools/Closeout/P2FreezePolicy.php"
       category: FROZEN_ENGINEERING_FOUNDATION
-      sha256: 35833f8b21e219a1514b5c82dd383d939bc8835bf4b9a9cef7384c419e5f6f27
+      sha256: 2b0134abd701ff3265941df445e02ad2e63411865f458cacaf3e44bb7e661ea4
     - path: "tools/Closeout/P2FreezeVerifier.php"
       category: FROZEN_ENGINEERING_FOUNDATION
-      sha256: 78cbba90ec369514bc9759d6ddbfa1e46afe46eaf738fd5f754583732f12c303
+      sha256: 1086fb6daaf37db2edfdf47108f1ca2baeffe4d42d91b0d64568eb7ee4e2f933
     - path: "tools/Closeout/generate-engineering-freeze.php"
       category: FROZEN_ENGINEERING_FOUNDATION
       sha256: 16ef5fb46b3da8841b81b551b5c447fa276c307caaa4bbf2838040b1e593185f
