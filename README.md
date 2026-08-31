@@ -1,9 +1,9 @@
 # Qur’an Memorizer DB
 
 QMDB is the governed Qur’an Memorizer Database platform. This repository contains the frozen P1 Core PHP engineering
-foundation and the active P2 identity and tenancy implementation. `QMDB-P2-B01` through `QMDB-P2-B08` are complete.
-`QMDB-P2-B09` remains a closeout-blocked implementation candidate because the required engineering freeze has not
-been committed. `QMDB-P2-B10` is the next batch and is not implemented in the current source.
+foundation and the active P2 identity and tenancy implementation. `QMDB-P2-B01` through `QMDB-P2-B09` are complete.
+`QMDB-P2-B10` is the next batch, is not implemented in the current source, and requires separate project-owner
+authorization before implementation or validation.
 
 ## Project identity
 
@@ -445,7 +445,8 @@ account version, block duplicate browser submission, and never retry a state cha
 Current scope includes the Security Audit ledger, verification/checkpoints, critical security-mutation evidence, account
 suspension/reactivation, and suspension-time session and privileged-access revocation. Account closure/deletion,
 automated risk scoring or suspension, SIEM integration, and an external checkpoint provider remain outside this batch.
-The next batch is `QMDB-P2-B10 — Identity and Tenant Security Hardening`; it remains blocked until B09 closes.
+The next batch is `QMDB-P2-B10 — Identity and Tenant Security Hardening`; B09 is complete and B10 awaits separate
+project-owner authorization.
 
 ## Structured logging
 
