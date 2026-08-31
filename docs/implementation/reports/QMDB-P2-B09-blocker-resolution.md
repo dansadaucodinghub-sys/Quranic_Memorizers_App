@@ -9,7 +9,7 @@
 | Starting condition | Combined B09/B10 implementation was committed concurrently; B10 was not authorized for current main |
 | Product-freeze drift | None detected |
 | Corrective commit | `a25771a983f9c556cce01840613f3ddb99fb90a1` — `revert(scope): remove unauthorized B10 changes from B09` |
-| Resolution status | B09 separated, frozen, and complete; B10 is next-batch-only and not implemented on current main |
+| Resolution status | At the B09 freeze snapshot, B09 was separated, frozen, and complete and B10 was next-batch-only; subsequent B10 completion is recorded in its own governed evidence set |
 
 ## Concurrent Combined Commit Separation
 

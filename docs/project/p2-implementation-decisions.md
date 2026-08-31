@@ -214,8 +214,8 @@ Implemented decision profile:
 
 ## P2-ADR-010 — Closed production-route security inventory
 
-- **Status:** Approved and implemented by QMDB-P2-B10; final B10 closeout remains subject to the current committed
-  release and Engineering Freeze evidence.
+- **Status:** Approved and implemented by QMDB-P2-B10; committed local CI, clean-install, release, and Engineering
+  Freeze evidence passed.
 - **Decision:** The production route set is closed by name in `ProductionRouteSecurityPolicyCatalog`. Each registered
   route receives explicit public/authenticated/tenant/base-role classification and policy metadata for tenant context,
   permission, assurance, step-up, CSRF, idempotency, content type, and no-store behavior. `RouteCollection` remains
@@ -226,8 +226,8 @@ Implemented decision profile:
 
 ## P2-ADR-011 — Closed tenant-repository and aggregate P2 verification
 
-- **Status:** Approved and implemented by QMDB-P2-B10; final B10 closeout remains subject to the current committed
-  release and Engineering Freeze evidence.
+- **Status:** Approved and implemented by QMDB-P2-B10; committed local CI, clean-install, release, and Engineering
+  Freeze evidence passed.
 - **Decision:** P2 tenant-owned repository contracts and implementations are maintained as a finite source-path
   inventory. Every listed public repository operation requires trusted `TenantContext`, derives its exact
   `workspace_id` scope from it, and cannot use a public-ID-only lookup; global and account-scoped repositories are

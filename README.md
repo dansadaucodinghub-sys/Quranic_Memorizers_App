@@ -1,9 +1,9 @@
 # Qur’an Memorizer DB
 
 QMDB is the governed Qur’an Memorizer Database platform. This repository contains the frozen P1 Core PHP engineering
-foundation and the active P2 identity and tenancy implementation. `QMDB-P2-B01` through `QMDB-P2-B09` are complete.
-`QMDB-P2-B10` is the next batch, is not implemented in the current source, and requires separate project-owner
-authorization before implementation or validation.
+foundation and the active P2 identity and tenancy implementation. `QMDB-P2-B01` through `QMDB-P2-B10` are complete.
+`QMDB-P2-CLOSE — Identity, Security, and Tenant Isolation Verification and Freeze` is the next separately governed
+batch; P2 remains in progress.
 
 ## Project identity
 
@@ -445,8 +445,8 @@ account version, block duplicate browser submission, and never retry a state cha
 Current scope includes the Security Audit ledger, verification/checkpoints, critical security-mutation evidence, account
 suspension/reactivation, and suspension-time session and privileged-access revocation. Account closure/deletion,
 automated risk scoring or suspension, SIEM integration, and an external checkpoint provider remain outside this batch.
-The next batch is `QMDB-P2-B10 — Identity and Tenant Security Hardening`; B09 is complete and B10 awaits separate
-project-owner authorization.
+`QMDB-P2-B10 — Identity and Tenant Security Hardening` is complete. The next batch is
+`QMDB-P2-CLOSE — Identity, Security, and Tenant Isolation Verification and Freeze`.
 
 ## Structured logging
 
@@ -540,7 +540,7 @@ time, external calls, or an SSE connection.
 
 ## P2-B10 hardening verification
 
-The active B10 batch adds a closed 88-route security catalog, a closed tenant-repository inventory, and bounded
+Completed B10 adds a closed 88-route security catalog, a closed tenant-repository inventory, and bounded
 read-only commands: `security:routes:verify`, `security:tenant-repositories:verify`, and `security:p2:verify`.
 They supplement—not replace—the authentication, authorization, Tenant Context, privileged-access, and audit controls
 implemented by B01–B09. B10 records local automated evidence only; independent penetration testing, production key

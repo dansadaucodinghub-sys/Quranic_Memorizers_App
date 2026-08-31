@@ -7,7 +7,7 @@
 | Product freeze | QMDB-P0-FRZ-001 |
 | Engineering freeze | QMDB-P1-FRZ-001 |
 | Batch | QMDB-P2-B10 — Identity and Tenant Security Hardening |
-| Status | Evidence complete; final committed-freeze/release gates recorded below |
+| Status | COMPLETE — local, clean-install, release, and committed-freeze gates passed |
 | Date | 2026-08-31 |
 
 ## Scope and authority
@@ -44,15 +44,19 @@ change the frozen P0 requirements, run migrations, or authorize P2-CLOSE.
 | Aggregate P2 security command | PASS — all six bounded component verifiers |
 | Frozen P0 baseline | PASS — 177 checks after restoring accidentally touched frozen files byte-for-byte |
 | Full isolated MySQL suite | PASS — 83 tests, 1,659 assertions in 21:58.456; 49 tables reset, 28 migrations and 3 seeds applied |
+| Direct local CI | PASS — 33 recorded stages, including release build and verification |
+| Composer CI | PASS — 33 recorded stages, including release build and verification |
+| Git-aware clean install | PASS — fresh clone with no `.env`, `vendor`, or `node_modules`; Quality 939/64,056, MySQL 83/1,659, frontend 51/51 |
 
 The MySQL harness restored and verified the canonical schema after its isolated run. The measured query and
 in-memory loops are regression tripwires only; they make no throughput, latency, capacity, or service-level claim.
 
 ## Defects and controlled correction
 
-Six defects were recorded and resolved: a missing closed route inventory, absence of a dedicated tenant repository
+Seven defects were recorded and resolved: a missing closed route inventory, absence of a dedicated tenant repository
 verifier, incorrect default no-database test selection, a brittle recovery-code test boundary, absence of a repeated
-bounded audit-listing tripwire, and an initial attempt to write B10 traceability into frozen P0 files. The complete
+bounded audit-listing tripwire, an initial attempt to write B10 traceability into frozen P0 files, and an archive-only
+clean-install attempt that omitted required Git provenance. The complete
 disposition is in [the B10 security defect register](QMDB-P2-B10-security-defect-register.md).
 
 No Critical or High source-code defect is open. Independent penetration testing, reverse-proxy confirmation,
@@ -68,8 +72,12 @@ reconciled into the B09 module graph; mixed files were manually forward-correcte
 generated claims were rejected. No cherry-pick, merge, reset, rebase, or wholesale restoration occurred. See
 [the historical recovery record](QMDB-P2-B10-historical-recovery.md).
 
-## Completion boundary
+## Completion result
 
-B10 completion requires the current source/docs commit, a regenerated and verified engineering freeze, a clean
-release artifact, and the final local CI/Composer CI evidence. P2 remains **IN PROGRESS** and P2-CLOSE remains the
-next, separate batch.
+The initial local-CI attempt intentionally stopped at the engineering-freeze guard after all normal Quality tests
+passed; the governed freeze was generated, committed, and reverified. The direct local CI and the separately invoked
+Composer CI then each passed all 33 stages. Release artifact verification passed for a clean, release-eligible source.
+The archive-only clean-install attempt was rejected because its `git archive` source had no Git metadata; the corrected
+fresh local clone passed every required gate. No unresolved source-code security defect remains.
+
+B10 is **COMPLETE**. P2 remains **IN PROGRESS** and `QMDB-P2-CLOSE` is the next, separately governed batch.

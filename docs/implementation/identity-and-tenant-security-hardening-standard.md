@@ -87,6 +87,6 @@ These checks are regression tripwires only; they do not state a production laten
 
 ## Completion conditions
 
-Complete B10 only after the focused route/architecture tests, full real-MySQL suite, static analysis, style, security,
-clean-install, release, and Engineering Freeze gates pass from committed governed source. Do not authorize P2 closeout
-while a mandatory B10 gate is unresolved.
+B10 completed focused route/architecture tests, full real-MySQL suite, static analysis, style, security,
+clean-install, direct local CI, Composer CI, release, and committed Engineering Freeze gates. P2-CLOSE remains the
+next separately governed batch.

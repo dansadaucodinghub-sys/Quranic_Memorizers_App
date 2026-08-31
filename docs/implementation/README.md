@@ -8,11 +8,11 @@
 | Freeze ID | QMDB-P0-FRZ-001 |
 | Batch ID | QMDB-P2-B10 |
 | Document Title | Implementation Entry Point |
-| Document Version | 1.3.0 |
-| Document Status | P1 COMPLETE; P2-B01 THROUGH P2-B09 COMPLETE; P2-B10 AUTHORIZED AND IN IMPLEMENTATION |
+| Document Version | 1.4.0 |
+| Document Status | P1 COMPLETE; P2-B01 THROUGH P2-B10 COMPLETE; P2-CLOSE NEXT |
 | Document Owner Role | Product, Architecture and Engineering Governance |
 | Last Updated | 2026-08-31 |
-| Approval Status | B10 implementation is explicitly authorized after B09 closure; P2-CLOSE remains separate |
+| Approval Status | B10 is complete after committed local, clean-install, release, and freeze evidence; P2-CLOSE remains separate |
 | Related Documents | [Closeout entry point](../closeout/README.md); [freeze manifest](../closeout/qmdb-p0-baseline-freeze.yaml); [project state](../project/project-state.md) |
 
 ## Purpose
@@ -74,13 +74,12 @@ The artifacts cover phased implementation routing, readiness/completion policy, 
 P0 remains complete and frozen. P1-B01 through P1-B10 are complete and P1 is closed/frozen. The project-owner recovery
 authorization established conservative executable OD-051/OD-052 contracts, after which P2-B01 through P2-B08 passed
 their mandatory gates. B09 supplies the completed audit and account-state boundary with committed Engineering Freeze
-evidence. The project owner has authorized B10 hardening; B10 remains responsible for its own committed release,
-Engineering Freeze, and evidence before P2-CLOSE can be requested.
+evidence. B10 has completed its committed local, clean-install, release, and Engineering Freeze evidence. P2-CLOSE
+is the next separately governed verification-and-freeze batch.
 
 ## Exact next action
 
-Complete the authorized B10 hardening work, commit and validate its clean release, refresh the Engineering Freeze,
-and stop before the separately authorized P2-CLOSE batch.
+Execute only the separately authorized P2-CLOSE verification-and-freeze batch; do not begin P3 from this entry point.
 
 ## Governance
 
