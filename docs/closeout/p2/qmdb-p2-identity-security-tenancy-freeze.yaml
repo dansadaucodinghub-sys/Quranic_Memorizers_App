@@ -11,8 +11,8 @@ p2_freeze:
   frozen_engineering_baseline: QMDB-P1-FRZ-001
   approved_change: QMDB-CR-001
   recovery_run: QMDB-RECOVERY-RUN-001
-  generated_at_utc: "2026-08-31T16:32:42Z"
-  source_revision: "f46397899b709d62f5f3158ac6c613272379cdc0"
+  generated_at_utc: "2026-08-31T18:09:13Z"
+  source_revision: "bce8aae81c75a66b7afc1b71a7a14fff8440ea00"
   source_state: clean
   completed_batches:
     - QMDB-P2-B01
