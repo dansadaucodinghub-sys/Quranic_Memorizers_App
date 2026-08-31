@@ -11,8 +11,8 @@ p2_freeze:
   frozen_engineering_baseline: QMDB-P1-FRZ-001
   approved_change: QMDB-CR-001
   recovery_run: QMDB-RECOVERY-RUN-001
-  generated_at_utc: "2026-08-31T16:02:57Z"
-  source_revision: "27a303c415108423192528dc81038e990f08a36e"
+  generated_at_utc: "2026-08-31T16:32:42Z"
+  source_revision: "f46397899b709d62f5f3158ac6c613272379cdc0"
   source_state: clean
   completed_batches:
     - QMDB-P2-B01
@@ -27,7 +27,7 @@ p2_freeze:
     - QMDB-P2-B10
   governed_files:
     count: 1502
-    manifest_sha256: 88c9c0bf3413084946d3a2fa04434ea930c23a5e10413709f392bd8984b5a9d0
+    manifest_sha256: ebfcab79ef9b683ed466285f1af4cab1758e3eaaca0621223b1d4aaea22ffb3f
   modules:
     count: 13
     catalog_sha256: be1138a9d8f6db16d5c22e753b6e44ef02829ee9c8b017ce71682ee3b895fb8e
@@ -4158,7 +4158,7 @@ p2_freeze:
       sha256: 512e65d1aed6d4bdea01250f3bb911967a30b3ee437700c5a4623259e7fea3f8
     - path: "tests/Tools/Closeout/P2FreezeTest.php"
       category: CONTROLLED_EXTENSION_POINT
-      sha256: bd1ea630e1f837154cbe358d301b188636fe166676bcec0baa2a2a7db0466680
+      sha256: 9dfd34f741d7c854c935a1a8f8504847374afcca3b6583c393e50132395b5f36
     - path: "tests/Tools/Sbom/ProductionSbomTest.php"
       category: CONTROLLED_EXTENSION_POINT
       sha256: 8a67a0cedbbf8f2c6004bcfb8373f5dcd7eb051e4663b4acd8825e68cc456477
@@ -4494,7 +4494,7 @@ p2_freeze:
       sha256: 35833f8b21e219a1514b5c82dd383d939bc8835bf4b9a9cef7384c419e5f6f27
     - path: "tools/Closeout/P2FreezeVerifier.php"
       category: CONTROLLED_EXTENSION_POINT
-      sha256: 92d999be3da6a933430fdba583d0533a9bc3d8f64e0a9b461df6018b5ca7bbf3
+      sha256: 78cbba90ec369514bc9759d6ddbfa1e46afe46eaf738fd5f754583732f12c303
     - path: "tools/Closeout/generate-engineering-freeze.php"
       category: CONTROLLED_EXTENSION_POINT
       sha256: 16ef5fb46b3da8841b81b551b5c447fa276c307caaa4bbf2838040b1e593185f
