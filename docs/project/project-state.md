@@ -20,6 +20,8 @@
 
 ## Authoritative outcome
 
+P1 Status: COMPLETE
+
 P1 is complete. P2-B01 through P2-B09 satisfy their engineering acceptance criteria. B09 is separated from the
 concurrent B09/B10 commit, frozen, and complete; B10 is not implemented in the current source.
 `QMDB-P1-FRZ-001` governs the resulting repository foundation. The original product and requirements freeze
