@@ -9,8 +9,8 @@ engineering_freeze:
   closeout_batch: QMDB-P1-CLOSE
   freeze_status: APPROVED
   readiness: P1_COMPLETE
-  generated_at_utc: "2026-08-31T06:55:48Z"
-  source_revision: "53360bb22ccfb3b44ed619ba19b422b0ab800c16"
+  generated_at_utc: "2026-08-31T08:00:12Z"
+  source_revision: "f05f482b87a7708b0b07592592c3f6612058872b"
   source_state: governed_clean
   completed_batches:
     - QMDB-P1-B01
@@ -84,7 +84,7 @@ engineering_freeze:
       sha256: 68ca3fba3b7e864770cb61aeb306d4bd4354b68ab4dd38450860c5d823e42a53
     - path: "README.md"
       category: CONTROLLED_EXTENSION_POINT
-      sha256: c0f86ec32722b0dcd34aa86ab4d75061874716cd2bcb53841466dc5ecefd3c9c
+      sha256: a391b53d7b740408067ddc7f507b25e74a965dc0fe9473e809ed798890d07fc1
     - path: "bin/console"
       category: FROZEN_ENGINEERING_FOUNDATION
       sha256: a77ede49773737522a05ebdf5246c6ba8819cada2de1d7d2023a8fdbedc00f0c
