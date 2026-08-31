@@ -6,13 +6,13 @@
 | Project Code | QMDB |
 | Source Baseline | QMDB-BL-001 |
 | Freeze ID | QMDB-P0-FRZ-001 |
-| Batch ID | QMDB-P2-B09 |
+| Batch ID | QMDB-P2-B10 |
 | Document Title | Implementation Entry Point |
 | Document Version | 1.3.0 |
-| Document Status | P1 COMPLETE; P2-B01 THROUGH P2-B08 COMPLETE; P2-B09 REMAINS INCOMPLETE PENDING ENGINEERING-FREEZE VERIFICATION |
+| Document Status | P1 COMPLETE; P2-B01 THROUGH P2-B09 COMPLETE; P2-B10 AUTHORIZED AND IN IMPLEMENTATION |
 | Document Owner Role | Product, Architecture and Engineering Governance |
-| Last Updated | 2026-08-30 |
-| Approval Status | B09 closeout is authorized; B10 remains the unimplemented next batch until B09 closure completes |
+| Last Updated | 2026-08-31 |
+| Approval Status | B10 implementation is explicitly authorized after B09 closure; P2-CLOSE remains separate |
 | Related Documents | [Closeout entry point](../closeout/README.md); [freeze manifest](../closeout/qmdb-p0-baseline-freeze.yaml); [project state](../project/project-state.md) |
 
 ## Purpose
@@ -62,19 +62,25 @@ The artifacts cover phased implementation routing, readiness/completion policy, 
 25. [Security events, audit integrity, and account-state standard](security-events-audit-integrity-and-account-state-standard.md)
     — B09 tamper-evident audit and account-state contract.
 26. [P2-B09 implementation report](reports/QMDB-P2-B09-implementation-report.md) — B09 implementation and closeout state.
+27. [Identity and tenant security hardening standard](identity-and-tenant-security-hardening-standard.md) — B10 route,
+    repository, threat, and adversarial verification boundary.
+28. [P2-B10 historical recovery](reports/QMDB-P2-B10-historical-recovery.md) — selective recovery and reconciliation record.
+29. [P2 threat-model reconciliation](../security/P2-threat-model-reconciliation.md) — B10 control-to-evidence record.
+30. [P2 route-security matrix](../security/P2-route-security-matrix.md) — closed production route inventory.
+31. [P2-B10 security defect register](reports/QMDB-P2-B10-security-defect-register.md) — discovered hardening defects and disposition.
 
 ## Current authorization
 
 P0 remains complete and frozen. P1-B01 through P1-B10 are complete and P1 is closed/frozen. The project-owner recovery
 authorization established conservative executable OD-051/OD-052 contracts, after which P2-B01 through P2-B08 passed
-their mandatory gates. B09 supplies the audit and account-state implementation candidate, but its committed
-engineering-freeze verification remains pending. B10 is the next, unimplemented batch and cannot advance before B09
-closes.
+their mandatory gates. B09 supplies the completed audit and account-state boundary with committed Engineering Freeze
+evidence. The project owner has authorized B10 hardening; B10 remains responsible for its own committed release,
+Engineering Freeze, and evidence before P2-CLOSE can be requested.
 
 ## Exact next action
 
-Complete B09 clean-source validation and committed engineering-freeze verification. Only then can B10 be considered
-for separate authorization.
+Complete the authorized B10 hardening work, commit and validate its clean release, refresh the Engineering Freeze,
+and stop before the separately authorized P2-CLOSE batch.
 
 ## Governance
 

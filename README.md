@@ -537,3 +537,11 @@ Migrations and seeds never run automatically from application bootstrap, HTTP, r
 Readiness performs read-only runtime-account checks and publicly returns only `ready` or `not_ready`. Future AJAX state
 changes must use short bounded application transactions: no transaction remains open during modal display, user think
 time, external calls, or an SSE connection.
+
+## P2-B10 hardening verification
+
+The active B10 batch adds a closed 88-route security catalog, a closed tenant-repository inventory, and bounded
+read-only commands: `security:routes:verify`, `security:tenant-repositories:verify`, and `security:p2:verify`.
+They supplement—not replace—the authentication, authorization, Tenant Context, privileged-access, and audit controls
+implemented by B01–B09. B10 records local automated evidence only; independent penetration testing, production key
+custody, hosting configuration, and deployment remain external operational gates.

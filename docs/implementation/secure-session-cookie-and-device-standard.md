@@ -107,3 +107,9 @@ Workspace selection is authoritative only in `user_sessions`, is independent per
 `tenant_context_version`. Switching or clearing does not change the authentication session version, token hashes,
 rotation, assurance, device record, or cookie. New sessions begin unselected; device-cookie reuse never restores a
 workspace. Revoked or expired sessions cannot resolve or mutate Tenant Context.
+
+## P2-B10 session assurance verification
+
+B10 preserves the existing session and device state machine and adds route-derived anonymous-denial evidence. Session
+secrets, device secrets, cookie material, Tenant Context, roles, and permissions remain absent from fragment bodies,
+client storage authority, and route-security command output.

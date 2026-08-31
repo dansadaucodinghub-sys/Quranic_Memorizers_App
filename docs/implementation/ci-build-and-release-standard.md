@@ -142,3 +142,11 @@ audit checkpoint and verification commands, the scheduler registration, account-
 controls. Required evidence includes hash-chain and checkpoint verification, event/checkpoint tamper rejection,
 authoritative rollback, account suspension/revocation, reactivation without session restoration, base-role and step-up
 authorization, English/Arabic progressive forms, and full prior P2 regression coverage.
+
+## P2-B10 hardening regression gates
+
+The B10 release scope includes only the route-security, tenant-repository, and aggregate read-only verifiers; their
+architecture/HTTP/performance tests; and the reconciled evidence records. Final gates must run the focused and full
+PHP/MySQL/frontend suites, verifiers, repository policy, scanner/SBOM/licence checks, clean-install verification,
+clean committed release build/verification, and a regenerated Engineering Freeze. No release, tag, deployment, or
+remote publication is performed by this batch.

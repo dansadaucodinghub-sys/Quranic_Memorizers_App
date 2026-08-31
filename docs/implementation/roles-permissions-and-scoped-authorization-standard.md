@@ -207,3 +207,10 @@ step-up consumption, and notification intent. The event uses the Platform or exa
 contains only the assignment public ID, role code, scope, reason, and opaque correlation ID. No exceptional access
 source can authorize account suspension or reactivation; those operations use the base-role guard and phishing-resistant
 action-bound step-up only.
+
+## P2-B10 authorization assurance matrix
+
+The B10 aggregate verifier composes the existing catalog verifier with Tenant Context, privileged-access, audit, and
+route verifiers without issuing a grant or mutating data. The authorization matrix retains deny-by-default, exact
+scope, exact active assignment, and assurance-as-necessary-not-sufficient behavior under normal and exceptional
+authorization sources.

@@ -87,3 +87,9 @@ their owning decisions.
 Successful password reset remains a single authoritative transaction and now appends a keyed account audit event
 without including a password, password hash, token, contact value, or recovery challenge secret. The durable security
 notification is still delivered only after commit by the existing scheduler path.
+
+## P2-B10 abuse-evidence reconciliation
+
+B10 retains the B04 recovery behavior and maps its generic response, one-time hashed challenge, idempotent reset,
+session revocation, and safe log boundary to the authentication-abuse matrix. The route inventory additionally keeps
+recovery challenge pages no-store and rejects unclassified mutation policy drift.

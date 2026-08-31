@@ -117,3 +117,9 @@ and CI operation. Production key custody/rotation, multi-version keyring, retent
 provider/frequency/retention, audit disclosure/export policy, and independent verification authority remain governed
 open decisions. P2-B10 owns future identity and tenant hardening, not this ledger's automated risk scoring, account
 closure/deletion, SIEM, or automated suspension.
+
+## P2-B10 hardening interface
+
+The B10 aggregate verifier consumes the existing read-only audit-control verifier and never creates a checkpoint or
+replays full history. Audit integrity remains tamper-evident, not tamper-proof; the adversarial matrix records the
+remaining key-custody and external-witness evidence as operational, not resolved source-code risk.

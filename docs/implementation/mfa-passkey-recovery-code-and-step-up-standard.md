@@ -166,3 +166,9 @@ factor recovery, and final production recency/attempt parameters remain governed
 MFA enablement/disablement, TOTP and passkey lifecycle changes, recovery-code use/regeneration, and passkey counter
 suspension append safe account audit evidence in their existing authoritative transactions. Audit metadata is an
 allowlisted canonical map and never contains a secret, assertion, recovery code, authenticator material, or contact data.
+
+## P2-B10 abuse-evidence reconciliation
+
+B10 maps the existing pre-auth, TOTP, recovery-code, WebAuthn, and action-bound step-up replay/concurrency tests to
+the reconciled threat model. It adds no password fallback, RP ID, origin, user-verification, authenticator, or
+continuation policy; configuration and service-level checks remain the source of truth.

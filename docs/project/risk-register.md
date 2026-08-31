@@ -499,3 +499,13 @@ recovery-authorized B01 normalization contract.
 | Final platform security administrator is suspended | Locked last-usable-administrator protection rejects the operation | MITIGATED by concurrency and authorization tests |
 | Security evidence is disclosed by a viewer | Viewer authorization is base-role scoped, responses are bounded/no-store, and routes do not export raw records | MITIGATED locally; disclosure/export policy remains OPEN |
 | Integrity verification is ignored operationally | CLI returns failure on invalid evidence and readiness has no external-witness claim | DETECTABLE; incident-response runbook remains OPEN |
+
+## P2-B10 identity and tenant hardening risk treatment
+
+| Risk | Implemented treatment | Current disposition |
+| --- | --- | --- |
+| A production route is added without security classification | Closed route catalog and `security:routes:verify` reject unclassified/retired policy entries | MITIGATED locally; future route batches must update the catalog and matrix |
+| Tenant repository scope drifts to a public-ID-only or unscoped SQL path | Closed contract/implementation inventory requires `TenantContext`, trusted workspace derivation, and exact workspace predicate | MITIGATED for the current two P2 tenant repositories; future repositories require registration |
+| Aggregate P2 health incorrectly replays audit history or mutates state | `security:p2:verify` composes bounded read-only controls; full audit replay remains explicit | MITIGATED locally; production monitoring policy remains OPEN |
+| Recovery-code UI persists or transmits one-time codes | Deterministic client test prohibits browser storage, cookie, and network sinks in the display controller | MITIGATED locally; user-side handling remains an operational risk |
+| Local performance evidence is misrepresented as production capacity | Tests enforce bounded operation regression tripwires and documentation records caveats | MITIGATED against false local claims; production capacity testing remains BLOCKS_DEPLOYMENT |

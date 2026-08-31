@@ -2,7 +2,7 @@
 
 This map routes the frozen P0 requirements into executable P2 ownership. It does not change requirement meaning.
 `QMDB-RECOVERY-RUN-001` resolved the historical entry block conservatively and authorizes only sequential B01–B05
-execution. B01 through B08 are complete; B09 is the active implementation candidate pending closeout verification.
+execution. B01 through B09 are complete; B10 is the active hardening batch and owns cumulative P2 security evidence.
 
 | Capability | Requirement IDs | Batch | Owning module | Migration group | Security controls | Acceptance scenarios/invariants | Test type |
 | --- | --- | --- | --- | --- | --- | --- | --- |

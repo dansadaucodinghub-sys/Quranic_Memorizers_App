@@ -122,3 +122,9 @@ Mutation fetches include the current server-rendered `X-QMDB-Tenant-Context-Vers
 workspace authority header. The Tenant Context controller reads only version metadata, persists nothing, and limits
 cross-tab `BroadcastChannel` messages to a fixed type and positive version. Workspace switching uses ordinary forms,
 duplicate-submit protection, busy state, same-origin navigation, and no automatic retry or modal.
+
+## P2-B10 verification addendum
+
+The B10 frontend regressions prove that recovery-code display uses neither browser storage, cookies, nor network
+transport after the server renders it. Fragment-policy tests remain the executable boundary for exact media type,
+marker, origin, form, script, style, event-handler, `javascript:` URL, stale-response, no-retry, and focus behavior.

@@ -538,3 +538,14 @@ elsewhere or authorize permissions owned by future business modules.
 | Integrity-verification failure incident response | Security Operations / Incident Response | Before production rollout | BLOCKS_DEPLOYMENT | CLI verifies and fails closed; containment, notification, and escalation runbook remain external decisions |
 | Account-state reason taxonomy and suspension duration policy | Product / Security / Legal | Before automated or duration-based state changes | BLOCKS_ACCOUNT_STATE_AUTOMATION | B09 accepts governed reason codes and bounded confidential justification; it creates no automated scoring or expiry action |
 | Production action-rate and TTL values | Security / Operations | Before production configuration | BLOCKS_DEPLOYMENT | Typed bounds exist; final operational values require deployment approval |
+
+## P2-B10 hardening operational evidence
+
+| Decision | Owner role | Required point | Classification | Implemented disposition |
+| --- | --- | --- | --- | --- |
+| Independent adversarial penetration test | Security Governance | Before production rollout | BLOCKS_DEPLOYMENT | B10 provides deterministic local abuse, route, isolation, and fault tests only; no external penetration test is claimed |
+| Production HTTP proxy and request-smuggling configuration | Platform Operations / Security | Before deployment | BLOCKS_DEPLOYMENT | Application rejects hostile request targets and ignores untrusted forwarded identity; reverse-proxy parsing remains infrastructure-owned |
+| Production WebAuthn RP ID/origin allowlist | Identity Operations / Security | Before production enablement | BLOCKS_DEPLOYMENT | Startup validation and test configuration exist; approved deployed origins are not invented locally |
+| Audit integrity-key custody, rotation, and independent checkpoint publication | Key Management / Compliance | Before external-witness claim | BLOCKS_DEPLOYMENT | Versioned key selection and local tamper detection are implemented; custody and publication remain external |
+| Production performance, capacity, and rate-limit tuning | SRE / Security Operations | Before production release | BLOCKS_DEPLOYMENT | B10 records bounded local regression evidence only and makes no production capacity/SLO claim |
+| Tenant repository expansion governance | Architecture / Security | Each future tenant-owned repository batch | NON_BLOCKING_B10 | New repository contracts must enter the closed verifier inventory with MySQL isolation evidence |

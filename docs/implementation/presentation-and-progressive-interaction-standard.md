@@ -125,3 +125,9 @@ Security-event lists, platform audit views, and integrity status remain bounded,
 pages. Severity and outcome are textual as well as visual; raw metadata, integrity keys, justification, internal IDs,
 and mutation controls are never rendered. Account-state confirmation uses explicit destructive language, associated
 reason and justification guidance, an accessible modal title, and an equivalent English/Arabic RTL full-page flow.
+
+## P2-B10 route and fragment assurance
+
+The B10 route matrix derives anonymous full-page and fragment denials from the registered route set. A fragment never
+establishes authority: protected requests return the established safe authentication/forbidden boundary, retain no
+session identifier in the body, and do not bypass ordinary CSRF, no-store, and same-origin navigation rules.

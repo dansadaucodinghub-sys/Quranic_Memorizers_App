@@ -73,3 +73,9 @@ Completion evidence requires real MySQL migration/seed/constraint verification, 
 authorization and Tenant Context regressions, scheduler checks, architecture and static analysis, frontend quality,
 release verification, and P0/P1 freeze rechecks. P2-B09 owns tamper-evident audit integrity and account-state
 operations; this module's lifecycle events are not represented as a B09 audit guarantee.
+
+## P2-B10 adversarial assurance
+
+B10 reconciles temporary privilege, support access, and break-glass lifecycle abuse tests with the closed route and
+authorization inventories. The hardening commands do not activate, approve, revoke, extend, or review privileged
+access; all state transitions remain under the existing transaction and exact step-up controls.

@@ -93,3 +93,9 @@ create a browser, queue, polling, or email-delivery execution path.
 stream heads, and creates a checkpoint only when the ledger has changed. It performs no full-ledger verification,
 does not publish externally without a separately configured publisher, returns normally to the scheduler, and exposes
 neither event metadata nor the audit integrity key in scheduler output or logs.
+
+## P2-B10 scheduler verification boundary
+
+B10 validates the registered task inventory and reuses the existing scheduler concurrency, bounded lease, idempotency,
+tenant revalidation, and no-payload-logging tests. It adds no worker route, durable queue, persistent cache, external
+publisher, or schedule-triggered full audit scan.

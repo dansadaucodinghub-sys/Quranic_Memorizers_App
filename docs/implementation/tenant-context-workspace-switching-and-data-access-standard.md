@@ -114,3 +114,9 @@ End, revocation, and expiry leave the normal selection empty; no prior context i
 detects a structurally conflicting normal/privileged context, clears the normal selection and safely revokes the
 exceptional activation. Tenant-aware repositories therefore retain the B07 exact-workspace rule even while a
 privileged workspace context supplies the scope.
+
+## P2-B10 tenant-repository verification
+
+`security:tenant-repositories:verify` maintains a closed P2 inventory of tenant-owned repository contracts and their
+MySQL implementations. Every listed method must take trusted `TenantContext`, derive `workspace_id` from it, and avoid
+public-ID-only lookup paths; account workspace inventory and global repositories remain named, bounded exceptions.

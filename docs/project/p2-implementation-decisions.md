@@ -192,7 +192,7 @@ Implemented decision profile:
 
 ## P2-ADR-009 — Keyed security-audit and account-state control boundary
 
-- **Status:** Approved and implemented by QMDB-P2-B09; formal closeout remains pending committed freeze verification.
+- **Status:** Approved and implemented by QMDB-P2-B09; B09 is complete and remains governed by its committed Engineering Freeze.
 - **Audit decision:** Maintain independent `PLATFORM`, `ACCOUNT`, and `WORKSPACE` streams with canonical allowlisted
   metadata, SHA-256 metadata digests, versioned HMAC-SHA-256 event chains, per-stream sequence heads, append-only
   database enforcement, and deterministic checkpoint snapshots. Every event is appended inside the authoritative
@@ -206,8 +206,32 @@ Implemented decision profile:
   access.
 - **Integrity boundary:** This is keyed, tamper-evident, append-oriented evidence, not a claim of tamper-proof or
   externally witnessed history. An administrator who controls both database and integrity key remains a residual risk.
-- **Boundary:** No external checkpoint publisher, audit export, retention purge, automated suspension, risk scoring,
-  account closure, or B10 hardening work is implemented.
+- **Boundary:** No external checkpoint publisher, audit export, retention purge, automated suspension, risk scoring, or
+  account closure is implemented. B10 may consume the bounded audit-control verifier but cannot weaken this ledger.
 - **Future review conditions:** Key custody/rotation, checkpoint publication, retention/legal hold, disclosure/export,
   verification incident response, account-state policy, and deployment values require their owning approvals and
   executable evidence.
+
+## P2-ADR-010 — Closed production-route security inventory
+
+- **Status:** Approved and implemented by QMDB-P2-B10; final B10 closeout remains subject to the current committed
+  release and Engineering Freeze evidence.
+- **Decision:** The production route set is closed by name in `ProductionRouteSecurityPolicyCatalog`. Each registered
+  route receives explicit public/authenticated/tenant/base-role classification and policy metadata for tenant context,
+  permission, assurance, step-up, CSRF, idempotency, content type, and no-store behavior. `RouteCollection` remains
+  responsible for rejecting duplicate names and ambiguous overlapping patterns.
+- **Consequences:** Adding, removing, or changing a governed route requires catalog and matrix reconciliation; the
+  read-only `security:routes:verify` command fails closed on catalog drift. The catalog is a verifier, not a second
+  route-registration system or authorization engine.
+
+## P2-ADR-011 — Closed tenant-repository and aggregate P2 verification
+
+- **Status:** Approved and implemented by QMDB-P2-B10; final B10 closeout remains subject to the current committed
+  release and Engineering Freeze evidence.
+- **Decision:** P2 tenant-owned repository contracts and implementations are maintained as a finite source-path
+  inventory. Every listed public repository operation requires trusted `TenantContext`, derives its exact
+  `workspace_id` scope from it, and cannot use a public-ID-only lookup; global and account-scoped repositories are
+  named exceptions. `security:p2:verify` composes authorization, tenant context, tenant repository, privileged-access,
+  audit-control, and route checks without tests, scanners, data mutation, or historical audit replay.
+- **Consequences:** A future tenant repository must be intentionally classified in its owning batch. This does not
+  create a generic repository discovery mechanism, query cache, tenant header authority, or background worker path.
