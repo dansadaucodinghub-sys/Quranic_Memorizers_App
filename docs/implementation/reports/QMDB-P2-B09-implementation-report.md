@@ -51,13 +51,13 @@ audit-readiness prerequisites. No history was rewritten and no push occurred.
   migrations and three governed seeds, then restored and verified the canonical schema afterward.
 - Command-level verification passed: authorization, Tenant Context, privileged access and audit verification; checkpoint
   `CREATED`/`UNCHANGED`; and a 3/3 successful scheduler run.
-- Final clean release source `0ffdfb16e8a6a5312cf217c7ff3475573df120ea` produced
-  `qmdb-0.1.0-dev-0ffdfb16e8a6.tar.gz`, is release-eligible, and passed artifact verification including secret scans,
+- Final clean release source `b2497c19cf5906e232dc8ee1e31de5a2dd9ff384` produced
+  `qmdb-0.1.0-dev-b2497c19cf59.tar.gz`, is release-eligible, and passed artifact verification including secret scans,
   Gitleaks, Trivy, CLI, English/Arabic/fragment HTTP, security headers and live MySQL readiness. Archive SHA-256:
-  `db498fb258376af85b6403b71358698c6f081bc0866fd922af0e3d279e231102`; manifest SHA-256:
-  `b9b322f7fccf8085431763296a3a8142d7174ba2758f133819c39ca2e0f432f7`; SBOM SHA-256:
-  `c43fc8af00feef3df1a1023892027b1e6946bc65c7cddd41dd55587c2d39df48`.
-- The governed Engineering Freeze commit `0ffdfb16e8a6a5312cf217c7ff3475573df120ea` verifies successfully. Its
+  `ecbd539e6e1ef781eba90372f723de666a88b48f92fec70630ba4523824e3fd1`; manifest SHA-256:
+  `99acb023316632c261e12c0f4bf25be1af5f35a4310da4434d295525fbdaa371`; SBOM SHA-256:
+  `59534c331a01c07ad6dee64897e36676f9dc3db9c88a6a04eceff57e3bf2c861`.
+- The governed Engineering Freeze commit `b2497c19cf5906e232dc8ee1e31de5a2dd9ff384` verifies successfully. Its
   final clean-source CI passed 33 stages, including 952 PHP tests / 66,902 assertions, 82 MySQL tests / 1,457
   assertions, 51 frontend tests, product-freeze checks, supply-chain scans and release verification.
 
