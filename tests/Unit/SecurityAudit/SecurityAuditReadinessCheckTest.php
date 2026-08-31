@@ -10,6 +10,8 @@ use Qmdb\Modules\SecurityAudit\Application\SecurityAuditControlVerificationRepor
 use Qmdb\Modules\SecurityAudit\Application\SecurityAuditControlVerifier;
 use Qmdb\Modules\SecurityAudit\Application\SecurityAuditReadinessCheck;
 
+#[\PHPUnit\Framework\Attributes\Group('AuditIntegrity')]
+#[\PHPUnit\Framework\Attributes\Group('FaultInjection')]
 final class SecurityAuditReadinessCheckTest extends TestCase
 {
     #[Test]

@@ -1,5 +1,6 @@
 import test from 'node:test';
 import assert from 'node:assert/strict';
+import { readFile } from 'node:fs/promises';
 import { installDom } from './test-dom.js';
 
 installDom();
@@ -23,7 +24,13 @@ test('copies visible codes only through the clipboard without persistence or net
 
     assert.deepEqual(writes, ['AAAA-BBBB\nCCCC-DDDD']);
     assert.deepEqual(messages, ['Recovery codes copied.']);
-    assert.equal(globalThis.localStorage, undefined);
+    const controllerSource = await readFile(
+        new URL('../../public/assets/js/recovery-code-display-controller.js', import.meta.url),
+        'utf8',
+    );
+    for (const forbiddenClientSink of ['localStorage', 'sessionStorage', 'document.cookie', 'fetch(']) {
+        assert.equal(controllerSource.includes(forbiddenClientSink), false);
+    }
 });
 
 test('hides the copy control when the clipboard API is unavailable', () => {

@@ -49,6 +49,8 @@ use Qmdb\Tests\Support\MySql\MySqlIntegrationTestCase;
 use Qmdb\Tests\Support\Observability\InMemoryEventLogger;
 use Qmdb\Tests\Support\TenancyContext\AccountWorkspaceTenantContextFactory;
 
+#[\PHPUnit\Framework\Attributes\Group('AuthorizationMatrix')]
+#[\PHPUnit\Framework\Attributes\Group('FaultInjection')]
 final class P2SecurityAuthorizationAdministrationIntegrationTest extends MySqlIntegrationTestCase
 {
     private PDO $connection;

@@ -29,6 +29,8 @@ use Qmdb\Tests\Support\IdentityAccess\FixedIdentityClock;
 use Qmdb\Tests\Support\MySql\AuthorizationMySqlFixture;
 use Qmdb\Tests\Support\MySql\MySqlIntegrationTestCase;
 
+#[\PHPUnit\Framework\Attributes\Group('TenantIsolation')]
+#[\PHPUnit\Framework\Attributes\Group('Concurrency')]
 final class P2TenantContextHttpIntegrationTest extends MySqlIntegrationTestCase
 {
     private const string PASSWORD = 'Strong passphrase 123!';

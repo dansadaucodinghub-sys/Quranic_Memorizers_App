@@ -9,6 +9,8 @@ use PHPUnit\Framework\TestCase;
 use Qmdb\Tests\Support\Http\HttpTestFactory;
 use Qmdb\Tests\Support\Http\ProductionHttpRuntimeFactory;
 
+#[\PHPUnit\Framework\Attributes\Group('MfaAbuse')]
+#[\PHPUnit\Framework\Attributes\Group('WebAuthnAbuse')]
 final class P2IdentityMultiFactorHttpTest extends TestCase
 {
     public function testLoginKeepsPasswordFallbackAndAddsProgressivePasskeyControl(): void

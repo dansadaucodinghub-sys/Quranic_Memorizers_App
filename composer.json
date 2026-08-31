@@ -41,7 +41,7 @@
     }
   },
   "scripts": {
-    "test": "php vendor/bin/phpunit --configuration phpunit.xml.dist",
+    "test": "php vendor/bin/phpunit --configuration phpunit.xml.dist --testsuite Quality",
     "test:mysql": "php tools/Ci/run-mysql-tests.php",
     "analyse": "php vendor/bin/phpstan analyse --configuration phpstan.neon.dist --no-progress --memory-limit=1G",
     "cs:check": "php vendor/bin/phpcs --standard=phpcs.xml.dist --warning-severity=0",

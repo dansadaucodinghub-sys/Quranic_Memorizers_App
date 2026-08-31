@@ -21,6 +21,7 @@ use Qmdb\Modules\SecurityAudit\Domain\SecurityEventCode;
 use Qmdb\Modules\SecurityAudit\Domain\SecurityEventCodeCatalog;
 use Qmdb\Shared\Identifier\UuidV7;
 
+#[\PHPUnit\Framework\Attributes\Group('AuditIntegrity')]
 final class SecurityAuditFoundationTest extends TestCase
 {
     public function testStreamIdentityIsDeterministicAndScopeRulesAreEnforced(): void

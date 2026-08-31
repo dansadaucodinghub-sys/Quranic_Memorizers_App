@@ -13,6 +13,7 @@ use Qmdb\Shared\Observability\Logging\SensitiveValueRedactor;
 use Qmdb\Tests\Support\Observability\ExplosiveJsonSerializable;
 use Qmdb\Tests\Support\Observability\ExplosiveStringable;
 
+#[\PHPUnit\Framework\Attributes\Group('SecurityHardening')]
 final class ContextSanitizationTest extends TestCase
 {
     public function testSupportedValuesArePreservedAndDatesBecomeUtc(): void

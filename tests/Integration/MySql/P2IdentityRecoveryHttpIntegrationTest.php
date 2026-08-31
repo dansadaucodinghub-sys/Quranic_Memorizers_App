@@ -51,6 +51,7 @@ use Qmdb\Shared\Presentation\Response\FragmentRequestDetector;
 use Qmdb\Shared\Schema\Migration\Migration;
 use Qmdb\Tests\Support\MySql\MySqlIntegrationTestCase;
 
+#[\PHPUnit\Framework\Attributes\Group('AuthenticationAbuse')]
 final class P2IdentityRecoveryHttpIntegrationTest extends MySqlIntegrationTestCase
 {
     private const PASSWORD = 'Strong passphrase 123!';

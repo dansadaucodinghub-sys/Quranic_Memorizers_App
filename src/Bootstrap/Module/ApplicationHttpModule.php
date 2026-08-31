@@ -74,6 +74,9 @@ use Qmdb\Shared\Http\Middleware\SecurityHeadersMiddleware;
 use Qmdb\Shared\Http\Request\NativeServerRequestFactory;
 use Qmdb\Shared\Http\Response\ResponseEmitter;
 use Qmdb\Shared\Http\Routing\RouteCollection;
+use Qmdb\Shared\Http\Routing\Security\ProductionRouteSecurityPolicyCatalog;
+use Qmdb\Shared\Http\Routing\Security\RouteSecurityVerifier;
+use Qmdb\Shared\Http\Routing\Security\RouteSecurityVerifyConsoleCommand;
 use Qmdb\Shared\Http\Routing\Router;
 use Qmdb\Shared\Http\Routing\RoutingRequestHandler;
 use Qmdb\Shared\Module\Module;
@@ -114,6 +117,11 @@ final readonly class ApplicationHttpModule implements Module
 
     public function register(ModuleRegistrationContext $context): void
     {
+        $context->service(ServiceDefinition::instance(
+            ProductionRouteSecurityPolicyCatalog::class,
+            self::ID,
+            new ProductionRouteSecurityPolicyCatalog(),
+        ));
         $context->service(ServiceDefinition::factory(
             ApplicationReadinessController::class,
             self::ID,
@@ -203,6 +211,23 @@ final readonly class ApplicationHttpModule implements Module
 
                 return $routes;
             }),
+        ));
+        $context->service(ServiceDefinition::factory(
+            RouteSecurityVerifier::class,
+            self::ID,
+            [ProductionRouteSecurityPolicyCatalog::class],
+            new ClosureServiceFactory(static fn (DependencyResolver $resolver): RouteSecurityVerifier =>
+                new RouteSecurityVerifier(ServiceReference::get($resolver, ProductionRouteSecurityPolicyCatalog::class))),
+        ));
+        $context->service(ServiceDefinition::factory(
+            RouteSecurityVerifyConsoleCommand::class,
+            self::ID,
+            [RouteCollection::class, RouteSecurityVerifier::class],
+            new ClosureServiceFactory(static fn (DependencyResolver $resolver): RouteSecurityVerifyConsoleCommand =>
+                new RouteSecurityVerifyConsoleCommand(
+                    ServiceReference::get($resolver, RouteCollection::class),
+                    ServiceReference::get($resolver, RouteSecurityVerifier::class),
+                )),
         ));
         $context->service(ServiceDefinition::factory(
             Router::class,

@@ -8,6 +8,8 @@ use Qmdb\Modules\IdentityMultiFactor\Domain\StepUpAction;
 use Qmdb\Tests\Support\MySql\AuthorizationMySqlFixture;
 use Qmdb\Tests\Support\MySql\MySqlIntegrationTestCase;
 
+#[\PHPUnit\Framework\Attributes\Group('AuthorizationMatrix')]
+#[\PHPUnit\Framework\Attributes\Group('Concurrency')]
 final class P2SecurityAuthorizationConcurrencyTest extends MySqlIntegrationTestCase
 {
     private AuthorizationMySqlFixture $fixture;

@@ -28,6 +28,9 @@ use Qmdb\Tests\Support\IdentityAccess\FixedIdentityClock;
 use Qmdb\Tests\Support\MySql\AuthorizationMySqlFixture;
 use Qmdb\Tests\Support\MySql\MySqlIntegrationTestCase;
 
+#[\PHPUnit\Framework\Attributes\Group('AuditIntegrity')]
+#[\PHPUnit\Framework\Attributes\Group('FaultInjection')]
+#[\PHPUnit\Framework\Attributes\Group('SecurityPerformance')]
 final class P2SecurityAuditIntegrationTest extends MySqlIntegrationTestCase
 {
     protected function setUp(): void
@@ -175,6 +178,22 @@ final class P2SecurityAuditIntegrationTest extends MySqlIntegrationTestCase
         $filter = new SecurityAuditListFilter(null, null, null, null, null, null);
         $this->assertInvalidPageSize(static fn () => $repository->listPlatform($filter, null, 101));
         $this->assertInvalidPageSize(static fn () => $repository->listForAccount(UuidV7::generate()->toString(), null, 101));
+    }
+
+    #[Test]
+    public function representativeBoundedAuditListingRemainsPracticalAcrossOneHundredQueries(): void
+    {
+        $repository = new MySqlSecurityAuditRepository($this->provider());
+        $filter = new SecurityAuditListFilter(SecurityEventCode::ACCOUNT_SUSPENDED);
+        $startedAt = hrtime(true);
+        for ($query = 1; $query <= 100; $query++) {
+            $page = $repository->listPlatform($filter, null, 25);
+            self::assertLessThanOrEqual(25, count($page->events));
+        }
+        $milliseconds = (hrtime(true) - $startedAt) / 1_000_000;
+
+        self::assertGreaterThan(0.0, $milliseconds);
+        self::assertLessThan(5000.0, $milliseconds);
     }
 
     /** @param \Closure(): mixed $operation */
