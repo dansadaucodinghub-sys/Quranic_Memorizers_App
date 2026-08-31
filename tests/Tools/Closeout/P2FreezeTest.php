@@ -72,4 +72,16 @@ final class P2FreezeTest extends TestCase
         self::assertSame(83, $method->invoke($generator, $ci, 'mysql-tests', $pattern, 1));
         self::assertSame(1659, $method->invoke($generator, $ci, 'mysql-tests', $pattern, 2));
     }
+
+    public function testFreezeEntryPatternAcceptsTheP2FrozenCategory(): void
+    {
+        $entry = "    - path: \"src/Modules/Identity/Application/RegisterAccount.php\"\n"
+            . "      category: FROZEN_P2_IDENTITY_SECURITY_TENANCY\n"
+            . '      sha256: ' . str_repeat('a', 64);
+
+        self::assertSame(1, preg_match(
+            '/^\\s+- path: "([^"]+)"\\R\\s+category: ([A-Z0-9_]+)\\R\\s+sha256: ([a-f0-9]{64})\\s*$/m',
+            $entry,
+        ));
+    }
 }

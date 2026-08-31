@@ -40,7 +40,7 @@ final readonly class P2FreezeVerifier
             $report->check(str_contains($yaml, $required), 'P2 freeze identity is missing: ' . $required);
         }
         $report->check(!preg_match('/^[A-Za-z]:[\\\\\/]/m', $yaml), 'P2 freeze contains a Windows absolute path.');
-        preg_match_all('/^\s+- path: "([^"]+)"\R\s+category: ([A-Z_]+)\R\s+sha256: ([a-f0-9]{64})\s*$/m', $yaml, $matches, PREG_SET_ORDER);
+        preg_match_all('/^\s+- path: "([^"]+)"\R\s+category: ([A-Z0-9_]+)\R\s+sha256: ([a-f0-9]{64})\s*$/m', $yaml, $matches, PREG_SET_ORDER);
         $report->check(count($matches) > 1_000, 'P2 freeze must govern the P2 source and evidence boundary.');
         $paths = [];
         foreach ($matches as $match) {
