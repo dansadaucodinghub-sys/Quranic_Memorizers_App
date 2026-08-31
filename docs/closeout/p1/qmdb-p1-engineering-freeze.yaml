@@ -9,8 +9,8 @@ engineering_freeze:
   closeout_batch: QMDB-P1-CLOSE
   freeze_status: APPROVED
   readiness: P1_COMPLETE
-  generated_at_utc: "2026-08-31T21:47:38Z"
-  source_revision: "1e7a53768fb4c6bc906934f189f6e9e0ef70210f"
+  generated_at_utc: "2026-08-31T21:54:15Z"
+  source_revision: "d80803c66157a8b6c2c4add563f175b258c38454"
   source_state: governed_clean
   completed_batches:
     - QMDB-P1-B01
@@ -3756,7 +3756,7 @@ engineering_freeze:
       sha256: 3688e7a86c25706c12a94ddb07000d84fe449379c475e9dceacfb2ee8f3b47ee
     - path: "tests/Integration/Bootstrap/ApplicationFactoryTest.php"
       category: FROZEN_ENGINEERING_FOUNDATION
-      sha256: ecbda2b76a30c6b13ebf7a788308747d4b8b15995589fc8be2025c8c69382c60
+      sha256: b6ed4e3188a7601022d4fe3e67883e0cf794615a9a544aa58796c97f96bc0b1f
     - path: "tests/Integration/Bootstrap/FoundationCompilationTest.php"
       category: FROZEN_ENGINEERING_FOUNDATION
       sha256: 8e248cac47162a9adb66116e6fc29815efd8403f8983cb05b5d5ed6cf6004f02
@@ -3765,13 +3765,13 @@ engineering_freeze:
       sha256: e41bee1cac94757fd9466c39b5999fa146f2228b22fbe32003dae0b614a791eb
     - path: "tests/Integration/Console/BackgroundConsoleIntegrationTest.php"
       category: FROZEN_ENGINEERING_FOUNDATION
-      sha256: a2fe7c4b013f6efc779b29f4bfc0831cc50693d1415bb0a49edf47ecf2dc35bc
+      sha256: d4b8c844993bac1038fc096f68d5a264a9ff3947de837963e78c4556aa3cf94c
     - path: "tests/Integration/Console/Observability/ConsoleObservabilityIntegrationTest.php"
       category: FROZEN_ENGINEERING_FOUNDATION
       sha256: 3862ef88094551fac3c791c324648036b986150182ef5cb8bafd35aceb7373a3
     - path: "tests/Integration/ConsoleApplicationTest.php"
       category: FROZEN_ENGINEERING_FOUNDATION
-      sha256: f41443db8771ec08db87d1ba441d291e5183b1f47a3fc5bfc048ba28a33c25a3
+      sha256: e6c6d1d3926166e54f2c154af043d101e8e99fb2829d5bb9fe279e9bb64a10cb
     - path: "tests/Integration/Http/ApplicationFactoryHttpRuntimeTest.php"
       category: FROZEN_ENGINEERING_FOUNDATION
       sha256: d79c8d8af0208c08155aa6e87a672245dae56b13b92d1b41362d023b8ddb52a0
@@ -3780,7 +3780,7 @@ engineering_freeze:
       sha256: 444e042623f21761b2b4de5fd759c024ad71fd0afcb0affacf36688b9ce4b14d
     - path: "tests/Integration/Http/HttpRoutesTest.php"
       category: FROZEN_ENGINEERING_FOUNDATION
-      sha256: 2f683791f49834edb7d68c93e178141861d6b605ef17d34d8d39dbda0e89b6fd
+      sha256: 6f4fe0b69ddba2864b86672a050898528075f664b3e265fc246bde69203afaba
     - path: "tests/Integration/Http/NativeServerRequestFactoryTest.php"
       category: FROZEN_ENGINEERING_FOUNDATION
       sha256: 7519e7694fbfcfccbb5beed9542bc4d2134bbe70ba6bf9e5f8a9cf099cbc95c1
@@ -4173,7 +4173,7 @@ engineering_freeze:
       sha256: 02d82d1d25ce2093681851240f6f62352ef586e219570a6043d76b878eaa18da
     - path: "tests/Unit/ApplicationMetadataTest.php"
       category: FROZEN_ENGINEERING_FOUNDATION
-      sha256: a8e5adc4f6dab066afbd201cedab95741aeb11e14cb3430d0e7c56215e4884e6
+      sha256: b9768a945b0088199fe612cc3337aade74ebc5a6d802ecfa26d3b357d19ba0bd
     - path: "tests/Unit/Architecture/P2TenantContextArchitectureTest.php"
       category: FROZEN_ENGINEERING_FOUNDATION
       sha256: 67ae4f8d7aeb0fc310417b207ff59ac505f401ab8b4583da31fb4f1724342d37
@@ -4260,7 +4260,7 @@ engineering_freeze:
       sha256: fa4fc2979d1ea40eaf0b55d9434956f4a206671fdcd577539fdd52287ed02ea5
     - path: "tests/Unit/Shared/Application/SystemInformationTest.php"
       category: FROZEN_ENGINEERING_FOUNDATION
-      sha256: b52d911c21485a14f8bcd94a9dda1e19faeee15f9b5b112619a4ef8a151bf4c6
+      sha256: 85688fe74b5f1760bc06ae8445c57b58b47cc6fd7138bbf74ab54b6542610886
     - path: "tests/Unit/Shared/Background/BackgroundConfigurationTest.php"
       category: FROZEN_ENGINEERING_FOUNDATION
       sha256: d607924fdddc469ba6bab2ddf81ebe60135c7fe70a768919a2fd790198b2295b
