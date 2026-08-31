@@ -18,7 +18,7 @@ assurance:
   - QMDB-P2-FRZ-001 remains unmodified as the historical P2 baseline.
   - P2 controlled-extension entries remain inventoried without rewriting QMDB-P2-FRZ-001.
   - New P3 geography source is excluded only from the P2 inventory by the explicit policy prefix list.
-  - The P3 composition bridge may update only ApplicationFactory, ApplicationMetadata, ApplicationHttpModule,
-    ConsoleFoundationModule, PresentationFoundationModule, ApplicationReadinessController, and
-    ProductionRouteSecurityPolicyCatalog; each is verified as a named authorization exception rather than silently
-    rewriting the P2 manifest.
+  - The P3 composition bridge may update only the existing application JavaScript entry point, ApplicationFactory,
+    ApplicationMetadata, ApplicationHttpModule, ConsoleFoundationModule, PresentationFoundationModule,
+    ApplicationReadinessController, and ProductionRouteSecurityPolicyCatalog; each is verified as a named
+    authorization exception rather than silently rewriting the P2 manifest.

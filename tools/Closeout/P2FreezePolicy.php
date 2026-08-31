@@ -51,6 +51,7 @@ final class P2FreezePolicy
 
     /** @var list<string> */
     private const P3_B01_MUTABLE_EXISTING_PATHS = [
+        'public/assets/js/app.js',
         'src/Bootstrap/ApplicationFactory.php',
         'src/Bootstrap/ApplicationMetadata.php',
         'src/Bootstrap/Module/ApplicationHttpModule.php',
