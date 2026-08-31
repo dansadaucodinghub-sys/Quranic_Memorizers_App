@@ -54,4 +54,22 @@ final class P2FreezeTest extends TestCase
         self::assertStringContainsString('identifier: P3', $first);
         self::assertStringContainsString('status: NOT_STARTED_NOT_AUTHORIZED', $first);
     }
+
+    public function testCiCountParsesPassingPhpAndMySqlEvidence(): void
+    {
+        $generator = new P2FreezeGenerator();
+        $method = new \ReflectionMethod($generator, 'ciCount');
+        $ci = [
+            'steps' => [
+                ['name' => 'php-tests', 'status' => 'passed', 'output' => 'OK (941 tests, 66747 assertions)'],
+                ['name' => 'mysql-tests', 'status' => 'passed', 'output' => 'OK (83 tests, 1659 assertions)'],
+            ],
+        ];
+        $pattern = '/OK \\((\\d+) tests, (\\d+) assertions\\)/';
+
+        self::assertSame(941, $method->invoke($generator, $ci, 'php-tests', $pattern, 1));
+        self::assertSame(66747, $method->invoke($generator, $ci, 'php-tests', $pattern, 2));
+        self::assertSame(83, $method->invoke($generator, $ci, 'mysql-tests', $pattern, 1));
+        self::assertSame(1659, $method->invoke($generator, $ci, 'mysql-tests', $pattern, 2));
+    }
 }
