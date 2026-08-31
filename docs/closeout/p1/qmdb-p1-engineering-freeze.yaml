@@ -9,8 +9,8 @@ engineering_freeze:
   closeout_batch: QMDB-P1-CLOSE
   freeze_status: APPROVED
   readiness: P1_COMPLETE
-  generated_at_utc: "2026-08-31T12:19:46Z"
-  source_revision: "f0bbc09f11ce34aa5ac80cd80fcfcf7953654876"
+  generated_at_utc: "2026-08-31T13:50:42Z"
+  source_revision: "97ef949cd37ce56dceb22093ecc88795df0be139"
   source_state: governed_clean
   completed_batches:
     - QMDB-P1-B01
@@ -84,7 +84,7 @@ engineering_freeze:
       sha256: 68ca3fba3b7e864770cb61aeb306d4bd4354b68ab4dd38450860c5d823e42a53
     - path: "README.md"
       category: CONTROLLED_EXTENSION_POINT
-      sha256: c2e7297325b9e749780b9fb2d5569bfb42b9c60eae3ac9930826d372acb3d932
+      sha256: 1a9f0cfc9e986e0c3710e34d630cc56f5d89fad9d7f5d372e116cdd062936455
     - path: "bin/console"
       category: FROZEN_ENGINEERING_FOUNDATION
       sha256: a77ede49773737522a05ebdf5246c6ba8819cada2de1d7d2023a8fdbedc00f0c
@@ -114,7 +114,7 @@ engineering_freeze:
       sha256: 38e17177df134c056f8e28d39f99da9e1fdd5cf16b054be42793d9700daa17a2
     - path: "docs/implementation/README.md"
       category: FROZEN_ENGINEERING_FOUNDATION
-      sha256: df94309ca65bc64299e611435a723f12203cb847eb9dd42bd0f50b96af737d13
+      sha256: 81f44f271519f4626fc0a5ed0a44c99b2ef2ba00bb3641c98ddd1a39409c43bd
     - path: "docs/implementation/account-recovery-and-security-notification-standard.md"
       category: FROZEN_ENGINEERING_FOUNDATION
       sha256: 4e79b2e719b78e1fb78f6345e2dfa9566c55b5a8dd90805730c909ffa6047b81
@@ -135,7 +135,7 @@ engineering_freeze:
       sha256: 1c2622fd0a219e296f81b7f5b9a0419359be001c8b68832c7ab5bb1a9dde1d0f
     - path: "docs/implementation/identity-and-tenant-security-hardening-standard.md"
       category: FROZEN_ENGINEERING_FOUNDATION
-      sha256: 84f25d7961b9ca8a75060582cc5d049061f458d53f73e030c97e82ddeeabc970
+      sha256: f492e3a4ae93609a80ced04823e21f43b9d96d949aeba131845431b97d3709a6
     - path: "docs/implementation/mfa-passkey-recovery-code-and-step-up-standard.md"
       category: FROZEN_ENGINEERING_FOUNDATION
       sha256: c41b476b5909de2877bf7960b72374d64d95094b4ee9f42b54392c1a00eb1d56
