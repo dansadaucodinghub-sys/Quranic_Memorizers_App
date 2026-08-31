@@ -18,7 +18,6 @@ use Qmdb\Modules\TenancyContext\Application\TenantContextFreshnessValidator;
 use Qmdb\Modules\TenancyContext\Application\SessionTenantContextResolver;
 use Qmdb\Modules\TenancyContext\Application\TenantContextRequiredGuard;
 use Qmdb\Modules\TenancyContext\Application\TenantContextSchemaVerifier;
-use Qmdb\Modules\TenancyContext\Application\TenantRepositorySecurityVerifier;
 use Qmdb\Modules\TenancyContext\Application\WorkspaceContextClearingService;
 use Qmdb\Modules\TenancyContext\Application\WorkspaceContextSelectionService;
 use Qmdb\Modules\TenancyContext\Domain\Repository\SessionTenantContextRepository;
@@ -26,7 +25,6 @@ use Qmdb\Modules\TenancyContext\Infrastructure\Persistence\MySqlSessionTenantCon
 use Qmdb\Modules\TenancyContext\Infrastructure\Persistence\MySqlTenantBoundBackgroundContextRepository;
 use Qmdb\Modules\TenancyContext\Infrastructure\Persistence\MySqlTenantContextSchemaVerifier;
 use Qmdb\Modules\TenancyContext\Interface\Console\TenantContextVerifyConsoleCommand;
-use Qmdb\Modules\TenancyContext\Interface\Console\TenantRepositorySecurityVerifyConsoleCommand;
 use Qmdb\Modules\TenancyContext\Interface\Http\AccountWorkspacesController;
 use Qmdb\Modules\TenancyContext\Interface\Http\CurrentWorkspaceController;
 use Qmdb\Modules\TenancyContext\Interface\Http\TenantContextFormInput;
@@ -178,23 +176,6 @@ final readonly class TenancyContextModule implements Module
             [TenantContextSchemaVerifier::class],
             static fn (DependencyResolver $r): TenantContextVerifyConsoleCommand =>
                 new TenantContextVerifyConsoleCommand(ServiceReference::get($r, TenantContextSchemaVerifier::class))
-        );
-        $this->factory(
-            $context,
-            TenantRepositorySecurityVerifier::class,
-            [],
-            fn (DependencyResolver $r): TenantRepositorySecurityVerifier => new TenantRepositorySecurityVerifier(
-                $this->projectRoot,
-            )
-        );
-        $this->factory(
-            $context,
-            TenantRepositorySecurityVerifyConsoleCommand::class,
-            [TenantRepositorySecurityVerifier::class],
-            static fn (DependencyResolver $r): TenantRepositorySecurityVerifyConsoleCommand =>
-                new TenantRepositorySecurityVerifyConsoleCommand(
-                    ServiceReference::get($r, TenantRepositorySecurityVerifier::class),
-                )
         );
         $this->factory(
             $context,
