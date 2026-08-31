@@ -8,7 +8,8 @@
 | Starting branch | `main` |
 | Starting condition | Combined B09/B10 implementation was committed concurrently; B10 was not authorized for current main |
 | Product-freeze drift | None detected |
-| Resolution status | Forward separation in progress; B09 validation and governed freeze refresh pending |
+| Corrective commit | `a25771a983f9c556cce01840613f3ddb99fb90a1` — `revert(scope): remove unauthorized B10 changes from B09` |
+| Resolution status | B09 source separated and validated; governed freeze refresh pending |
 
 ## Concurrent Combined Commit Separation
 
@@ -46,6 +47,31 @@ quality-suite configuration, and the B10 performance baseline. The historical so
 `b2c44171a43ca691e334fc76a65f572f6ef4c1bc` and local safeguard branch
 `safeguard/qmdb-b09-b10-combined-b2c4417`; no history rewrite, rebase, reset, tag or push is used.
 
+## Corrective-commit and clean-source evidence
+
+An unexpected evidence-only commit, `ebc6134bf35d8a30b16bdfd848cb1fbea66e0840` (`Second Psuh`), arrived before
+the selective reversal began. It added only this B09 blocker report, was audited as compatible B09 evidence and was
+preserved as an ancestor. The corrective commit was then made forward-only from that revision. The advisory closure
+lock guarded the operation; no additional head change was detected after the compatible evidence commit.
+
+- Focused B09 unit/domain evidence: **10 tests, 29 assertions passed**.
+- Focused B09 bootstrap, console, HTTP and metadata evidence: **42 tests, 169 assertions passed**.
+- Guarded real-MySQL B09 matrix: **82 tests, 1,457 assertions passed** in **11:14.939**. It rebuilt the isolated
+  schema, applied 28 migrations and three seeds, and restored the canonical schema with authorization, Tenant Context
+  and schema-ledger verification passing.
+- B09 command verification passed: all migrations applied; no pending seeds; authorization, Tenant Context and
+  privileged-access verification passed; audit checkpoint returned `CREATED` then `UNCHANGED`; audit verification
+  passed; scheduler returned `Due: 3`, `Claimed: 3`, `Succeeded: 3`, `Failed: 0`.
+- Clean release source: `a25771a983f9c556cce01840613f3ddb99fb90a1`; release build and verification passed and the
+  artifact is release-eligible. Archive SHA-256:
+  `bc21e094507340d2c64b648f0f0edcca56000476132519e16d401e528c22f80d`; manifest SHA-256:
+  `1f416d49b3d2841a9cb3f73b3c4c18a014bf0af38fdbe1719412e041776d878d`; SBOM SHA-256:
+  `ce16633f9718a5df6e68961a95c053e427d1a7efce574b7d68e7914edfdca02d`.
+
+The B10 source is absent from current main and remains recoverable exclusively through the historical combined commit
+and safeguard reference. No applied migration or seed was changed, no secret or runtime artifact was committed, and
+no remote publication occurred.
+
 ## Included B09 inventory
 
 The B09 implementation commit includes the security-audit and account-state modules; B09 migration and seed
@@ -81,9 +107,6 @@ No secret-bearing or runtime artifact is staged. No P0-frozen file is modified.
 
 ## Required closeout sequence
 
-1. Commit the reviewed B09 candidate.
-2. Temporarily isolate excluded B10 work from the validation tree.
-3. Run the clean committed B09 release and validation gates.
-4. Commit final B09 evidence and project-state completion.
-5. Generate and commit the engineering-freeze manifest using the repository tool.
-6. Verify the freeze and clean tree without remote publication.
+1. Generate and commit the engineering-freeze manifest using the repository tool.
+2. Verify the freeze and final clean-tree gates without remote publication.
+3. Record the freeze result and project-state completion in dynamic evidence files.

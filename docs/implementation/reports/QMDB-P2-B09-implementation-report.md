@@ -7,8 +7,8 @@
 | Product freeze | QMDB-P0-FRZ-001 |
 | Engineering freeze | QMDB-P1-FRZ-001 |
 | Batch | QMDB-P2-B09 — Security Events, Audit Integrity, and Account State Operations |
-| Scope status | Implementation complete; formal closeout blocked by the required committed engineering-freeze verification |
-| Date | 2026-08-29 |
+| Scope status | B09 source active; final closeout pending governed engineering-freeze refresh |
+| Date | 2026-08-31 |
 
 ## Delivered scope
 
@@ -37,28 +37,28 @@ The ledger is keyed, tamper-evident, append-oriented, and externally checkpointa
 tamper-proof, externally witnessed, or immune to an administrator who controls both MySQL and the integrity key.
 No external checkpoint publisher is configured.
 
-## Executable evidence
+## Corrected-source executable evidence
 
-- Focused B09 architecture, bootstrap, console, HTTP, metadata, and configuration regression set: **79 tests, 44,547
-  assertions passed** on PHP 8.5.10.
-- Final isolated MySQL schema and concurrency matrix: **81 tests, 1,448 assertions passed**. It rebuilt all 28 migrations
-  and all three authorization catalogs before tests, then restored and verified the canonical schema afterward.
-- The final `composer ci` invocation passed repository policy (3,027 checks), frozen-baseline verification (177 checks),
-  workflow validation (47 checks), Markdown links (1,010 checks), lockfile checks (15 checks), Composer validation,
-  audit, autoload, platform requirements, PHP syntax (1,351 files), PHPCS, and PHPStan.
-- Its locked PHPUnit stage ran 949 tests with 66,581 assertions and had exactly one failure: the required
-  `EngineeringFreezeTest` rejection of uncommitted governed B09 paths. Because that stage failed, the CI invocation
-  correctly stopped before its downstream frontend, security-scanner, SBOM, licence, release, and final aggregate
-  stages; those stages must not be reported as executed in this closeout state.
+The concurrent combined commit `b2c44171a43ca691e334fc76a65f572f6ef4c1bc` is preserved in history and on local
+reference `safeguard/qmdb-b09-b10-combined-b2c4417`. Forward corrective commit
+`a25771a983f9c556cce01840613f3ddb99fb90a1` removes B10-only route, tenant-repository, aggregate-verifier,
+hardening-test, performance and reporting material from current main while retaining B09 and its documented
+audit-readiness prerequisites. No history was rewritten and no push occurred.
+
+- Focused B09 unit/domain evidence: **10 tests, 29 assertions passed**.
+- Focused B09 bootstrap, console, HTTP and metadata evidence: **42 tests, 169 assertions passed**.
+- Final guarded MySQL matrix: **82 tests, 1,457 assertions passed** in **11:14.939**. The runner applied all 28
+  migrations and three governed seeds, then restored and verified the canonical schema afterward.
+- Command-level verification passed: authorization, Tenant Context, privileged access and audit verification; checkpoint
+  `CREATED`/`UNCHANGED`; and a 3/3 successful scheduler run.
+- The clean release from `a25771a983f9c556cce01840613f3ddb99fb90a1` is
+  `qmdb-0.1.0-dev-a25771a983f9.tar.gz`, is release-eligible, and passed artifact verification including secret scans,
+  Gitleaks, Trivy, CLI, English/Arabic/fragment HTTP, security headers and live MySQL readiness.
 
 ## Closeout condition
 
-The batch instruction explicitly prohibits this agent from making a Git commit. The existing engineering-freeze verifier
-correctly rejects every uncommitted governed path, and the locked PHPUnit suite invokes that verifier. The generated
-candidate therefore remains blocked by the cumulative governed implementation changes in the working tree, including
-B09. The implementation is deliberately not recorded as `COMPLETE` and QMDB-P2-B10 is not authorized. After the owner
-reviews and commits the intended governed change set, regenerate and verify the engineering freeze and run final local
-CI/`composer ci` once more; then update the project state from `CLOSEOUT BLOCKED` to `COMPLETE`.
+B09 source and release gates are complete. The remaining closure step is the governed engineering-freeze refresh and
+its final clean-tree verification. B10 is not implemented on current main and remains the next batch only.
 
 ## Open operational decisions
 
