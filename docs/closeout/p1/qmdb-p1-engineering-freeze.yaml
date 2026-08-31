@@ -9,8 +9,8 @@ engineering_freeze:
   closeout_batch: QMDB-P1-CLOSE
   freeze_status: APPROVED
   readiness: P1_COMPLETE
-  generated_at_utc: "2026-08-31T06:49:37Z"
-  source_revision: "7063478906beb79ef5485d926a0018dd3afc82bd"
+  generated_at_utc: "2026-08-31T06:55:48Z"
+  source_revision: "53360bb22ccfb3b44ed619ba19b422b0ab800c16"
   source_state: governed_clean
   completed_batches:
     - QMDB-P1-B01
@@ -609,7 +609,7 @@ engineering_freeze:
       sha256: 191add71f0c0b08d5a0cafd2428b33884decef6aa9e1c81d791e905df4d7252d
     - path: "src/Bootstrap/Module/TenancyContextModule.php"
       category: CONTROLLED_EXTENSION_POINT
-      sha256: 4451ab8e26a73bde87271ec70fea4d9d328b50f116c3220d2394d4a2aa1e0225
+      sha256: a413c79ab51548c3d560938cda9ae2e6dc869fe77ef6b20e002720f761fdd934
     - path: "src/Bootstrap/Module/TenancyFoundationModule.php"
       category: CONTROLLED_EXTENSION_POINT
       sha256: d77746a1c66f36181aef0c79744bca3b14ec183ee661f53ab9c3f29c0c633908
