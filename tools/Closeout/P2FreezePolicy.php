@@ -59,6 +59,8 @@ final class P2FreezePolicy
         'src/Bootstrap/Module/PresentationFoundationModule.php',
         'src/Modules/IdentitySessions/Interface/Http/ApplicationReadinessController.php',
         'src/Shared/Http/Routing/Security/ProductionRouteSecurityPolicyCatalog.php',
+        'tools/Build/ReleaseFilePolicy.php',
+        'tests/Tools/Build/ReleaseFilePolicyTest.php',
     ];
 
     public function __construct(private readonly PathPolicy $pathPolicy = new PathPolicy())

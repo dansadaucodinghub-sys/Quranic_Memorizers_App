@@ -22,3 +22,6 @@ assurance:
     ApplicationMetadata, ApplicationHttpModule, ConsoleFoundationModule, PresentationFoundationModule,
     ApplicationReadinessController, and ProductionRouteSecurityPolicyCatalog; each is verified as a named
     authorization exception rather than silently rewriting the P2 manifest.
+  - The P3 release composition bridge may update only tools/Build/ReleaseFilePolicy.php and its
+    tests/Tools/Build/ReleaseFilePolicyTest.php regression test so the canonical geography dataset is present in
+    the generated artifact.
