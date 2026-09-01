@@ -50,3 +50,10 @@ Each workflow must be tested in representative LTR and RTL locales, keyboard-onl
 
 Record browser/AT versions, locale, viewport, network profile, tester role, steps, results, defects, remediation and retest. Accessibility conformance review authority remains an open governance decision.
 
+## P3-B02 executed profile evidence
+
+The implemented private profile, dependent and guardianship pages use server-rendered labels, instructions, validation
+responses, keyboard-operable ordinary forms and equivalent progressive updates. English and Arabic templates preserve
+Unicode and RTL rendering; lazy State/FCT child selection has a no-JavaScript form fallback. Automated template,
+route and frontend regression checks are evidence for this batch, not a claim of a completed assistive-technology
+conformance review.

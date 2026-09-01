@@ -1361,3 +1361,11 @@ MySQL is credited only for declared key, foreign-key, unique, generated-column a
 - [Schema conventions](03-mysql-schema-conventions.md)
 - [Indexing and access patterns](07-indexing-and-query-access-patterns.md)
 - [P0-B04 traceability](../requirements/P0-B04-traceability-matrix.md)
+
+## P3-B02 integrity addendum
+
+The People migrations enforce unique active Account SELF links, unique active name-type rows, active Person-role rows,
+and unique active guardian/dependent pairs using generated active markers and foreign keys. Geography associations are
+validated against the B01 parent/child hierarchy. Transactional application checks additionally require the exact
+self-link or active guardianship, an adult Guardian with active Guardian role, a minor dependent, and preservation of
+at least one active guardian for a minor. Those cross-row rules are covered by MySQL integration and concurrency tests.

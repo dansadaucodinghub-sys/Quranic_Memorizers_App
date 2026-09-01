@@ -40,6 +40,13 @@ enum SecurityEventCode: string
     case BREAK_GLASS_REVOKED = 'privileged_access.break_glass.revoked';
     case BREAK_GLASS_EXPIRED = 'privileged_access.break_glass.expired';
     case BREAK_GLASS_REVIEW_COMPLETED = 'privileged_access.break_glass.review_completed';
+    case PERSON_PROFILE_CREATED = 'people.profile.created';
+    case PERSON_PROFILE_UPDATED = 'people.profile.updated';
+    case PERSON_ROLE_ACTIVATED = 'people.role.activated';
+    case PERSON_ROLE_DEACTIVATED = 'people.role.deactivated';
+    case MEMORIZER_PROGRESS_UPDATED = 'people.memorizer_progress.updated';
+    case DEPENDENT_PROFILE_CREATED = 'people.dependent.created';
+    case GUARDIANSHIP_REVOKED = 'people.guardianship.revoked';
 
     public function severity(): SecurityEventSeverity
     {

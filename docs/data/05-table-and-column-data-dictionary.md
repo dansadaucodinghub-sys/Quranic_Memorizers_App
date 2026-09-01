@@ -9968,3 +9968,10 @@ Required B04 concepts use the canonical tables above. Person/User Account, curre
 - [Relationship and integrity catalog](06-relationship-constraint-and-integrity-catalog.md)
 - [Tenant-isolation model](09-tenant-isolation-data-model.md)
 
+## P3-B02 implemented table addendum
+
+The executable People foundation adds `people_persons`, `people_person_names`, `people_account_links`,
+`people_person_geographies`, `people_role_profiles`, `people_memorizer_progress` and `people_guardianships`.
+Person names and birth dates are confidential personal data; opaque public IDs and registry codes are not access
+grants. Current/historical rows, status columns and optimistic versions preserve lifecycle evidence. The migrations,
+schema verifier and People verification command are authoritative for executable column detail.

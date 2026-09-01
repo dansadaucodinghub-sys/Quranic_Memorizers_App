@@ -32,6 +32,10 @@ use Qmdb\Modules\IdentityAccountState\Infrastructure\Migration\CreateAccountStat
 use Qmdb\Modules\SecurityAudit\Infrastructure\Migration\PreserveCanonicalAuditMetadataMigration;
 use Qmdb\Modules\Geography\Infrastructure\Migration\CreateGeographyCountryAndDatasetFoundationMigration;
 use Qmdb\Modules\Geography\Infrastructure\Migration\CreateGeographyAdministrativeAreaHierarchyMigration;
+use Qmdb\Modules\People\Infrastructure\Migration\CreatePeoplePersonFoundationMigration;
+use Qmdb\Modules\People\Infrastructure\Migration\CreatePeopleGeographyAssociationMigration;
+use Qmdb\Modules\People\Infrastructure\Migration\CreatePeopleRoleProfilesMigration;
+use Qmdb\Modules\People\Infrastructure\Migration\CreatePeopleGuardianshipAndSecurityCatalogMigration;
 use Qmdb\Shared\Schema\Migration\MigrationRegistry;
 use Qmdb\Shared\Schema\Migration\MigrationRegistryBuilder;
 
@@ -67,5 +71,9 @@ return static function (): MigrationRegistry {
         ->register(new PreserveCanonicalAuditMetadataMigration())
         ->register(new CreateGeographyCountryAndDatasetFoundationMigration())
         ->register(new CreateGeographyAdministrativeAreaHierarchyMigration())
+        ->register(new CreatePeoplePersonFoundationMigration())
+        ->register(new CreatePeopleGeographyAssociationMigration())
+        ->register(new CreatePeopleRoleProfilesMigration())
+        ->register(new CreatePeopleGuardianshipAndSecurityCatalogMigration())
         ->build();
 };

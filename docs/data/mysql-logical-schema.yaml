@@ -169,6 +169,7 @@ modules:
         requirements: ['QMDB-DR-006', 'QMDB-FR-TEN-001', 'QMDB-FR-TEN-002', 'QMDB-FR-AUT-001', 'QMDB-NFR-DAT-001', 'QMDB-NFR-DAT-002']
         implementation_phase: 'P2'
         open_decisions: []
+
       - table_id: 'QMDB-TBL-002'
         name: 'workspace_settings'
         module: 'Workspaces and Authorization'
@@ -43279,6 +43280,7 @@ modules:
         requirements: ['QMDB-DR-027', 'QMDB-FR-OPS-001', 'QMDB-FR-OPS-002', 'QMDB-FR-OPS-003', 'QMDB-NFR-DAT-001', 'QMDB-NFR-DAT-002']
         implementation_phase: 'P13'
         open_decisions: []
+
       - table_id: 'QMDB-TBL-240'
         name: 'feature_flag_versions'
         module: 'Platform and Offline Operations'
@@ -45219,3 +45221,33 @@ modules:
         implementation_phase: 'P13'
         open_decisions: []
 
+implemented_p3_b02_person_foundation:
+  status: 'implemented bounded foundation; not a replacement for the governed future logical schema'
+  module: 'people.profiles'
+  tenant_scope: 'GLOBAL_GOVERNED; no workspace_id and no tenant-owned Person data'
+  tables:
+    - name: 'people_persons'
+      purpose: 'Private global Person root with opaque public identifier, non-sequential registry code, lifecycle state and optimistic version.'
+      classification: 'QMDB-DCL-003'
+    - name: 'people_person_names'
+      purpose: 'Unicode-safe current and historical private names, with approved name type and script metadata.'
+      classification: 'QMDB-DCL-003'
+    - name: 'people_account_links'
+      purpose: 'Explicit Account-to-Person SELF link; a generated active marker enforces one active SELF link per Account and Person.'
+      classification: 'QMDB-DCL-003'
+    - name: 'people_person_geographies'
+      purpose: 'Historical optional nationality, origin and residence associations to governed Nigerian geography.'
+      classification: 'QMDB-DCL-003'
+    - name: 'people_role_profiles'
+      purpose: 'Bounded Person roles for Memorizer, Reciter, Competitor and Guardian; not authorization roles.'
+      classification: 'QMDB-DCL-003'
+    - name: 'people_memorizer_progress'
+      purpose: 'Versioned self- or guardian-declared progress; not verified competition evidence.'
+      classification: 'QMDB-DCL-003'
+    - name: 'people_guardianships'
+      purpose: 'Self-declared, revocable profile-management relationship with an active marker preventing duplicate active pairs.'
+      classification: 'QMDB-DCL-003'
+  enforcement:
+    - 'Foreign keys preserve Person, Account, role and geography referential integrity.'
+    - 'Application transactions and locks enforce cross-row age, active-role, last-guardian and access-policy rules.'
+    - 'Opaque public identifiers are references only and never authorization.'

@@ -606,3 +606,16 @@ The detailed requirements therefore keep MySQL/InnoDB and the secure Core PHP mo
 - [Core modules and business invariants](../domain/core-modules-and-business-invariants.md)
 - [Open decisions](open-decisions.md)
 - [P0-B01 requirements](../requirements/P0-B01-requirements.md)
+
+## P3-B02 implemented decisions
+
+- A Person is global and distinct from a User Account or Workspace-owned business record; one active SELF Account link
+  is allowed per Account and per Person.
+- Person roles are bounded profile categories, not Authorization Roles; Competitor is not competition registration and
+  Guardian is not guardianship authority.
+- Exact active guardianship grants only bounded dependent profile management. It is self-declared in B02 and is not
+  legal certification, consent or verification.
+- Names support Unicode/Arabic text and history; opaque display/public IDs do not authorize; Person records are not
+  hard deleted.
+- Memorizer progress is declared, not verified competition performance. Sensitive profile changes require step-up;
+  private Person pages are no-store and profile values do not enter audit metadata.

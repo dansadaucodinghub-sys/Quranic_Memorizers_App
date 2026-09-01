@@ -6,13 +6,13 @@
 | Project Code | QMDB |
 | Source Baseline | QMDB-BL-001 |
 | Freeze ID | QMDB-P0-FRZ-001 |
-| Batch ID | QMDB-P3-B01 |
+| Batch ID | QMDB-P3-B02 |
 | Document Title | Implementation Entry Point |
 | Document Version | 1.5.0 |
-| Document Status | P1 COMPLETE / FROZEN; P2 COMPLETE / FROZEN; P3-B01 COMPLETE |
+| Document Status | P1 COMPLETE / FROZEN; P2 COMPLETE / FROZEN; P3-B01 COMPLETE; P3-B02 COMPLETE |
 | Document Owner Role | Product, Architecture and Engineering Governance |
-| Last Updated | 2026-08-31 |
-| Approval Status | P3-B01 is complete under the separately authorized Nigerian geography-only scope |
+| Last Updated | 2026-09-01 |
+| Approval Status | P3-B02 is complete under the separately authorized private Person-profile scope |
 | Related Documents | [Closeout entry point](../closeout/README.md); [freeze manifest](../closeout/qmdb-p0-baseline-freeze.yaml); [project state](../project/project-state.md) |
 
 ## Purpose
@@ -74,17 +74,23 @@ The artifacts cover phased implementation routing, readiness/completion policy, 
     canonicalization, and known limitations for the first governed release.
 34. [P3-B01 implementation report](reports/QMDB-P3-B01-implementation-report.md) — executable delivery,
     public-interface, performance, phase-control, and validation evidence.
+35. [P3-B02 requirements-to-batches record](p3-b02-requirements-to-batches.md) — bounded requirement coverage,
+    evidence and exclusions for the private Person-profile foundation.
+36. [P3-B02 implementation report](reports/QMDB-P3-B02-implementation-report.md) — delivery, security boundaries,
+    deferred policy and validation evidence.
+37. [Person-profile standard](person-memorizer-reciter-competitor-and-guardian-profile-standard.md) — implemented
+    Person, role, guardianship, privacy and interface boundary.
 
 ## Current authorization
 
-P0, P1, and P2 remain frozen. `QMDB-P3-OPEN-B01` separately authorizes only the completed Nigeria administrative
-geography reference registry. P3-B02 and every organization, person, guardianship, consent, competition, and
-tenant-scoped capability remain unstarted and require separate project-owner authorization.
+P0, P1 and P2 remain frozen. `QMDB-P3-OPEN-B01` authorized the completed Nigeria administrative geography registry;
+`QMDB-P3-B02-EXEC` authorized the completed bounded private Person-profile foundation. Organizations, consent,
+public discovery, competition and tenant-scoped domain capabilities remain unstarted.
 
 ## Exact next action
 
-Do not begin P3-B02. The next action requires a separate authorization and must preserve the P3-B01 public-id,
-dataset-version, provenance, and isolation contracts.
+Do not begin P3-B03 without separate authorization. Preserve the P3-B01 public-id/dataset provenance contracts and
+the P3-B02 private-profile, minor-safety and no-public-discovery boundaries.
 
 ## Governance
 

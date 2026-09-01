@@ -63,6 +63,37 @@ final class P2FreezePolicy
         'tests/Tools/Build/ReleaseFilePolicyTest.php',
     ];
 
+    /** @var list<string> */
+    private const P3_B02_EXTENSION_PREFIXES = [
+        'src/Modules/People/',
+        'src/Bootstrap/Module/PeopleProfilesModule.php',
+        'resources/views/pages/account-person-profile.php',
+        'resources/views/fragments/account-person-profile.php',
+        'tests/Unit/Modules/People/',
+        'tests/Integration/MySql/P3People',
+        'tests/Architecture/P3People',
+        'tests/Support/MySql/P3People',
+    ];
+
+    /** @var list<string> */
+    private const P3_B02_MUTABLE_EXISTING_PATHS = [
+        'src/Modules/IdentityAccess/Domain/IdempotencyOperation.php',
+        'src/Modules/IdentityAccess/Infrastructure/Persistence/MySqlIdentityAccessRepository.php',
+        'src/Modules/IdentityAccess/Security/RateLimit/IdentityRateLimitScope.php',
+        'src/Modules/IdentityMultiFactor/Domain/StepUpAction.php',
+        'src/Modules/IdentitySecurityNotifications/Domain/AccountSecurityNotificationType.php',
+        'src/Modules/SecurityAudit/Domain/SecurityEventCode.php',
+        'src/Modules/SecurityAudit/Domain/SecurityEventSubjectKind.php',
+        'src/Modules/SecurityWeb/Csrf/CsrfAction.php',
+        'src/Shared/Http/Routing/Security/ProductionRouteSecurityPolicyCatalog.php',
+        'tests/Integration/MySql/GeographyReferenceIntegrationTest.php',
+        'tests/Integration/MySql/IdentityTenancyFoundationIntegrationTest.php',
+        'tests/Integration/MySql/P2IdentityAccessHttpIntegrationTest.php',
+        'tests/Integration/MySql/P2IdentityMultiFactorIntegrationTest.php',
+        'tests/Integration/MySql/P2IdentityRecoveryHttpIntegrationTest.php',
+        'tests/Integration/MySql/P2WebAuthnCeremonyIntegrationTest.php',
+    ];
+
     public function __construct(private readonly PathPolicy $pathPolicy = new PathPolicy())
     {
     }
@@ -97,7 +128,7 @@ final class P2FreezePolicy
     public function isIncluded(string $path): bool
     {
         $path = PathPolicy::normalize($path);
-        if ($this->isP3B01Extension($path)) {
+        if ($this->isP3AuthorizedExtension($path)) {
             return false;
         }
         if ($path === 'docs/closeout/p2/qmdb-p2-identity-security-tenancy-freeze.yaml') {
@@ -150,9 +181,35 @@ final class P2FreezePolicy
         return false;
     }
 
+    public function isP3B02Extension(string $path): bool
+    {
+        foreach (self::P3_B02_EXTENSION_PREFIXES as $prefix) {
+            if (str_starts_with(PathPolicy::normalize($path), $prefix)) {
+                return true;
+            }
+        }
+
+        return false;
+    }
+
+    public function isP3AuthorizedExtension(string $path): bool
+    {
+        return $this->isP3B01Extension($path) || $this->isP3B02Extension($path);
+    }
+
     public function isP3B01MutableExistingPath(string $path): bool
     {
         return in_array(PathPolicy::normalize($path), self::P3_B01_MUTABLE_EXISTING_PATHS, true);
+    }
+
+    public function isP3B02MutableExistingPath(string $path): bool
+    {
+        return in_array(PathPolicy::normalize($path), self::P3_B02_MUTABLE_EXISTING_PATHS, true);
+    }
+
+    public function isP3MutableExistingPath(string $path): bool
+    {
+        return $this->isP3B01MutableExistingPath($path) || $this->isP3B02MutableExistingPath($path);
     }
 
     public function category(string $path): string

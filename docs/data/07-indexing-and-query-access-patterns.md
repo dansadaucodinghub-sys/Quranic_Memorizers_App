@@ -769,3 +769,9 @@ ADR-037 proposes default isolation pending OD-056. Critical transitions use expl
 - [Relationship catalog](06-relationship-constraint-and-integrity-catalog.md)
 - [Volume and partitioning](12-volume-archival-and-partitioning-strategy.md)
 
+## P3-B02 access-pattern addendum
+
+Private People reads use opaque Person IDs only after exact Account self-link or guardianship authorization. Supporting
+indexes cover active Account links, current names, role state, guardian/dependent active pairs and chronology. No
+global Person-name search index or public directory query is exposed. Geography selection uses the public B01
+State/FCT-to-child lookup and does not prefetch all level-two records.

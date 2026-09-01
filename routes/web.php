@@ -41,6 +41,7 @@ use Qmdb\Modules\IdentityAccountState\Interface\Http\SecurityAuditViewerControll
 use Qmdb\Modules\Geography\Interface\Http\GeographyChildrenLookupController;
 use Qmdb\Modules\Geography\Interface\Http\NigeriaGeographyAreaController;
 use Qmdb\Modules\Geography\Interface\Http\NigeriaGeographyDirectoryController;
+use Qmdb\Modules\People\Interface\Http\PeopleProfilesController;
 use Qmdb\Shared\Http\Routing\HttpMethod;
 use Qmdb\Shared\Http\Routing\Route;
 use Qmdb\Shared\Http\Routing\RouteCollection;
@@ -84,6 +85,7 @@ return static function (
     NigeriaGeographyDirectoryController $geographyDirectory,
     NigeriaGeographyAreaController $geographyArea,
     GeographyChildrenLookupController $geographyChildren,
+    PeopleProfilesController $peopleProfiles,
 ): RouteCollection {
     return new RouteCollection(
         new Route('system.home', [HttpMethod::GET], new RoutePattern('/'), $homeController),
@@ -457,5 +459,25 @@ return static function (
             new RoutePattern('/account/security/mfa/recovery-codes/regenerate'),
             $multiFactor,
         ),
+        new Route('account.person_profile.view', [HttpMethod::GET], new RoutePattern('/account/profile'), $peopleProfiles),
+        new Route('account.person_profile.create.form', [HttpMethod::GET], new RoutePattern('/account/profile/create'), $peopleProfiles),
+        new Route('account.person_profile.create.submit', [HttpMethod::POST], new RoutePattern('/account/profile'), $peopleProfiles),
+        new Route('account.person_profile.edit.form', [HttpMethod::GET], new RoutePattern('/account/profile/edit'), $peopleProfiles),
+        new Route('account.person_profile.update.submit', [HttpMethod::POST], new RoutePattern('/account/profile/update'), $peopleProfiles),
+        new Route('account.person_profile.role.activate', [HttpMethod::POST], new RoutePattern('/account/profile/roles/{role_type}/activate'), $peopleProfiles),
+        new Route('account.person_profile.role.deactivate.form', [HttpMethod::GET], new RoutePattern('/account/profile/roles/{role_type}/deactivate'), $peopleProfiles),
+        new Route('account.person_profile.role.deactivate.submit', [HttpMethod::POST], new RoutePattern('/account/profile/roles/{role_type}/deactivate'), $peopleProfiles),
+        new Route('account.person_profile.memorizer_progress.form', [HttpMethod::GET], new RoutePattern('/account/profile/memorizer-progress'), $peopleProfiles),
+        new Route('account.person_profile.memorizer_progress.submit', [HttpMethod::POST], new RoutePattern('/account/profile/memorizer-progress'), $peopleProfiles),
+        new Route('account.person_profile.dependents.index', [HttpMethod::GET], new RoutePattern('/account/dependents'), $peopleProfiles),
+        new Route('account.person_profile.dependent.create.form', [HttpMethod::GET], new RoutePattern('/account/dependents/create'), $peopleProfiles),
+        new Route('account.person_profile.dependent.create.submit', [HttpMethod::POST], new RoutePattern('/account/dependents'), $peopleProfiles),
+        new Route('account.person_profile.dependent.view', [HttpMethod::GET], new RoutePattern('/account/dependents/{person_id}'), $peopleProfiles),
+        new Route('account.person_profile.dependent.edit.form', [HttpMethod::GET], new RoutePattern('/account/dependents/{person_id}/edit'), $peopleProfiles),
+        new Route('account.person_profile.dependent.update.submit', [HttpMethod::POST], new RoutePattern('/account/dependents/{person_id}/update'), $peopleProfiles),
+        new Route('account.person_profile.dependent.memorizer_progress.form', [HttpMethod::GET], new RoutePattern('/account/dependents/{person_id}/memorizer-progress'), $peopleProfiles),
+        new Route('account.person_profile.dependent.memorizer_progress.submit', [HttpMethod::POST], new RoutePattern('/account/dependents/{person_id}/memorizer-progress'), $peopleProfiles),
+        new Route('account.person_profile.guardianship.revoke.form', [HttpMethod::GET], new RoutePattern('/account/dependents/{person_id}/guardianship/revoke'), $peopleProfiles),
+        new Route('account.person_profile.guardianship.revoke.submit', [HttpMethod::POST], new RoutePattern('/account/dependents/{person_id}/guardianship/revoke'), $peopleProfiles),
     );
 };

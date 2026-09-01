@@ -468,3 +468,9 @@ Classification or ownership change requires the owning module, Privacy/Security/
 - [Controlled taxonomy and seed catalog](controlled-taxonomy-and-seed-catalog.yaml)
 - [P0-B04 traceability](../requirements/P0-B04-traceability-matrix.md)
 
+## P3-B02 lineage addendum
+
+Person, name, birth-date, geography and guardianship data are `QMDB-DCL-003` confidential personal data. The People
+module is the global owner; no Workspace owns or scopes these B02 records. Audit and notification integrations retain
+only bounded action and opaque-reference metadata, never names or birth dates. Browser storage, public caches, public
+projections and exports are not part of this batch.

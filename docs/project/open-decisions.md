@@ -61,6 +61,15 @@ These decisions remain open. B08 implements provider-neutral contracts and conse
 | OD-105 | Outbox-to-job bridge | No bridge or consumer is implemented | Data and Integration Architecture | Owning outbox/delivery phase | OPEN |
 | OD-106 | Browser job progress, SSE contract, and polling fallback | No status endpoint/UI; SSE projection and bounded polling only as governed future direction | Product, Frontend, Accessibility and Platform Operations | P1-B09 and owning workflow/live phases | OPEN |
 
+## QMDB-P3-B02 controlled implementation parameters
+
+| Parameter | Applied technical value | Governing decision and boundary |
+| --- | --- | --- |
+| Minor technical gate | `PERSON_MINOR_THRESHOLD_YEARS=18`, configurable in the approved range 1–25 | OD-011 remains open; this is a conservative application gate, not a legal or consent determination. |
+| Maximum recorded age | `PERSON_MAX_AGE_YEARS=120`, configurable 100–130 | Data-quality bound only; no legal inference. |
+| Guardian relationship | `SELF_DECLARED`, profile-management scope only | OD-012 remains open; no verification, legal certification or consent authority is implied. |
+| Public visibility | No Person routes are public; no profile search/claim/merge | OD-016 and OD-032 remain open; this batch cannot activate those capabilities. |
+
 ## Purpose
 
 This register prevents unresolved policy, authority, infrastructure, security, privacy, functional-workflow, data-schema, and commercial questions from becoming silent implementation assumptions. QMDB-P0-CLOSE classifies all 70 historical records, resolves five implementation conventions, and carries 65 decisions forward with owners, phases and conservative behavior.
@@ -549,3 +558,17 @@ elsewhere or authorize permissions owned by future business modules.
 | Audit integrity-key custody, rotation, and independent checkpoint publication | Key Management / Compliance | Before external-witness claim | BLOCKS_DEPLOYMENT | Versioned key selection and local tamper detection are implemented; custody and publication remain external |
 | Production performance, capacity, and rate-limit tuning | SRE / Security Operations | Before production release | BLOCKS_DEPLOYMENT | B10 records bounded local regression evidence only and makes no production capacity/SLO claim |
 | Tenant repository expansion governance | Architecture / Security | Each future tenant-owned repository batch | NON_BLOCKING_B10 | New repository contracts must enter the closed verifier inventory with MySQL isolation evidence |
+
+## P3-B02 People and guardianship decisions
+
+| Decision | Owner role | Required point | Classification | Conservative current assumption |
+| --- | --- | --- | --- | --- |
+| Legal meaning of minor threshold | Legal, Product and Child-Safety Governance | Before legal-age claim or production policy | BLOCKS_DEPLOYMENT | Default technical threshold is a product guard only |
+| Adult dependent management | Product, Privacy and Legal Governance | Before adult dependent workflow | BLOCKS_ADULT_DEPENDENT_MANAGEMENT | No adult dependent-management path is added |
+| Legal guardianship/document verification | Legal and Child-Safety Governance | Before legal-status, consent or publication use | BLOCKS_LEGAL_GUARDIANSHIP | B02 relationship is self-declared profile management only |
+| Multi-guardian invitation and transfer | Product and Child-Safety Governance | Before invitation/transfer workflow | BLOCKS_GUARDIANSHIP_WORKFLOW | Direct verified invitation/transfer is absent |
+| Profile claim, Account transfer and Person merge | Product, Privacy and Data Governance | Before identity correction workflow | BLOCKS_PERSON_IDENTITY_CORRECTION | No claim, merge, unlink or dependent Account is created |
+| Person retirement, deceased handling and retention | Privacy, Legal and Records Governance | Before lifecycle automation | BLOCKS_RETENTION_AUTOMATION | No hard deletion or automated retention is performed |
+| Public Reciter/Memorizer profile, photograph and biography | Product, Privacy and Child-Safety Governance | Before public projection | BLOCKS_PUBLIC_PROFILE | No public Person projection exists |
+| International geography and origin eligibility | Geography, Product and Competition Governance | Before international/eligibility policy | BLOCKS_GEOGRAPHY_ELIGIBILITY | B02 supports only governed Nigerian reference associations |
+| Organization-managed creation and bulk import | Organization, Privacy and Security Governance | Before Organization/import workflow | BLOCKS_ORGANIZATION_PERSON_CREATION | Only self and bounded guardian creation exists |

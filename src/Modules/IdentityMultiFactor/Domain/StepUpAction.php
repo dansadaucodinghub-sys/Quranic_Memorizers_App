@@ -29,6 +29,9 @@ enum StepUpAction: string
     case BREAK_GLASS_REVIEW = 'BREAK_GLASS_REVIEW';
     case ACCOUNT_SUSPEND = 'ACCOUNT_SUSPEND';
     case ACCOUNT_REACTIVATE = 'ACCOUNT_REACTIVATE';
+    case PERSON_PROFILE_SENSITIVE_UPDATE = 'PERSON_PROFILE_SENSITIVE_UPDATE';
+    case DEPENDENT_PROFILE_CREATE = 'DEPENDENT_PROFILE_CREATE';
+    case GUARDIANSHIP_REVOKE = 'GUARDIANSHIP_REVOKE';
 
     public function requirement(): AuthenticationAssuranceLevel
     {
@@ -65,6 +68,9 @@ enum StepUpAction: string
             self::BREAK_GLASS_ACTIVATE,
             self::BREAK_GLASS_REVIEW => '/account/security/privileged-access',
             self::ACCOUNT_SUSPEND, self::ACCOUNT_REACTIVATE => '/platform/security/accounts',
+            self::PERSON_PROFILE_SENSITIVE_UPDATE,
+            self::DEPENDENT_PROFILE_CREATE,
+            self::GUARDIANSHIP_REVOKE => '/account/profile',
             default => '/account/security/authentication',
         };
     }

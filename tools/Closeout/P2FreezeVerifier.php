@@ -56,7 +56,7 @@ final readonly class P2FreezeVerifier
                 $match[2] === P2FreezePolicy::FROZEN
                 && is_file($absolute)
                 && !is_link($absolute)
-                && (!$authorizedP3Extension || !$this->policy->isP3B01MutableExistingPath($relative))
+                && (!$authorizedP3Extension || !$this->policy->isP3MutableExistingPath($relative))
             ) {
                 $report->check(hash_file('sha256', $absolute) === $match[3], 'P2 checksum mismatch: ' . $relative);
             }
@@ -110,11 +110,12 @@ final readonly class P2FreezeVerifier
     private function verifyNoP3Production(string $root, VerificationReport $report): void
     {
         $ledgerExists = is_file($root . '/docs/project/p3-p2-freeze-extension-ledger.yaml');
-        foreach (['Organizations', 'People', 'Guardianship'] as $module) {
+        foreach (['Organizations', 'Guardianship'] as $module) {
             $report->check(!is_dir($root . '/src/Modules/' . $module), 'Unapproved P3 production module exists: ' . $module);
         }
         if (!$ledgerExists) {
             $report->check(!is_dir($root . '/src/Modules/Geography'), 'Unapproved P3 production module exists: Geography');
+            $report->check(!is_dir($root . '/src/Modules/People'), 'Unapproved P3 production module exists: People');
         }
     }
 
@@ -126,8 +127,9 @@ final readonly class P2FreezeVerifier
             return;
         }
         $contents = file_get_contents($ledger);
-        $report->check(is_string($contents) && str_contains($contents, 'authorization: QMDB-P3-OPEN-B01'), 'P3 extension ledger is invalid.');
-        $report->check(is_string($contents) && str_contains($contents, 'allowed_module: reference.geography'), 'P3 extension ledger does not constrain the allowed module.');
+        $authorized = is_string($contents) && (str_contains($contents, 'authorization: QMDB-P3-OPEN-B01') || str_contains($contents, 'authorization: QMDB-P3-B02-EXEC'));
+        $report->check($authorized, 'P3 extension ledger is invalid.');
+        $report->check(is_string($contents) && str_contains($contents, 'allowed_modules:'), 'P3 extension ledger does not constrain the allowed modules.');
         $report->check(is_string($contents) && str_contains($contents, 'P3 composition bridge may update only'), 'P3 extension ledger lacks P2 integrity assurance.');
         $report->check(str_contains($state, 'P3 Status: IN PROGRESS'), 'Project state does not record the authorized P3 transition.');
     }

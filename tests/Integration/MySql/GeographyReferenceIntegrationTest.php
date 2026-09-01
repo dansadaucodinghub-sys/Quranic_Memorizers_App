@@ -101,6 +101,15 @@ final class GeographyReferenceIntegrationTest extends MySqlIntegrationTestCase
     private function dropGeographyTables(): void
     {
         $this->connection->exec('SET FOREIGN_KEY_CHECKS = 0');
+        foreach (
+            [
+            'people_profile_operation_results', 'people_guardianships', 'people_memorizer_progress',
+            'people_role_profiles', 'people_person_geographies', 'people_account_links', 'people_person_names',
+            'people_persons',
+            ] as $table
+        ) {
+            $this->connection->exec('DROP TABLE IF EXISTS ' . $table);
+        }
         foreach (['geography_administrative_areas', 'geography_dataset_versions', 'geography_countries'] as $table) {
             $this->connection->exec('DROP TABLE IF EXISTS ' . $table);
         }

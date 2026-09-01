@@ -131,3 +131,10 @@ reason and justification guidance, an accessible modal title, and an equivalent 
 The B10 route matrix derives anonymous full-page and fragment denials from the registered route set. A fragment never
 establishes authority: protected requests return the established safe authentication/forbidden boundary, retain no
 session identifier in the body, and do not bypass ordinary CSRF, no-store, and same-origin navigation rules.
+
+## P3-B02 private Person presentation
+
+The Person profile surface is authenticated and private, with `no-store` and `no-referrer` response policy. It exposes
+only necessary private values to the current self-link or exact active guardianship, renders normal server forms for
+every mutation, and uses safe locale-aware English/Arabic output. No public card, search result, profile claim or
+client-side authoritative profile state exists.

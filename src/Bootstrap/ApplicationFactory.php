@@ -25,6 +25,7 @@ use Qmdb\Bootstrap\Module\SecurityAuthorizationModule;
 use Qmdb\Bootstrap\Module\SecurityPrivilegedAccessModule;
 use Qmdb\Bootstrap\Module\SecurityAuditModule;
 use Qmdb\Bootstrap\Module\IdentitySecurityNotificationsModule;
+use Qmdb\Bootstrap\Module\PeopleProfilesModule;
 use Qmdb\Bootstrap\Module\ObservabilityFoundationModule;
 use Qmdb\Bootstrap\Module\PresentationFoundationModule;
 use Qmdb\Bootstrap\Module\SchemaFoundationModule;
@@ -45,6 +46,7 @@ use Qmdb\Modules\IdentityMultiFactor\Configuration\IdentityMultiFactorConfigurat
 use Qmdb\Modules\SecurityPrivilegedAccess\Configuration\PrivilegedAccessConfigurationFactory;
 use Qmdb\Modules\SecurityAudit\Configuration\SecurityAuditConfigurationFactory;
 use Qmdb\Modules\IdentityAccountState\Configuration\AccountStateConfigurationFactory;
+use Qmdb\Modules\People\Configuration\PeopleProfilesConfigurationFactory;
 use Qmdb\Shared\DependencyInjection\CompiledContainer;
 use Qmdb\Shared\DependencyInjection\ContainerBuilder;
 use Qmdb\Shared\Module\ModuleRegistry;
@@ -165,6 +167,9 @@ final readonly class ApplicationFactory
         $accountStateConfiguration = (new AccountStateConfigurationFactory())->create(
             $loadedEnvironment->variables(),
         );
+        $peopleProfilesConfiguration = (new PeopleProfilesConfigurationFactory())->create(
+            $loadedEnvironment->variables(),
+        );
 
         $registry = new ModuleRegistry([
             new CoreFoundationModule($configuration, $loadedEnvironment->variables(), $runtimeEnvironment),
@@ -195,6 +200,7 @@ final readonly class ApplicationFactory
             new SecurityPrivilegedAccessModule($privilegedAccessConfiguration),
             new SecurityAuditModule($securityAuditConfiguration),
             new IdentityAccountStateModule($accountStateConfiguration),
+            new PeopleProfilesModule($peopleProfilesConfiguration),
             new ApplicationHttpModule($this->projectRoot),
             new ConsoleFoundationModule(),
         ]);

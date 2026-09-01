@@ -84,7 +84,17 @@ final class P2IdentityRecoveryHttpIntegrationTest extends MySqlIntegrationTestCa
         self::assertSame(503, $readiness->getStatusCode());
         self::assertSame('{"status":"not_ready"}', (string)$readiness->getBody());
 
-        self::assertCount(30, $this->migrationRegistry()->ordered());
+        $migrations = $this->migrationRegistry()->ordered();
+        self::assertCount(34, $migrations);
+        self::assertSame([
+            '20260901030100_create_people_person_foundation',
+            '20260901030200_create_people_geography_associations',
+            '20260901030300_create_people_role_profiles',
+            '20260901030400_create_people_guardianship_and_security_catalog',
+        ], array_map(
+            static fn (Migration $migration): string => $migration->id()->value(),
+            array_slice($migrations, -4),
+        ));
         foreach (
             ['account_password_recovery_challenges', 'account_password_recovery_events',
                 'account_security_notifications', 'account_security_notification_events'] as $table
@@ -638,6 +648,9 @@ final class P2IdentityRecoveryHttpIntegrationTest extends MySqlIntegrationTestCa
     private function identityTables(): array
     {
         return [
+            'people_profile_operation_results', 'people_guardianships', 'people_memorizer_progress',
+            'people_role_profiles', 'people_person_geographies', 'people_account_links', 'people_person_names',
+            'people_persons',
             'privileged_access_reviews', 'privileged_access_events', 'privileged_access_activations',
             'privileged_access_approvals', 'privileged_access_request_permissions',
             'privileged_access_requests', 'privileged_access_permission_policies',

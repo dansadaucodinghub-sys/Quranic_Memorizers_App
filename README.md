@@ -1,9 +1,7 @@
 # Qur’an Memorizer DB
 
-QMDB is the governed Qur’an Memorizer Database platform. This repository contains the frozen P1 Core PHP engineering
-foundation and the active P2 identity and tenancy implementation. `QMDB-P2-B01` through `QMDB-P2-B10` are complete.
-`QMDB-P2-CLOSE — Identity, Security, and Tenant Isolation Verification and Freeze` is the next separately governed
-batch; P2 remains in progress.
+QMDB is the governed Qur’an Memorizer Database platform. P1 and P2 are frozen; P3-B01 Nigerian administrative
+geography and P3-B02's bounded private Person-profile foundation are complete. P3 remains in progress.
 
 ## Project identity
 
@@ -11,10 +9,10 @@ batch; P2 remains in progress.
 - Code: QMDB
 - Source baseline: QMDB-BL-001
 - Frozen baseline: QMDB-P0-FRZ-001
-- Phase: P2 — Identity, Security, and Tenant Isolation
-- Completed batch: QMDB-P2-B08 — Temporary Privileges, Support Access, and Break-Glass Controls
-- Current batch: QMDB-P2-B09 — Security Events, Audit Integrity, and Account State Operations
-- Readiness: B09_CLOSEOUT_PENDING_COMMITTED_FREEZE
+- Phase: P3 — Nigerian Geography, Organizations, People, and Guardianship
+- Completed batch: QMDB-P3-B02 — Person, Memorizer, Reciter, Competitor, and Guardian Profile Foundation
+- Next batch: QMDB-P3-B03 — Organizations, Schools, Groups, Mosques, and Branches Registry
+- Readiness: READY_FOR_SEPARATELY_AUTHORIZED_P3_B03_ONLY
 - Engineering freeze: QMDB-P1-FRZ-001
 - Development version: 0.1.0-dev
 
@@ -177,6 +175,24 @@ Implemented: password recovery request, password reset, post-reset session inval
 security notification. MFA, passkeys, and recovery-code fallback are implemented separately by P2-B05; roles and
 permissions are implemented by P2-B06. Authenticated password change, support-assisted recovery, and a security-
 notification inbox remain unimplemented.
+
+## Private People profiles
+
+A Person is distinct from a User Account. An Account can have one active self-linked Person, and a Person can have
+multiple private Person-role profiles: `MEMORIZER`, `RECITER`, `COMPETITOR`, and `GUARDIAN`. These are not
+Authorization Roles, grant no Workspace permission, and their opaque public IDs do not grant access. `COMPETITOR`
+does not create a Competition registration; a `GUARDIAN` role does not itself create guardianship authority.
+
+Profile pages are private; there is no public Person discovery. A Guardian Account manages a minor dependent only
+through an active, self-declared relationship. The relationship does not certify legal guardianship, does not create a
+dependent Account, and cannot leave a minor with no active guardian. Adult dependent management remains unresolved.
+
+Memorizer Juz progress is self- or guardian-declared; it is not a verified Competition result or certificate. The
+current scope includes Person/Account links, Unicode and optional Arabic names, nationality/origin/residence,
+Person roles, Memorizer progress, minor dependents, guardianship relationships and private self-service. It excludes
+profile claims, legal-document verification, merge, public Reciter profiles, Organizations, Schools, Groups, Mosques,
+competitions, judging, scoring, certificates, media and social feeds. See the
+[profile standard](docs/implementation/person-memorizer-reciter-competitor-and-guardian-profile-standard.md).
 
 ## Installation
 

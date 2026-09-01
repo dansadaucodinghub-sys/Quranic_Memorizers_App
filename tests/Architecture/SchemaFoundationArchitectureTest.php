@@ -10,6 +10,10 @@ use Qmdb\Modules\Identity\Infrastructure\Migration\CreateUserAccountsMigration;
 use Qmdb\Modules\Geography\Infrastructure\Migration\CreateGeographyAdministrativeAreaHierarchyMigration;
 use Qmdb\Modules\Geography\Infrastructure\Migration\CreateGeographyCountryAndDatasetFoundationMigration;
 use Qmdb\Modules\Geography\Infrastructure\Seed\SeedNigeriaAdministrativeGeography;
+use Qmdb\Modules\People\Infrastructure\Migration\CreatePeopleGeographyAssociationMigration;
+use Qmdb\Modules\People\Infrastructure\Migration\CreatePeopleGuardianshipAndSecurityCatalogMigration;
+use Qmdb\Modules\People\Infrastructure\Migration\CreatePeoplePersonFoundationMigration;
+use Qmdb\Modules\People\Infrastructure\Migration\CreatePeopleRoleProfilesMigration;
 use Qmdb\Modules\IdentityAccess\Infrastructure\Migration\CreateIdentityRateLimitFoundationMigration;
 use Qmdb\Modules\IdentityAccess\Infrastructure\Migration\CreateIdentityVerificationFoundationMigration;
 use Qmdb\Modules\IdentityAccountState\Infrastructure\Migration\CreateAccountStateOperationsMigration;
@@ -46,7 +50,7 @@ use SplFileInfo;
 
 final class SchemaFoundationArchitectureTest extends TestCase
 {
-    public function testProductionManifestsContainAuthorizedP1ThroughP3B01SchemaChanges(): void
+    public function testProductionManifestsContainAuthorizedP1ThroughP3B02SchemaChanges(): void
     {
         $migrationFactory = require dirname(__DIR__, 2) . '/database/migrations.php';
         $seedFactory = require dirname(__DIR__, 2) . '/database/seeds.php';
@@ -61,7 +65,7 @@ final class SchemaFoundationArchitectureTest extends TestCase
         }
 
         $ordered = $migrations->ordered();
-        self::assertCount(30, $ordered);
+        self::assertCount(34, $ordered);
         self::assertSame(
             [
                 CreateScheduledTaskRunsMigration::class,
@@ -94,6 +98,10 @@ final class SchemaFoundationArchitectureTest extends TestCase
                 PreserveCanonicalAuditMetadataMigration::class,
                 CreateGeographyCountryAndDatasetFoundationMigration::class,
                 CreateGeographyAdministrativeAreaHierarchyMigration::class,
+                CreatePeoplePersonFoundationMigration::class,
+                CreatePeopleGeographyAssociationMigration::class,
+                CreatePeopleRoleProfilesMigration::class,
+                CreatePeopleGuardianshipAndSecurityCatalogMigration::class,
             ],
             array_map(static fn (Migration $migration): string => $migration::class, $ordered),
         );
@@ -129,6 +137,10 @@ final class SchemaFoundationArchitectureTest extends TestCase
                 '20260826012700_preserve_canonical_audit_metadata',
                 '20260831000100_create_geography_country_and_dataset_foundation',
                 '20260831000200_create_geography_administrative_area_hierarchy',
+                '20260901030100_create_people_person_foundation',
+                '20260901030200_create_people_geography_associations',
+                '20260901030300_create_people_role_profiles',
+                '20260901030400_create_people_guardianship_and_security_catalog',
             ],
             array_map(static fn (Migration $migration): string => $migration->id()->value(), $ordered),
         );

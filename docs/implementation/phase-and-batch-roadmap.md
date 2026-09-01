@@ -97,6 +97,13 @@ Every implementation batch must produce one or more in-scope executable PHP, tes
 | Dependencies | P2 identity/tenancy and approved legal/domain sources. |
 | Explicit exclusions | Qur’an reference releases and competition execution. |
 
+### P3-B02 completion record
+
+`QMDB-P3-B02 — Person, Memorizer, Reciter, Competitor, and Guardian Profile Foundation` is complete as a bounded,
+private global-Person foundation. It deliberately does not complete the Organizations, consent, public profile,
+discovery, merge or tenant-owned-Person portions of P3. The next separately authorized batch is
+`QMDB-P3-B03 — Organizations, Schools, Groups, Mosques, and Branches Registry`.
+
 ## P4 — Qur’an Reference and Governance
 
 | Required element | Phase contract |
@@ -266,4 +273,3 @@ Later phases may prepare research or designs, but implementation cannot bypass e
 ## Exact next action
 
 Execute only [QMDB-P1-B01 — Core PHP Repository and Runtime Foundation](prompts/QMDB-P1-B01-core-php-repository-and-runtime-foundation.md). Do not start QMDB-P1-B02 until B01 completion evidence is accepted.
-

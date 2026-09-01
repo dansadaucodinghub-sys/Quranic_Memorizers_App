@@ -1,23 +1,28 @@
 ledger_id: QMDB-P3-P2-EXT-001
-authorization: QMDB-P3-OPEN-B01
-authorized_on: 2026-08-31
+authorization: QMDB-P3-B02-EXEC
+authorized_on: 2026-09-01
 expected_p2_freeze_id: QMDB-P2-FRZ-001
 expected_p2_freeze_manifest: docs/closeout/p2/qmdb-p2-identity-security-tenancy-freeze.yaml
-allowed_module: reference.geography
+allowed_modules:
+  - reference.geography
+  - people.profiles
 allowed_scope:
   - Nigerian country and administrative-reference data
   - geography migrations and seed registration
   - public read-only routes and route-security classification
   - readiness, verification CLI, views, fragments, and progressive enhancement
+  - global Person, private Account self-link, bounded role-profile and Memorizer-progress foundations
+  - self-declared profile-management guardianship only, with minor and step-up protections
+  - controlled P2 security-catalog, CSRF, idempotency, audit, notification, and rate-limit extensions
 prohibited_modules:
   - Organizations
-  - People
-  - Guardianship
   - Competitions
+  - Person search, discovery, merge, deletion, profile claiming, contacts, dependent Accounts and tenant-owned Person data
+  - guardian consent, legal-status certification and relationship verification workflows
 assurance:
   - QMDB-P2-FRZ-001 remains unmodified as the historical P2 baseline.
   - P2 controlled-extension entries remain inventoried without rewriting QMDB-P2-FRZ-001.
-  - New P3 geography source is excluded only from the P2 inventory by the explicit policy prefix list.
+  - New P3 geography and people-profile source are excluded only from the P2 inventory by explicit policy prefix lists.
   - The P3 composition bridge may update only the existing application JavaScript entry point, ApplicationFactory,
     ApplicationMetadata, ApplicationHttpModule, ConsoleFoundationModule, PresentationFoundationModule,
     ApplicationReadinessController, and ProductionRouteSecurityPolicyCatalog; each is verified as a named
@@ -25,3 +30,6 @@ assurance:
   - The P3 release composition bridge may update only tools/Build/ReleaseFilePolicy.php and its
     tests/Tools/Build/ReleaseFilePolicyTest.php regression test so the canonical geography dataset is present in
     the generated artifact.
+  - The P3-B02 compatibility bridge may update only the P2 closed catalogs and service contracts explicitly
+    enumerated by P2FreezePolicy::P3_B02_MUTABLE_EXISTING_PATHS; changes are recorded as controlled extensions,
+    not a rewrite of QMDB-P2-FRZ-001.

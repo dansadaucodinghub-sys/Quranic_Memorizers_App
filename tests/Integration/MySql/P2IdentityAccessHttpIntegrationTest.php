@@ -438,6 +438,15 @@ final class P2IdentityAccessHttpIntegrationTest extends MySqlIntegrationTestCase
     {
         foreach (
             [
+            'people_profile_operation_results', 'people_guardianships', 'people_memorizer_progress',
+            'people_role_profiles', 'people_person_geographies', 'people_account_links', 'people_person_names',
+            'people_persons',
+            ] as $table
+        ) {
+            $this->connection->exec('DROP TABLE IF EXISTS ' . $table);
+        }
+        foreach (
+            [
                 'account_state_operations', 'security_audit_checkpoint_heads', 'security_audit_checkpoints',
                 'security_audit_events', 'security_audit_streams',
                 'privileged_access_reviews', 'privileged_access_events', 'privileged_access_activations',

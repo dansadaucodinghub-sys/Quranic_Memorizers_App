@@ -128,3 +128,10 @@ duplicate-submit protection, busy state, same-origin navigation, and no automati
 The B10 frontend regressions prove that recovery-code display uses neither browser storage, cookies, nor network
 transport after the server renders it. Fragment-policy tests remain the executable boundary for exact media type,
 marker, origin, form, script, style, event-handler, `javascript:` URL, stale-response, no-retry, and focus behavior.
+
+## P3-B02 private profile interaction
+
+Private Person forms use normal CSRF-protected POSTs first and progressively enhance only the selected geography
+child list. The selector sends a whitelisted field and opaque public selection; it never receives Account, Person,
+birth-date or name data. Profile data is not written to browser storage, and failed/unchanged mutations do not create
+duplicate history.

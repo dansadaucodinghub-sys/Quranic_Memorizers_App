@@ -210,3 +210,11 @@ Primary control set: QMDB-CTL-018; QMDB-CTL-023; QMDB-CTL-024; QMDB-CTL-026; QMD
 
 Every critical threat has at least one preventive control plus QMDB-CTL-020 and/or a recovery control; every threat maps a risk and phase. A material boundary, asset, actor, data-flow, provider, offline or cryptographic change reopens modelling.
 
+## P3-B02 People-profile boundary update
+
+The B02 attack surface is authenticated private Person pages and same-origin progressive geography requests. The
+material threats are Account/Person conflation, opaque-ID direct-object-reference, cross-Account dependent access,
+Guardian-role confusion, revoked/final-guardian races, invalid age/name/geography input, sensitive-field leakage and
+public cache/referrer disclosure. Controls are exact relationship authorization, transactions/versions/unique keys,
+step-up for sensitive actions, CSRF, bounded rates, output encoding, no-store/no-referrer headers and privacy-safe
+audit/notification metadata. No public profile, consent, Organization or tenant-owned Person endpoint is introduced.

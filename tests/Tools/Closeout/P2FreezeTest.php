@@ -26,6 +26,9 @@ final class P2FreezeTest extends TestCase
         self::assertTrue($policy->isP3B01MutableExistingPath('tools/Build/ReleaseFilePolicy.php'));
         self::assertTrue($policy->isP3B01MutableExistingPath('tests/Tools/Build/ReleaseFilePolicyTest.php'));
         self::assertTrue($policy->isP3B01Extension('public/assets/js/geography-dependent-select.js'));
+        self::assertTrue($policy->isP3B02Extension('src/Modules/People/Application/PersonProfileService.php'));
+        self::assertTrue($policy->isP3B02MutableExistingPath('src/Modules/SecurityWeb/Csrf/CsrfAction.php'));
+        self::assertTrue($policy->isP3B02MutableExistingPath('tests/Integration/MySql/P2IdentityRecoveryHttpIntegrationTest.php'));
         self::assertFalse($policy->isIncluded('docs/closeout/p2/qmdb-p2-identity-security-tenancy-freeze.yaml'));
     }
 

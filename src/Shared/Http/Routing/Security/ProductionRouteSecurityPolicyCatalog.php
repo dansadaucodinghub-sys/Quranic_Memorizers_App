@@ -51,6 +51,15 @@ final class ProductionRouteSecurityPolicyCatalog
         'account.passkey.revoke.form', 'account.passkey.revoke.submit', 'account.mfa.enable',
         'account.mfa.disable.form', 'account.mfa.disable.submit', 'account.mfa.recovery_codes.status',
         'account.mfa.recovery_codes.regenerate',
+        'account.person_profile.view', 'account.person_profile.create.form', 'account.person_profile.create.submit',
+        'account.person_profile.edit.form', 'account.person_profile.update.submit', 'account.person_profile.role.activate',
+        'account.person_profile.role.deactivate.form', 'account.person_profile.role.deactivate.submit',
+        'account.person_profile.memorizer_progress.form', 'account.person_profile.memorizer_progress.submit',
+        'account.person_profile.dependents.index', 'account.person_profile.dependent.create.form',
+        'account.person_profile.dependent.create.submit', 'account.person_profile.dependent.view',
+        'account.person_profile.dependent.edit.form', 'account.person_profile.dependent.update.submit',
+        'account.person_profile.dependent.memorizer_progress.form', 'account.person_profile.dependent.memorizer_progress.submit',
+        'account.person_profile.guardianship.revoke.form', 'account.person_profile.guardianship.revoke.submit',
     ];
 
     /** @var list<string> */
@@ -86,6 +95,10 @@ final class ProductionRouteSecurityPolicyCatalog
         'account.mfa.enable' => 'MFA_ENABLE',
         'account.mfa.disable.submit' => 'MFA_DISABLE',
         'account.mfa.recovery_codes.regenerate' => 'MFA_REGENERATE_RECOVERY_CODES',
+        'account.person_profile.update.submit' => 'PERSON_PROFILE_SENSITIVE_UPDATE',
+        'account.person_profile.dependent.update.submit' => 'PERSON_PROFILE_SENSITIVE_UPDATE',
+        'account.person_profile.dependent.create.submit' => 'DEPENDENT_PROFILE_CREATE',
+        'account.person_profile.guardianship.revoke.submit' => 'GUARDIANSHIP_REVOKE',
     ];
 
     /** @var array<string, string> */
@@ -134,6 +147,15 @@ final class ProductionRouteSecurityPolicyCatalog
         'account.mfa.enable' => 'account.mfa.enable',
         'account.mfa.disable.submit' => 'account.mfa.disable',
         'account.mfa.recovery_codes.regenerate' => 'account.mfa.recovery_codes.regenerate',
+        'account.person_profile.create.submit' => 'people.profile.create',
+        'account.person_profile.update.submit' => 'people.profile.update',
+        'account.person_profile.role.activate' => 'people.role.activate',
+        'account.person_profile.role.deactivate.submit' => 'people.role.deactivate',
+        'account.person_profile.memorizer_progress.submit' => 'people.memorizer_progress.update',
+        'account.person_profile.dependent.create.submit' => 'people.dependent.create',
+        'account.person_profile.dependent.update.submit' => 'people.dependent.update',
+        'account.person_profile.dependent.memorizer_progress.submit' => 'people.memorizer_progress.update',
+        'account.person_profile.guardianship.revoke.submit' => 'people.guardianship.revoke',
     ];
 
     /** @var list<string> */
@@ -143,6 +165,11 @@ final class ProductionRouteSecurityPolicyCatalog
         'account.privileged_access.temporary.request.submit', 'account.privileged_access.support.request.submit',
         'account.privileged_access.approve.submit', 'workspace.privileged_access.approve.submit',
         'account.privileged_access.activate.submit', 'account.privileged_access.break_glass.activate.submit',
+        'account.person_profile.create.submit', 'account.person_profile.update.submit',
+        'account.person_profile.role.activate', 'account.person_profile.role.deactivate.submit',
+        'account.person_profile.memorizer_progress.submit', 'account.person_profile.dependent.create.submit',
+        'account.person_profile.dependent.update.submit', 'account.person_profile.dependent.memorizer_progress.submit',
+        'account.person_profile.guardianship.revoke.submit',
     ];
 
     /** @var list<string> */
@@ -169,7 +196,7 @@ final class ProductionRouteSecurityPolicyCatalog
             $policies[$route] = $this->policy(RouteSecurityClassification::BASE_ROLE_REQUIRED, $route);
         }
 
-        if (count($policies) !== 91) {
+        if (count($policies) !== 111) {
             throw new LogicException('The closed production route-security catalog is incomplete.');
         }
 

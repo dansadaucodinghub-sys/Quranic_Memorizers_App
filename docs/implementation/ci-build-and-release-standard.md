@@ -150,3 +150,11 @@ architecture/HTTP/performance tests; and the reconciled evidence records. Final 
 PHP/MySQL/frontend suites, verifiers, repository policy, scanner/SBOM/licence checks, clean-install verification,
 clean committed release build/verification, and a regenerated Engineering Freeze. No release, tag, deployment, or
 remote publication is performed by this batch.
+
+## P3-B02 release composition
+
+B02 extends the application composition with `people.profiles`, four forward-only People migrations, private routes,
+translation/view assets and controlled P2 catalog bridges. The release gate must verify PHP syntax/style/static
+analysis, focused and full Quality/MySQL/frontend suites, migration/seed/schema/People/route verifiers, P0/P1/P2
+freeze preservation, repository policy and clean committed release output. Profiles, test fixtures and runtime logs
+are excluded from release artifacts and source control.

@@ -1039,3 +1039,11 @@ The arrows are references or event flows, not ownership transfer. IDs shown here
 - [ERDs](04-entity-relationship-model.md)
 - [Table and column dictionary](05-table-and-column-data-dictionary.md)
 - [Record lifecycle](08-record-versioning-lifecycle-and-deletion.md)
+
+## P3-B02 implemented ownership addendum
+
+`people_persons` is the private, global Person aggregate root. It owns names, Account links, optional geography
+associations, Person-role profiles and declared Memorizer progress. `people_guardianships` is a separate relationship
+aggregate: a Guardian role is not authority, and an active exact relationship is required for dependent management.
+Neither aggregate is Workspace-owned in B02; Organization affiliation, consent and public projections remain outside
+the delivered ownership model.

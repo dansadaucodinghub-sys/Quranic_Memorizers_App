@@ -21,6 +21,7 @@ export class GeographyDependentSelectController {
         if (!(this.parent instanceof HTMLSelectElement) || !(this.target instanceof HTMLElement)
             || typeof this.fetchImpl !== 'function' || typeof AbortController !== 'function') return;
         this.parent.addEventListener('change', this.onChange);
+        if (this.parent.value) void this.onChange();
     }
 
     async onChange() {
@@ -37,6 +38,12 @@ export class GeographyDependentSelectController {
         try {
             const url = new URL('/lookups/geography/children', globalThis.location.origin);
             url.searchParams.set('parent', parentId);
+            if (this.parent.dataset.qmdbGeographyChildField) {
+                url.searchParams.set('field', this.parent.dataset.qmdbGeographyChildField);
+            }
+            if (this.parent.dataset.qmdbGeographySelectedChild) {
+                url.searchParams.set('selected', this.parent.dataset.qmdbGeographySelectedChild);
+            }
             const response = await this.fetchImpl(`${url.pathname}${url.search}`, {
                 method: 'GET',
                 headers: { Accept: 'text/vnd.qmdb.fragment+html' },

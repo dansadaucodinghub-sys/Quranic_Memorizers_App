@@ -740,3 +740,14 @@ Every record is open. The stated conservative behavior is mandatory while the va
 
 An approved value requires the accountable owner’s evidence, an approved decision reference, affected-NFR and test updates, and project-state recording. Superseded values retain history.
 
+## P3-B02 bounded parameters
+
+| Parameter | Conservative B02 behaviour | Decision owner | Status |
+| --- | --- | --- | --- |
+| Minor age threshold | Typed configurable threshold, default 18; used only as a product guard for dependent creation | Product, Legal and Child-Safety Governance | Legal meaning unresolved |
+| Maximum Person age | Typed configurable upper bound, default 120; future/implausible dates reject | Product and Privacy Governance | Implemented safeguard |
+| Guardian/dependent mutation rates | Typed bounded windows for profile and dependent creation | Security Operations | Production tuning deferred |
+| Guardian dependent count | Typed bounded product maximum, default 50 | Product and Child-Safety Governance | Capacity/policy review deferred |
+
+These settings do not constitute legal age advice, legal guardianship certification, retention policy or production
+capacity/SLO approval.

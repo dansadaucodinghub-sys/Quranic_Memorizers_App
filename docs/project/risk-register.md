@@ -519,3 +519,16 @@ recovery-authorized B01 normalization contract.
 | P2 authorization-catalog decision was stale | 32 permissions, 9 roles, 83 mappings and 20 privileged policies pass verifier and seed checks; OD-062 controls future extension | Security and Product Governance / before future catalog extension | RESOLVED_FOR_P2 |
 | Hosted, physical-device, browser/AT, key-custody and penetration-test evidence is absent | Deferred-evidence register records owner, phase/release gate and compensating controls | Owning operational governance / before production activation or publication | NON_BLOCKING_P2_CLOSEOUT; BLOCKS_AFFECTED_PRODUCTION_RELEASE |
 | P3 product-policy decisions remain open | No P3 source exists; P3 assessment names exact decisions and prevents implied authorization | Product, Privacy, Child-Safety and Domain Governance / before affected P3 capability | NOT_A_P2_BLOCKER |
+
+## P3-B02 People-profile risks
+
+| Risk | Current evidence | Owner / required gate | Disposition |
+| --- | --- | --- | --- |
+| Account/Person or Person-role/Authorization-role conflation | Distinct domain contracts, route/access tests and private UI wording | Architecture and Security | MITIGATED_FOR_B02 |
+| Duplicate Person or active Account self link | Unique active markers, transactions, idempotency and concurrency tests | People module owner | MITIGATED_FOR_B02 |
+| Cross-Account or revoked guardian access | Exact relationship policy, status checks and negative tests | Security and Child-Safety | MITIGATED_FOR_B02 |
+| Minor loses final guardian in a race | Transactional active-count guard and concurrency test | People module owner | MITIGATED_FOR_B02 |
+| Legal-status or consent misrepresentation | Explicit self-declared wording and no consent/publication feature | Legal and Child-Safety Governance | OPEN; BLOCKS_AFFECTED_CAPABILITY |
+| Name/birth-date or geography leakage | No-store/referrer, output encoding and audit/notification minimization tests | Privacy and Security | MITIGATED_FOR_B02_SCOPE |
+| Public profile, profile claim or Person merge is implied | No routes, repositories or UI controls for those capabilities | Product and Privacy Governance | OPEN; BLOCKS_AFFECTED_CAPABILITY |
+| P2 frozen-baseline regression | Controlled extension ledger and P2 freeze verifier | Architecture and Security | MITIGATED_FOR_B02 |

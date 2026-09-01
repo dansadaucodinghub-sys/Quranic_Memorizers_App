@@ -157,3 +157,10 @@ Classification governs storage, transmission, logs, public display, export, supp
 
 New data requires classification before persistence or logging. Classification change needs Privacy, Security and Records review, migration/derivative analysis, cache/search purge rules and audit evidence.
 
+## P3-B02 Person-profile handling addendum
+
+Person names, birth dates, nationality, origin/residence and guardianship relationships are `QMDB-DCL-003`
+confidential personal data. They remain in authoritative private MySQL rows and are omitted from audit metadata,
+security notifications, URL/referrer data, browser storage and public caches. Opaque public IDs are references, not
+public-profile authorization. No export, public projection, contact record, consent record or retention automation is
+introduced; their purpose, legal basis and retention remain open governance decisions.

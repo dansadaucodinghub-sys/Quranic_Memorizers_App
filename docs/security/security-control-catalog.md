@@ -686,3 +686,10 @@ Controls are planned requirements, not claims of implementation. Exceptions cann
 
 Every Critical threat maps a preventive control plus QMDB-CTL-020 and/or a corrective/recovery control. Verification failure blocks the affected release unless an authorized, expiring risk acceptance with compensating control is recorded; locked constraints cannot be excepted.
 
+## P3-B02 People-profile control application
+
+The implemented People foundation applies the existing access-control, input-validation, CSRF, step-up, rate-limit,
+audit and privacy controls to private Person mutations. Exact active Account self-link or guardianship is required;
+Person roles, opaque IDs, Workspace roles and privileged access do not grant profile access. Names and birth dates are
+excluded from audit/notification metadata, pages are no-store/no-referrer, and P2 control implementations remain
+governed extensions rather than a rewrite of the P2 freeze.

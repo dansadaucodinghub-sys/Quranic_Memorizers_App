@@ -15,4 +15,7 @@ enum SecurityEventSubjectKind: string
     case PRIVILEGED_ACCESS = 'PRIVILEGED_ACCESS';
     case WORKSPACE = 'WORKSPACE';
     case SECURITY_AUDIT = 'SECURITY_AUDIT';
+    case PERSON = 'PERSON';
+    case PERSON_ROLE = 'PERSON_ROLE';
+    case GUARDIANSHIP = 'GUARDIANSHIP';
 }

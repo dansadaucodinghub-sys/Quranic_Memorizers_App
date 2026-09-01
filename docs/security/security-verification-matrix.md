@@ -59,3 +59,10 @@ Verification combines review, automated tests, manual specialist review, penetra
 
 Evidence must identify source revision/artifact, environment, configuration, tester/reviewer, date, scope, expected/actual result, findings, disposition and retest. Production personal data is not copied into testing without approved minimization and controls.
 
+## P3-B02 verification addendum
+
+The B02 evidence set covers private-route classification, opaque-ID non-authority, CSRF, step-up, rate-limit and
+idempotency enforcement; invalid Unicode/name input; exact self-link/guardianship access; revoked and last-guardian
+denials; MySQL uniqueness and foreign-key constraints; race handling; no sensitive audit metadata; and English/Arabic
+template/progressive selector behaviour. Physical accessibility, legal guardianship and production capacity evidence
+remain separately governed and are not claimed by these tests.

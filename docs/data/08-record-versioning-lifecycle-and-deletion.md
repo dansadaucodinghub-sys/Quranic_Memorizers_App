@@ -132,3 +132,9 @@ Assignment Package, Edge Node, device sequence, expected resource version, event
 - [Volume, archival and partitioning](12-volume-archival-and-partitioning-strategy.md)
 - [Retention and deletion register](../privacy/retention-and-deletion-decision-register.md)
 
+## P3-B02 lifecycle addendum
+
+People records are not hard deleted. Name, geography, role, progress and guardianship transitions retain historical
+rows or status evidence, while current mutations use optimistic versions. Retention, Person retirement, deceased
+handling, legal correction, merge and deletion/anonymization policy remain open decisions; this foundation does not
+invent them.

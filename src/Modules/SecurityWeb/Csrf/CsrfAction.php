@@ -45,4 +45,12 @@ enum CsrfAction: string
     case PRIVILEGED_ACCESS_REVIEW = 'privileged_access.review';
     case ACCOUNT_STATE_SUSPEND = 'account.state.suspend';
     case ACCOUNT_STATE_REACTIVATE = 'account.state.reactivate';
+    case PEOPLE_PROFILE_CREATE = 'people.profile.create';
+    case PEOPLE_PROFILE_UPDATE = 'people.profile.update';
+    case PEOPLE_ROLE_ACTIVATE = 'people.role.activate';
+    case PEOPLE_ROLE_DEACTIVATE = 'people.role.deactivate';
+    case PEOPLE_MEMORIZER_PROGRESS_UPDATE = 'people.memorizer_progress.update';
+    case PEOPLE_DEPENDENT_CREATE = 'people.dependent.create';
+    case PEOPLE_DEPENDENT_UPDATE = 'people.dependent.update';
+    case PEOPLE_GUARDIANSHIP_REVOKE = 'people.guardianship.revoke';
 }

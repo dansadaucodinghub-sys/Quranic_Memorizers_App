@@ -9,14 +9,15 @@
 | Approved Change | QMDB-CR-001 — Asynchronous Progressive Interaction and Modal UX Standard |
 | Engineering Freeze | QMDB-P1-FRZ-001 |
 | Identity and Tenant Security Freeze | QMDB-P2-FRZ-001 |
-| Document Version | 5.1.0 |
-| Last Updated | 2026-08-31 |
-| Status | P0 COMPLETE / FROZEN; P1 COMPLETE / FROZEN; P2 COMPLETE / FROZEN; P3-B01 COMPLETE |
+| Document Version | 5.3.0 |
+| Last Updated | 2026-09-01 |
+| Status | P0 COMPLETE / FROZEN; P1 COMPLETE / FROZEN; P2 COMPLETE / FROZEN; P3-B01 COMPLETE; P3-B02 COMPLETE |
 | Completed Closeout | QMDB-P2-CLOSE — Identity, Security, and Tenant Isolation Verification and Freeze |
 | Current Phase | P3 — Nigerian Geography, Organizations, People, and Guardianship |
-| Current Batch | QMDB-P3-B01 — Nigerian Administrative Geography and Jurisdiction Registry |
+| Current Batch | QMDB-P3-B02 — Person, Memorizer, Reciter, Competitor, and Guardian Profile Foundation |
+| Next Batch | QMDB-P3-B03 — Organizations, Schools, Groups, Mosques, and Branches Registry |
 | Batch Status | COMPLETE |
-| Implementation Readiness | READY FOR NEXT BATCH |
+| Implementation Readiness | READY FOR SEPARATELY AUTHORIZED P3-B03 ONLY; P3 REMAINS IN PROGRESS |
 | P2 Status | COMPLETE / FROZEN |
 
 ## Authoritative outcome
@@ -35,7 +36,8 @@ sequential execution of P2-B01 through P2-B05. P1 remains frozen; P2 changes use
 
 `QMDB-P2-CLOSE` records the final P2 verification and `QMDB-P2-FRZ-001` governs the Identity, Security and Tenant
 Isolation baseline. `QMDB-P3-OPEN-B01` authorizes the isolated Nigerian Administrative Geography and Jurisdiction
-Registry only; Organizations, People, and Guardianship remain out of scope until their separately authorized batches.
+Registry only. `QMDB-P3-B02-EXEC` subsequently authorized the bounded private Person-profile foundation; Organizations,
+consent, public profiles, Person discovery/merge and tenant-owned Person data remain out of scope.
 
 ## Recovery execution ledger
 
@@ -50,6 +52,14 @@ Registry only; Organizations, People, and Guardianship remain out of scope until
 | P2-B09 Status | COMPLETE — concurrent scope separation, final CI and Engineering Freeze verified |
 | P2-B10 Status | COMPLETE |
 | P2 Closeout Status | COMPLETE / FROZEN |
+
+## P3 batch ledger
+
+| Batch | Title | Status | Boundary |
+| --- | --- | --- | --- |
+| QMDB-P3-B01 | Nigerian Administrative Geography and Jurisdiction Registry | COMPLETE | Public, read-only Nigerian reference data only |
+| QMDB-P3-B02 | Person, Memorizer, Reciter, Competitor, and Guardian Profile Foundation | COMPLETE | Private global Person/profile foundation; no consent, public discovery, merge, Organizations or tenant-owned Person data |
+| QMDB-P3-B03 | Organizations, Schools, Groups, Mosques, and Branches Registry | NEXT / NOT AUTHORIZED | No implementation may begin without separate authorization |
 
 ## P1 batch ledger
 
@@ -282,10 +292,10 @@ Next Phase: P3 — Nigerian Geography, Organizations, People, and Guardianship
 
 Current Phase: P3 — Nigerian Geography, Organizations, People, and Guardianship
 
-Current Batch: QMDB-P3-B01 — Nigerian Administrative Geography and Jurisdiction Registry
+Current Batch: QMDB-P3-B02 — Person, Memorizer, Reciter, Competitor, and Guardian Profile Foundation
 
 P3 Status: IN PROGRESS
 
 Batch Status: COMPLETE
 
-Implementation Status: READY FOR NEXT BATCH
+Implementation Status: READY FOR SEPARATELY AUTHORIZED P3-B03 ONLY

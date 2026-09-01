@@ -123,3 +123,10 @@ closure/deletion, SIEM, or automated suspension.
 The B10 aggregate verifier consumes the existing read-only audit-control verifier and never creates a checkpoint or
 replays full history. Audit integrity remains tamper-evident, not tamper-proof; the adversarial matrix records the
 remaining key-custody and external-witness evidence as operational, not resolved source-code risk.
+
+## P3-B02 privacy-safe profile events
+
+Person-profile creation, update, role transition, declared progress and guardianship changes append the existing
+Security Audit categories through controlled catalog extensions. Event metadata contains only bounded action context
+and opaque references; it excludes Person names, birth dates, contact values and profile form bodies. Notification
+content follows the same minimization rule and never establishes profile authority.
