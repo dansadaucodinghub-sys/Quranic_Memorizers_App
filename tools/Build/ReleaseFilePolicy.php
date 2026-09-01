@@ -14,7 +14,7 @@ final class ReleaseFilePolicy
 
     /** @var list<string> */
     private const SOURCE_DIRECTORIES = [
-        'config', 'public', 'resources/translations', 'resources/views', 'routes', 'src',
+        'config', 'database/reference', 'public', 'resources/translations', 'resources/views', 'routes', 'src',
     ];
 
     /** @var list<string> */
@@ -23,6 +23,7 @@ final class ReleaseFilePolicy
         'bin/console',
         'composer.json',
         'composer.lock',
+        'database/reference/nigeria-administrative-areas-v1.json',
         'public/index.php',
         'resources/translations/en.php',
         'resources/translations/ar.php',

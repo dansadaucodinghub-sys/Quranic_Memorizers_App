@@ -29,6 +29,14 @@ final class ReleaseFilePolicyTest extends TestCase
         self::assertSame(0644, $policy->mode('public/index.php'));
     }
 
+    public function testRequiresTheCanonicalNigerianGeographyDataset(): void
+    {
+        self::assertContains(
+            'database/reference/nigeria-administrative-areas-v1.json',
+            (new ReleaseFilePolicy())->requiredFiles(),
+        );
+    }
+
     public function testReleaseFilenameIsBounded(): void
     {
         $policy = new ReleaseFilePolicy();
@@ -47,6 +55,7 @@ final class ReleaseFilePolicyTest extends TestCase
     public static function allowedPaths(): iterable
     {
         yield 'source' => ['src/Bootstrap/Application.php'];
+        yield 'runtime reference data' => ['database/reference/nigeria-administrative-areas-v1.json'];
         yield 'runtime vendor' => ['vendor/composer/autoload_real.php'];
         yield 'exact SBOM' => ['metadata/production-sbom.cdx.json'];
         yield 'manifest' => ['release-manifest.json'];
