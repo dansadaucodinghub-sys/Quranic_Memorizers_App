@@ -1,0 +1,9 @@
+<?php
+declare(strict_types=1);
+namespace Qmdb\Tests\Architecture;
+use PHPUnit\Framework\TestCase;
+final class P3OrganizationsRegistrySecurityArchitectureTest extends TestCase
+{
+ public function testRegistryDeclaresExplicitTenantAndSecurityBoundaries():void{$root=dirname(__DIR__,2);$module=(string)file_get_contents($root.'/src/Bootstrap/Module/OrganizationsRegistryModule.php');$repository=(string)file_get_contents($root.'/src/Modules/Organizations/Infrastructure/Persistence/MySqlOrganizationRegistryRepository.php');$controller=(string)file_get_contents($root.'/src/Modules/Organizations/Interface/Http/OrganizationsRegistryController.php');self::assertStringContainsString("organizations.registry",$module);self::assertStringContainsString("TenantContextRequiredGuard",$module);self::assertStringNotContainsString("people.profiles",$module);self::assertStringContainsString('implements OrganizationRegistryRepository',$repository);self::assertStringContainsString('workspace_id=:workspace_id',$repository);self::assertStringContainsString('IdentityCsrf',$controller);self::assertStringContainsString('validates',$controller);}
+ public function testRoutesAndClosedCatalogContainAllOrganizationMutations():void{$root=dirname(__DIR__,2);$routes=(string)file_get_contents($root.'/routes/web.php');$catalog=(string)file_get_contents($root.'/src/Shared/Http/Routing/Security/ProductionRouteSecurityPolicyCatalog.php');foreach(['workspace.organizations.create.submit','workspace.organizations.update.submit','workspace.organizations.retire.submit','workspace.organizations.units.create.submit','workspace.organizations.units.update.submit','workspace.organizations.units.retire.submit']as$route){self::assertStringContainsString($route,$routes);self::assertStringContainsString($route,$catalog);}self::assertStringContainsString('ORGANIZATION_UNIT_RETIRE',$catalog);}
+}

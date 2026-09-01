@@ -13,6 +13,7 @@ use Qmdb\Modules\IdentitySecurityNotifications\Domain\SecurityNotificationDedupl
 use Qmdb\Modules\SecurityAudit\Application\SecurityAuditEventAppender;
 use Qmdb\Modules\SecurityAuthorization\Application\AuthenticationAssuranceComparator;
 use Qmdb\Modules\SecurityAuthorization\Application\AuthorizationCatalogVerifier;
+use Qmdb\Modules\SecurityAuthorization\Application\AuthorizationRequirementGuard;
 use Qmdb\Modules\SecurityAuthorization\Application\BaseRoleAuthorizationGuard;
 use Qmdb\Modules\SecurityAuthorization\Application\AuthorizationReadinessCheck;
 use Qmdb\Modules\SecurityAuthorization\Application\AuthorizationSecurityNotificationService;
@@ -79,7 +80,7 @@ final readonly class SecurityAuthorizationModule implements Module
         $context->service(ServiceDefinition::instance(
             AuthorizationCatalog::class,
             self::ID,
-            AuthorizationCatalogRegistry::withAuditAccountState(),
+            AuthorizationCatalogRegistry::withOrganizationsRegistry(),
         ));
         $context->service(ServiceDefinition::instance(
             AuthenticationAssuranceComparator::class,
@@ -175,6 +176,7 @@ final readonly class SecurityAuthorizationModule implements Module
                 ServiceReference::get($r, RoleBasedAuthorizationService::class),
             )
         );
+        $context->alias(AuthorizationRequirementGuard::class, BaseRoleAuthorizationGuard::class);
         $this->factory($context, DelegationValidator::class, [
             EffectivePermissionRepository::class,
             AuthorizationAdministrationRepository::class,

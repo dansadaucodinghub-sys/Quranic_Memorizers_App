@@ -53,4 +53,10 @@ enum CsrfAction: string
     case PEOPLE_DEPENDENT_CREATE = 'people.dependent.create';
     case PEOPLE_DEPENDENT_UPDATE = 'people.dependent.update';
     case PEOPLE_GUARDIANSHIP_REVOKE = 'people.guardianship.revoke';
+    case ORGANIZATION_CREATE = 'organizations.organization.create';
+    case ORGANIZATION_UPDATE = 'organizations.organization.update';
+    case ORGANIZATION_RETIRE = 'organizations.organization.retire';
+    case ORGANIZATION_UNIT_CREATE = 'organizations.unit.create';
+    case ORGANIZATION_UNIT_UPDATE = 'organizations.unit.update';
+    case ORGANIZATION_UNIT_RETIRE = 'organizations.unit.retire';
 }

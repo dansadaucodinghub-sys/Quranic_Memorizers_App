@@ -14,6 +14,10 @@ use Qmdb\Modules\People\Infrastructure\Migration\CreatePeopleGeographyAssociatio
 use Qmdb\Modules\People\Infrastructure\Migration\CreatePeopleGuardianshipAndSecurityCatalogMigration;
 use Qmdb\Modules\People\Infrastructure\Migration\CreatePeoplePersonFoundationMigration;
 use Qmdb\Modules\People\Infrastructure\Migration\CreatePeopleRoleProfilesMigration;
+use Qmdb\Modules\Organizations\Infrastructure\Migration\CreateOrganizationClassificationAndSecurityCatalogMigration;
+use Qmdb\Modules\Organizations\Infrastructure\Migration\CreateOrganizationsRegistryMigration;
+use Qmdb\Modules\Organizations\Infrastructure\Migration\CreateOrganizationUnitsMigration;
+use Qmdb\Modules\Organizations\Infrastructure\Seed\SeedOrganizationCatalogAndAuthorization;
 use Qmdb\Modules\IdentityAccess\Infrastructure\Migration\CreateIdentityRateLimitFoundationMigration;
 use Qmdb\Modules\IdentityAccess\Infrastructure\Migration\CreateIdentityVerificationFoundationMigration;
 use Qmdb\Modules\IdentityAccountState\Infrastructure\Migration\CreateAccountStateOperationsMigration;
@@ -65,7 +69,7 @@ final class SchemaFoundationArchitectureTest extends TestCase
         }
 
         $ordered = $migrations->ordered();
-        self::assertCount(34, $ordered);
+        self::assertCount(37, $ordered);
         self::assertSame(
             [
                 CreateScheduledTaskRunsMigration::class,
@@ -102,6 +106,9 @@ final class SchemaFoundationArchitectureTest extends TestCase
                 CreatePeopleGeographyAssociationMigration::class,
                 CreatePeopleRoleProfilesMigration::class,
                 CreatePeopleGuardianshipAndSecurityCatalogMigration::class,
+                CreateOrganizationClassificationAndSecurityCatalogMigration::class,
+                CreateOrganizationsRegistryMigration::class,
+                CreateOrganizationUnitsMigration::class,
             ],
             array_map(static fn (Migration $migration): string => $migration::class, $ordered),
         );
@@ -141,16 +148,20 @@ final class SchemaFoundationArchitectureTest extends TestCase
                 '20260901030200_create_people_geography_associations',
                 '20260901030300_create_people_role_profiles',
                 '20260901030400_create_people_guardianship_and_security_catalog',
+                '20260901040100_create_organization_classification_and_security_catalog',
+                '20260901040200_create_organizations_registry',
+                '20260901040300_create_organization_units',
             ],
             array_map(static fn (Migration $migration): string => $migration->id()->value(), $ordered),
         );
-        self::assertCount(4, $seeds->ordered());
+        self::assertCount(5, $seeds->ordered());
         self::assertSame(
             [
                 SeedFoundationalAuthorizationCatalog::class,
                 SeedPrivilegedAccessCatalog::class,
                 SeedAccountStateAuthorizationCatalog::class,
                 SeedNigeriaAdministrativeGeography::class,
+                SeedOrganizationCatalogAndAuthorization::class,
             ],
             array_map(static fn (object $seed): string => $seed::class, $seeds->ordered()),
         );

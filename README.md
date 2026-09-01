@@ -10,7 +10,7 @@ geography and P3-B02's bounded private Person-profile foundation are complete. P
 - Source baseline: QMDB-BL-001
 - Frozen baseline: QMDB-P0-FRZ-001
 - Phase: P3 — Nigerian Geography, Organizations, People, and Guardianship
-- Completed batch: QMDB-P3-B02 — Person, Memorizer, Reciter, Competitor, and Guardian Profile Foundation
+- Completed batch: QMDB-P3-B03 — Organizations, Schools, Groups, Mosques, and Branches Registry
 - Next batch: QMDB-P3-B03 — Organizations, Schools, Groups, Mosques, and Branches Registry
 - Readiness: READY_FOR_SEPARATELY_AUTHORIZED_P3_B03_ONLY
 - Engineering freeze: QMDB-P1-FRZ-001

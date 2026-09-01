@@ -22,7 +22,7 @@ final readonly class RouteSecurityVerifier
     public function verify(RouteCollection $routes): RouteSecurityVerificationReport
     {
         $policies = $this->catalog->policies();
-        $catalog = AuthorizationCatalogRegistry::withAuditAccountState();
+        $catalog = AuthorizationCatalogRegistry::withOrganizationsRegistry();
         $errors = [];
         $classified = 0;
         $mutations = 0;

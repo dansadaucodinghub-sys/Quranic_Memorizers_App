@@ -22,6 +22,7 @@ final class DatabaseArchitectureTest extends TestCase
                 || str_contains($normalized, '/Modules/Identity/Infrastructure/Persistence/')
                 || str_contains($normalized, '/Modules/Geography/Infrastructure/Persistence/')
                 || str_contains($normalized, '/Modules/People/Infrastructure/Persistence/')
+                || str_contains($normalized, '/Modules/Organizations/Infrastructure/Persistence/')
                 || str_contains($normalized, '/Modules/IdentityAccess/Infrastructure/Persistence/')
                 || str_contains($normalized, '/Modules/IdentityAccountState/Infrastructure/Persistence/')
                 || str_contains($normalized, '/Modules/IdentityMultiFactor/Infrastructure/Persistence/')

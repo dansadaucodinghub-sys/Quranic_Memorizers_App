@@ -30,7 +30,7 @@ final class ConsoleApplicationTest extends TestCase
                 'QMDB',
                 'QMDB-P0-FRZ-001',
                 'P3',
-                'QMDB-P3-B02',
+                'QMDB-P3-B03',
                 '0.1.0-dev',
                 'Environment: test',
                 'Debug Mode: disabled',

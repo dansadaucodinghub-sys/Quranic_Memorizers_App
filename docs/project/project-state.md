@@ -9,15 +9,15 @@
 | Approved Change | QMDB-CR-001 — Asynchronous Progressive Interaction and Modal UX Standard |
 | Engineering Freeze | QMDB-P1-FRZ-001 |
 | Identity and Tenant Security Freeze | QMDB-P2-FRZ-001 |
-| Document Version | 5.3.0 |
+| Document Version | 5.4.0 |
 | Last Updated | 2026-09-01 |
-| Status | P0 COMPLETE / FROZEN; P1 COMPLETE / FROZEN; P2 COMPLETE / FROZEN; P3-B01 COMPLETE; P3-B02 COMPLETE |
+| Status | P0 COMPLETE / FROZEN; P1 COMPLETE / FROZEN; P2 COMPLETE / FROZEN; P3-B01 COMPLETE; P3-B02 COMPLETE; P3-B03 COMPLETE |
 | Completed Closeout | QMDB-P2-CLOSE — Identity, Security, and Tenant Isolation Verification and Freeze |
 | Current Phase | P3 — Nigerian Geography, Organizations, People, and Guardianship |
-| Current Batch | QMDB-P3-B02 — Person, Memorizer, Reciter, Competitor, and Guardian Profile Foundation |
-| Next Batch | QMDB-P3-B03 — Organizations, Schools, Groups, Mosques, and Branches Registry |
+| Current Batch | QMDB-P3-B03 — Organizations, Schools, Groups, Mosques, and Branches Registry |
+| Next Batch | QMDB-P3-B04 — Organization Memberships, Staff, Leadership, and Person Affiliations |
 | Batch Status | COMPLETE |
-| Implementation Readiness | READY FOR SEPARATELY AUTHORIZED P3-B03 ONLY; P3 REMAINS IN PROGRESS |
+| Implementation Readiness | B03 COMPLETE; B04 NOT STARTED AND REQUIRES SEPARATE AUTHORIZATION; P3 REMAINS IN PROGRESS |
 | P2 Status | COMPLETE / FROZEN |
 
 ## Authoritative outcome
@@ -59,7 +59,8 @@ consent, public profiles, Person discovery/merge and tenant-owned Person data re
 | --- | --- | --- | --- |
 | QMDB-P3-B01 | Nigerian Administrative Geography and Jurisdiction Registry | COMPLETE | Public, read-only Nigerian reference data only |
 | QMDB-P3-B02 | Person, Memorizer, Reciter, Competitor, and Guardian Profile Foundation | COMPLETE | Private global Person/profile foundation; no consent, public discovery, merge, Organizations or tenant-owned Person data |
-| QMDB-P3-B03 | Organizations, Schools, Groups, Mosques, and Branches Registry | NEXT / NOT AUTHORIZED | No implementation may begin without separate authorization |
+| QMDB-P3-B03 | Organizations, Schools, Groups, Mosques, and Branches Registry | COMPLETE | Workspace-owned registry, governed classifications, self-declared jurisdiction and immutable Unit hierarchy; no membership, staff, leadership or Person affiliation |
+| QMDB-P3-B04 | Organization Memberships, Staff, Leadership, and Person Affiliations | NOT STARTED | Requires separate authorization; no B04 work is implied by B03 |
 
 ## P1 batch ledger
 

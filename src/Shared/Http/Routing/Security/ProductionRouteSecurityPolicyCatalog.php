@@ -76,6 +76,21 @@ final class ProductionRouteSecurityPolicyCatalog
         'platform.security.events' => 'platform.security_events.view',
         'platform.security.events.detail' => 'platform.security_events.view',
         'platform.security.audit' => 'platform.audit.verify',
+        'workspace.organizations.index' => 'workspace.organizations.view',
+        'workspace.organizations.create.form' => 'workspace.organizations.manage',
+        'workspace.organizations.create.submit' => 'workspace.organizations.manage',
+        'workspace.organizations.view' => 'workspace.organizations.view',
+        'workspace.organizations.edit.form' => 'workspace.organizations.manage',
+        'workspace.organizations.update.submit' => 'workspace.organizations.manage',
+        'workspace.organizations.retire.form' => 'workspace.organizations.manage',
+        'workspace.organizations.retire.submit' => 'workspace.organizations.manage',
+        'workspace.organizations.units.create.form' => 'workspace.organization_units.manage',
+        'workspace.organizations.units.create.submit' => 'workspace.organization_units.manage',
+        'workspace.organizations.units.view' => 'workspace.organization_units.view',
+        'workspace.organizations.units.edit.form' => 'workspace.organization_units.manage',
+        'workspace.organizations.units.update.submit' => 'workspace.organization_units.manage',
+        'workspace.organizations.units.retire.form' => 'workspace.organization_units.manage',
+        'workspace.organizations.units.retire.submit' => 'workspace.organization_units.manage',
     ];
 
     /** @var array<string, string> */
@@ -99,6 +114,8 @@ final class ProductionRouteSecurityPolicyCatalog
         'account.person_profile.dependent.update.submit' => 'PERSON_PROFILE_SENSITIVE_UPDATE',
         'account.person_profile.dependent.create.submit' => 'DEPENDENT_PROFILE_CREATE',
         'account.person_profile.guardianship.revoke.submit' => 'GUARDIANSHIP_REVOKE',
+        'workspace.organizations.retire.submit' => 'ORGANIZATION_RETIRE',
+        'workspace.organizations.units.retire.submit' => 'ORGANIZATION_UNIT_RETIRE',
     ];
 
     /** @var array<string, string> */
@@ -156,6 +173,12 @@ final class ProductionRouteSecurityPolicyCatalog
         'account.person_profile.dependent.update.submit' => 'people.dependent.update',
         'account.person_profile.dependent.memorizer_progress.submit' => 'people.memorizer_progress.update',
         'account.person_profile.guardianship.revoke.submit' => 'people.guardianship.revoke',
+        'workspace.organizations.create.submit' => 'organizations.organization.create',
+        'workspace.organizations.update.submit' => 'organizations.organization.update',
+        'workspace.organizations.retire.submit' => 'organizations.organization.retire',
+        'workspace.organizations.units.create.submit' => 'organizations.unit.create',
+        'workspace.organizations.units.update.submit' => 'organizations.unit.update',
+        'workspace.organizations.units.retire.submit' => 'organizations.unit.retire',
     ];
 
     /** @var list<string> */
@@ -170,6 +193,9 @@ final class ProductionRouteSecurityPolicyCatalog
         'account.person_profile.memorizer_progress.submit', 'account.person_profile.dependent.create.submit',
         'account.person_profile.dependent.update.submit', 'account.person_profile.dependent.memorizer_progress.submit',
         'account.person_profile.guardianship.revoke.submit',
+        'workspace.organizations.create.submit', 'workspace.organizations.update.submit',
+        'workspace.organizations.retire.submit', 'workspace.organizations.units.create.submit',
+        'workspace.organizations.units.update.submit', 'workspace.organizations.units.retire.submit',
     ];
 
     /** @var list<string> */
@@ -196,7 +222,7 @@ final class ProductionRouteSecurityPolicyCatalog
             $policies[$route] = $this->policy(RouteSecurityClassification::BASE_ROLE_REQUIRED, $route);
         }
 
-        if (count($policies) !== 111) {
+        if (count($policies) !== 126) {
             throw new LogicException('The closed production route-security catalog is incomplete.');
         }
 
@@ -207,14 +233,16 @@ final class ProductionRouteSecurityPolicyCatalog
     {
         $permission = self::BASE_ROLE_PERMISSIONS[$route] ?? null;
         $assurance = match ($permission) {
-            'platform.accounts.view', 'platform.security_events.view' => 'MULTI_FACTOR',
+            'platform.accounts.view', 'platform.security_events.view',
+            'workspace.organizations.manage', 'workspace.organization_units.manage' => 'MULTI_FACTOR',
+            'workspace.organizations.view', 'workspace.organization_units.view' => 'PRIMARY',
             'platform.accounts.suspend', 'platform.accounts.reactivate', 'platform.audit.verify' => 'PHISHING_RESISTANT',
             default => null,
         };
 
         return new RouteSecurityPolicy(
             $classification,
-            $classification === RouteSecurityClassification::TENANT_REQUIRED,
+            $classification === RouteSecurityClassification::TENANT_REQUIRED || str_starts_with($route, 'workspace.organizations.'),
             $permission,
             $assurance,
             self::STEP_UP_ACTIONS[$route] ?? null,

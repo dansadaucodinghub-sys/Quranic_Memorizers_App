@@ -56,6 +56,8 @@ use Qmdb\Modules\Geography\Interface\Http\NigeriaGeographyAreaController;
 use Qmdb\Modules\Geography\Interface\Http\NigeriaGeographyDirectoryController;
 use Qmdb\Modules\People\Application\PeopleProfilesReadinessCheck;
 use Qmdb\Modules\People\Interface\Http\PeopleProfilesController;
+use Qmdb\Modules\Organizations\Application\OrganizationsRegistryReadinessCheck;
+use Qmdb\Modules\Organizations\Interface\Http\OrganizationsRegistryController;
 use Qmdb\Shared\DependencyInjection\ClosureServiceFactory;
 use Qmdb\Shared\DependencyInjection\DependencyResolver;
 use Qmdb\Shared\DependencyInjection\ServiceDefinition;
@@ -120,6 +122,7 @@ final readonly class ApplicationHttpModule implements Module
             new ModuleId('identity.account_state'),
             new ModuleId('reference.geography'),
             new ModuleId('people.profiles'),
+            new ModuleId('organizations.registry'),
         ];
     }
 
@@ -148,6 +151,7 @@ final readonly class ApplicationHttpModule implements Module
                 PrivilegedAccessReadinessCheck::class,
                 GeographyReferenceReadinessCheck::class,
                 PeopleProfilesReadinessCheck::class,
+                OrganizationsRegistryReadinessCheck::class,
             ],
             new ClosureServiceFactory(static fn (DependencyResolver $resolver): ApplicationReadinessController =>
                 new ApplicationReadinessController(
@@ -165,6 +169,7 @@ final readonly class ApplicationHttpModule implements Module
                     ServiceReference::get($resolver, PrivilegedAccessReadinessCheck::class),
                     ServiceReference::get($resolver, GeographyReferenceReadinessCheck::class),
                     ServiceReference::get($resolver, PeopleProfilesReadinessCheck::class),
+                    ServiceReference::get($resolver, OrganizationsRegistryReadinessCheck::class),
                 )),
         ));
         $controllers = [
@@ -206,6 +211,7 @@ final readonly class ApplicationHttpModule implements Module
             NigeriaGeographyAreaController::class,
             GeographyChildrenLookupController::class,
             PeopleProfilesController::class,
+            OrganizationsRegistryController::class,
         ];
         $context->service(ServiceDefinition::factory(
             RouteCollection::class,

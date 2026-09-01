@@ -18,4 +18,6 @@ enum SecurityEventSubjectKind: string
     case PERSON = 'PERSON';
     case PERSON_ROLE = 'PERSON_ROLE';
     case GUARDIANSHIP = 'GUARDIANSHIP';
+    case ORGANIZATION = 'ORGANIZATION';
+    case ORGANIZATION_UNIT = 'ORGANIZATION_UNIT';
 }

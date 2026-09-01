@@ -47,6 +47,12 @@ enum SecurityEventCode: string
     case MEMORIZER_PROGRESS_UPDATED = 'people.memorizer_progress.updated';
     case DEPENDENT_PROFILE_CREATED = 'people.dependent.created';
     case GUARDIANSHIP_REVOKED = 'people.guardianship.revoked';
+    case ORGANIZATION_CREATED = 'organizations.organization.created';
+    case ORGANIZATION_UPDATED = 'organizations.organization.updated';
+    case ORGANIZATION_RETIRED = 'organizations.organization.retired';
+    case ORGANIZATION_UNIT_CREATED = 'organizations.unit.created';
+    case ORGANIZATION_UNIT_UPDATED = 'organizations.unit.updated';
+    case ORGANIZATION_UNIT_RETIRED = 'organizations.unit.retired';
 
     public function severity(): SecurityEventSeverity
     {

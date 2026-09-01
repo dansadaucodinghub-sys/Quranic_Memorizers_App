@@ -57,7 +57,13 @@ final readonly class MigrationPlanner
         if ($record === null) {
             return MigrationPlanStatus::PENDING;
         }
-        if (!hash_equals($record->checksum, $this->checksum->migrationBinary($migration))) {
+        // A failed/partial migration has not established a completed migration contract.
+        // Its recorded steps remain immutable, but its unapplied steps may be corrected
+        // and then resumed under the existing schema mutation lock.
+        if (
+            !hash_equals($record->checksum, $this->checksum->migrationBinary($migration))
+            && !in_array($record->status, [MigrationStatus::PARTIAL, MigrationStatus::RUNNING], true)
+        ) {
             return MigrationPlanStatus::DRIFTED;
         }
         foreach ($record->appliedStepChecksums as $stepId => $storedChecksum) {

@@ -42,6 +42,7 @@ use Qmdb\Modules\Geography\Interface\Http\GeographyChildrenLookupController;
 use Qmdb\Modules\Geography\Interface\Http\NigeriaGeographyAreaController;
 use Qmdb\Modules\Geography\Interface\Http\NigeriaGeographyDirectoryController;
 use Qmdb\Modules\People\Interface\Http\PeopleProfilesController;
+use Qmdb\Modules\Organizations\Interface\Http\OrganizationsRegistryController;
 use Qmdb\Shared\Http\Routing\HttpMethod;
 use Qmdb\Shared\Http\Routing\Route;
 use Qmdb\Shared\Http\Routing\RouteCollection;
@@ -86,6 +87,7 @@ return static function (
     NigeriaGeographyAreaController $geographyArea,
     GeographyChildrenLookupController $geographyChildren,
     PeopleProfilesController $peopleProfiles,
+    OrganizationsRegistryController $organizationsRegistry,
 ): RouteCollection {
     return new RouteCollection(
         new Route('system.home', [HttpMethod::GET], new RoutePattern('/'), $homeController),
@@ -479,5 +481,20 @@ return static function (
         new Route('account.person_profile.dependent.memorizer_progress.submit', [HttpMethod::POST], new RoutePattern('/account/dependents/{person_id}/memorizer-progress'), $peopleProfiles),
         new Route('account.person_profile.guardianship.revoke.form', [HttpMethod::GET], new RoutePattern('/account/dependents/{person_id}/guardianship/revoke'), $peopleProfiles),
         new Route('account.person_profile.guardianship.revoke.submit', [HttpMethod::POST], new RoutePattern('/account/dependents/{person_id}/guardianship/revoke'), $peopleProfiles),
+        new Route('workspace.organizations.index', [HttpMethod::GET], new RoutePattern('/workspace/organizations'), $organizationsRegistry),
+        new Route('workspace.organizations.create.form', [HttpMethod::GET], new RoutePattern('/workspace/organizations/create'), $organizationsRegistry),
+        new Route('workspace.organizations.create.submit', [HttpMethod::POST], new RoutePattern('/workspace/organizations'), $organizationsRegistry),
+        new Route('workspace.organizations.view', [HttpMethod::GET], new RoutePattern('/workspace/organizations/{organizationId}'), $organizationsRegistry),
+        new Route('workspace.organizations.edit.form', [HttpMethod::GET], new RoutePattern('/workspace/organizations/{organizationId}/edit'), $organizationsRegistry),
+        new Route('workspace.organizations.update.submit', [HttpMethod::POST], new RoutePattern('/workspace/organizations/{organizationId}/update'), $organizationsRegistry),
+        new Route('workspace.organizations.retire.form', [HttpMethod::GET], new RoutePattern('/workspace/organizations/{organizationId}/retire'), $organizationsRegistry),
+        new Route('workspace.organizations.retire.submit', [HttpMethod::POST], new RoutePattern('/workspace/organizations/{organizationId}/retire'), $organizationsRegistry),
+        new Route('workspace.organizations.units.create.form', [HttpMethod::GET], new RoutePattern('/workspace/organizations/{organizationId}/units/create'), $organizationsRegistry),
+        new Route('workspace.organizations.units.create.submit', [HttpMethod::POST], new RoutePattern('/workspace/organizations/{organizationId}/units'), $organizationsRegistry),
+        new Route('workspace.organizations.units.view', [HttpMethod::GET], new RoutePattern('/workspace/organizations/{organizationId}/units/{unitId}'), $organizationsRegistry),
+        new Route('workspace.organizations.units.edit.form', [HttpMethod::GET], new RoutePattern('/workspace/organizations/{organizationId}/units/{unitId}/edit'), $organizationsRegistry),
+        new Route('workspace.organizations.units.update.submit', [HttpMethod::POST], new RoutePattern('/workspace/organizations/{organizationId}/units/{unitId}/update'), $organizationsRegistry),
+        new Route('workspace.organizations.units.retire.form', [HttpMethod::GET], new RoutePattern('/workspace/organizations/{organizationId}/units/{unitId}/retire'), $organizationsRegistry),
+        new Route('workspace.organizations.units.retire.submit', [HttpMethod::POST], new RoutePattern('/workspace/organizations/{organizationId}/units/{unitId}/retire'), $organizationsRegistry),
     );
 };

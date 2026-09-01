@@ -36,6 +36,9 @@ use Qmdb\Modules\People\Infrastructure\Migration\CreatePeoplePersonFoundationMig
 use Qmdb\Modules\People\Infrastructure\Migration\CreatePeopleGeographyAssociationMigration;
 use Qmdb\Modules\People\Infrastructure\Migration\CreatePeopleRoleProfilesMigration;
 use Qmdb\Modules\People\Infrastructure\Migration\CreatePeopleGuardianshipAndSecurityCatalogMigration;
+use Qmdb\Modules\Organizations\Infrastructure\Migration\CreateOrganizationClassificationAndSecurityCatalogMigration;
+use Qmdb\Modules\Organizations\Infrastructure\Migration\CreateOrganizationsRegistryMigration;
+use Qmdb\Modules\Organizations\Infrastructure\Migration\CreateOrganizationUnitsMigration;
 use Qmdb\Shared\Schema\Migration\MigrationRegistry;
 use Qmdb\Shared\Schema\Migration\MigrationRegistryBuilder;
 
@@ -75,5 +78,8 @@ return static function (): MigrationRegistry {
         ->register(new CreatePeopleGeographyAssociationMigration())
         ->register(new CreatePeopleRoleProfilesMigration())
         ->register(new CreatePeopleGuardianshipAndSecurityCatalogMigration())
+        ->register(new CreateOrganizationClassificationAndSecurityCatalogMigration())
+        ->register(new CreateOrganizationsRegistryMigration())
+        ->register(new CreateOrganizationUnitsMigration())
         ->build();
 };

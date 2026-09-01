@@ -24,6 +24,7 @@ use Qmdb\Bootstrap\Module\IdentitySecurityNotificationsModule;
 use Qmdb\Bootstrap\Module\IdentitySessionsModule;
 use Qmdb\Bootstrap\Module\IdentityMultiFactorModule;
 use Qmdb\Bootstrap\Module\ObservabilityFoundationModule;
+use Qmdb\Bootstrap\Module\OrganizationsRegistryModule;
 use Qmdb\Bootstrap\Module\PeopleProfilesModule;
 use Qmdb\Bootstrap\Module\PresentationFoundationModule;
 use Qmdb\Bootstrap\Module\SchemaFoundationModule;
@@ -50,6 +51,7 @@ use Qmdb\Modules\IdentitySecurityNotifications\Configuration\SecurityNotificatio
 use Qmdb\Modules\IdentitySessions\Configuration\IdentitySessionConfigurationFactory;
 use Qmdb\Modules\IdentityMultiFactor\Configuration\IdentityMultiFactorConfigurationFactory;
 use Qmdb\Modules\People\Configuration\PeopleProfilesConfigurationFactory;
+use Qmdb\Modules\Organizations\Configuration\OrganizationsRegistryConfigurationFactory;
 use Qmdb\Modules\SecurityPrivilegedAccess\Configuration\PrivilegedAccessConfigurationFactory;
 use Qmdb\Modules\SecurityAudit\Configuration\SecurityAuditConfigurationFactory;
 use Qmdb\Shared\DependencyInjection\CompiledContainer;
@@ -85,6 +87,7 @@ final class FoundationCompilationTest extends TestCase
             'security.privileged_access',
             'identity.account_state',
             'reference.geography',
+            'organizations.registry',
             'people.profiles',
             'application.http',
             'foundation.console',
@@ -109,7 +112,7 @@ final class FoundationCompilationTest extends TestCase
         $result = $queryBus->ask(new GetSystemInformation());
 
         self::assertInstanceOf(SystemInformation::class, $result);
-        self::assertSame('QMDB-P3-B02', $result->currentBatch());
+        self::assertSame('QMDB-P3-B03', $result->currentBatch());
     }
 
     public function testFoundationContainsNoDeferredInfrastructureService(): void
@@ -152,6 +155,7 @@ final class FoundationCompilationTest extends TestCase
         $securityAudit = (new SecurityAuditConfigurationFactory())->create($variables, $configuration);
         $accountState = (new AccountStateConfigurationFactory())->create($variables);
         $peopleProfiles = (new PeopleProfilesConfigurationFactory())->create($variables);
+        $organizationsRegistry = (new OrganizationsRegistryConfigurationFactory())->create($variables);
         $registry = new ModuleRegistry([
             new CoreFoundationModule(
                 $configuration,
@@ -186,6 +190,7 @@ final class FoundationCompilationTest extends TestCase
             new SecurityAuditModule($securityAudit),
             new IdentityAccountStateModule($accountState),
             new PeopleProfilesModule($peopleProfiles),
+            new OrganizationsRegistryModule($organizationsRegistry),
             new ApplicationHttpModule(dirname(__DIR__, 3)),
             new ConsoleFoundationModule(),
         ]);

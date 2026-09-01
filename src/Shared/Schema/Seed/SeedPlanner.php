@@ -23,7 +23,9 @@ final readonly class SeedPlanner
         }
         foreach ($registry->ordered() as $seed) {
             $record = $records[$seed->id()->value()] ?? null;
-            if ($record !== null && !hash_equals($record->checksum, $this->checksum->binary($seed))) {
+            // Seeds are executed as one database transaction. A recorded failed seed
+            // therefore has no committed steps and may be corrected before retry.
+            if ($record !== null && !hash_equals($record->checksum, $this->checksum->binary($seed)) && $record->status !== SeedStatus::FAILED) {
                 $blocked = true;
                 $drifted[$seed->id()->value()] = true;
                 continue;

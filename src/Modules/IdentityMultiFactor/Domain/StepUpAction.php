@@ -32,6 +32,8 @@ enum StepUpAction: string
     case PERSON_PROFILE_SENSITIVE_UPDATE = 'PERSON_PROFILE_SENSITIVE_UPDATE';
     case DEPENDENT_PROFILE_CREATE = 'DEPENDENT_PROFILE_CREATE';
     case GUARDIANSHIP_REVOKE = 'GUARDIANSHIP_REVOKE';
+    case ORGANIZATION_RETIRE = 'ORGANIZATION_RETIRE';
+    case ORGANIZATION_UNIT_RETIRE = 'ORGANIZATION_UNIT_RETIRE';
 
     public function requirement(): AuthenticationAssuranceLevel
     {
@@ -71,6 +73,8 @@ enum StepUpAction: string
             self::PERSON_PROFILE_SENSITIVE_UPDATE,
             self::DEPENDENT_PROFILE_CREATE,
             self::GUARDIANSHIP_REVOKE => '/account/profile',
+            self::ORGANIZATION_RETIRE,
+            self::ORGANIZATION_UNIT_RETIRE => '/workspace/organizations',
             default => '/account/security/authentication',
         };
     }
