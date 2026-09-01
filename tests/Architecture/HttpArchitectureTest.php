@@ -14,6 +14,7 @@ use Qmdb\Shared\Http\Contract\Controller;
 use Qmdb\Shared\Http\Kernel\HttpKernel;
 use Qmdb\Shared\Http\Middleware\ExceptionHandlingMiddleware;
 use Qmdb\Shared\Http\Request\NativeServerRequestFactory;
+use Qmdb\Tools\Ci\FrozenBaselineVerifier;
 use RecursiveDirectoryIterator;
 use RecursiveIteratorIterator;
 use ReflectionClass;
@@ -200,20 +201,10 @@ final class HttpArchitectureTest extends TestCase
 
     public function testFrozenP0FileHashesRemainValid(): void
     {
-        $manifest = $this->read($this->root() . '/docs/closeout/qmdb-p0-baseline-freeze.yaml');
-        $matched = preg_match_all(
-            '/- path: "([^"]+)"\R\s+category: [^\r\n]+\R\s+sha256: ([a-f0-9]{64})/',
-            $manifest,
-            $entries,
-            PREG_SET_ORDER,
-        );
-        self::assertSame(82, $matched);
+        $report = (new FrozenBaselineVerifier($this->root()))->verify();
 
-        foreach ($entries as $entry) {
-            $path = $this->root() . '/' . $entry[1];
-            self::assertFileExists($path);
-            self::assertSame($entry[2], hash_file('sha256', $path), $entry[1]);
-        }
+        self::assertTrue($report->passed(), implode("\n", $report->errors()));
+        self::assertGreaterThanOrEqual(190, $report->checks());
     }
 
     public function testPublicFrontControllerIsThinAndSafe(): void
