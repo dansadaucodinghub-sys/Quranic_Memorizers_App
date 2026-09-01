@@ -48,7 +48,9 @@ public profile, contact, consent, organization affiliation, dependent Account or
 
 The test set covers domain validation, private-route architecture, catalog closure, schema constraints,
 duplicate-link contention, account/profile isolation, geography parent checks and isolated MySQL concurrency.
-Final commit, generated freeze and release verification identifiers are recorded by the closeout evidence commit.
+The implementation source is committed in `193bce3d3b4bc71691fe6177f626daca6e252110`; the controlled P0
+documentation-extension correction is committed in `6f8e242740f7127446907208e10cc672ef94a4a2`. Final engineering-freeze
+and release identifiers are recorded by the closeout evidence commits.
 
 ## Module, schema and route composition
 
@@ -95,7 +97,23 @@ static analysis, style, full quality/MySQL/frontend suites, P0/P1/P2 governance 
 ## Corrections and deferred evidence
 
 The B02 closeout corrected deterministic foundation-test registration, batch metadata, P2 test-fixture teardown
-ordering for the new Person foreign keys, and P2 freeze controlled-extension accounting. These changes preserve the
-historical P2 manifest rather than rewriting it. Production legal review of the age threshold, adult dependent policy,
+ordering for the new Person foreign keys, P2 freeze controlled-extension accounting, and P0 documentation-freeze
+accounting. The P0 correction preserves `QMDB-P0-FRZ-001` unchanged and accepts only the exact, hash-bound B02
+documentation extension ledger; it does not rewrite the historical baseline. Production legal review of the age
+threshold, adult dependent policy,
 legal guardianship/document verification, consent, Person merge/claim/retirement, public profiles, organizations,
 international geography, retention, physical assistive-technology and production-capacity evidence remain deferred.
+
+## Pre-freeze validation evidence
+
+- The serial Oracle MySQL suite passed: **89 tests, 1,733 assertions** in 12m54s. It reset, migrated, seeded,
+  verified, ran all MySQL tests, then restored the canonical schema.
+- Canonical schema evidence is clean: 34 forward-only migrations and four seeds are applied; schema verification,
+  geography verification (811 areas: 36 States, FCT, 768 LGAs and six Area Councils), and People verification pass.
+- Route-security verification reports 111 classified production routes, 53 mutation routes and 53 CSRF-protected
+  mutations. P2 authorization, tenant-context, privileged-access, audit, tenant-repository and aggregate security
+  verification pass.
+- The frozen P0 verifier passes with 199 checks through
+  `docs/project/p3-p0-freeze-extension-ledger.yaml`; the P2 freeze verifier passes with 7,062 checks.
+- The PHP 8.5.10, Node 24.19.0 and MySQL 8.4.11 governed toolchain is in use. Composer validation, platform
+  requirements, locked dependency audit and JavaScript syntax checks pass.
