@@ -117,3 +117,18 @@ international geography, retention, physical assistive-technology and production
   `docs/project/p3-p0-freeze-extension-ledger.yaml`; the P2 freeze verifier passes with 7,062 checks.
 - The PHP 8.5.10, Node 24.19.0 and MySQL 8.4.11 governed toolchain is in use. Composer validation, platform
   requirements, locked dependency audit and JavaScript syntax checks pass.
+
+## Final local CI evidence
+
+- `composer ci` passed all **34 recorded stages**. Its governed PHP quality suite passed **977 tests and 70,603
+  assertions**; the frontend suite passed **53 tests**; and the isolated Oracle MySQL suite passed **89 tests and
+  1,733 assertions** in 15m43s before restoring the canonical schema.
+- Static analysis reported no errors; coding style checked 1,379 files; PHP syntax checked 1,474 files; Composer and
+  npm dependency audits found no vulnerabilities. Gitleaks and Trivy repository scans passed with no leak or actionable
+  repository finding.
+- SBOM generation and validation passed (269 checks), and the runtime licence inventory reported 52 runtime packages,
+  29 development packages, zero unknown runtime licences and zero items requiring review.
+- The pre-closeout release archive built and verified from clean revision
+  `8e4178cdc015060ed5da21cc5dadc7533710fc2f`: `qmdb-0.1.0-dev-8e4178cdc015.tar.gz`, SHA-256
+  `e0b952655df1a786b3f53540edad18dab0659282319d57d6491d17875548b4e1`. Final engineering-freeze refresh and
+  release verification follow this evidence update.
