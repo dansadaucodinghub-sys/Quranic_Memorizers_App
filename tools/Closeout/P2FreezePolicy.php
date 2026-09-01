@@ -78,6 +78,7 @@ final class P2FreezePolicy
     /** @var list<string> */
     private const P3_B03_EXTENSION_PREFIXES = [
         'src/Modules/Organizations/',
+        'src/Modules/SecurityAuthorization/Domain/OrganizationsAuthorizationCatalog.php',
         'src/Bootstrap/Module/OrganizationsRegistryModule.php',
         'tests/Unit/Modules/Organizations/',
         'tests/Integration/MySql/P3Organizations',
