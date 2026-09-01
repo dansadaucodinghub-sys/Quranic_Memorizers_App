@@ -6,6 +6,27 @@ namespace Qmdb\Tools\Ci;
 
 final class FrozenBaselineVerifier
 {
+    private const P3_B02_DOCUMENTATION_EXTENSION_LEDGER = 'docs/project/p3-p0-freeze-extension-ledger.yaml';
+
+    /** @var list<string> */
+    private const P3_B02_DOCUMENTATION_PATHS = [
+        'docs/accessibility/accessibility-verification-matrix.md',
+        'docs/data/02-domain-aggregate-and-ownership-model.md',
+        'docs/data/05-table-and-column-data-dictionary.md',
+        'docs/data/06-relationship-constraint-and-integrity-catalog.md',
+        'docs/data/07-indexing-and-query-access-patterns.md',
+        'docs/data/08-record-versioning-lifecycle-and-deletion.md',
+        'docs/data/10-data-classification-ownership-and-lineage.md',
+        'docs/data/mysql-logical-schema.yaml',
+        'docs/implementation/phase-and-batch-roadmap.md',
+        'docs/operations/quality-attribute-parameter-register.md',
+        'docs/privacy/data-classification-and-handling.md',
+        'docs/project/decision-register.md',
+        'docs/security/security-control-catalog.md',
+        'docs/security/security-verification-matrix.md',
+        'docs/security/threat-model.md',
+    ];
+
     public function __construct(private readonly string $root)
     {
     }
@@ -35,6 +56,11 @@ final class FrozenBaselineVerifier
             PREG_SET_ORDER,
         );
         $report->check(count($matches) === 82, 'Frozen manifest must contain exactly 82 governed file hashes.');
+        $baselineHashes = [];
+        foreach ($matches as $match) {
+            $baselineHashes[$match[1]] = $match[2];
+        }
+        $approvedExtensions = $this->approvedP3B02DocumentationExtensions($baselineHashes, $report);
         $paths = [];
         foreach ($matches as $match) {
             $relative = $match[1];
@@ -42,7 +68,11 @@ final class FrozenBaselineVerifier
             $absolute = $this->root . '/' . $relative;
             $report->check(is_file($absolute), 'Frozen file is missing: ' . $relative);
             if (is_file($absolute)) {
-                $report->check(hash_file('sha256', $absolute) === $match[2], 'Frozen checksum mismatch: ' . $relative);
+                $expectedHash = $approvedExtensions[$relative] ?? $match[2];
+                $report->check(
+                    hash_file('sha256', $absolute) === $expectedHash,
+                    'Frozen checksum mismatch: ' . $relative,
+                );
             }
         }
         $report->check(count(array_unique($paths)) === count($paths), 'Frozen manifest paths must be unique.');
@@ -67,5 +97,66 @@ final class FrozenBaselineVerifier
             $report->check(!in_array($required, $paths, true), 'Dynamic file must not also be frozen: ' . $required);
         }
         return $report;
+    }
+
+    /**
+     * @param array<string, string> $baselineHashes
+     * @return array<string, string>
+     */
+    private function approvedP3B02DocumentationExtensions(array $baselineHashes, VerificationReport $report): array
+    {
+        $ledgerPath = $this->root . '/' . self::P3_B02_DOCUMENTATION_EXTENSION_LEDGER;
+        if (!is_file($ledgerPath)) {
+            return [];
+        }
+        $ledger = file_get_contents($ledgerPath);
+        if (!is_string($ledger)) {
+            $report->check(false, 'P3 B02 P0 documentation-extension ledger is unreadable.');
+
+            return [];
+        }
+        foreach (
+            [
+                'ledger_id: QMDB-P3-P0-EXT-001',
+                'authorization: QMDB-P3-B02-EXEC',
+                'baseline_id: QMDB-P0-FRZ-001',
+                'preserves_historical_baseline: true',
+            ] as $required
+        ) {
+            $report->check(str_contains($ledger, $required), 'P3 B02 P0 extension ledger is missing: ' . $required);
+        }
+        preg_match_all(
+            '/^\s+- path: "([^"]+)"\R\s+baseline_sha256: ([a-f0-9]{64})\R\s+extension_sha256: ([a-f0-9]{64})\R\s+reason: "([^"]+)"\s*$/m',
+            $ledger,
+            $matches,
+            PREG_SET_ORDER,
+        );
+        $report->check(
+            count($matches) === count(self::P3_B02_DOCUMENTATION_PATHS),
+            'P3 B02 P0 extension ledger must contain every approved documentation extension exactly once.',
+        );
+
+        $paths = [];
+        $approved = [];
+        foreach ($matches as $match) {
+            $path = $match[1];
+            $paths[] = $path;
+            $baselineHash = $baselineHashes[$path] ?? null;
+            $matchesBaseline = is_string($baselineHash) && hash_equals($baselineHash, $match[2]);
+            $report->check($matchesBaseline, 'P3 B02 P0 extension has an unrecognized baseline hash: ' . $path);
+            if ($matchesBaseline) {
+                $approved[$path] = $match[3];
+            }
+        }
+        $report->check(
+            $paths === self::P3_B02_DOCUMENTATION_PATHS,
+            'P3 B02 P0 extension paths must be the ordered, approved documentation list.',
+        );
+        $report->check(
+            count(array_unique($paths)) === count($paths),
+            'P3 B02 P0 extension paths must be unique.',
+        );
+
+        return $approved;
     }
 }

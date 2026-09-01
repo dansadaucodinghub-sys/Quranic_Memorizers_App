@@ -1,0 +1,73 @@
+p0_freeze_extension:
+  ledger_id: QMDB-P3-P0-EXT-001
+  authorization: QMDB-P3-B02-EXEC
+  baseline_id: QMDB-P0-FRZ-001
+  preserves_historical_baseline: true
+  implementation_revision: "193bce3d3b4bc71691fe6177f626daca6e252110"
+  scope: "Owner-authorized P3-B02 documentation implementation records only."
+  constraints:
+    - "The QMDB-P0-FRZ-001 manifest remains unchanged."
+    - "Each entry preserves the exact frozen baseline hash and records one replacement hash."
+    - "No product requirement, architecture decision, legal policy, or historical closeout claim is reclassified by this ledger."
+    - "The verifier accepts only this exact ordered P3-B02 documentation list."
+  entries:
+    - path: "docs/accessibility/accessibility-verification-matrix.md"
+      baseline_sha256: 5e75c8f841ec6697914f3a5c8a2090859882911edec85a813d7b323fd2dab1c3
+      extension_sha256: 23ed586d8e4662f776bbd4f34e673328da9420e8f9637b41f4f3f9ea0a8ca196
+      reason: "Records the private Person-profile accessibility evidence."
+    - path: "docs/data/02-domain-aggregate-and-ownership-model.md"
+      baseline_sha256: c2f03e01ce603f257c052de3b706a896316d37ddc1ed4fc05f595ce0b9858948
+      extension_sha256: 6798ddf1dcf27853c93bc12fd0ea396b2c6bad0fdea86d4735f223ada7ade4c7
+      reason: "Records global Person ownership and private Account links."
+    - path: "docs/data/05-table-and-column-data-dictionary.md"
+      baseline_sha256: 23a0b0752c99b8a76169f714367ad48c8b6d773e35af877113a330f887acac49
+      extension_sha256: 25e87b6666d64f4bc16d856d36ddfa3c0243ca2452350f48899514384f627609
+      reason: "Records the implemented Person foundation tables and columns."
+    - path: "docs/data/06-relationship-constraint-and-integrity-catalog.md"
+      baseline_sha256: c4c30655f3535463b4ab0e54bd83260abf074e95f45eb0968e0c3889ba5dff84
+      extension_sha256: 127ba0716bd5d9a337593048b0b01ad959807b756ef67d4671a50e07e799a5a1
+      reason: "Records Person-link, profile, geography, and guardianship constraints."
+    - path: "docs/data/07-indexing-and-query-access-patterns.md"
+      baseline_sha256: cc076b21feee98611f33b4267f63191424f2431483949b5d6f613c061bf7eecc
+      extension_sha256: 4e7a450bc40885f747ea11c4fbedaeebeec243def48b3a49ddad11a1c349893d
+      reason: "Records private profile lookup and concurrency indexes."
+    - path: "docs/data/08-record-versioning-lifecycle-and-deletion.md"
+      baseline_sha256: ba7b59d14cc0f1dbbd593abe0355479da52de187febc3582da3a02fd0a31e968
+      extension_sha256: f60fd17fb0ec3f640edda36b5187e8d18a5529912625460b343d2b1eba021221
+      reason: "Records Person, name, role, and guardianship lifecycle handling."
+    - path: "docs/data/10-data-classification-ownership-and-lineage.md"
+      baseline_sha256: 56cd3cc3f9e845855f0dbe13d6c95651ff253b2f9a29d8b72f9be9dcf32cfefd
+      extension_sha256: 63ba75eca3ffa3104310934f0eab5281667596317e84556c6b2fe9cad7a59aa8
+      reason: "Records Person-profile data classification and privacy lineage."
+    - path: "docs/data/mysql-logical-schema.yaml"
+      baseline_sha256: 43dad01150ad94aacfe3a4a098a3b91b21416abf9d19ff2612e5522c7d9d7038
+      extension_sha256: 6c6d659ffb9b2dc1a7e60a194d1dee7c8b2c182dd34e62a953102d748df8b01e
+      reason: "Records the implemented P3-B02 MySQL logical schema extension."
+    - path: "docs/implementation/phase-and-batch-roadmap.md"
+      baseline_sha256: 873abc3a179ed5df62d3bf8547a93aa0813198f090554c36ae925124299a0512
+      extension_sha256: 71c8b1280c4e21539af3e42ec59edd5d4dc4e195bcf503647f3c08305a31a7b8
+      reason: "Records B02 completion and preserves B03 as the next batch."
+    - path: "docs/operations/quality-attribute-parameter-register.md"
+      baseline_sha256: 7ed88b7bef95e0fd5bc0336d7dd5c9623c96c28bba7eb768568bc900ed109b96
+      extension_sha256: 153b27e04bca78d9c641b480d758a1f2c4495556224b181e47b936b632aba8ff
+      reason: "Records bounded Person-profile quality parameters."
+    - path: "docs/privacy/data-classification-and-handling.md"
+      baseline_sha256: 3c723efaf067479de34af194d14c6c5b7ebce2ce479ad7c8fa2a9f9c21474c9c
+      extension_sha256: 6faebcb5baa04be25d552d2d9f2429856859f84275f42eb2129d93bbf5afc65b
+      reason: "Records B02 Person-profile privacy controls and exclusions."
+    - path: "docs/project/decision-register.md"
+      baseline_sha256: 5d01db03107d945951df99355242bc941ee6a919555af877b49e61ffb1c48dd4
+      extension_sha256: 0b3e681ce2a823742f1e3c324215a4ebefc0ee303a32d6a749fe50c4a424a6aa
+      reason: "Records only the Person-profile decisions implemented in B02."
+    - path: "docs/security/security-control-catalog.md"
+      baseline_sha256: 47f68d69b413e6402a3d7b490778163d182d3e2fa42fa36bb008c627936cbf64
+      extension_sha256: 67e7e7dd784cf57a13a023db68d584071269389b31041769cb54eafe56907f50
+      reason: "Records security controls applied to private Person-profile operations."
+    - path: "docs/security/security-verification-matrix.md"
+      baseline_sha256: 80dfec64499a210620953dd857d7336b5665bde104ef9c7bd6d748a3d612e4f0
+      extension_sha256: e61dbbc7c43d56d21b3b09de06e7a922cd9a81eb83372a0c63aac6cbcacb4289
+      reason: "Records Person-profile security verification evidence."
+    - path: "docs/security/threat-model.md"
+      baseline_sha256: ca67912690363431aacc15f71c194552a973131aaf2076c21c5ce82beb1103e0
+      extension_sha256: 64def6c5389e3a130028763fbbe28f115621e486233c3f870c8af19619acf7b6
+      reason: "Records B02 private-profile threats and mitigations."
