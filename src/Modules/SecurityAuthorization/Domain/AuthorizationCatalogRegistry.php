@@ -103,6 +103,18 @@ final readonly class AuthorizationCatalogRegistry
         return self::withOrganizationsRegistry();
     }
 
+    public static function withPeopleIdentityResolution(): AuthorizationCatalog
+    {
+        $builder = new AuthorizationCatalogBuilder();
+        self::populateFoundational($builder);
+        PrivilegedAccessAuthorizationCatalog::extend($builder);
+        AccountStateAuthorizationCatalog::extend($builder);
+        OrganizationsAuthorizationCatalog::extend($builder);
+        PeopleIdentityResolutionAuthorizationCatalog::extend($builder);
+
+        return $builder->build();
+    }
+
     private static function populateFoundational(AuthorizationCatalogBuilder $builder): void
     {
         $timestamp = new DateTimeImmutable('2026-08-28T00:00:00.000000Z');

@@ -108,6 +108,8 @@ final class SourceArchitectureTest extends TestCase
             self::assertTrue(
                 str_contains($path, '/Shared/Infrastructure/Persistence/MySql/')
                 || str_contains($path, '/Modules/Identity/Infrastructure/Persistence/')
+                || str_contains($path, '/Modules/IdentityResolution/Infrastructure/Persistence/')
+                || str_contains($path, '/Modules/IdentityResolution/Infrastructure/Seed/')
                 || str_contains($path, '/Modules/Geography/Infrastructure/Persistence/')
                 || str_contains($path, '/Modules/Geography/Infrastructure/Seed/')
                 || str_contains($path, '/Modules/People/Infrastructure/Persistence/')
@@ -137,7 +139,7 @@ final class SourceArchitectureTest extends TestCase
         }
     }
 
-    public function testOnlyAuthorizedP2AndP3B04DomainModulesExist(): void
+    public function testOnlyAuthorizedP2AndP3B05DomainModulesExist(): void
     {
         $modules = glob($this->projectRoot() . '/src/Modules/*', GLOB_ONLYDIR);
         self::assertIsArray($modules);
@@ -149,6 +151,7 @@ final class SourceArchitectureTest extends TestCase
                 'IdentityAccountState',
                 'IdentityMultiFactor',
                 'IdentityRecovery',
+                'IdentityResolution',
                 'IdentitySecurityNotifications',
                 'IdentitySessions',
                 'OrganizationAffiliations',

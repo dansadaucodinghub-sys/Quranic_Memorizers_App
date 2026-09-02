@@ -9,6 +9,7 @@ use Qmdb\Modules\Geography\Infrastructure\Seed\SeedNigeriaAdministrativeGeograph
 use Qmdb\Modules\Organizations\Infrastructure\Seed\SeedOrganizationCatalogAndAuthorization;
 use Qmdb\Modules\OrganizationAffiliations\Infrastructure\Seed\SeedOrganizationAffiliationRoleDefinitions;
 use Qmdb\Modules\OrganizationAffiliations\Infrastructure\Seed\SeedOrganizationAffiliationAuthorization;
+use Qmdb\Modules\IdentityResolution\Infrastructure\Seed\SeedPeopleIdentityResolutionAuthorization;
 use Qmdb\Shared\Schema\Seed\SeedRegistry;
 use Qmdb\Shared\Schema\Seed\SeedRegistryBuilder;
 
@@ -21,5 +22,6 @@ return static function (): SeedRegistry {
         ->register(new SeedOrganizationCatalogAndAuthorization())
         ->register(new SeedOrganizationAffiliationRoleDefinitions())
         ->register(new SeedOrganizationAffiliationAuthorization())
+        ->register(new SeedPeopleIdentityResolutionAuthorization())
         ->build();
 };

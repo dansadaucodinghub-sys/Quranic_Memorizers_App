@@ -548,6 +548,16 @@ elsewhere or authorize permissions owned by future business modules.
 | Account-state reason taxonomy and suspension duration policy | Product / Security / Legal | Before automated or duration-based state changes | BLOCKS_ACCOUNT_STATE_AUTOMATION | B09 accepts governed reason codes and bounded confidential justification; it creates no automated scoring or expiry action |
 | Production action-rate and TTL values | Security / Operations | Before production configuration | BLOCKS_DEPLOYMENT | Typed bounds exist; final operational values require deployment approval |
 
+## P3-B05 identity-resolution decisions and conservative assumptions
+
+| Decision | Owner role | Required point | Classification | Implemented disposition |
+| --- | --- | --- | --- | --- |
+| Cross-border identity verification | Product, Privacy and Legal Governance | Before any non-Nigerian or external identity-evidence workflow | BLOCKS_CROSS_BORDER_IDENTITY_VERIFICATION | B05 records only private QMDB profile relationship history and invokes no external verification service |
+| Independent second review for duplicate canonicalization | Identity, Records and Privacy Governance | Before dual-review policy is claimed or enforced | BLOCKS_DUAL_REVIEW_POLICY | B05 requires reviewer separation from reporter and consenting Accounts but implements no second-review queue |
+| Claim, assertion, duplicate-case and alias retention | Privacy, Legal and Records Governance | Before retention automation or purge | BLOCKS_RETENTION_AUTOMATION | Historical rows remain protected; no automated purge or legal-retention claim is made |
+| Exact adulthood-transition handling | Product, Privacy and Child-Safety Governance | Before a product-policy change at the threshold boundary | BLOCKS_ADULTHOOD_TRANSITION_POLICY | Current technical age guard is evaluated at action time; no backdated automatic transition is performed |
+| Guardian disagreement process | Product, Privacy, Child-Safety and Records Governance | Before a mediation, override or appeal workflow | BLOCKS_GUARDIAN_DISAGREEMENT_WORKFLOW | Any required duplicate-consent decline blocks resolution; no unilateral override or dispute workflow exists |
+
 ## P2-B10 hardening operational evidence
 
 | Decision | Owner role | Required point | Classification | Implemented disposition |

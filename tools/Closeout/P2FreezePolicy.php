@@ -51,7 +51,6 @@ final class P2FreezePolicy
 
     /** @var list<string> */
     private const P3_B01_MUTABLE_EXISTING_PATHS = [
-        'public/assets/js/app.js',
         'src/Bootstrap/ApplicationFactory.php',
         'src/Bootstrap/ApplicationMetadata.php',
         'src/Bootstrap/Module/ApplicationHttpModule.php',
@@ -59,6 +58,7 @@ final class P2FreezePolicy
         'src/Bootstrap/Module/PresentationFoundationModule.php',
         'src/Modules/IdentitySessions/Interface/Http/ApplicationReadinessController.php',
         'src/Shared/Http/Routing/Security/ProductionRouteSecurityPolicyCatalog.php',
+        'public/assets/js/app.js',
         'tools/Build/ReleaseFilePolicy.php',
         'tests/Tools/Build/ReleaseFilePolicyTest.php',
     ];
@@ -105,6 +105,31 @@ final class P2FreezePolicy
     ];
 
     /** @var list<string> */
+    private const P3_B05_EXTENSION_PREFIXES = [
+        'src/Modules/IdentityResolution/',
+        'src/Bootstrap/Module/PeopleIdentityResolutionModule.php',
+        'src/Modules/SecurityAuthorization/Domain/PeopleIdentityResolutionAuthorizationCatalog.php',
+        'src/Modules/People/Application/PersonCanonical',
+        'src/Modules/People/Application/PersonManagementAuthoritySnapshotProvider.php',
+        'src/Modules/People/Application/PersonVerificationProjectionProvider.php',
+        'src/Modules/OrganizationAffiliations/Application/OrganizationAffiliationPersonCanonicalizationParticipant.php',
+        'resources/views/pages/account-profile-claim-',
+        'resources/views/pages/account-dependent-profile-claim-',
+        'resources/views/pages/account-person-duplicate-',
+        'resources/views/pages/platform-profile-',
+        'resources/views/pages/platform-person-duplicate-',
+        'resources/views/fragments/person-identity-resolution.php',
+        'public/assets/js/person-identity-resolution-',
+        'tests/Unit/Modules/IdentityResolution/',
+        'tests/Integration/MySql/P3IdentityResolution',
+        'tests/Architecture/P3IdentityResolution',
+        'tests/Frontend/person-identity-resolution-',
+        'tests/Support/MySql/P3IdentityResolution',
+        'docs/implementation/P3-B05-',
+        'docs/implementation/reports/QMDB-P3-B05-',
+    ];
+
+    /** @var list<string> */
     private const P3_B02_MUTABLE_EXISTING_PATHS = [
         'src/Modules/IdentityAccess/Domain/IdempotencyOperation.php',
         'src/Modules/IdentityAccess/Infrastructure/Persistence/MySqlIdentityAccessRepository.php',
@@ -137,6 +162,8 @@ final class P2FreezePolicy
         'resources/translations/ar.php',
         'resources/translations/en.php',
         'routes/web.php',
+        'public/assets/js/app.js',
+        'public/assets/js/mutation-fetch-client.js',
         'src/Modules/IdentitySessions/Interface/Http/ApplicationReadinessController.php',
         'src/Shared/Schema/State/MySqlSchemaStateRepository.php',
         'tests/Architecture/P2RouteSecurityPolicyTest.php',
@@ -145,6 +172,59 @@ final class P2FreezePolicy
         'tests/Integration/MySql/P2SecurityAuthorizationIntegrationTest.php',
         'tests/Support/MySql/AuthorizationMySqlFixture.php',
         'docs/project/project-state.md',
+    ];
+
+    /** @var list<string> */
+    private const P3_B05_MUTABLE_EXISTING_PATHS = [
+        '.env.example',
+        'phpunit.xml.dist',
+        'resources/translations/ar.php',
+        'resources/translations/en.php',
+        'database/migrations.php',
+        'database/seeds.php',
+        'routes/web.php',
+        'public/assets/js/app.js',
+        'public/assets/js/mutation-fetch-client.js',
+        'src/Bootstrap/ApplicationFactory.php',
+        'src/Bootstrap/Module/ApplicationHttpModule.php',
+        'src/Bootstrap/Module/ConsoleFoundationModule.php',
+        'src/Bootstrap/Module/OrganizationsAffiliationsModule.php',
+        'src/Bootstrap/Module/SecurityAuthorizationModule.php',
+        'src/Modules/IdentityAccess/Infrastructure/Persistence/MySqlIdentityAccessRepository.php',
+        'src/Modules/IdentityAccess/Security/RateLimit/IdentityRateLimitScope.php',
+        'src/Modules/IdentityMultiFactor/Domain/StepUpAction.php',
+        'src/Modules/IdentitySecurityNotifications/Domain/AccountSecurityNotificationType.php',
+        'src/Modules/IdentitySessions/Interface/Http/ApplicationReadinessController.php',
+        'src/Modules/SecurityAudit/Domain/SecurityEventCode.php',
+        'src/Modules/SecurityAudit/Domain/SecurityEventSubjectKind.php',
+        'src/Modules/SecurityAuthorization/Domain/AuthorizationCatalogRegistry.php',
+        'src/Modules/SecurityWeb/Csrf/CsrfAction.php',
+        'src/Shared/Http/Routing/Security/ProductionRouteSecurityPolicyCatalog.php',
+        'src/Shared/Http/Routing/Security/RouteSecurityVerifier.php',
+        'tests/Architecture/P2RouteSecurityPolicyTest.php',
+        'tests/Architecture/ConfigurationArchitectureTest.php',
+        'tests/Architecture/DatabaseArchitectureTest.php',
+        'tests/Architecture/SchemaFoundationArchitectureTest.php',
+        'tests/Architecture/SourceArchitectureTest.php',
+        'tests/Integration/Console/BackgroundConsoleIntegrationTest.php',
+        'tests/Integration/Bootstrap/FoundationCompilationTest.php',
+        'tests/Frontend/test-dom.js',
+        'tests/Frontend/mutation-fetch-client.test.js',
+        'tests/Integration/MySql/IdentityTenancyFoundationIntegrationTest.php',
+        'tests/Integration/MySql/P2IdentityMultiFactorIntegrationTest.php',
+        'tests/Integration/MySql/P2IdentityRecoveryHttpIntegrationTest.php',
+        'tests/Integration/MySql/P2SecurityAuthorizationIntegrationTest.php',
+        'tests/Integration/MySql/P2WebAuthnCeremonyIntegrationTest.php',
+        'tests/Support/MySql/AuthorizationMySqlFixture.php',
+        'tests/Tools/Closeout/P2FreezeTest.php',
+        'tools/Closeout/P2FreezePolicy.php',
+        'tools/Closeout/P2FreezeVerifier.php',
+        'docs/operations/quality-attribute-parameter-register.md',
+        'docs/project/decision-register.md',
+        'docs/project/open-decisions.md',
+        'docs/project/risk-register.md',
+        'docs/project/project-state.md',
+        'docs/project/p3-p2-freeze-extension-ledger.yaml',
     ];
 
     public function __construct(private readonly PathPolicy $pathPolicy = new PathPolicy())
@@ -247,7 +327,7 @@ final class P2FreezePolicy
 
     public function isP3AuthorizedExtension(string $path): bool
     {
-        return $this->isP3B01Extension($path) || $this->isP3B02Extension($path) || $this->isP3B03Extension($path) || $this->isP3B04Extension($path);
+        return $this->isP3B01Extension($path) || $this->isP3B02Extension($path) || $this->isP3B03Extension($path) || $this->isP3B04Extension($path) || $this->isP3B05Extension($path);
     }
 
     public function isP3B01MutableExistingPath(string $path): bool
@@ -292,12 +372,29 @@ final class P2FreezePolicy
         return in_array(PathPolicy::normalize($path), self::P3_B04_MUTABLE_EXISTING_PATHS, true);
     }
 
+    public function isP3B05Extension(string $path): bool
+    {
+        foreach (self::P3_B05_EXTENSION_PREFIXES as $prefix) {
+            if (str_starts_with(PathPolicy::normalize($path), $prefix)) {
+                return true;
+            }
+        }
+
+        return false;
+    }
+
+    public function isP3B05MutableExistingPath(string $path): bool
+    {
+        return in_array(PathPolicy::normalize($path), self::P3_B05_MUTABLE_EXISTING_PATHS, true);
+    }
+
     public function isP3MutableExistingPath(string $path): bool
     {
         return $this->isP3B01MutableExistingPath($path)
             || $this->isP3B02MutableExistingPath($path)
             || $this->isP3B03MutableExistingPath($path)
-            || $this->isP3B04MutableExistingPath($path);
+            || $this->isP3B04MutableExistingPath($path)
+            || $this->isP3B05MutableExistingPath($path);
     }
 
     public function category(string $path): string

@@ -15,19 +15,6 @@
             <directory>tests/Architecture</directory>
             <directory>tests/Tools</directory>
         </testsuite>
-        <testsuite name="Unit">
-            <directory>tests/Unit</directory>
-        </testsuite>
-        <testsuite name="Integration">
-            <directory>tests/Integration</directory>
-            <exclude>tests/Integration/MySql</exclude>
-        </testsuite>
-        <testsuite name="Architecture">
-            <directory>tests/Architecture</directory>
-        </testsuite>
-        <testsuite name="Tools">
-            <directory>tests/Tools</directory>
-        </testsuite>
         <testsuite name="MySQL">
             <directory>tests/Integration/MySql</directory>
         </testsuite>

@@ -43,6 +43,12 @@ use Qmdb\Modules\OrganizationAffiliations\Infrastructure\Migration\CreateOrganiz
 use Qmdb\Modules\OrganizationAffiliations\Infrastructure\Migration\CreateOrganizationAffiliationsMigration;
 use Qmdb\Modules\OrganizationAffiliations\Infrastructure\Migration\CreateOrganizationAffiliationAssignmentsMigration;
 use Qmdb\Modules\OrganizationAffiliations\Infrastructure\Migration\ExtendOrganizationAffiliationExpiryNotificationMigration;
+use Qmdb\Modules\IdentityResolution\Infrastructure\Migration\CreateProfileClaimPairingAndClaimMigration;
+use Qmdb\Modules\IdentityResolution\Infrastructure\Migration\CreateProfileVerificationAssertionsMigration;
+use Qmdb\Modules\IdentityResolution\Infrastructure\Migration\CreatePersonDuplicateCasesMigration;
+use Qmdb\Modules\IdentityResolution\Infrastructure\Migration\CreatePersonCanonicalAliasesMigration;
+use Qmdb\Modules\IdentityResolution\Infrastructure\Migration\ExtendIdentityResolutionSecurityCatalogMigration;
+use Qmdb\Modules\IdentityResolution\Infrastructure\Migration\ExtendIdentityResolutionReviewIdempotencyMigration;
 use Qmdb\Shared\Schema\Migration\MigrationRegistry;
 use Qmdb\Shared\Schema\Migration\MigrationRegistryBuilder;
 
@@ -89,5 +95,11 @@ return static function (): MigrationRegistry {
         ->register(new CreateOrganizationAffiliationsMigration())
         ->register(new CreateOrganizationAffiliationAssignmentsMigration())
         ->register(new ExtendOrganizationAffiliationExpiryNotificationMigration())
+        ->register(new CreateProfileClaimPairingAndClaimMigration())
+        ->register(new CreateProfileVerificationAssertionsMigration())
+        ->register(new CreatePersonDuplicateCasesMigration())
+        ->register(new CreatePersonCanonicalAliasesMigration())
+        ->register(new ExtendIdentityResolutionSecurityCatalogMigration())
+        ->register(new ExtendIdentityResolutionReviewIdempotencyMigration())
         ->build();
 };

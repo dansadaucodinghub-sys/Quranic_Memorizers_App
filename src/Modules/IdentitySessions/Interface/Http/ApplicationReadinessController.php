@@ -19,6 +19,7 @@ use Qmdb\Modules\Geography\Application\GeographyReferenceReadinessCheck;
 use Qmdb\Modules\People\Application\PeopleProfilesReadinessCheck;
 use Qmdb\Modules\Organizations\Application\OrganizationsRegistryReadinessCheck;
 use Qmdb\Modules\OrganizationAffiliations\Application\OrganizationAffiliationsReadinessCheck;
+use Qmdb\Modules\IdentityResolution\Application\PeopleIdentityResolutionReadinessCheck;
 use Qmdb\Shared\Database\Health\DatabaseHealthCheck;
 use Qmdb\Shared\Http\Contract\Controller;
 use Qmdb\Shared\Http\Message\JsonResponseFactory;
@@ -43,6 +44,7 @@ final readonly class ApplicationReadinessController implements Controller
         private PeopleProfilesReadinessCheck $peopleProfiles,
         private OrganizationsRegistryReadinessCheck $organizationsRegistry,
         private OrganizationAffiliationsReadinessCheck $organizationAffiliations,
+        private PeopleIdentityResolutionReadinessCheck $identityResolution,
     ) {
     }
 
@@ -63,6 +65,7 @@ final readonly class ApplicationReadinessController implements Controller
         $ready = $ready && $this->peopleProfiles->isReady();
         $ready = $ready && $this->organizationsRegistry->isReady();
         $ready = $ready && $this->organizationAffiliations->isReady();
+        $ready = $ready && $this->identityResolution->isReady();
 
         return $this->responses->create(['status' => $ready ? 'ready' : 'not_ready'], $ready ? 200 : 503);
     }

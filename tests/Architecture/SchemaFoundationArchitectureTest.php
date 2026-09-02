@@ -7,6 +7,13 @@ namespace Qmdb\Tests\Architecture;
 use PHPUnit\Framework\TestCase;
 use Qmdb\Modules\Identity\Infrastructure\Migration\CreateAccountSecurityFoundationMigration;
 use Qmdb\Modules\Identity\Infrastructure\Migration\CreateUserAccountsMigration;
+use Qmdb\Modules\IdentityResolution\Infrastructure\Migration\CreatePersonCanonicalAliasesMigration;
+use Qmdb\Modules\IdentityResolution\Infrastructure\Migration\CreatePersonDuplicateCasesMigration;
+use Qmdb\Modules\IdentityResolution\Infrastructure\Migration\CreateProfileClaimPairingAndClaimMigration;
+use Qmdb\Modules\IdentityResolution\Infrastructure\Migration\CreateProfileVerificationAssertionsMigration;
+use Qmdb\Modules\IdentityResolution\Infrastructure\Migration\ExtendIdentityResolutionReviewIdempotencyMigration;
+use Qmdb\Modules\IdentityResolution\Infrastructure\Migration\ExtendIdentityResolutionSecurityCatalogMigration;
+use Qmdb\Modules\IdentityResolution\Infrastructure\Seed\SeedPeopleIdentityResolutionAuthorization;
 use Qmdb\Modules\Geography\Infrastructure\Migration\CreateGeographyAdministrativeAreaHierarchyMigration;
 use Qmdb\Modules\Geography\Infrastructure\Migration\CreateGeographyCountryAndDatasetFoundationMigration;
 use Qmdb\Modules\Geography\Infrastructure\Seed\SeedNigeriaAdministrativeGeography;
@@ -60,7 +67,7 @@ use SplFileInfo;
 
 final class SchemaFoundationArchitectureTest extends TestCase
 {
-    public function testProductionManifestsContainAuthorizedP1ThroughP3B04SchemaChanges(): void
+    public function testProductionManifestsContainAuthorizedP1ThroughP3B05SchemaChanges(): void
     {
         $migrationFactory = require dirname(__DIR__, 2) . '/database/migrations.php';
         $seedFactory = require dirname(__DIR__, 2) . '/database/seeds.php';
@@ -75,7 +82,7 @@ final class SchemaFoundationArchitectureTest extends TestCase
         }
 
         $ordered = $migrations->ordered();
-        self::assertCount(41, $ordered);
+        self::assertCount(47, $ordered);
         self::assertSame(
             [
                 CreateScheduledTaskRunsMigration::class,
@@ -119,6 +126,12 @@ final class SchemaFoundationArchitectureTest extends TestCase
                 CreateOrganizationAffiliationsMigration::class,
                 CreateOrganizationAffiliationAssignmentsMigration::class,
                 ExtendOrganizationAffiliationExpiryNotificationMigration::class,
+                CreateProfileClaimPairingAndClaimMigration::class,
+                CreateProfileVerificationAssertionsMigration::class,
+                CreatePersonDuplicateCasesMigration::class,
+                CreatePersonCanonicalAliasesMigration::class,
+                ExtendIdentityResolutionSecurityCatalogMigration::class,
+                ExtendIdentityResolutionReviewIdempotencyMigration::class,
             ],
             array_map(static fn (Migration $migration): string => $migration::class, $ordered),
         );
@@ -165,10 +178,16 @@ final class SchemaFoundationArchitectureTest extends TestCase
                 '20260901040500_create_organization_affiliations',
                 '20260901040600_create_organization_affiliation_assignments',
                 '20260902040401_extend_organization_affiliation_expiry_notification',
+                '20260902050100_create_profile_claim_pairing_and_claim',
+                '20260902050200_create_profile_verification_assertions',
+                '20260902050300_create_person_duplicate_cases',
+                '20260902050400_create_person_canonical_aliases',
+                '20260902050500_extend_identity_resolution_security_catalog',
+                '20260902050600_extend_identity_resolution_review_idempotency',
             ],
             array_map(static fn (Migration $migration): string => $migration->id()->value(), $ordered),
         );
-        self::assertCount(7, $seeds->ordered());
+        self::assertCount(8, $seeds->ordered());
         self::assertSame(
             [
                 SeedFoundationalAuthorizationCatalog::class,
@@ -178,6 +197,7 @@ final class SchemaFoundationArchitectureTest extends TestCase
                 SeedOrganizationCatalogAndAuthorization::class,
                 SeedOrganizationAffiliationRoleDefinitions::class,
                 SeedOrganizationAffiliationAuthorization::class,
+                SeedPeopleIdentityResolutionAuthorization::class,
             ],
             array_map(static fn (object $seed): string => $seed::class, $seeds->ordered()),
         );

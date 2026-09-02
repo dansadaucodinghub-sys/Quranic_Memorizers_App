@@ -28,6 +28,7 @@ use Qmdb\Bootstrap\Module\IdentitySecurityNotificationsModule;
 use Qmdb\Bootstrap\Module\PeopleProfilesModule;
 use Qmdb\Bootstrap\Module\OrganizationsRegistryModule;
 use Qmdb\Bootstrap\Module\OrganizationsAffiliationsModule;
+use Qmdb\Bootstrap\Module\PeopleIdentityResolutionModule;
 use Qmdb\Bootstrap\Module\ObservabilityFoundationModule;
 use Qmdb\Bootstrap\Module\PresentationFoundationModule;
 use Qmdb\Bootstrap\Module\SchemaFoundationModule;
@@ -51,6 +52,7 @@ use Qmdb\Modules\IdentityAccountState\Configuration\AccountStateConfigurationFac
 use Qmdb\Modules\People\Configuration\PeopleProfilesConfigurationFactory;
 use Qmdb\Modules\Organizations\Configuration\OrganizationsRegistryConfigurationFactory;
 use Qmdb\Modules\OrganizationAffiliations\Configuration\OrganizationAffiliationsConfigurationFactory;
+use Qmdb\Modules\IdentityResolution\Configuration\IdentityResolutionConfigurationFactory;
 use Qmdb\Shared\DependencyInjection\CompiledContainer;
 use Qmdb\Shared\DependencyInjection\ContainerBuilder;
 use Qmdb\Shared\Module\ModuleRegistry;
@@ -180,6 +182,10 @@ final readonly class ApplicationFactory
         $organizationAffiliationsConfiguration = (new OrganizationAffiliationsConfigurationFactory())->create(
             $loadedEnvironment->variables(),
         );
+        $identityResolutionConfiguration = (new IdentityResolutionConfigurationFactory())->create(
+            $loadedEnvironment->variables(),
+            $configuration,
+        );
 
         $registry = new ModuleRegistry([
             new CoreFoundationModule($configuration, $loadedEnvironment->variables(), $runtimeEnvironment),
@@ -213,6 +219,7 @@ final readonly class ApplicationFactory
             new PeopleProfilesModule($peopleProfilesConfiguration),
             new OrganizationsRegistryModule($organizationsRegistryConfiguration),
             new OrganizationsAffiliationsModule($organizationAffiliationsConfiguration),
+            new PeopleIdentityResolutionModule($identityResolutionConfiguration),
             new ApplicationHttpModule($this->projectRoot),
             new ConsoleFoundationModule(),
         ]);

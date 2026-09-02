@@ -27,6 +27,7 @@ use Qmdb\Bootstrap\Module\ObservabilityFoundationModule;
 use Qmdb\Bootstrap\Module\OrganizationsRegistryModule;
 use Qmdb\Bootstrap\Module\OrganizationsAffiliationsModule;
 use Qmdb\Bootstrap\Module\PeopleProfilesModule;
+use Qmdb\Bootstrap\Module\PeopleIdentityResolutionModule;
 use Qmdb\Bootstrap\Module\PresentationFoundationModule;
 use Qmdb\Bootstrap\Module\SchemaFoundationModule;
 use Qmdb\Bootstrap\Module\SecurityWebModule;
@@ -54,6 +55,7 @@ use Qmdb\Modules\IdentityMultiFactor\Configuration\IdentityMultiFactorConfigurat
 use Qmdb\Modules\People\Configuration\PeopleProfilesConfigurationFactory;
 use Qmdb\Modules\Organizations\Configuration\OrganizationsRegistryConfigurationFactory;
 use Qmdb\Modules\OrganizationAffiliations\Configuration\OrganizationAffiliationsConfigurationFactory;
+use Qmdb\Modules\IdentityResolution\Configuration\IdentityResolutionConfigurationFactory;
 use Qmdb\Modules\SecurityPrivilegedAccess\Configuration\PrivilegedAccessConfigurationFactory;
 use Qmdb\Modules\SecurityAudit\Configuration\SecurityAuditConfigurationFactory;
 use Qmdb\Shared\DependencyInjection\CompiledContainer;
@@ -92,6 +94,7 @@ final class FoundationCompilationTest extends TestCase
             'organizations.registry',
             'people.profiles',
             'organizations.affiliations',
+            'people.identity_resolution',
             'application.http',
             'foundation.console',
         ], $registry->orderedModuleIds());
@@ -160,6 +163,7 @@ final class FoundationCompilationTest extends TestCase
         $peopleProfiles = (new PeopleProfilesConfigurationFactory())->create($variables);
         $organizationsRegistry = (new OrganizationsRegistryConfigurationFactory())->create($variables);
         $organizationAffiliations = (new OrganizationAffiliationsConfigurationFactory())->create($variables);
+        $identityResolution = (new IdentityResolutionConfigurationFactory())->create($variables, $configuration);
         $registry = new ModuleRegistry([
             new CoreFoundationModule(
                 $configuration,
@@ -196,6 +200,7 @@ final class FoundationCompilationTest extends TestCase
             new PeopleProfilesModule($peopleProfiles),
             new OrganizationsRegistryModule($organizationsRegistry),
             new OrganizationsAffiliationsModule($organizationAffiliations),
+            new PeopleIdentityResolutionModule($identityResolution),
             new ApplicationHttpModule(dirname(__DIR__, 3)),
             new ConsoleFoundationModule(),
         ]);

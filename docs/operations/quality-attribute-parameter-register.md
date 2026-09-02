@@ -751,3 +751,17 @@ An approved value requires the accountable owner’s evidence, an approved decis
 
 These settings do not constitute legal age advice, legal guardianship certification, retention policy or production
 capacity/SLO approval.
+
+## P3-B05 bounded identity-resolution parameters
+
+| Parameter | Conservative B05 behaviour | Decision owner | Status |
+| --- | --- | --- | --- |
+| Pairing HMAC key and version | A dedicated `AUTH_PROFILE_CLAIM_PAIRING_HMAC_KEY` is mandatory in production-like environments, must be at least 32 bytes and must differ from Audit and MFA keys; version defaults to 1 | Security and Key Management Governance | Implemented technical guard; production custody remains deferred |
+| Pairing entropy, lifetime and attempts | At least 128 bits, default 1,800 seconds and 10 attempts; configured ranges reject weaker or excessive values | Security Operations | Implemented safeguard; production tuning deferred |
+| Claim lifetime and mutation rate | Default 604,800 seconds; claim lifetime cannot be shorter than pairing lifetime; account claim mutations default to 20 attempts per 900 seconds | Product and Security Governance | Implemented safeguard |
+| Duplicate mutation rate | Duplicate actions default to 20 attempts per 900 seconds | Security Operations | Implemented safeguard; production tuning deferred |
+| Page and maintenance bounds | Private lists are capped at 50, maintenance at 100 rows, affected affiliations at 500 and consent authorities at 20 | Privacy, Product and Operations Governance | Implemented bounded work; capacity validation deferred |
+| Review text limits | Reference is capped at 128 bytes and confidential justification at 2,000 bytes | Privacy and Records Governance | Implemented minimization control |
+
+These values are technical safeguards, not legal-identity, legal-guardianship, retention, capacity or service-level
+commitments. Any production value change requires the normal change-control evidence and regression tests.

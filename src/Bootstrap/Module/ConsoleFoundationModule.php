@@ -46,6 +46,7 @@ use Qmdb\Modules\Geography\Interface\Console\GeographyReferenceVerifyConsoleComm
 use Qmdb\Modules\People\Interface\Console\PeopleProfilesVerifyConsoleCommand;
 use Qmdb\Modules\Organizations\Interface\Console\OrganizationsRegistryVerifyConsoleCommand;
 use Qmdb\Modules\OrganizationAffiliations\Interface\Console\OrganizationAffiliationsVerifyConsoleCommand;
+use Qmdb\Modules\IdentityResolution\Interface\Console\PeopleIdentityResolutionVerifyConsoleCommand;
 
 final readonly class ConsoleFoundationModule implements Module
 {
@@ -73,6 +74,7 @@ final readonly class ConsoleFoundationModule implements Module
             new ModuleId('people.profiles'),
             new ModuleId('organizations.registry'),
             new ModuleId('organizations.affiliations'),
+            new ModuleId('people.identity_resolution'),
         ];
     }
 
@@ -173,6 +175,7 @@ final readonly class ConsoleFoundationModule implements Module
             PeopleProfilesVerifyConsoleCommand::class,
             OrganizationsRegistryVerifyConsoleCommand::class,
             OrganizationAffiliationsVerifyConsoleCommand::class,
+            PeopleIdentityResolutionVerifyConsoleCommand::class,
         ];
         $context->service(ServiceDefinition::factory(
             ConsoleCommandMap::class,
@@ -205,6 +208,7 @@ final readonly class ConsoleFoundationModule implements Module
                 $registry->register(ServiceReference::get($resolver, PeopleProfilesVerifyConsoleCommand::class));
                 $registry->register(ServiceReference::get($resolver, OrganizationsRegistryVerifyConsoleCommand::class));
                 $registry->register(ServiceReference::get($resolver, OrganizationAffiliationsVerifyConsoleCommand::class));
+                $registry->register(ServiceReference::get($resolver, PeopleIdentityResolutionVerifyConsoleCommand::class));
 
                 return $registry->build();
             }),

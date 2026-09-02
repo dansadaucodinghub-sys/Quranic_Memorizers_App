@@ -22,7 +22,7 @@ final readonly class RouteSecurityVerifier
     public function verify(RouteCollection $routes): RouteSecurityVerificationReport
     {
         $policies = $this->catalog->policies();
-        $catalog = AuthorizationCatalogRegistry::withOrganizationsRegistry();
+        $catalog = AuthorizationCatalogRegistry::withPeopleIdentityResolution();
         $errors = [];
         $classified = 0;
         $mutations = 0;
@@ -92,6 +92,7 @@ final readonly class RouteSecurityVerifier
                 $errors[] = 'Route references an unknown step-up action: ' . $route->name();
             } elseif (
                 $policy->requiredAssurance !== null
+                && $policy->classification !== RouteSecurityClassification::BASE_ROLE_REQUIRED
                 && !$stepUp->requirement()->satisfies(
                     AuthenticationAssuranceLevel::from($policy->requiredAssurance),
                 )

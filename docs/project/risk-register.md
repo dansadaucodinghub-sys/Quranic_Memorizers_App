@@ -532,3 +532,34 @@ recovery-authorized B01 normalization contract.
 | Name/birth-date or geography leakage | No-store/referrer, output encoding and audit/notification minimization tests | Privacy and Security | MITIGATED_FOR_B02_SCOPE |
 | Public profile, profile claim or Person merge is implied | No routes, repositories or UI controls for those capabilities | Product and Privacy Governance | OPEN; BLOCKS_AFFECTED_CAPABILITY |
 | P2 frozen-baseline regression | Controlled extension ledger and P2 freeze verifier | Architecture and Security | MITIGATED_FOR_B02 |
+
+## P3-B05 profile identity-resolution risks
+
+| Risk | Executable treatment | Current disposition |
+| --- | --- | --- |
+| Registry-code-only claim | No route or service accepts a registry code as claim authority; pairing, issuer authorization and claimant acceptance are distinct controls | MITIGATED_FOR_B05 |
+| Pairing-code theft, brute force or replay | High-entropy split selector/secret, HMAC-only storage, attempt limit, expiry, Account binding, one-time consumption and rate limits | MITIGATED_FOR_B05 |
+| Pairing secret logging | Raw secret is absent from persistence, Audit metadata, notifications, response fragments and browser storage | MITIGATED_FOR_B05 |
+| Wrong target Account pairing | Pairing and pending claim bind the exact authenticated Account; cross-Account acceptance denies | MITIGATED_FOR_B05 |
+| Guardian authorization error or changing authority | Exact active SELF/guardian relationship is checked at authorization and claim acceptance revokes superseded management authority | MITIGATED_FOR_B05 |
+| Platform-review abuse | Closed base-role permission, phishing-resistant step-up, confidential reference/justification and self/guardian conflict checks | MITIGATED_FOR_B05; independent second review remains OPEN |
+| False legal-verification claim | Private wording is “QMDB profile record status”; assertions grant no permission and no legal/government/biometric claim exists | MITIGATED_FOR_B05_SCOPE |
+| Minor self-claim | Action-time minor threshold guard rejects self claim | MITIGATED_FOR_B05 |
+| Claim acceptance or revocation race | Optimistic versions, row locks, unique active markers, idempotency and real-MySQL concurrency tests | MITIGATED_FOR_B05 |
+| Acceptance during suspended Account state | Authoritative Account/session state and step-up are rechecked inside the workflow | MITIGATED_FOR_B05 |
+| Two active SELF links | Unique active Account and Person markers plus locked conflict checks | MITIGATED_FOR_B05 |
+| Duplicate Person enumeration | Private Account/Platform routes, generic failures, no public name/birth-date search and no public alias lookup | MITIGATED_FOR_B05 |
+| Automatic false-positive merge | Cases are explicitly reported, never automatically matched; every active manager must consent | MITIGATED_FOR_B05 |
+| Missing or disagreeing consent authority | Managerless cases block; decline blocks; changed authority invalidates and regenerates requirements | MITIGATED_FOR_B05 |
+| Reviewer conflict of interest | Reporter and consenting Account identities cannot review or resolve the case | MITIGATED_FOR_B05 |
+| Demographic, geography, progress or affiliation conflict | Preflight returns safe machine codes and blocks unsafe canonicalization | MITIGATED_FOR_B05 |
+| Account-link conflict | Preflight rejects two active SELF links and never transfers Account ownership | MITIGATED_FOR_B05 |
+| Alias cycle, chain or inbound-alias source | Immutable source-to-canonical alias constraints and preflight rejection | MITIGATED_FOR_B05 |
+| Partial canonicalization or transaction growth | Fixed bounded participants preflight then apply inside one caller-owned transaction; rollback tests cover failure | MITIGATED_FOR_B05 |
+| Name, demographic or geography overwrite | Canonicalization does not overwrite primary identity fields | MITIGATED_FOR_B05 |
+| Person deletion | Source Person is retired and aliased; no delete repository or route exists | MITIGATED_FOR_B05 |
+| Audit, notification or review-justification leakage | Audited metadata is allowlisted; notification payloads and logs exclude confidential review text | MITIGATED_FOR_B05 |
+| Browser-storage leakage | Progressive client only refreshes server fragments and stores no pairing, claim or review material | MITIGATED_FOR_B05 |
+| Claim-maintenance failure | Bounded scheduled task has schema/readiness checks and is exercised by scheduler regression tests | MITIGATED_FOR_B05; production scheduler operation remains OPEN |
+| P2 frozen-baseline regression | Controlled-extension policy, P2 freeze verifier and final repository checks preserve historical evidence | MITIGATED_FOR_B05 |
+| Concurrent Git modification | Advisory lock, expected-HEAD checks before commits/freezes and no history rewrite | MITIGATED_FOR_B05 |

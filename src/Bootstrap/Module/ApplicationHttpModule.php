@@ -60,6 +60,8 @@ use Qmdb\Modules\Organizations\Application\OrganizationsRegistryReadinessCheck;
 use Qmdb\Modules\Organizations\Interface\Http\OrganizationsRegistryController;
 use Qmdb\Modules\OrganizationAffiliations\Application\OrganizationAffiliationsReadinessCheck;
 use Qmdb\Modules\OrganizationAffiliations\Interface\Http\OrganizationAffiliationsController;
+use Qmdb\Modules\IdentityResolution\Application\PeopleIdentityResolutionReadinessCheck;
+use Qmdb\Modules\IdentityResolution\Interface\Http\PeopleIdentityResolutionController;
 use Qmdb\Shared\DependencyInjection\ClosureServiceFactory;
 use Qmdb\Shared\DependencyInjection\DependencyResolver;
 use Qmdb\Shared\DependencyInjection\ServiceDefinition;
@@ -126,6 +128,7 @@ final readonly class ApplicationHttpModule implements Module
             new ModuleId('people.profiles'),
             new ModuleId('organizations.registry'),
             new ModuleId('organizations.affiliations'),
+            new ModuleId('people.identity_resolution'),
         ];
     }
 
@@ -156,6 +159,7 @@ final readonly class ApplicationHttpModule implements Module
                 PeopleProfilesReadinessCheck::class,
                 OrganizationsRegistryReadinessCheck::class,
                 OrganizationAffiliationsReadinessCheck::class,
+                PeopleIdentityResolutionReadinessCheck::class,
             ],
             new ClosureServiceFactory(static fn (DependencyResolver $resolver): ApplicationReadinessController =>
                 new ApplicationReadinessController(
@@ -175,6 +179,7 @@ final readonly class ApplicationHttpModule implements Module
                     ServiceReference::get($resolver, PeopleProfilesReadinessCheck::class),
                     ServiceReference::get($resolver, OrganizationsRegistryReadinessCheck::class),
                     ServiceReference::get($resolver, OrganizationAffiliationsReadinessCheck::class),
+                    ServiceReference::get($resolver, PeopleIdentityResolutionReadinessCheck::class),
                 )),
         ));
         $controllers = [
@@ -218,6 +223,7 @@ final readonly class ApplicationHttpModule implements Module
             PeopleProfilesController::class,
             OrganizationsRegistryController::class,
             OrganizationAffiliationsController::class,
+            PeopleIdentityResolutionController::class,
         ];
         $context->service(ServiceDefinition::factory(
             RouteCollection::class,

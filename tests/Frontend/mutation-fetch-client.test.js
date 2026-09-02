@@ -22,6 +22,7 @@ test('submits one same-origin URL-encoded mutation with CSRF and idempotency hea
     assert.equal(captured.options.method, 'POST');
     assert.equal(captured.options.credentials, 'same-origin');
     assert.equal(captured.options.headers['X-QMDB-CSRF'], 'csrf-value');
+    assert.equal(captured.options.headers['X-QMDB-Locale'], 'en');
     assert.equal(captured.options.headers['Idempotency-Key'], '01991f93-0b42-7abc-8abc-1234567890ab');
     assert.equal(captured.options.headers['X-QMDB-Tenant-Context-Version'], '3');
     assert.match(captured.options.body.toString(), /email=person%40example.test/);

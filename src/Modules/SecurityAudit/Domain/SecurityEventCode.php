@@ -65,6 +65,23 @@ enum SecurityEventCode: string
     case ORGANIZATION_AFFILIATION_ASSIGNMENTS_UPDATED = 'organizations.affiliation.assignments_updated';
     case ORGANIZATION_AFFILIATION_LEADERSHIP_ASSIGNED = 'organizations.affiliation.leadership_assigned';
     case ORGANIZATION_AFFILIATION_LEADERSHIP_REMOVED = 'organizations.affiliation.leadership_removed';
+    case PROFILE_CLAIM_PAIRING_CREATED = 'people.claim_pairing.created';
+    case PROFILE_CLAIM_PAIRING_REVOKED = 'people.claim_pairing.revoked';
+    case PROFILE_CLAIM_PAIRING_EXHAUSTED = 'people.claim_pairing.exhausted';
+    case PROFILE_CLAIM_AUTHORIZED = 'people.profile_claim.authorized';
+    case PROFILE_CLAIM_ACCEPTED = 'people.profile_claim.accepted';
+    case PROFILE_CLAIM_DECLINED = 'people.profile_claim.declined';
+    case PROFILE_CLAIM_REVOKED = 'people.profile_claim.revoked';
+    case PROFILE_CLAIM_EXPIRED = 'people.profile_claim.expired';
+    case PROFILE_VERIFICATION_RECORDED = 'people.profile_verification.recorded';
+    case PROFILE_VERIFICATION_REVOKED = 'people.profile_verification.revoked';
+    case PERSON_DUPLICATE_REPORTED = 'people.duplicate.reported';
+    case PERSON_DUPLICATE_CONSENT_APPROVED = 'people.duplicate.consent_approved';
+    case PERSON_DUPLICATE_CONSENT_DECLINED = 'people.duplicate.consent_declined';
+    case PERSON_DUPLICATE_DISMISSED = 'people.duplicate.dismissed';
+    case PERSON_DUPLICATE_BLOCKED = 'people.duplicate.blocked';
+    case PERSON_DUPLICATE_RESOLVED = 'people.duplicate.resolved';
+    case PERSON_CANONICALIZED = 'people.person.canonicalized';
 
     public function severity(): SecurityEventSeverity
     {

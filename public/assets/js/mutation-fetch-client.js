@@ -33,6 +33,7 @@ export async function submitMutationForm(form, { signal, fetchImpl = globalThis.
         Accept: `${FRAGMENT_MEDIA_TYPE}, application/problem+json`,
         'Content-Type': 'application/x-www-form-urlencoded;charset=UTF-8',
         'X-QMDB-CSRF': typeof csrf === 'string' ? csrf : '',
+        'X-QMDB-Locale': document.documentElement.lang === 'ar' ? 'ar' : 'en',
     };
     if (idempotency) headers['Idempotency-Key'] = idempotency;
     const contextVersion = tenantContextVersion();

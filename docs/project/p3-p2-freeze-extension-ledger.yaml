@@ -1,6 +1,6 @@
 ledger_id: QMDB-P3-P2-EXT-001
-authorization: QMDB-P3-B04-EXEC
-authorized_on: 2026-09-01
+authorization: QMDB-P3-B05-EXEC
+authorized_on: 2026-09-02
 expected_p2_freeze_id: QMDB-P2-FRZ-001
 expected_p2_freeze_manifest: docs/closeout/p2/qmdb-p2-identity-security-tenancy-freeze.yaml
 allowed_modules:
@@ -8,6 +8,7 @@ allowed_modules:
   - people.profiles
   - organizations.registry
   - organizations.affiliations
+  - people.identity_resolution
 allowed_scope:
   - Nigerian country and administrative-reference data
   - geography migrations and seed registration
@@ -18,10 +19,12 @@ allowed_scope:
   - controlled P2 security-catalog, CSRF, idempotency, audit, notification, and rate-limit extensions
   - consent-aware, tenant-scoped Organization-to-Person affiliation source, private account inventories,
     lifecycle records, assignment sets, organization retirement guards, and maintenance
+  - private Account-to-Person claim pairing, Guardian or QMDB record-review authorization, private
+    record-status assertions, consent-gated duplicate cases, canonical aliases, and bounded maintenance
 prohibited_modules:
   - Competitions
-  - Person search, discovery, merge, deletion, profile claiming, contacts, dependent Accounts and tenant-owned Person data
-  - guardian consent, legal-status certification and relationship verification workflows
+  - Person search, discovery, deletion, contacts, dependent Accounts and tenant-owned Person data
+  - guardian invitation/transfer, legal-status certification and relationship verification workflows
 assurance:
   - QMDB-P2-FRZ-001 remains unmodified as the historical P2 baseline.
   - P2 controlled-extension entries remain inventoried without rewriting QMDB-P2-FRZ-001.
@@ -45,3 +48,20 @@ assurance:
   - The P3-B04 compatibility bridge may correct the schema-seed retry ledger so a failed seed that is corrected
     before retry records the checksum of the source actually applied. It is a named P2 immutable-source exception
     in P2FreezePolicy and does not revise any applied migration or seed data.
+  - The P3-B05 compatibility bridge may add private identity-resolution source, schema, routes, tests and
+    progressive enhancement. It may extend only the named closed P2 security catalogs and composition bridges
+    in P2FreezePolicy::P3_B05_MUTABLE_EXISTING_PATHS; it does not revise QMDB-P2-FRZ-001.
+  - The P3-B05 compatibility bridge may normalize phpunit.xml.dist by removing overlapping named suites while
+    retaining the Quality and MySQL suites. This repairs duplicate test registration warnings without changing
+    production behavior, test discovery coverage, or QMDB-P2-FRZ-001.
+  - The P3-B05 compatibility bridge may add English and Arabic private identity-resolution interface copy to the
+    established translation catalogs and may use the existing accessible confirmation dialog for destructive B05
+    actions. It may pass the already-rendered page locale on existing progressive mutation requests. It does not
+    change P2 authentication, authorization, session, or tenant semantics.
+  - The P3-B05 compatibility bridge may update named MySQL test-isolation fixtures to remove new
+    identity-resolution dependent tables before their frozen P2 parent tables, and may refresh a P2 test's
+    registered-seed cardinality or mark the B05 maintenance slot complete inside a deliberately P2-only
+    scheduler fixture. These are test-only dependency-order corrections required by the B05 schema.
+  - The P3-B05 compatibility bridge may record the bounded claim, duplicate-resolution, privacy and operational
+    parameter decisions in the existing quality-attribute, decision, open-decision and risk registers. Those
+    records document the new controlled extension without changing the historical QMDB-P2-FRZ-001 evidence.

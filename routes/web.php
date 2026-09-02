@@ -44,6 +44,7 @@ use Qmdb\Modules\Geography\Interface\Http\NigeriaGeographyDirectoryController;
 use Qmdb\Modules\People\Interface\Http\PeopleProfilesController;
 use Qmdb\Modules\Organizations\Interface\Http\OrganizationsRegistryController;
 use Qmdb\Modules\OrganizationAffiliations\Interface\Http\OrganizationAffiliationsController;
+use Qmdb\Modules\IdentityResolution\Interface\Http\PeopleIdentityResolutionController;
 use Qmdb\Shared\Http\Routing\HttpMethod;
 use Qmdb\Shared\Http\Routing\Route;
 use Qmdb\Shared\Http\Routing\RouteCollection;
@@ -90,6 +91,7 @@ return static function (
     PeopleProfilesController $peopleProfiles,
     OrganizationsRegistryController $organizationsRegistry,
     OrganizationAffiliationsController $organizationAffiliations,
+    PeopleIdentityResolutionController $identityResolution,
 ): RouteCollection {
     return new RouteCollection(
         new Route('system.home', [HttpMethod::GET], new RoutePattern('/'), $homeController),
@@ -483,6 +485,41 @@ return static function (
         new Route('account.person_profile.dependent.memorizer_progress.submit', [HttpMethod::POST], new RoutePattern('/account/dependents/{person_id}/memorizer-progress'), $peopleProfiles),
         new Route('account.person_profile.guardianship.revoke.form', [HttpMethod::GET], new RoutePattern('/account/dependents/{person_id}/guardianship/revoke'), $peopleProfiles),
         new Route('account.person_profile.guardianship.revoke.submit', [HttpMethod::POST], new RoutePattern('/account/dependents/{person_id}/guardianship/revoke'), $peopleProfiles),
+        new Route('account.profile_claim_pairing.form', [HttpMethod::GET], new RoutePattern('/account/profile/claim-pairing'), $identityResolution),
+        new Route('account.profile_claim_pairing.create', [HttpMethod::POST], new RoutePattern('/account/profile/claim-pairing'), $identityResolution),
+        new Route('account.profile_claim_pairing.revoke', [HttpMethod::POST], new RoutePattern('/account/profile/claim-pairing/{pairingId}/revoke'), $identityResolution),
+        new Route('account.profile_claims.index', [HttpMethod::GET], new RoutePattern('/account/profile/claims'), $identityResolution),
+        new Route('account.profile_claim.detail', [HttpMethod::GET], new RoutePattern('/account/profile/claims/{claimId}'), $identityResolution),
+        new Route('account.profile_claim.accept', [HttpMethod::POST], new RoutePattern('/account/profile/claims/{claimId}/accept'), $identityResolution),
+        new Route('account.profile_claim.decline', [HttpMethod::POST], new RoutePattern('/account/profile/claims/{claimId}/decline'), $identityResolution),
+        new Route('account.dependent_profile_claim.authorization.form', [HttpMethod::GET], new RoutePattern('/account/dependents/{personId}/profile-claim/authorization'), $identityResolution),
+        new Route('account.dependent_profile_claim.authorization.submit', [HttpMethod::POST], new RoutePattern('/account/dependents/{personId}/profile-claim/authorization'), $identityResolution),
+        new Route('account.dependent_profile_claim.revoke', [HttpMethod::POST], new RoutePattern('/account/dependents/{personId}/profile-claims/{claimId}/revoke'), $identityResolution),
+        new Route('platform.profile_claim.index', [HttpMethod::GET], new RoutePattern('/platform/people/profile-claims'), $identityResolution),
+        new Route('platform.profile_claim.authorization.form', [HttpMethod::GET], new RoutePattern('/platform/people/profile-claims/authorization'), $identityResolution),
+        new Route('platform.profile_claim.authorization.submit', [HttpMethod::POST], new RoutePattern('/platform/people/profile-claims/authorization'), $identityResolution),
+        new Route('platform.profile_claim.revoke', [HttpMethod::POST], new RoutePattern('/platform/people/profile-claims/{claimId}/revoke'), $identityResolution),
+        new Route('platform.profile_verification.index', [HttpMethod::GET], new RoutePattern('/platform/people/profile-verifications'), $identityResolution),
+        new Route('platform.profile_verification.detail', [HttpMethod::GET], new RoutePattern('/platform/people/profile-verifications/{personId}'), $identityResolution),
+        new Route('platform.profile_verification.record', [HttpMethod::POST], new RoutePattern('/platform/people/profile-verifications/{personId}'), $identityResolution),
+        new Route('platform.profile_verification.revoke', [HttpMethod::POST], new RoutePattern('/platform/people/profile-verifications/{personId}/{assertionId}/revoke'), $identityResolution),
+        new Route('account.person_duplicate.report.form', [HttpMethod::GET], new RoutePattern('/account/profile/duplicates/report'), $identityResolution),
+        new Route('account.person_duplicate.report.submit', [HttpMethod::POST], new RoutePattern('/account/profile/duplicates/report'), $identityResolution),
+        new Route('account.person_duplicate.index', [HttpMethod::GET], new RoutePattern('/account/profile/duplicate-cases'), $identityResolution),
+        new Route('account.person_duplicate.case.detail', [HttpMethod::GET], new RoutePattern('/account/profile/duplicate-cases/{caseId}'), $identityResolution),
+        new Route('account.person_duplicate.consent', [HttpMethod::POST], new RoutePattern('/account/profile/duplicate-cases/{caseId}/consent'), $identityResolution),
+        new Route('account.person_duplicate.decline', [HttpMethod::POST], new RoutePattern('/account/profile/duplicate-cases/{caseId}/decline'), $identityResolution),
+        new Route('account.dependent_duplicate.report.form', [HttpMethod::GET], new RoutePattern('/account/dependents/{personId}/duplicates/report'), $identityResolution),
+        new Route('account.dependent_duplicate.report.submit', [HttpMethod::POST], new RoutePattern('/account/dependents/{personId}/duplicates/report'), $identityResolution),
+        new Route('account.dependent_duplicate.case.detail', [HttpMethod::GET], new RoutePattern('/account/dependents/{personId}/duplicate-cases/{caseId}'), $identityResolution),
+        new Route('account.dependent_duplicate.consent', [HttpMethod::POST], new RoutePattern('/account/dependents/{personId}/duplicate-cases/{caseId}/consent'), $identityResolution),
+        new Route('account.dependent_duplicate.decline', [HttpMethod::POST], new RoutePattern('/account/dependents/{personId}/duplicate-cases/{caseId}/decline'), $identityResolution),
+        new Route('platform.person_duplicate.index', [HttpMethod::GET], new RoutePattern('/platform/people/duplicates'), $identityResolution),
+        new Route('platform.person_duplicate.detail', [HttpMethod::GET], new RoutePattern('/platform/people/duplicates/{caseId}'), $identityResolution),
+        new Route('platform.person_duplicate.review', [HttpMethod::POST], new RoutePattern('/platform/people/duplicates/{caseId}/review'), $identityResolution),
+        new Route('platform.person_duplicate.dismiss', [HttpMethod::POST], new RoutePattern('/platform/people/duplicates/{caseId}/dismiss'), $identityResolution),
+        new Route('platform.person_duplicate.resolve.form', [HttpMethod::GET], new RoutePattern('/platform/people/duplicates/{caseId}/resolve'), $identityResolution),
+        new Route('platform.person_duplicate.resolve.submit', [HttpMethod::POST], new RoutePattern('/platform/people/duplicates/{caseId}/resolve'), $identityResolution),
         new Route('workspace.organizations.index', [HttpMethod::GET], new RoutePattern('/workspace/organizations'), $organizationsRegistry),
         new Route('workspace.organizations.create.form', [HttpMethod::GET], new RoutePattern('/workspace/organizations/create'), $organizationsRegistry),
         new Route('workspace.organizations.create.submit', [HttpMethod::POST], new RoutePattern('/workspace/organizations'), $organizationsRegistry),

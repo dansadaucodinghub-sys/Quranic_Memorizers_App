@@ -62,6 +62,9 @@ final readonly class AuthorizationMySqlFixture
     {
         foreach (
             [
+            'people_person_aliases', 'people_duplicate_case_events', 'people_duplicate_consent_requirements',
+            'people_duplicate_cases', 'people_profile_verification_assertions', 'people_profile_claim_events',
+            'people_profile_claims', 'people_profile_claim_pairings',
             'organization_affiliation_role_assignments', 'organization_affiliation_unit_assignments',
             'organization_affiliation_status_events', 'organization_affiliations',
             'organization_affiliation_role_definitions',

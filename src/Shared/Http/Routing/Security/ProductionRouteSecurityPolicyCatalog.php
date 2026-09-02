@@ -64,6 +64,16 @@ final class ProductionRouteSecurityPolicyCatalog
         'account.affiliations.accept.form', 'account.affiliations.accept.submit',
         'account.affiliations.decline.form', 'account.affiliations.decline.submit',
         'account.affiliations.leave.form', 'account.affiliations.leave.submit',
+        'account.profile_claim_pairing.form', 'account.profile_claim_pairing.create',
+        'account.profile_claim_pairing.revoke', 'account.profile_claims.index',
+        'account.profile_claim.detail', 'account.profile_claim.accept', 'account.profile_claim.decline',
+        'account.dependent_profile_claim.authorization.form', 'account.dependent_profile_claim.authorization.submit',
+        'account.dependent_profile_claim.revoke', 'account.person_duplicate.report.form',
+        'account.person_duplicate.report.submit', 'account.person_duplicate.index',
+        'account.person_duplicate.case.detail', 'account.person_duplicate.consent',
+        'account.person_duplicate.decline', 'account.dependent_duplicate.report.form',
+        'account.dependent_duplicate.report.submit', 'account.dependent_duplicate.case.detail',
+        'account.dependent_duplicate.consent', 'account.dependent_duplicate.decline',
     ];
 
     /** @var list<string> */
@@ -109,6 +119,20 @@ final class ProductionRouteSecurityPolicyCatalog
         'workspace.organizations.affiliations.resume.submit' => 'workspace.organization_affiliations.manage',
         'workspace.organizations.affiliations.end.form' => 'workspace.organization_affiliations.manage',
         'workspace.organizations.affiliations.end.submit' => 'workspace.organization_affiliations.manage',
+        'platform.profile_claim.index' => 'platform.people_profile_claims.authorize',
+        'platform.profile_claim.authorization.form' => 'platform.people_profile_claims.authorize',
+        'platform.profile_claim.authorization.submit' => 'platform.people_profile_claims.authorize',
+        'platform.profile_claim.revoke' => 'platform.people_profile_claims.authorize',
+        'platform.profile_verification.index' => 'platform.people_profile_verifications.manage',
+        'platform.profile_verification.detail' => 'platform.people_profile_verifications.manage',
+        'platform.profile_verification.record' => 'platform.people_profile_verifications.manage',
+        'platform.profile_verification.revoke' => 'platform.people_profile_verifications.manage',
+        'platform.person_duplicate.index' => 'platform.people_duplicates.view',
+        'platform.person_duplicate.detail' => 'platform.people_duplicates.view',
+        'platform.person_duplicate.review' => 'platform.people_duplicates.view',
+        'platform.person_duplicate.dismiss' => 'platform.people_duplicates.resolve',
+        'platform.person_duplicate.resolve.form' => 'platform.people_duplicates.resolve',
+        'platform.person_duplicate.resolve.submit' => 'platform.people_duplicates.resolve',
     ];
 
     /** @var array<string, string> */
@@ -139,6 +163,22 @@ final class ProductionRouteSecurityPolicyCatalog
         'workspace.organizations.affiliations.end.submit' => 'ORGANIZATION_AFFILIATION_END',
         'account.affiliations.accept.submit' => 'ORGANIZATION_AFFILIATION_ACCEPT',
         'account.affiliations.leave.submit' => 'ORGANIZATION_AFFILIATION_LEAVE',
+        'account.dependent_profile_claim.authorization.submit' => 'PROFILE_CLAIM_AUTHORIZE_GUARDIAN',
+        'account.profile_claim.accept' => 'PROFILE_CLAIM_ACCEPT',
+        'account.dependent_profile_claim.revoke' => 'PROFILE_CLAIM_REVOKE',
+        'platform.profile_claim.authorization.submit' => 'PROFILE_CLAIM_AUTHORIZE_PLATFORM',
+        'platform.profile_claim.revoke' => 'PROFILE_CLAIM_REVOKE',
+        'platform.profile_verification.record' => 'PROFILE_VERIFICATION_RECORD',
+        'platform.profile_verification.revoke' => 'PROFILE_VERIFICATION_REVOKE',
+        'account.person_duplicate.report.submit' => 'PROFILE_DUPLICATE_REPORT',
+        'account.dependent_duplicate.report.submit' => 'PROFILE_DUPLICATE_REPORT',
+        'account.person_duplicate.consent' => 'PROFILE_DUPLICATE_CONSENT',
+        'account.person_duplicate.decline' => 'PROFILE_DUPLICATE_CONSENT',
+        'account.dependent_duplicate.consent' => 'PROFILE_DUPLICATE_CONSENT',
+        'account.dependent_duplicate.decline' => 'PROFILE_DUPLICATE_CONSENT',
+        'platform.person_duplicate.review' => 'PROFILE_DUPLICATE_REPORT',
+        'platform.person_duplicate.dismiss' => 'PROFILE_DUPLICATE_DISMISS',
+        'platform.person_duplicate.resolve.submit' => 'PROFILE_DUPLICATE_RESOLVE',
     ];
 
     /** @var array<string, string> */
@@ -211,6 +251,25 @@ final class ProductionRouteSecurityPolicyCatalog
         'account.affiliations.accept.submit' => 'organization.affiliation.accept',
         'account.affiliations.decline.submit' => 'organization.affiliation.decline',
         'account.affiliations.leave.submit' => 'organization.affiliation.leave',
+        'account.profile_claim_pairing.create' => 'people.claim_pairing.create',
+        'account.profile_claim_pairing.revoke' => 'people.claim_pairing.revoke',
+        'account.dependent_profile_claim.authorization.submit' => 'people.profile_claim.authorize',
+        'account.profile_claim.accept' => 'people.profile_claim.accept',
+        'account.profile_claim.decline' => 'people.profile_claim.decline',
+        'account.dependent_profile_claim.revoke' => 'people.profile_claim.revoke',
+        'platform.profile_claim.authorization.submit' => 'people.profile_claim.authorize',
+        'platform.profile_claim.revoke' => 'people.profile_claim.revoke',
+        'platform.profile_verification.record' => 'people.profile_verification.record',
+        'platform.profile_verification.revoke' => 'people.profile_verification.revoke',
+        'account.person_duplicate.report.submit' => 'people.duplicate.report',
+        'account.dependent_duplicate.report.submit' => 'people.duplicate.report',
+        'account.person_duplicate.consent' => 'people.duplicate.consent',
+        'account.person_duplicate.decline' => 'people.duplicate.consent',
+        'account.dependent_duplicate.consent' => 'people.duplicate.consent',
+        'account.dependent_duplicate.decline' => 'people.duplicate.consent',
+        'platform.person_duplicate.review' => 'people.duplicate.report',
+        'platform.person_duplicate.dismiss' => 'people.duplicate.dismiss',
+        'platform.person_duplicate.resolve.submit' => 'people.duplicate.resolve',
     ];
 
     /** @var list<string> */
@@ -236,6 +295,16 @@ final class ProductionRouteSecurityPolicyCatalog
         'workspace.organizations.affiliations.end.submit',
         'account.affiliations.accept.submit', 'account.affiliations.decline.submit',
         'account.affiliations.leave.submit',
+        'account.profile_claim_pairing.create', 'account.profile_claim_pairing.revoke',
+        'account.dependent_profile_claim.authorization.submit', 'account.profile_claim.accept',
+        'account.profile_claim.decline', 'account.dependent_profile_claim.revoke',
+        'platform.profile_claim.authorization.submit', 'platform.profile_claim.revoke',
+        'platform.profile_verification.record', 'platform.profile_verification.revoke',
+        'account.person_duplicate.report.submit', 'account.person_duplicate.consent',
+        'account.person_duplicate.decline', 'account.dependent_duplicate.report.submit',
+        'account.dependent_duplicate.consent', 'account.dependent_duplicate.decline',
+        'platform.person_duplicate.review', 'platform.person_duplicate.dismiss',
+        'platform.person_duplicate.resolve.submit',
     ];
 
     /** @var list<string> */
@@ -262,7 +331,7 @@ final class ProductionRouteSecurityPolicyCatalog
             $policies[$route] = $this->policy(RouteSecurityClassification::BASE_ROLE_REQUIRED, $route);
         }
 
-        if (count($policies) !== 148) {
+        if (count($policies) !== 183) {
             throw new LogicException('The closed production route-security catalog is incomplete.');
         }
 
@@ -277,7 +346,10 @@ final class ProductionRouteSecurityPolicyCatalog
             'workspace.organizations.manage', 'workspace.organization_units.manage',
             'workspace.organization_affiliations.manage', 'workspace.organization_affiliation_assignments.manage' => 'MULTI_FACTOR',
             'workspace.organizations.view', 'workspace.organization_units.view', 'workspace.organization_affiliations.view' => 'PRIMARY',
-            'platform.accounts.suspend', 'platform.accounts.reactivate', 'platform.audit.verify' => 'PHISHING_RESISTANT',
+            'platform.accounts.suspend', 'platform.accounts.reactivate', 'platform.audit.verify',
+            'platform.people_profile_claims.authorize', 'platform.people_profile_verifications.manage',
+            'platform.people_duplicates.resolve' => 'PHISHING_RESISTANT',
+            'platform.people_duplicates.view' => 'MULTI_FACTOR',
             default => null,
         };
 

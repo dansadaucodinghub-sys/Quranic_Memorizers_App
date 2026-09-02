@@ -285,6 +285,7 @@ final class P2IdentityRecoveryHttpIntegrationTest extends MySqlIntegrationTestCa
             . "'identity.security_notifications.deliver', 'security.privileged_access.maintain')",
         );
         $this->markCurrentScheduleSlotSucceeded('organizations.affiliations.maintain', 900);
+        $this->markCurrentScheduleSlotSucceeded('people.profile_claims.maintain', 900);
         $schedule = ApplicationFactory::fromCurrentProcess()->createConsoleApplication()->run(['schedule:run']);
         self::assertSame(
             ExitCode::SUCCESS,
@@ -667,7 +668,7 @@ final class P2IdentityRecoveryHttpIntegrationTest extends MySqlIntegrationTestCa
             ':task_id' => $taskId,
             ':interval_first' => $intervalSeconds,
             ':interval_second' => $intervalSeconds,
-            ':execution_id' => str_repeat('a', 32),
+            ':execution_id' => substr(hash('sha256', $taskId), 0, 32),
             ':status' => 'SUCCEEDED',
         ]);
         self::assertSame(1, $statement->rowCount());
@@ -677,6 +678,10 @@ final class P2IdentityRecoveryHttpIntegrationTest extends MySqlIntegrationTestCa
     private function identityTables(): array
     {
         return [
+            'people_duplicate_case_events', 'people_duplicate_consent_requirements',
+            'people_person_aliases', 'people_duplicate_cases',
+            'people_profile_verification_assertions', 'people_profile_claim_events', 'people_profile_claims',
+            'people_profile_claim_pairings',
             'people_profile_operation_results', 'people_guardianships', 'people_memorizer_progress',
             'people_role_profiles', 'people_person_geographies', 'people_account_links', 'people_person_names',
             'people_persons',

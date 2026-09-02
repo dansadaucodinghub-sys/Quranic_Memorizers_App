@@ -80,7 +80,7 @@ final readonly class SecurityAuthorizationModule implements Module
         $context->service(ServiceDefinition::instance(
             AuthorizationCatalog::class,
             self::ID,
-            AuthorizationCatalogRegistry::withOrganizationsAffiliations(),
+            AuthorizationCatalogRegistry::withPeopleIdentityResolution(),
         ));
         $context->service(ServiceDefinition::instance(
             AuthenticationAssuranceComparator::class,

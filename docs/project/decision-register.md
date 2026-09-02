@@ -580,6 +580,28 @@ These schema conventions translate locked ADR-001 through ADR-020 into a determi
 - **Security impact:** Repeatable analysis, dependency auditing and boundary tests reduce unsafe drift and supply-chain ambiguity.
 - **Future review conditions:** Tool replacement requires equivalent-or-stronger evidence, migration cost, compatibility, security and rollback analysis.
 
+### ADR-056 — Profile-claim pairing and non-destructive Person canonicalization
+
+- **Status:** Approved for P3-B05 implementation.
+- **Context:** A Person registry code is not proof of Account ownership, while duplicate resolution can corrupt
+  sensitive relationships if it silently transfers links or deletes a Person.
+- **Decision:** Profile claims require an expiring, one-time, attempt-bounded pairing secret stored only as a
+  versioned HMAC plus Guardian or exact platform-record-review authorization and claimant acceptance. Duplicate
+  resolution is a consent-gated, conflict-checked, reviewer-operated canonicalization that creates an immutable
+  alias and retires the source Person; it never deletes a Person or performs automatic matching.
+- **Rationale:** The split prevents a registry-code lookup, pairing secret, authorization record, or name similarity
+  from independently granting identity control. Explicit consent, step-up and row-level constraints keep the
+  resulting Account-to-Person link and downstream consolidation bounded and auditable.
+- **Consequences:** Pairing material is never recoverable or emitted to Audit, notifications or browser storage.
+  Assertions use only the term “QMDB profile record status” and grant no permission. Canonicalization must run in
+  one caller-owned transaction through fixed participants, recheck current management authority, reject conflicts,
+  preserve source history and keep Organization-affiliation reassignment tenant-safe.
+- **Security impact:** The decision mitigates pairing replay, cross-Account claims, unilateral guardian/platform
+  action, false legal-verification claims, consent bypass, alias chains/cycles, partial consolidation and Person
+  deletion. Production key custody, retention, legal meaning and an independent second-review policy remain open.
+- **Future review conditions:** Change requires privacy and records-governance approval, migration/rollback and
+  concurrency evidence, updated threat/risk records, and no weakening of the pairing, consent or alias controls.
+
 ## QMDB-P0 closeout consistency review
 
 QMDB-P0-CLOSE validated ADR-001 through ADR-020 without changing their status or meaning. ADR-021 through ADR-041 and ADR-045 through ADR-055 are approved technical conventions for P1 implementation under QMDB-P0-FRZ-001. ADR-042 through ADR-044 remain proposed because canonical Arabic collation and email/phone normalization require later qualified data, identity, security and privacy validation. OD-030, OD-047, OD-048, OD-056 and OD-057 are resolved by the approved roadmap and ADR-030, ADR-031, ADR-037 and ADR-053.
