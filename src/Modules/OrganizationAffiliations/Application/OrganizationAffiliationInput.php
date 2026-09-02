@@ -16,8 +16,7 @@ final readonly class OrganizationAffiliationInput
     private function __construct(
         public array $roles,
         public array $units,
-    )
-    {
+    ) {
     }
 
     /** @param array<string,mixed> $body */
