@@ -62,6 +62,9 @@ final readonly class AuthorizationMySqlFixture
     {
         foreach (
             [
+            'organization_affiliation_role_assignments', 'organization_affiliation_unit_assignments',
+            'organization_affiliation_status_events', 'organization_affiliations',
+            'organization_affiliation_role_definitions',
             'organization_unit_locations', 'organization_unit_names', 'organization_units',
             'organization_jurisdictions', 'organization_classification_assignments', 'organization_names',
             'organizations', 'organization_classifications',

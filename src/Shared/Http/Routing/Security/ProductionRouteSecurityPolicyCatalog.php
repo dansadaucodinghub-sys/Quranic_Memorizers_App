@@ -60,6 +60,10 @@ final class ProductionRouteSecurityPolicyCatalog
         'account.person_profile.dependent.edit.form', 'account.person_profile.dependent.update.submit',
         'account.person_profile.dependent.memorizer_progress.form', 'account.person_profile.dependent.memorizer_progress.submit',
         'account.person_profile.guardianship.revoke.form', 'account.person_profile.guardianship.revoke.submit',
+        'account.affiliations.index', 'account.affiliations.detail',
+        'account.affiliations.accept.form', 'account.affiliations.accept.submit',
+        'account.affiliations.decline.form', 'account.affiliations.decline.submit',
+        'account.affiliations.leave.form', 'account.affiliations.leave.submit',
     ];
 
     /** @var list<string> */
@@ -91,6 +95,20 @@ final class ProductionRouteSecurityPolicyCatalog
         'workspace.organizations.units.update.submit' => 'workspace.organization_units.manage',
         'workspace.organizations.units.retire.form' => 'workspace.organization_units.manage',
         'workspace.organizations.units.retire.submit' => 'workspace.organization_units.manage',
+        'workspace.organizations.affiliations.index' => 'workspace.organization_affiliations.view',
+        'workspace.organizations.affiliations.view' => 'workspace.organization_affiliations.view',
+        'workspace.organizations.affiliations.request.form' => 'workspace.organization_affiliations.manage',
+        'workspace.organizations.affiliations.request.submit' => 'workspace.organization_affiliations.manage',
+        'workspace.organizations.affiliations.assignments.form' => 'workspace.organization_affiliation_assignments.manage',
+        'workspace.organizations.affiliations.assignments.submit' => 'workspace.organization_affiliation_assignments.manage',
+        'workspace.organizations.affiliations.withdraw.form' => 'workspace.organization_affiliations.manage',
+        'workspace.organizations.affiliations.withdraw.submit' => 'workspace.organization_affiliations.manage',
+        'workspace.organizations.affiliations.suspend.form' => 'workspace.organization_affiliations.manage',
+        'workspace.organizations.affiliations.suspend.submit' => 'workspace.organization_affiliations.manage',
+        'workspace.organizations.affiliations.resume.form' => 'workspace.organization_affiliations.manage',
+        'workspace.organizations.affiliations.resume.submit' => 'workspace.organization_affiliations.manage',
+        'workspace.organizations.affiliations.end.form' => 'workspace.organization_affiliations.manage',
+        'workspace.organizations.affiliations.end.submit' => 'workspace.organization_affiliations.manage',
     ];
 
     /** @var array<string, string> */
@@ -116,6 +134,11 @@ final class ProductionRouteSecurityPolicyCatalog
         'account.person_profile.guardianship.revoke.submit' => 'GUARDIANSHIP_REVOKE',
         'workspace.organizations.retire.submit' => 'ORGANIZATION_RETIRE',
         'workspace.organizations.units.retire.submit' => 'ORGANIZATION_UNIT_RETIRE',
+        'workspace.organizations.affiliations.suspend.submit' => 'ORGANIZATION_AFFILIATION_SUSPEND',
+        'workspace.organizations.affiliations.resume.submit' => 'ORGANIZATION_AFFILIATION_RESUME',
+        'workspace.organizations.affiliations.end.submit' => 'ORGANIZATION_AFFILIATION_END',
+        'account.affiliations.accept.submit' => 'ORGANIZATION_AFFILIATION_ACCEPT',
+        'account.affiliations.leave.submit' => 'ORGANIZATION_AFFILIATION_LEAVE',
     ];
 
     /** @var array<string, string> */
@@ -179,6 +202,15 @@ final class ProductionRouteSecurityPolicyCatalog
         'workspace.organizations.units.create.submit' => 'organizations.unit.create',
         'workspace.organizations.units.update.submit' => 'organizations.unit.update',
         'workspace.organizations.units.retire.submit' => 'organizations.unit.retire',
+        'workspace.organizations.affiliations.request.submit' => 'organization.affiliation.request',
+        'workspace.organizations.affiliations.assignments.submit' => 'organization.affiliation.assignments.update',
+        'workspace.organizations.affiliations.withdraw.submit' => 'organization.affiliation.withdraw',
+        'workspace.organizations.affiliations.suspend.submit' => 'organization.affiliation.suspend',
+        'workspace.organizations.affiliations.resume.submit' => 'organization.affiliation.resume',
+        'workspace.organizations.affiliations.end.submit' => 'organization.affiliation.end',
+        'account.affiliations.accept.submit' => 'organization.affiliation.accept',
+        'account.affiliations.decline.submit' => 'organization.affiliation.decline',
+        'account.affiliations.leave.submit' => 'organization.affiliation.leave',
     ];
 
     /** @var list<string> */
@@ -196,6 +228,14 @@ final class ProductionRouteSecurityPolicyCatalog
         'workspace.organizations.create.submit', 'workspace.organizations.update.submit',
         'workspace.organizations.retire.submit', 'workspace.organizations.units.create.submit',
         'workspace.organizations.units.update.submit', 'workspace.organizations.units.retire.submit',
+        'workspace.organizations.affiliations.request.submit',
+        'workspace.organizations.affiliations.assignments.submit',
+        'workspace.organizations.affiliations.withdraw.submit',
+        'workspace.organizations.affiliations.suspend.submit',
+        'workspace.organizations.affiliations.resume.submit',
+        'workspace.organizations.affiliations.end.submit',
+        'account.affiliations.accept.submit', 'account.affiliations.decline.submit',
+        'account.affiliations.leave.submit',
     ];
 
     /** @var list<string> */
@@ -222,7 +262,7 @@ final class ProductionRouteSecurityPolicyCatalog
             $policies[$route] = $this->policy(RouteSecurityClassification::BASE_ROLE_REQUIRED, $route);
         }
 
-        if (count($policies) !== 126) {
+        if (count($policies) !== 148) {
             throw new LogicException('The closed production route-security catalog is incomplete.');
         }
 
@@ -234,8 +274,9 @@ final class ProductionRouteSecurityPolicyCatalog
         $permission = self::BASE_ROLE_PERMISSIONS[$route] ?? null;
         $assurance = match ($permission) {
             'platform.accounts.view', 'platform.security_events.view',
-            'workspace.organizations.manage', 'workspace.organization_units.manage' => 'MULTI_FACTOR',
-            'workspace.organizations.view', 'workspace.organization_units.view' => 'PRIMARY',
+            'workspace.organizations.manage', 'workspace.organization_units.manage',
+            'workspace.organization_affiliations.manage', 'workspace.organization_affiliation_assignments.manage' => 'MULTI_FACTOR',
+            'workspace.organizations.view', 'workspace.organization_units.view', 'workspace.organization_affiliations.view' => 'PRIMARY',
             'platform.accounts.suspend', 'platform.accounts.reactivate', 'platform.audit.verify' => 'PHISHING_RESISTANT',
             default => null,
         };

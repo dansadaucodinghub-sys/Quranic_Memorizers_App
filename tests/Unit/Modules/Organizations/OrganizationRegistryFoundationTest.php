@@ -1,9 +1,34 @@
 <?php
+
 declare(strict_types=1);
+
 namespace Qmdb\Tests\Unit\Modules\Organizations;
-use PHPUnit\Framework\TestCase;use Qmdb\Modules\Organizations\Application\OrganizationInput;use Qmdb\Modules\Organizations\Configuration\OrganizationsRegistryConfigurationFactory;use Qmdb\Modules\Organizations\Domain\OrganizationAccessPolicy;use Qmdb\Modules\Organizations\Domain\OrganizationAccessReason;use Qmdb\Modules\Organizations\Infrastructure\Security\SecureOrganizationRegistryCodeGenerator;use Qmdb\Shared\Configuration\EnvironmentVariables;
+
+use PHPUnit\Framework\TestCase;
+use Qmdb\Modules\Organizations\Application\OrganizationInput;
+use Qmdb\Modules\Organizations\Configuration\OrganizationsRegistryConfigurationFactory;
+use Qmdb\Modules\Organizations\Domain\OrganizationAccessPolicy;
+use Qmdb\Modules\Organizations\Domain\OrganizationAccessReason;
+use Qmdb\Modules\Organizations\Infrastructure\Security\SecureOrganizationRegistryCodeGenerator;
+use Qmdb\Shared\Configuration\EnvironmentVariables;
+
 final class OrganizationRegistryFoundationTest extends TestCase
 {
- public function testRegistryCodesAreOpaqueAndClassificationsNeverGrantAccess():void{$codes=new SecureOrganizationRegistryCodeGenerator();self::assertMatchesRegularExpression('/\AQMO-[A-Z2-9]{16}\z/',$codes->organization());self::assertMatchesRegularExpression('/\AQMU-[A-Z2-9]{16}\z/',$codes->unit());self::assertSame(OrganizationAccessReason::ORGANIZATION_UNAVAILABLE,(new OrganizationAccessPolicy())->visible(null)->reason);}
- public function testConfigurationAndInputEnforceBoundedNamesAndJurisdictionShape():void{$config=(new OrganizationsRegistryConfigurationFactory())->create(new EnvironmentVariables([],'test'));self::assertSame(8,$config->unitMaximumDepth);$input=OrganizationInput::fromBody(['primary_name'=>'  Al-Huda  ','classification_codes'=>'SCHOOL,MOSQUE','primary_classification'=>'SCHOOL','jurisdiction_level'=>'NOT_RECORDED','unit_name'=>'Headquarters','unit_type'=>'HEADQUARTERS'],$config);self::assertSame('Al-Huda',$input->primaryName);self::assertSame(['SCHOOL','MOSQUE'],$input->classificationCodes);$this->expectException(\InvalidArgumentException::class);OrganizationInput::fromBody(['primary_name'=>'Test','classification_codes'=>'OTHER','primary_classification'=>'OTHER','jurisdiction_level'=>'COUNTRY','unit_name'=>'HQ','unit_type'=>'HEADQUARTERS'],$config);}
+    public function testRegistryCodesAreOpaqueAndClassificationsNeverGrantAccess(): void
+    {
+        $codes = new SecureOrganizationRegistryCodeGenerator();
+        self::assertMatchesRegularExpression('/\AQMO-[A-Z2-9]{16}\z/', $codes->organization());
+        self::assertMatchesRegularExpression('/\AQMU-[A-Z2-9]{16}\z/', $codes->unit());
+        self::assertSame(OrganizationAccessReason::ORGANIZATION_UNAVAILABLE, (new OrganizationAccessPolicy())->visible(null)->reason);
+    }
+    public function testConfigurationAndInputEnforceBoundedNamesAndJurisdictionShape(): void
+    {
+        $config = (new OrganizationsRegistryConfigurationFactory())->create(new EnvironmentVariables([]));
+        self::assertSame(8, $config->unitMaximumDepth);
+        $input = OrganizationInput::fromBody(['primary_name' => '  Al-Huda  ','classification_codes' => 'SCHOOL,MOSQUE','primary_classification' => 'SCHOOL','jurisdiction_level' => 'NOT_RECORDED','unit_name' => 'Headquarters','unit_type' => 'HEADQUARTERS'], $config);
+        self::assertSame('Al-Huda', $input->primaryName);
+        self::assertSame(['SCHOOL','MOSQUE'], $input->classificationCodes);
+        $this->expectException(\InvalidArgumentException::class);
+        OrganizationInput::fromBody(['primary_name' => 'Test','classification_codes' => 'OTHER','primary_classification' => 'OTHER','jurisdiction_level' => 'COUNTRY','unit_name' => 'HQ','unit_type' => 'HEADQUARTERS'], $config);
+    }
 }

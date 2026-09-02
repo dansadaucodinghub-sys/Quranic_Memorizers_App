@@ -1,25 +1,509 @@
 <?php
+
 declare(strict_types=1);
+
 namespace Qmdb\Modules\Organizations\Application;
-use Qmdb\Modules\SecurityAuthorization\Application\BaseRoleAuthorizationGuard;
-use DateTimeImmutable;use Qmdb\Modules\IdentityAccess\Domain\IdempotencyClaimStatus;use Qmdb\Modules\IdentityAccess\Domain\Repository\IdentityAccessRepository;use Qmdb\Modules\IdentityAccess\Security\Fingerprint\IdentityFingerprintGenerator;use Qmdb\Modules\IdentityAccess\Security\RateLimit\IdentityRateLimitAttempt;use Qmdb\Modules\IdentityAccess\Security\RateLimit\IdentityRateLimitPolicy;use Qmdb\Modules\IdentityAccess\Security\RateLimit\IdentityRateLimitScope;use Qmdb\Modules\IdentityAccess\Security\RateLimit\IdentityRateLimiter;use Qmdb\Modules\IdentityMultiFactor\Application\StepUpGuard;use Qmdb\Modules\IdentityMultiFactor\Domain\StepUpAction;use Qmdb\Modules\IdentitySessions\Application\AuthenticatedAccountContext;use Qmdb\Modules\Organizations\Configuration\OrganizationsRegistryConfiguration;use Qmdb\Modules\Organizations\Domain\OrganizationRegistryCodeGenerator;use Qmdb\Modules\SecurityAudit\Application\SecurityAuditAppendCommand;use Qmdb\Modules\SecurityAudit\Application\SecurityAuditRecorder;use Qmdb\Modules\SecurityAudit\Domain\SecurityAuditStreamIdentity;use Qmdb\Modules\SecurityAudit\Domain\SecurityAuditStreamType;use Qmdb\Modules\SecurityAudit\Domain\SecurityEventActorKind;use Qmdb\Modules\SecurityAudit\Domain\SecurityEventCode;use Qmdb\Modules\SecurityAudit\Domain\SecurityEventOutcome;use Qmdb\Modules\SecurityAudit\Domain\SecurityEventSubjectKind;use Qmdb\Modules\SecurityAuthorization\Application\AuthorizationRequest;use Qmdb\Modules\SecurityAuthorization\Application\AuthorizationRequirementGuard;use Qmdb\Modules\SecurityAuthorization\Application\AuthorizationSubject;use Qmdb\Modules\SecurityAuthorization\Domain\PermissionCode;use Qmdb\Modules\SecurityAuthorization\Domain\WorkspaceAuthorizationScope;use Qmdb\Modules\TenancyContext\Domain\AccountWorkspaceTenantContext;use Qmdb\Shared\Database\Transaction\TransactionManager;use Qmdb\Shared\Database\Transaction\TransactionOptions;use Qmdb\Shared\Database\Transaction\TransactionRetryPolicy;use Qmdb\Shared\Identifier\UuidV7;use Qmdb\Shared\Time\Clock;
+
+use DateTimeImmutable;
+use Qmdb\Modules\IdentityAccess\Domain\IdempotencyClaimStatus;
+use Qmdb\Modules\IdentityAccess\Domain\Repository\IdentityAccessRepository;
+use Qmdb\Modules\IdentityAccess\Security\Fingerprint\IdentityFingerprintGenerator;
+use Qmdb\Modules\IdentityAccess\Security\RateLimit\IdentityRateLimitAttempt;
+use Qmdb\Modules\IdentityAccess\Security\RateLimit\IdentityRateLimitPolicy;
+use Qmdb\Modules\IdentityAccess\Security\RateLimit\IdentityRateLimitScope;
+use Qmdb\Modules\IdentityAccess\Security\RateLimit\IdentityRateLimiter;
+use Qmdb\Modules\IdentityMultiFactor\Application\StepUpGuard;
+use Qmdb\Modules\IdentityMultiFactor\Domain\StepUpAction;
+use Qmdb\Modules\IdentitySessions\Application\AuthenticatedAccountContext;
+use Qmdb\Modules\Organizations\Configuration\OrganizationsRegistryConfiguration;
+use Qmdb\Modules\Organizations\Domain\OrganizationRegistryCodeGenerator;
+use Qmdb\Modules\Organizations\Domain\OrganizationSubmissionId;
+use Qmdb\Modules\SecurityAudit\Application\SecurityAuditAppendCommand;
+use Qmdb\Modules\SecurityAudit\Application\SecurityAuditRecorder;
+use Qmdb\Modules\SecurityAudit\Domain\SecurityAuditStreamIdentity;
+use Qmdb\Modules\SecurityAudit\Domain\SecurityAuditStreamType;
+use Qmdb\Modules\SecurityAudit\Domain\SecurityEventActorKind;
+use Qmdb\Modules\SecurityAudit\Domain\SecurityEventCode;
+use Qmdb\Modules\SecurityAudit\Domain\SecurityEventOutcome;
+use Qmdb\Modules\SecurityAudit\Domain\SecurityEventSubjectKind;
+use Qmdb\Modules\SecurityAuthorization\Application\AuthorizationRequest;
+use Qmdb\Modules\SecurityAuthorization\Application\AuthorizationSubject;
+use Qmdb\Modules\SecurityAuthorization\Application\AuthorizationRequirementGuard;
+use Qmdb\Modules\SecurityAuthorization\Domain\PermissionCode;
+use Qmdb\Modules\SecurityAuthorization\Domain\WorkspaceAuthorizationScope;
+use Qmdb\Modules\TenancyContext\Domain\AccountWorkspaceTenantContext;
+use Qmdb\Shared\Database\Transaction\TransactionManager;
+use Qmdb\Shared\Database\Transaction\TransactionOptions;
+use Qmdb\Shared\Database\Transaction\TransactionRetryPolicy;
+use Qmdb\Shared\Identifier\UuidV7;
+use Qmdb\Shared\Time\Clock;
+
+/**
+ * @phpstan-import-type InputData from OrganizationRegistryRepository
+ * @phpstan-import-type Record from OrganizationRegistryRepository
+ */
 final readonly class OrganizationsRegistryService
 {
- public function __construct(private OrganizationRegistryRepository $organizations,private IdentityAccessRepository $idempotency,private IdentityRateLimiter $rateLimits,private IdentityFingerprintGenerator $fingerprints,private BaseRoleAuthorizationGuard $authorization,private StepUpGuard $stepUp,private SecurityAuditRecorder $audit,private OrganizationRegistryCodeGenerator $codes,private OrganizationsRegistryConfiguration $config,private TransactionManager $transactions,private Clock $clock){}
- /** @return list<array<string,mixed>> */ public function list(AuthenticatedAccountContext $actor,AccountWorkspaceTenantContext $context,string $search):array{$this->authorize($actor,$context,'workspace.organizations.view');return $this->organizations->list($context->tenant(),$search,50);}
- /** @return array<string,mixed>|null */ public function organization(AuthenticatedAccountContext $actor,AccountWorkspaceTenantContext $context,string $id):?array{$this->authorize($actor,$context,'workspace.organizations.view');return $this->organizations->organization($context->tenant(),$id);}
- /** @return list<array<string,mixed>> */ public function classifications(AuthenticatedAccountContext $actor,AccountWorkspaceTenantContext $context):array{$this->authorize($actor,$context,'workspace.organizations.view');return $this->organizations->classifications();}
- /** @return array<string,mixed> */ public function create(AuthenticatedAccountContext $actor,AccountWorkspaceTenantContext $context,OrganizationSubmissionId $submission,OrganizationInput $input):array{$this->authorize($actor,$context,'workspace.organizations.manage');$this->rate($actor,false);return $this->transactions->transactional(function()use($actor,$context,$submission,$input){$now=$this->clock->now();$claim=$this->claim($submission,'ORGANIZATION_CREATE',$actor,$context,$input->primaryName);if($claim===IdempotencyClaimStatus::CONFLICT)throw new \DomainException('Organization submission conflicts with a prior request.');if($claim===IdempotencyClaimStatus::REPLAY)throw new \DomainException('Organization replay cannot be resolved safely.');$id=UuidV7::generate()->toString();$record=$this->organizations->create($context->tenant(),$actor->accountInternalId,$id,$this->codes->organization(),$this->input($input),$now);$this->idempotency->completeIdempotency($submission,$now);$this->audit($actor,$context,$id,SecurityEventCode::ORGANIZATION_CREATED,SecurityEventSubjectKind::ORGANIZATION,['organization_version'=>(int)$record['version']],$now);return $record;},TransactionOptions::readWrite(retryPolicy:new TransactionRetryPolicy(3,15,150)));}
- /** @return array<string,mixed> */ public function update(AuthenticatedAccountContext $actor,AccountWorkspaceTenantContext $context,OrganizationSubmissionId $submission,string $id,OrganizationInput $input,int $version):array{$this->authorize($actor,$context,'workspace.organizations.manage');$this->rate($actor,false);return $this->transactions->transactional(function()use($actor,$context,$submission,$id,$input,$version){$now=$this->clock->now();$claim=$this->claim($submission,'ORGANIZATION_UPDATE',$actor,$context,$id."\0".$version);if($claim!==IdempotencyClaimStatus::CLAIMED)throw new \DomainException('Organization update is not available.');$record=$this->required($this->organizations->organization($context->tenant(),$id,true));$updated=$this->organizations->update($context->tenant(),$record,$this->input($input),$version,$now);$this->idempotency->completeIdempotency($submission,$now);$this->audit($actor,$context,$id,SecurityEventCode::ORGANIZATION_UPDATED,SecurityEventSubjectKind::ORGANIZATION,['organization_version'=>(int)$updated['version'],'changed_fields'=>['name','classification','jurisdiction']],$now);return $updated;},TransactionOptions::readWrite(retryPolicy:new TransactionRetryPolicy(3,15,150)));}
- public function retire(AuthenticatedAccountContext $actor,AccountWorkspaceTenantContext $context,OrganizationSubmissionId $submission,string $id,int $version):void{$this->authorize($actor,$context,'workspace.organizations.manage');$this->rate($actor,false);$this->transactions->transactional(function()use($actor,$context,$submission,$id,$version){$now=$this->clock->now();if($this->claim($submission,'ORGANIZATION_RETIRE',$actor,$context,$id."\0".$version)!==IdempotencyClaimStatus::CLAIMED)throw new \DomainException('Organization retirement is not available.');$this->stepUp->consumeWithGrant($actor,StepUpAction::ORGANIZATION_RETIRE);$record=$this->required($this->organizations->organization($context->tenant(),$id,true));$retired=$this->organizations->retire($context->tenant(),$record,$version,$now);$this->idempotency->completeIdempotency($submission,$now);$this->audit($actor,$context,$id,SecurityEventCode::ORGANIZATION_RETIRED,SecurityEventSubjectKind::ORGANIZATION,['retired_unit_count'=>$retired],$now);},TransactionOptions::readWrite(retryPolicy:new TransactionRetryPolicy(3,15,150)));}
- /** @return list<array<string,mixed>> */ public function units(AuthenticatedAccountContext $actor,AccountWorkspaceTenantContext $context,string $id):array{$this->authorize($actor,$context,'workspace.organization_units.view');$o=$this->required($this->organizations->organization($context->tenant(),$id));return $this->organizations->units($context->tenant(),$o);}
- /** @return array<string,mixed> */ public function createUnit(AuthenticatedAccountContext $actor,AccountWorkspaceTenantContext $context,OrganizationSubmissionId $submission,string $organizationId,?string $parentId,OrganizationInput $input):array{$this->authorize($actor,$context,'workspace.organization_units.manage');$this->rate($actor,true);return $this->transactions->transactional(function()use($actor,$context,$submission,$organizationId,$parentId,$input){$now=$this->clock->now();if($this->claim($submission,'ORGANIZATION_UNIT_CREATE',$actor,$context,$organizationId."\0".$parentId)!==IdempotencyClaimStatus::CLAIMED)throw new \DomainException('Organization Unit creation is not available.');$o=$this->required($this->organizations->organization($context->tenant(),$organizationId,true));$parent=$parentId===null?null:$this->required($this->organizations->unit($context->tenant(),$o,$parentId,true));$id=UuidV7::generate()->toString();$unit=$this->organizations->createChildUnit($context->tenant(),$o,$this->input($input),$parent,$actor->accountInternalId,$id,$this->codes->unit(),$now);$this->idempotency->completeIdempotency($submission,$now);$this->audit($actor,$context,$id,SecurityEventCode::ORGANIZATION_UNIT_CREATED,SecurityEventSubjectKind::ORGANIZATION_UNIT,['organization_public_id'=>$organizationId,'unit_version'=>(int)$unit['version']],$now);return $unit;},TransactionOptions::readWrite(retryPolicy:new TransactionRetryPolicy(3,15,150)));}
- /** @return array<string,mixed> */ public function updateUnit(AuthenticatedAccountContext $actor,AccountWorkspaceTenantContext $context,OrganizationSubmissionId $submission,string $organizationId,string $unitId,OrganizationInput $input,int $version):array{$this->authorize($actor,$context,'workspace.organization_units.manage');$this->rate($actor,true);return $this->transactions->transactional(function()use($actor,$context,$submission,$organizationId,$unitId,$input,$version){$now=$this->clock->now();if($this->claim($submission,'ORGANIZATION_UNIT_UPDATE',$actor,$context,$unitId."\0".$version)!==IdempotencyClaimStatus::CLAIMED)throw new \DomainException('Organization Unit update is not available.');$o=$this->required($this->organizations->organization($context->tenant(),$organizationId,true));$u=$this->required($this->organizations->unit($context->tenant(),$o,$unitId,true));$updated=$this->organizations->updateUnit($context->tenant(),$o,$u,$this->input($input),$version,$now);$this->idempotency->completeIdempotency($submission,$now);$this->audit($actor,$context,$unitId,SecurityEventCode::ORGANIZATION_UNIT_UPDATED,SecurityEventSubjectKind::ORGANIZATION_UNIT,['unit_version'=>(int)$updated['version'],'changed_fields'=>['name','type','location']],$now);return $updated;},TransactionOptions::readWrite(retryPolicy:new TransactionRetryPolicy(3,15,150)));}
- public function retireUnit(AuthenticatedAccountContext $actor,AccountWorkspaceTenantContext $context,OrganizationSubmissionId $submission,string $organizationId,string $unitId,int $version):void{$this->authorize($actor,$context,'workspace.organization_units.manage');$this->rate($actor,true);$this->transactions->transactional(function()use($actor,$context,$submission,$organizationId,$unitId,$version){$now=$this->clock->now();if($this->claim($submission,'ORGANIZATION_UNIT_RETIRE',$actor,$context,$unitId."\0".$version)!==IdempotencyClaimStatus::CLAIMED)throw new \DomainException('Organization Unit retirement is not available.');$this->stepUp->consumeWithGrant($actor,StepUpAction::ORGANIZATION_UNIT_RETIRE);$o=$this->required($this->organizations->organization($context->tenant(),$organizationId,true));$u=$this->required($this->organizations->unit($context->tenant(),$o,$unitId,true));$this->organizations->retireUnit($context->tenant(),$o,$u,$version,$now);$this->idempotency->completeIdempotency($submission,$now);$this->audit($actor,$context,$unitId,SecurityEventCode::ORGANIZATION_UNIT_RETIRED,SecurityEventSubjectKind::ORGANIZATION_UNIT,['organization_public_id'=>$organizationId],$now);},TransactionOptions::readWrite(retryPolicy:new TransactionRetryPolicy(3,15,150)));}
- private function authorize(AuthenticatedAccountContext $a,AccountWorkspaceTenantContext $c,string $p):void{$this->authorization->requireAllowed(new AuthorizationRequest(AuthorizationSubject::fromAuthenticatedContext($a),new PermissionCode($p),new WorkspaceAuthorizationScope($c)));}
- private function rate(AuthenticatedAccountContext $a,bool $unit):void{$policy=new IdentityRateLimitPolicy($unit?$this->config->unitMutationWindowSeconds:$this->config->mutationWindowSeconds,$unit?$this->config->unitMutationMaximumAttempts:$this->config->mutationMaximumAttempts,$unit?$this->config->unitMutationWindowSeconds:$this->config->mutationWindowSeconds);$scopes=$unit?[IdentityRateLimitScope::ORGANIZATION_UNIT_MUTATION_ACCOUNT,IdentityRateLimitScope::ORGANIZATION_UNIT_MUTATION_PEER]:[IdentityRateLimitScope::ORGANIZATION_MUTATION_ACCOUNT,IdentityRateLimitScope::ORGANIZATION_MUTATION_PEER];if(!$this->rateLimits->consume([new IdentityRateLimitAttempt($scopes[0],$this->fingerprints->generate('organization-account',(string)$a->accountInternalId),$policy),new IdentityRateLimitAttempt($scopes[1],$this->fingerprints->generate('organization-session',(string)$a->sessionInternalId),$policy)],$this->clock->now())->allowed)throw new \DomainException('Organization operation is temporarily unavailable.');}
- private function claim(OrganizationSubmissionId $s,string $op,AuthenticatedAccountContext $a,AccountWorkspaceTenantContext $c,string $content):IdempotencyClaimStatus{return $this->idempotency->claimIdempotency($s,$op,$this->fingerprints->generate('organization-idempotency',$a->accountInternalId."\0".$c->workspaceInternalId."\0".$op."\0".hash('sha256',$content)),$this->clock->now());}
- /** @param array<string,mixed> $in @return array<string,mixed> */ private function input(OrganizationInput $in):array{return ['primary_name'=>$in->primaryName,'primary_script'=>$in->primaryScript,'classification_codes'=>$in->classificationCodes,'primary_classification'=>$in->primaryClassification,'jurisdiction_level'=>$in->jurisdictionLevel,'country_public_id'=>$in->countryPublicId,'level_one_public_id'=>$in->levelOnePublicId,'level_two_public_id'=>$in->levelTwoPublicId,'unit_name'=>$in->unitName,'unit_script'=>$in->unitScript,'unit_type'=>$in->unitType,'unit_country_public_id'=>$in->unitCountryPublicId,'unit_level_one_public_id'=>$in->unitLevelOnePublicId,'unit_level_two_public_id'=>$in->unitLevelTwoPublicId];}
- private function required(?array $record):array{if($record===null)throw new \DomainException('Organization is unavailable.');return $record;}
- /** @param array<string,mixed> $meta */ private function audit(AuthenticatedAccountContext $a,AccountWorkspaceTenantContext $c,string $subject,SecurityEventCode $code,SecurityEventSubjectKind $kind,array $meta,DateTimeImmutable $now):void{$this->audit->append(new SecurityAuditAppendCommand(new SecurityAuditStreamIdentity(SecurityAuditStreamType::WORKSPACE,UuidV7::fromString($c->workspaceId->toString())),$code,SecurityEventOutcome::SUCCESS,SecurityEventActorKind::ACCOUNT,UuidV7::fromString($a->accountId->toString()),UuidV7::fromString($a->sessionId->toString()),UuidV7::fromString($c->workspaceId->toString()),$kind,UuidV7::fromString($subject),null,null,null,$meta,$now));}
+    public function __construct(
+        private OrganizationRegistryRepository $organizations,
+        private IdentityAccessRepository $idempotency,
+        private IdentityRateLimiter $rateLimits,
+        private IdentityFingerprintGenerator $fingerprints,
+        private AuthorizationRequirementGuard $authorization,
+        private StepUpGuard $stepUp,
+        private SecurityAuditRecorder $audit,
+        private OrganizationRegistryCodeGenerator $codes,
+        private OrganizationsRegistryConfiguration $config,
+        private TransactionManager $transactions,
+        private Clock $clock,
+    ) {
+    }
+
+    /** @return list<Record> */
+    public function list(
+        AuthenticatedAccountContext $actor,
+        AccountWorkspaceTenantContext $context,
+        string $search,
+    ): array {
+        $this->authorize($actor, $context, 'workspace.organizations.view');
+
+        return $this->organizations->list($context->tenant(), $search, 50);
+    }
+
+    /** @return Record|null */
+    public function organization(
+        AuthenticatedAccountContext $actor,
+        AccountWorkspaceTenantContext $context,
+        string $id,
+    ): ?array {
+        $this->authorize($actor, $context, 'workspace.organizations.view');
+
+        return $this->organizations->organization($context->tenant(), $id);
+    }
+
+    /** @return list<Record> */
+    public function classifications(
+        AuthenticatedAccountContext $actor,
+        AccountWorkspaceTenantContext $context,
+    ): array {
+        $this->authorize($actor, $context, 'workspace.organizations.view');
+
+        return $this->organizations->classifications();
+    }
+
+    /** @return Record */
+    public function create(
+        AuthenticatedAccountContext $actor,
+        AccountWorkspaceTenantContext $context,
+        OrganizationSubmissionId $submission,
+        OrganizationInput $input,
+    ): array {
+        $this->authorize($actor, $context, 'workspace.organizations.manage');
+        $this->rate($actor, false);
+
+        return $this->transactions->transactional(
+            function () use ($actor, $context, $submission, $input): array {
+                $now = $this->clock->now();
+                $claim = $this->claim($submission, 'ORGANIZATION_CREATE', $actor, $context, $input->primaryName);
+                if ($claim === IdempotencyClaimStatus::CONFLICT) {
+                    throw new \DomainException('Organization submission conflicts with a prior request.');
+                }
+                if ($claim === IdempotencyClaimStatus::REPLAY) {
+                    throw new \DomainException('Organization replay cannot be resolved safely.');
+                }
+
+                $id = UuidV7::generate()->toString();
+                $record = $this->organizations->create(
+                    $context->tenant(),
+                    $actor->accountInternalId,
+                    $id,
+                    $this->codes->organization(),
+                    $this->input($input),
+                    $now,
+                );
+                $this->idempotency->completeIdempotency($submission, $now);
+                $this->audit(
+                    $actor,
+                    $context,
+                    $id,
+                    SecurityEventCode::ORGANIZATION_CREATED,
+                    SecurityEventSubjectKind::ORGANIZATION,
+                    ['organization_version' => (int) $record['version']],
+                    $now,
+                );
+
+                return $record;
+            },
+            TransactionOptions::readWrite(retryPolicy: new TransactionRetryPolicy(3, 15, 150)),
+        );
+    }
+
+    /** @return Record */
+    public function update(
+        AuthenticatedAccountContext $actor,
+        AccountWorkspaceTenantContext $context,
+        OrganizationSubmissionId $submission,
+        string $id,
+        OrganizationInput $input,
+        int $version,
+    ): array {
+        $this->authorize($actor, $context, 'workspace.organizations.manage');
+        $this->rate($actor, false);
+
+        return $this->transactions->transactional(
+            function () use ($actor, $context, $submission, $id, $input, $version): array {
+                $now = $this->clock->now();
+                $claim = $this->claim($submission, 'ORGANIZATION_UPDATE', $actor, $context, $id . "\0" . $version);
+                if ($claim !== IdempotencyClaimStatus::CLAIMED) {
+                    throw new \DomainException('Organization update is not available.');
+                }
+
+                $record = $this->required($this->organizations->organization($context->tenant(), $id, true));
+                $updated = $this->organizations->update(
+                    $context->tenant(),
+                    $record,
+                    $this->input($input),
+                    $version,
+                    $now,
+                );
+                $this->idempotency->completeIdempotency($submission, $now);
+                $this->audit(
+                    $actor,
+                    $context,
+                    $id,
+                    SecurityEventCode::ORGANIZATION_UPDATED,
+                    SecurityEventSubjectKind::ORGANIZATION,
+                    ['organization_version' => (int) $updated['version'], 'changed_fields' => ['name', 'classification', 'jurisdiction']],
+                    $now,
+                );
+
+                return $updated;
+            },
+            TransactionOptions::readWrite(retryPolicy: new TransactionRetryPolicy(3, 15, 150)),
+        );
+    }
+
+    public function retire(
+        AuthenticatedAccountContext $actor,
+        AccountWorkspaceTenantContext $context,
+        OrganizationSubmissionId $submission,
+        string $id,
+        int $version,
+    ): void {
+        $this->authorize($actor, $context, 'workspace.organizations.manage');
+        $this->rate($actor, false);
+
+        $this->transactions->transactional(
+            function () use ($actor, $context, $submission, $id, $version): void {
+                $now = $this->clock->now();
+                $claim = $this->claim($submission, 'ORGANIZATION_RETIRE', $actor, $context, $id . "\0" . $version);
+                if ($claim !== IdempotencyClaimStatus::CLAIMED) {
+                    throw new \DomainException('Organization retirement is not available.');
+                }
+
+                $this->stepUp->consumeWithGrant($actor, StepUpAction::ORGANIZATION_RETIRE);
+                $record = $this->required($this->organizations->organization($context->tenant(), $id, true));
+                $retired = $this->organizations->retire($context->tenant(), $record, $version, $now);
+                $this->idempotency->completeIdempotency($submission, $now);
+                $this->audit(
+                    $actor,
+                    $context,
+                    $id,
+                    SecurityEventCode::ORGANIZATION_RETIRED,
+                    SecurityEventSubjectKind::ORGANIZATION,
+                    ['retired_unit_count' => $retired],
+                    $now,
+                );
+            },
+            TransactionOptions::readWrite(retryPolicy: new TransactionRetryPolicy(3, 15, 150)),
+        );
+    }
+
+    /** @return list<Record> */
+    public function units(
+        AuthenticatedAccountContext $actor,
+        AccountWorkspaceTenantContext $context,
+        string $id,
+    ): array {
+        $this->authorize($actor, $context, 'workspace.organization_units.view');
+        $organization = $this->required($this->organizations->organization($context->tenant(), $id));
+
+        return $this->organizations->units($context->tenant(), $organization);
+    }
+
+    /** @return Record */
+    public function createUnit(
+        AuthenticatedAccountContext $actor,
+        AccountWorkspaceTenantContext $context,
+        OrganizationSubmissionId $submission,
+        string $organizationId,
+        ?string $parentId,
+        OrganizationInput $input,
+    ): array {
+        $this->authorize($actor, $context, 'workspace.organization_units.manage');
+        $this->rate($actor, true);
+
+        return $this->transactions->transactional(
+            function () use ($actor, $context, $submission, $organizationId, $parentId, $input): array {
+                $now = $this->clock->now();
+                $claim = $this->claim(
+                    $submission,
+                    'ORGANIZATION_UNIT_CREATE',
+                    $actor,
+                    $context,
+                    $organizationId . "\0" . $parentId,
+                );
+                if ($claim !== IdempotencyClaimStatus::CLAIMED) {
+                    throw new \DomainException('Organization Unit creation is not available.');
+                }
+
+                $organization = $this->required($this->organizations->organization($context->tenant(), $organizationId, true));
+                $parent = $parentId === null
+                    ? null
+                    : $this->required($this->organizations->unit($context->tenant(), $organization, $parentId, true));
+                $id = UuidV7::generate()->toString();
+                $unit = $this->organizations->createChildUnit(
+                    $context->tenant(),
+                    $organization,
+                    $this->input($input),
+                    $parent,
+                    $actor->accountInternalId,
+                    $id,
+                    $this->codes->unit(),
+                    $now,
+                );
+                $this->idempotency->completeIdempotency($submission, $now);
+                $this->audit(
+                    $actor,
+                    $context,
+                    $id,
+                    SecurityEventCode::ORGANIZATION_UNIT_CREATED,
+                    SecurityEventSubjectKind::ORGANIZATION_UNIT,
+                    ['organization_public_id' => $organizationId, 'unit_version' => (int) $unit['version']],
+                    $now,
+                );
+
+                return $unit;
+            },
+            TransactionOptions::readWrite(retryPolicy: new TransactionRetryPolicy(3, 15, 150)),
+        );
+    }
+
+    /** @return Record */
+    public function updateUnit(
+        AuthenticatedAccountContext $actor,
+        AccountWorkspaceTenantContext $context,
+        OrganizationSubmissionId $submission,
+        string $organizationId,
+        string $unitId,
+        OrganizationInput $input,
+        int $version,
+    ): array {
+        $this->authorize($actor, $context, 'workspace.organization_units.manage');
+        $this->rate($actor, true);
+
+        return $this->transactions->transactional(
+            function () use ($actor, $context, $submission, $organizationId, $unitId, $input, $version): array {
+                $now = $this->clock->now();
+                $claim = $this->claim($submission, 'ORGANIZATION_UNIT_UPDATE', $actor, $context, $unitId . "\0" . $version);
+                if ($claim !== IdempotencyClaimStatus::CLAIMED) {
+                    throw new \DomainException('Organization Unit update is not available.');
+                }
+
+                $organization = $this->required($this->organizations->organization($context->tenant(), $organizationId, true));
+                $unit = $this->required($this->organizations->unit($context->tenant(), $organization, $unitId, true));
+                $updated = $this->organizations->updateUnit(
+                    $context->tenant(),
+                    $organization,
+                    $unit,
+                    $this->input($input),
+                    $version,
+                    $now,
+                );
+                $this->idempotency->completeIdempotency($submission, $now);
+                $this->audit(
+                    $actor,
+                    $context,
+                    $unitId,
+                    SecurityEventCode::ORGANIZATION_UNIT_UPDATED,
+                    SecurityEventSubjectKind::ORGANIZATION_UNIT,
+                    ['unit_version' => (int) $updated['version'], 'changed_fields' => ['name', 'type', 'location']],
+                    $now,
+                );
+
+                return $updated;
+            },
+            TransactionOptions::readWrite(retryPolicy: new TransactionRetryPolicy(3, 15, 150)),
+        );
+    }
+
+    public function retireUnit(
+        AuthenticatedAccountContext $actor,
+        AccountWorkspaceTenantContext $context,
+        OrganizationSubmissionId $submission,
+        string $organizationId,
+        string $unitId,
+        int $version,
+    ): void {
+        $this->authorize($actor, $context, 'workspace.organization_units.manage');
+        $this->rate($actor, true);
+
+        $this->transactions->transactional(
+            function () use ($actor, $context, $submission, $organizationId, $unitId, $version): void {
+                $now = $this->clock->now();
+                $claim = $this->claim($submission, 'ORGANIZATION_UNIT_RETIRE', $actor, $context, $unitId . "\0" . $version);
+                if ($claim !== IdempotencyClaimStatus::CLAIMED) {
+                    throw new \DomainException('Organization Unit retirement is not available.');
+                }
+
+                $this->stepUp->consumeWithGrant($actor, StepUpAction::ORGANIZATION_UNIT_RETIRE);
+                $organization = $this->required($this->organizations->organization($context->tenant(), $organizationId, true));
+                $unit = $this->required($this->organizations->unit($context->tenant(), $organization, $unitId, true));
+                $this->organizations->retireUnit($context->tenant(), $organization, $unit, $version, $now);
+                $this->idempotency->completeIdempotency($submission, $now);
+                $this->audit(
+                    $actor,
+                    $context,
+                    $unitId,
+                    SecurityEventCode::ORGANIZATION_UNIT_RETIRED,
+                    SecurityEventSubjectKind::ORGANIZATION_UNIT,
+                    ['organization_public_id' => $organizationId],
+                    $now,
+                );
+            },
+            TransactionOptions::readWrite(retryPolicy: new TransactionRetryPolicy(3, 15, 150)),
+        );
+    }
+
+    private function authorize(
+        AuthenticatedAccountContext $actor,
+        AccountWorkspaceTenantContext $context,
+        string $permission,
+    ): void {
+        $this->authorization->requireAllowed(
+            new AuthorizationRequest(
+                AuthorizationSubject::fromAuthenticatedContext($actor),
+                new PermissionCode($permission),
+                new WorkspaceAuthorizationScope($context),
+            ),
+        );
+    }
+
+    private function rate(AuthenticatedAccountContext $actor, bool $unit): void
+    {
+        $policy = new IdentityRateLimitPolicy(
+            $unit ? $this->config->unitMutationWindowSeconds : $this->config->mutationWindowSeconds,
+            $unit ? $this->config->unitMutationMaximumAttempts : $this->config->mutationMaximumAttempts,
+            $unit ? $this->config->unitMutationWindowSeconds : $this->config->mutationWindowSeconds,
+        );
+        $scopes = $unit
+            ? [IdentityRateLimitScope::ORGANIZATION_UNIT_MUTATION_ACCOUNT, IdentityRateLimitScope::ORGANIZATION_UNIT_MUTATION_PEER]
+            : [IdentityRateLimitScope::ORGANIZATION_MUTATION_ACCOUNT, IdentityRateLimitScope::ORGANIZATION_MUTATION_PEER];
+        $allowed = $this->rateLimits->consume(
+            [
+                new IdentityRateLimitAttempt(
+                    $scopes[0],
+                    $this->fingerprints->generate('organization-account', (string) $actor->accountInternalId),
+                    $policy,
+                ),
+                new IdentityRateLimitAttempt(
+                    $scopes[1],
+                    $this->fingerprints->generate('organization-session', (string) $actor->sessionInternalId),
+                    $policy,
+                ),
+            ],
+            $this->clock->now(),
+        )->allowed;
+        if (!$allowed) {
+            throw new \DomainException('Organization operation is temporarily unavailable.');
+        }
+    }
+
+    private function claim(
+        OrganizationSubmissionId $submission,
+        string $operation,
+        AuthenticatedAccountContext $actor,
+        AccountWorkspaceTenantContext $context,
+        string $content,
+    ): IdempotencyClaimStatus {
+        return $this->idempotency->claimIdempotency(
+            $submission,
+            $operation,
+            $this->fingerprints->generate(
+                'organization-idempotency',
+                $actor->accountInternalId . "\0" . $context->workspaceInternalId . "\0" . $operation . "\0" . hash('sha256', $content),
+            ),
+            $this->clock->now(),
+        );
+    }
+
+    /**
+     * @return InputData
+     */
+    private function input(OrganizationInput $in): array
+    {
+        return [
+            'primary_name' => $in->primaryName,
+            'primary_script' => $in->primaryScript,
+            'classification_codes' => $in->classificationCodes,
+            'primary_classification' => $in->primaryClassification,
+            'jurisdiction_level' => $in->jurisdictionLevel,
+            'country_public_id' => $in->countryPublicId,
+            'level_one_public_id' => $in->levelOnePublicId,
+            'level_two_public_id' => $in->levelTwoPublicId,
+            'unit_name' => $in->unitName,
+            'unit_script' => $in->unitScript,
+            'unit_type' => $in->unitType,
+            'unit_country_public_id' => $in->unitCountryPublicId,
+            'unit_level_one_public_id' => $in->unitLevelOnePublicId,
+            'unit_level_two_public_id' => $in->unitLevelTwoPublicId,
+        ];
+    }
+
+    /**
+     * @param Record|null $record
+     *
+     * @return Record
+     */
+    private function required(?array $record): array
+    {
+        if ($record === null) {
+            throw new \DomainException('Organization is unavailable.');
+        }
+
+        return $record;
+    }
+
+    /** @param array<string, mixed> $meta */
+    private function audit(
+        AuthenticatedAccountContext $actor,
+        AccountWorkspaceTenantContext $context,
+        string $subject,
+        SecurityEventCode $code,
+        SecurityEventSubjectKind $kind,
+        array $meta,
+        DateTimeImmutable $now,
+    ): void {
+        $this->audit->append(
+            new SecurityAuditAppendCommand(
+                new SecurityAuditStreamIdentity(
+                    SecurityAuditStreamType::WORKSPACE,
+                    UuidV7::fromString($context->workspaceId->toString()),
+                ),
+                $code,
+                SecurityEventOutcome::SUCCESS,
+                SecurityEventActorKind::ACCOUNT,
+                UuidV7::fromString($actor->accountId->toString()),
+                UuidV7::fromString($actor->sessionId->toString()),
+                UuidV7::fromString($context->workspaceId->toString()),
+                $kind,
+                UuidV7::fromString($subject),
+                null,
+                null,
+                null,
+                $meta,
+                $now,
+            ),
+        );
+    }
 }

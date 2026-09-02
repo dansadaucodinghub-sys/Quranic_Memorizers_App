@@ -11,6 +11,7 @@ import { PasskeyStepUpController } from './passkey-step-up-controller.js';
 import { RecoveryCodeDisplayController } from './recovery-code-display-controller.js';
 import { TenantContextController } from './tenant-context-controller.js';
 import { startGeographyDependentSelects } from './geography-dependent-select.js';
+import { OrganizationAffiliationRosterController } from './organization-affiliation-roster-controller.js';
 
 function start() {
     const liveRegion = new LiveRegion(document.getElementById('qmdb-live-region'));
@@ -25,6 +26,7 @@ function start() {
     new PasskeyStepUpController({ liveRegion }).start();
     new RecoveryCodeDisplayController({ liveRegion }).start();
     new TenantContextController().start();
+    new OrganizationAffiliationRosterController().start();
     startGeographyDependentSelects();
 }
 

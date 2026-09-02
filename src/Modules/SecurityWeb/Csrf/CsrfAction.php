@@ -59,4 +59,13 @@ enum CsrfAction: string
     case ORGANIZATION_UNIT_CREATE = 'organizations.unit.create';
     case ORGANIZATION_UNIT_UPDATE = 'organizations.unit.update';
     case ORGANIZATION_UNIT_RETIRE = 'organizations.unit.retire';
+    case ORGANIZATION_AFFILIATION_REQUEST = 'organization.affiliation.request';
+    case ORGANIZATION_AFFILIATION_ACCEPT = 'organization.affiliation.accept';
+    case ORGANIZATION_AFFILIATION_DECLINE = 'organization.affiliation.decline';
+    case ORGANIZATION_AFFILIATION_WITHDRAW = 'organization.affiliation.withdraw';
+    case ORGANIZATION_AFFILIATION_ASSIGNMENTS_UPDATE = 'organization.affiliation.assignments.update';
+    case ORGANIZATION_AFFILIATION_SUSPEND = 'organization.affiliation.suspend';
+    case ORGANIZATION_AFFILIATION_RESUME = 'organization.affiliation.resume';
+    case ORGANIZATION_AFFILIATION_END = 'organization.affiliation.end';
+    case ORGANIZATION_AFFILIATION_LEAVE = 'organization.affiliation.leave';
 }

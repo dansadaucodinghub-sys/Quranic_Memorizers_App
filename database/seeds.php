@@ -7,6 +7,8 @@ use Qmdb\Modules\SecurityPrivilegedAccess\Infrastructure\Seed\SeedPrivilegedAcce
 use Qmdb\Modules\IdentityAccountState\Infrastructure\Seed\SeedAccountStateAuthorizationCatalog;
 use Qmdb\Modules\Geography\Infrastructure\Seed\SeedNigeriaAdministrativeGeography;
 use Qmdb\Modules\Organizations\Infrastructure\Seed\SeedOrganizationCatalogAndAuthorization;
+use Qmdb\Modules\OrganizationAffiliations\Infrastructure\Seed\SeedOrganizationAffiliationRoleDefinitions;
+use Qmdb\Modules\OrganizationAffiliations\Infrastructure\Seed\SeedOrganizationAffiliationAuthorization;
 use Qmdb\Shared\Schema\Seed\SeedRegistry;
 use Qmdb\Shared\Schema\Seed\SeedRegistryBuilder;
 
@@ -17,5 +19,7 @@ return static function (): SeedRegistry {
         ->register(new SeedAccountStateAuthorizationCatalog())
         ->register(new SeedNigeriaAdministrativeGeography())
         ->register(new SeedOrganizationCatalogAndAuthorization())
+        ->register(new SeedOrganizationAffiliationRoleDefinitions())
+        ->register(new SeedOrganizationAffiliationAuthorization())
         ->build();
 };

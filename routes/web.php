@@ -43,6 +43,7 @@ use Qmdb\Modules\Geography\Interface\Http\NigeriaGeographyAreaController;
 use Qmdb\Modules\Geography\Interface\Http\NigeriaGeographyDirectoryController;
 use Qmdb\Modules\People\Interface\Http\PeopleProfilesController;
 use Qmdb\Modules\Organizations\Interface\Http\OrganizationsRegistryController;
+use Qmdb\Modules\OrganizationAffiliations\Interface\Http\OrganizationAffiliationsController;
 use Qmdb\Shared\Http\Routing\HttpMethod;
 use Qmdb\Shared\Http\Routing\Route;
 use Qmdb\Shared\Http\Routing\RouteCollection;
@@ -88,6 +89,7 @@ return static function (
     GeographyChildrenLookupController $geographyChildren,
     PeopleProfilesController $peopleProfiles,
     OrganizationsRegistryController $organizationsRegistry,
+    OrganizationAffiliationsController $organizationAffiliations,
 ): RouteCollection {
     return new RouteCollection(
         new Route('system.home', [HttpMethod::GET], new RoutePattern('/'), $homeController),
@@ -496,5 +498,27 @@ return static function (
         new Route('workspace.organizations.units.update.submit', [HttpMethod::POST], new RoutePattern('/workspace/organizations/{organizationId}/units/{unitId}/update'), $organizationsRegistry),
         new Route('workspace.organizations.units.retire.form', [HttpMethod::GET], new RoutePattern('/workspace/organizations/{organizationId}/units/{unitId}/retire'), $organizationsRegistry),
         new Route('workspace.organizations.units.retire.submit', [HttpMethod::POST], new RoutePattern('/workspace/organizations/{organizationId}/units/{unitId}/retire'), $organizationsRegistry),
+        new Route('workspace.organizations.affiliations.index', [HttpMethod::GET], new RoutePattern('/workspace/organizations/{organizationId}/affiliations'), $organizationAffiliations),
+        new Route('workspace.organizations.affiliations.request.form', [HttpMethod::GET], new RoutePattern('/workspace/organizations/{organizationId}/affiliations/request'), $organizationAffiliations),
+        new Route('workspace.organizations.affiliations.request.submit', [HttpMethod::POST], new RoutePattern('/workspace/organizations/{organizationId}/affiliations/request'), $organizationAffiliations),
+        new Route('workspace.organizations.affiliations.view', [HttpMethod::GET], new RoutePattern('/workspace/organizations/{organizationId}/affiliations/{affiliationId}'), $organizationAffiliations),
+        new Route('workspace.organizations.affiliations.assignments.form', [HttpMethod::GET], new RoutePattern('/workspace/organizations/{organizationId}/affiliations/{affiliationId}/assignments'), $organizationAffiliations),
+        new Route('workspace.organizations.affiliations.assignments.submit', [HttpMethod::POST], new RoutePattern('/workspace/organizations/{organizationId}/affiliations/{affiliationId}/assignments'), $organizationAffiliations),
+        new Route('workspace.organizations.affiliations.withdraw.form', [HttpMethod::GET], new RoutePattern('/workspace/organizations/{organizationId}/affiliations/{affiliationId}/withdraw'), $organizationAffiliations),
+        new Route('workspace.organizations.affiliations.withdraw.submit', [HttpMethod::POST], new RoutePattern('/workspace/organizations/{organizationId}/affiliations/{affiliationId}/withdraw'), $organizationAffiliations),
+        new Route('workspace.organizations.affiliations.suspend.form', [HttpMethod::GET], new RoutePattern('/workspace/organizations/{organizationId}/affiliations/{affiliationId}/suspend'), $organizationAffiliations),
+        new Route('workspace.organizations.affiliations.suspend.submit', [HttpMethod::POST], new RoutePattern('/workspace/organizations/{organizationId}/affiliations/{affiliationId}/suspend'), $organizationAffiliations),
+        new Route('workspace.organizations.affiliations.resume.form', [HttpMethod::GET], new RoutePattern('/workspace/organizations/{organizationId}/affiliations/{affiliationId}/resume'), $organizationAffiliations),
+        new Route('workspace.organizations.affiliations.resume.submit', [HttpMethod::POST], new RoutePattern('/workspace/organizations/{organizationId}/affiliations/{affiliationId}/resume'), $organizationAffiliations),
+        new Route('workspace.organizations.affiliations.end.form', [HttpMethod::GET], new RoutePattern('/workspace/organizations/{organizationId}/affiliations/{affiliationId}/end'), $organizationAffiliations),
+        new Route('workspace.organizations.affiliations.end.submit', [HttpMethod::POST], new RoutePattern('/workspace/organizations/{organizationId}/affiliations/{affiliationId}/end'), $organizationAffiliations),
+        new Route('account.affiliations.index', [HttpMethod::GET], new RoutePattern('/account/affiliations'), $organizationAffiliations),
+        new Route('account.affiliations.detail', [HttpMethod::GET], new RoutePattern('/account/affiliations/{affiliationId}'), $organizationAffiliations),
+        new Route('account.affiliations.accept.form', [HttpMethod::GET], new RoutePattern('/account/affiliations/{affiliationId}/accept'), $organizationAffiliations),
+        new Route('account.affiliations.accept.submit', [HttpMethod::POST], new RoutePattern('/account/affiliations/{affiliationId}/accept'), $organizationAffiliations),
+        new Route('account.affiliations.decline.form', [HttpMethod::GET], new RoutePattern('/account/affiliations/{affiliationId}/decline'), $organizationAffiliations),
+        new Route('account.affiliations.decline.submit', [HttpMethod::POST], new RoutePattern('/account/affiliations/{affiliationId}/decline'), $organizationAffiliations),
+        new Route('account.affiliations.leave.form', [HttpMethod::GET], new RoutePattern('/account/affiliations/{affiliationId}/leave'), $organizationAffiliations),
+        new Route('account.affiliations.leave.submit', [HttpMethod::POST], new RoutePattern('/account/affiliations/{affiliationId}/leave'), $organizationAffiliations),
     );
 };

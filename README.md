@@ -1,7 +1,8 @@
 # Qur’an Memorizer DB
 
-QMDB is the governed Qur’an Memorizer Database platform. P1 and P2 are frozen; P3-B01 Nigerian administrative
-geography and P3-B02's bounded private Person-profile foundation are complete. P3 remains in progress.
+QMDB is the governed Qur’an Memorizer Database platform. P1 and P2 are frozen; P3-B01 through P3-B04 provide
+Nigerian geography, private Person profiles, tenant-owned Organizations, and private consent-based Organization
+affiliations. P3 remains in progress.
 
 ## Project identity
 
@@ -10,9 +11,9 @@ geography and P3-B02's bounded private Person-profile foundation are complete. P
 - Source baseline: QMDB-BL-001
 - Frozen baseline: QMDB-P0-FRZ-001
 - Phase: P3 — Nigerian Geography, Organizations, People, and Guardianship
-- Completed batch: QMDB-P3-B03 — Organizations, Schools, Groups, Mosques, and Branches Registry
-- Next batch: QMDB-P3-B03 — Organizations, Schools, Groups, Mosques, and Branches Registry
-- Readiness: READY_FOR_SEPARATELY_AUTHORIZED_P3_B03_ONLY
+- Completed batch: QMDB-P3-B04 — Organization Memberships, Staff, Leadership, and Person Affiliations
+- Next batch: QMDB-P3-B05 — Profile Claims, Verification, Consent, and Duplicate Resolution
+- Readiness: B04 completion evidence is being recorded; B05 remains authorized only from the clean, committed B04 release baseline
 - Engineering freeze: QMDB-P1-FRZ-001
 - Development version: 0.1.0-dev
 

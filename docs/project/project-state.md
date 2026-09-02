@@ -9,15 +9,15 @@
 | Approved Change | QMDB-CR-001 — Asynchronous Progressive Interaction and Modal UX Standard |
 | Engineering Freeze | QMDB-P1-FRZ-001 |
 | Identity and Tenant Security Freeze | QMDB-P2-FRZ-001 |
-| Document Version | 5.4.0 |
-| Last Updated | 2026-09-01 |
-| Status | P0 COMPLETE / FROZEN; P1 COMPLETE / FROZEN; P2 COMPLETE / FROZEN; P3-B01 COMPLETE; P3-B02 COMPLETE; P3-B03 COMPLETE |
+| Document Version | 5.5.0 |
+| Last Updated | 2026-09-02 |
+| Status | P0 COMPLETE / FROZEN; P1 COMPLETE / FROZEN; P2 COMPLETE / FROZEN; P3-B01 COMPLETE; P3-B02 COMPLETE; P3-B03 COMPLETE; P3-B04 COMPLETE |
 | Completed Closeout | QMDB-P2-CLOSE — Identity, Security, and Tenant Isolation Verification and Freeze |
 | Current Phase | P3 — Nigerian Geography, Organizations, People, and Guardianship |
-| Current Batch | QMDB-P3-B03 — Organizations, Schools, Groups, Mosques, and Branches Registry |
-| Next Batch | QMDB-P3-B04 — Organization Memberships, Staff, Leadership, and Person Affiliations |
-| Batch Status | COMPLETE |
-| Implementation Readiness | B03 COMPLETE; B04 NOT STARTED AND REQUIRES SEPARATE AUTHORIZATION; P3 REMAINS IN PROGRESS |
+| Current Batch | QMDB-P3-B05 — Profile Claims, Verification, Consent, and Duplicate Resolution |
+| Next Batch | QMDB-P3-B06 — People, Geography, and Organization Security Hardening and Closeout Preparation |
+| Batch Status | NOT STARTED |
+| Implementation Readiness | B04 COMPLETE; B05 AUTHORIZED AND MAY START ONLY FROM THE CLEAN B04 RELEASE BASELINE; P3 REMAINS IN PROGRESS |
 | P2 Status | COMPLETE / FROZEN |
 
 ## Authoritative outcome
@@ -60,7 +60,8 @@ consent, public profiles, Person discovery/merge and tenant-owned Person data re
 | QMDB-P3-B01 | Nigerian Administrative Geography and Jurisdiction Registry | COMPLETE | Public, read-only Nigerian reference data only |
 | QMDB-P3-B02 | Person, Memorizer, Reciter, Competitor, and Guardian Profile Foundation | COMPLETE | Private global Person/profile foundation; no consent, public discovery, merge, Organizations or tenant-owned Person data |
 | QMDB-P3-B03 | Organizations, Schools, Groups, Mosques, and Branches Registry | COMPLETE | Workspace-owned registry, governed classifications, self-declared jurisdiction and immutable Unit hierarchy; no membership, staff, leadership or Person affiliation |
-| QMDB-P3-B04 | Organization Memberships, Staff, Leadership, and Person Affiliations | NOT STARTED | Requires separate authorization; no B04 work is implied by B03 |
+| QMDB-P3-B04 | Organization Memberships, Staff, Leadership, and Person Affiliations | COMPLETE | Private consent-based Organization-to-Person affiliation lifecycle, fixed role catalog, assignment history, Guardian authority, leadership step-up, MySQL integrity and progressive workflow; no B05 claims or duplicate resolution |
+| QMDB-P3-B05 | Profile Claims, Verification, Consent, and Duplicate Resolution | NOT STARTED | Authorized after the clean B04 release baseline; no B06 work is implied |
 
 ## P1 batch ledger
 
@@ -293,10 +294,17 @@ Next Phase: P3 — Nigerian Geography, Organizations, People, and Guardianship
 
 Current Phase: P3 — Nigerian Geography, Organizations, People, and Guardianship
 
-Current Batch: QMDB-P3-B02 — Person, Memorizer, Reciter, Competitor, and Guardian Profile Foundation
+Completed P3 Batches:
+
+- QMDB-P3-B01
+- QMDB-P3-B02
+- QMDB-P3-B03
+- QMDB-P3-B04
+
+Current Batch: QMDB-P3-B05 — Profile Claims, Verification, Consent, and Duplicate Resolution
 
 P3 Status: IN PROGRESS
 
-Batch Status: COMPLETE
+Batch Status: NOT STARTED
 
-Implementation Status: READY FOR SEPARATELY AUTHORIZED P3-B03 ONLY
+Implementation Status: B04 COMPLETE; B05 AUTHORIZED FROM CLEAN B04 RELEASE BASELINE ONLY; P3-B06 PROHIBITED

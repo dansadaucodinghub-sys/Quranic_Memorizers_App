@@ -31,7 +31,7 @@ final class BackgroundConsoleIntegrationTest extends TestCase
     public static function successfulCommands(): iterable
     {
         yield 'help' => [['help'], 'schedule:list'];
-        yield 'about' => [['app:about'], 'QMDB-P3-B03'];
+        yield 'about' => [['app:about'], 'QMDB-P3-B05'];
         yield 'schedule list' => [['schedule:list'], 'identity.security_notifications.deliver'];
         yield 'worker once' => [['worker:run', '--once'], 'NO_WORK_ONCE'];
         yield 'bounded worker' => [[
@@ -48,7 +48,7 @@ final class BackgroundConsoleIntegrationTest extends TestCase
         $result = $this->console()->run(['schedule:run'], '8.5.0', ['json', 'mbstring']);
 
         self::assertSame(ExitCode::FAILURE, $result->exitCode());
-        self::assertStringContainsString('Failed: 3', $result->standardOutput());
+        self::assertStringContainsString('Failed: 4', $result->standardOutput());
         self::assertStringNotContainsString('password', strtolower($result->standardError()));
     }
 

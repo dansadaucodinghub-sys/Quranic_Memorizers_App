@@ -98,6 +98,11 @@ final readonly class AuthorizationCatalogRegistry
         return $builder->build();
     }
 
+    public static function withOrganizationsAffiliations(): AuthorizationCatalog
+    {
+        return self::withOrganizationsRegistry();
+    }
+
     private static function populateFoundational(AuthorizationCatalogBuilder $builder): void
     {
         $timestamp = new DateTimeImmutable('2026-08-28T00:00:00.000000Z');

@@ -58,6 +58,8 @@ use Qmdb\Modules\People\Application\PeopleProfilesReadinessCheck;
 use Qmdb\Modules\People\Interface\Http\PeopleProfilesController;
 use Qmdb\Modules\Organizations\Application\OrganizationsRegistryReadinessCheck;
 use Qmdb\Modules\Organizations\Interface\Http\OrganizationsRegistryController;
+use Qmdb\Modules\OrganizationAffiliations\Application\OrganizationAffiliationsReadinessCheck;
+use Qmdb\Modules\OrganizationAffiliations\Interface\Http\OrganizationAffiliationsController;
 use Qmdb\Shared\DependencyInjection\ClosureServiceFactory;
 use Qmdb\Shared\DependencyInjection\DependencyResolver;
 use Qmdb\Shared\DependencyInjection\ServiceDefinition;
@@ -123,6 +125,7 @@ final readonly class ApplicationHttpModule implements Module
             new ModuleId('reference.geography'),
             new ModuleId('people.profiles'),
             new ModuleId('organizations.registry'),
+            new ModuleId('organizations.affiliations'),
         ];
     }
 
@@ -152,6 +155,7 @@ final readonly class ApplicationHttpModule implements Module
                 GeographyReferenceReadinessCheck::class,
                 PeopleProfilesReadinessCheck::class,
                 OrganizationsRegistryReadinessCheck::class,
+                OrganizationAffiliationsReadinessCheck::class,
             ],
             new ClosureServiceFactory(static fn (DependencyResolver $resolver): ApplicationReadinessController =>
                 new ApplicationReadinessController(
@@ -170,6 +174,7 @@ final readonly class ApplicationHttpModule implements Module
                     ServiceReference::get($resolver, GeographyReferenceReadinessCheck::class),
                     ServiceReference::get($resolver, PeopleProfilesReadinessCheck::class),
                     ServiceReference::get($resolver, OrganizationsRegistryReadinessCheck::class),
+                    ServiceReference::get($resolver, OrganizationAffiliationsReadinessCheck::class),
                 )),
         ));
         $controllers = [
@@ -212,6 +217,7 @@ final readonly class ApplicationHttpModule implements Module
             GeographyChildrenLookupController::class,
             PeopleProfilesController::class,
             OrganizationsRegistryController::class,
+            OrganizationAffiliationsController::class,
         ];
         $context->service(ServiceDefinition::factory(
             RouteCollection::class,

@@ -29,8 +29,12 @@ final class P2FreezeTest extends TestCase
         self::assertTrue($policy->isP3B02Extension('src/Modules/People/Application/PersonProfileService.php'));
         self::assertTrue($policy->isP3B03Extension('src/Modules/Organizations/Application/OrganizationsRegistryService.php'));
         self::assertTrue($policy->isP3B04Extension('src/Modules/OrganizationAffiliations/Application/OrganizationAffiliationRequestService.php'));
+        self::assertTrue($policy->isP3B04Extension('tests/Frontend/organization-affiliation-roster-controller.test.js'));
         self::assertTrue($policy->isP3B02MutableExistingPath('src/Modules/SecurityWeb/Csrf/CsrfAction.php'));
         self::assertTrue($policy->isP3B03MutableExistingPath('src/Shared/Schema/Migration/MigrationPlanner.php'));
+        self::assertTrue($policy->isP3B04MutableExistingPath('src/Shared/Schema/State/MySqlSchemaStateRepository.php'));
+        self::assertTrue($policy->isP3B04MutableExistingPath('routes/web.php'));
+        self::assertTrue($policy->isP3B04MutableExistingPath('docs/project/project-state.md'));
         self::assertTrue($policy->isP3B02MutableExistingPath('tests/Integration/MySql/P2IdentityRecoveryHttpIntegrationTest.php'));
         self::assertFalse($policy->isIncluded('docs/closeout/p2/qmdb-p2-identity-security-tenancy-freeze.yaml'));
     }

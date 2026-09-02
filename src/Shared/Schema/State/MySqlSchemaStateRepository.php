@@ -69,7 +69,7 @@ final readonly class MySqlSchemaStateRepository implements SchemaStateRepository
             . '(migration_id, description, checksum, status, batch, started_at, completed_at, execution_ms, '
             . 'application_version, failure_code) VALUES '
             . '(:id, :description, :checksum, :status, :batch, UTC_TIMESTAMP(6), NULL, NULL, :version, NULL) '
-            . 'ON DUPLICATE KEY UPDATE status = VALUES(status), batch = VALUES(batch), '
+            . 'ON DUPLICATE KEY UPDATE description = VALUES(description), checksum = VALUES(checksum), status = VALUES(status), batch = VALUES(batch), '
             . 'started_at = VALUES(started_at), completed_at = NULL, execution_ms = NULL, failure_code = NULL',
         );
         $statement->execute([
@@ -194,7 +194,7 @@ final readonly class MySqlSchemaStateRepository implements SchemaStateRepository
             . '(seed_id, description, checksum, status, batch, started_at, completed_at, execution_ms, '
             . 'application_version, failure_code) VALUES '
             . '(:id, :description, :checksum, :status, :batch, UTC_TIMESTAMP(6), NULL, NULL, :version, NULL) '
-            . 'ON DUPLICATE KEY UPDATE status = VALUES(status), batch = VALUES(batch), '
+            . 'ON DUPLICATE KEY UPDATE description = VALUES(description), checksum = VALUES(checksum), status = VALUES(status), batch = VALUES(batch), '
             . 'started_at = VALUES(started_at), completed_at = NULL, execution_ms = NULL, failure_code = NULL',
         );
         $statement->execute([

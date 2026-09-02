@@ -1,0 +1,102 @@
+<?php
+
+declare(strict_types=1);
+
+namespace Qmdb\Modules\OrganizationAffiliations\Infrastructure\Migration;
+
+use Qmdb\Modules\Organizations\Infrastructure\Migration\CreateOrganizationUnitsMigration;
+use Qmdb\Shared\Schema\Migration\Migration;
+use Qmdb\Shared\Schema\Migration\MigrationId;
+use Qmdb\Shared\Schema\Migration\MigrationStepId;
+use Qmdb\Shared\Schema\Migration\SqlMigrationStep;
+
+final readonly class CreateOrganizationAffiliationCatalogAndSecurityMigration implements Migration
+{
+    public function id(): MigrationId
+    {
+        return new MigrationId('20260901040400_create_organization_affiliation_catalog_and_security');
+    }
+    public function description(): string
+    {
+        return 'Create affiliation roles and governed security-catalog extensions.';
+    }
+    public function dependencies(): array
+    {
+        return [(new CreateOrganizationUnitsMigration())->id()];
+    }
+
+    public function up(): array
+    {
+        return [
+            new SqlMigrationStep(new MigrationStepId('001_create_role_definitions'), 'Create global Organization affiliation role definitions.', <<<'SQL'
+CREATE TABLE organization_affiliation_role_definitions (
+ id BIGINT UNSIGNED NOT NULL AUTO_INCREMENT, public_id BINARY(16) NOT NULL,
+ code VARCHAR(48) CHARACTER SET ascii COLLATE ascii_bin NOT NULL,
+ category VARCHAR(32) CHARACTER SET ascii COLLATE ascii_bin NOT NULL,
+ sensitivity_level VARCHAR(16) CHARACTER SET ascii COLLATE ascii_bin NOT NULL,
+ required_person_role_type VARCHAR(16) CHARACTER SET ascii COLLATE ascii_bin NULL,
+ status VARCHAR(16) CHARACTER SET ascii COLLATE ascii_bin NOT NULL, sort_order SMALLINT UNSIGNED NOT NULL,
+ version INT UNSIGNED NOT NULL DEFAULT 1, created_at DATETIME(6) NOT NULL, updated_at DATETIME(6) NOT NULL, retired_at DATETIME(6) NULL,
+ PRIMARY KEY (id), UNIQUE KEY uq_organization_affiliation_role_definitions_public_id (public_id),
+ UNIQUE KEY uq_organization_affiliation_role_definitions_code (code),
+ KEY ix_organization_affiliation_role_definitions_status_sort (status,sort_order,code,id),
+ KEY ix_organization_affiliation_role_definitions_category (category,status,id),
+ KEY ix_organization_affiliation_role_definitions_sensitivity (sensitivity_level,status,id),
+ CONSTRAINT ck_organization_affiliation_role_definition_category CHECK (category IN ('MEMBERSHIP','STUDY','QURAN_PARTICIPATION','TEACHING','RELIGIOUS_SERVICE','STAFF','VOLUNTEERING','LEADERSHIP','REPRESENTATION')),
+ CONSTRAINT ck_organization_affiliation_role_definition_sensitivity CHECK (sensitivity_level IN ('NORMAL','LEADERSHIP')),
+ CONSTRAINT ck_organization_affiliation_role_definition_required_person_role CHECK (required_person_role_type IS NULL OR required_person_role_type IN ('MEMORIZER','RECITER')),
+ CONSTRAINT ck_organization_affiliation_role_definition_status CHECK (status IN ('ACTIVE','RETIRED')),
+ CONSTRAINT ck_organization_affiliation_role_definition_sort CHECK (sort_order >= 0),
+ CONSTRAINT ck_organization_affiliation_role_definition_version CHECK (version >= 1),
+ CONSTRAINT ck_organization_affiliation_role_definition_retired CHECK (status <> 'RETIRED' OR retired_at IS NOT NULL)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci
+SQL),
+            new SqlMigrationStep(new MigrationStepId('002_extend_idempotency_operations'), 'Allow Organization affiliation idempotency operations.', <<<'SQL'
+ALTER TABLE identity_idempotency_records DROP CHECK ck_identity_idempotency_operation,
+ ADD CONSTRAINT ck_identity_idempotency_operation CHECK (operation IN (
+ 'ACCOUNT_REGISTRATION','EMAIL_VERIFICATION_RESEND','PASSWORD_RECOVERY_REQUEST','PASSWORD_RECOVERY_RESET',
+ 'PERSON_PROFILE_CREATE','PERSON_PROFILE_UPDATE','PERSON_ROLE_ACTIVATE','PERSON_ROLE_DEACTIVATE','MEMORIZER_PROGRESS_UPDATE','DEPENDENT_PROFILE_CREATE','DEPENDENT_PROFILE_UPDATE','GUARDIANSHIP_REVOKE',
+ 'ORGANIZATION_CREATE','ORGANIZATION_UPDATE','ORGANIZATION_RETIRE','ORGANIZATION_UNIT_CREATE','ORGANIZATION_UNIT_UPDATE','ORGANIZATION_UNIT_RETIRE',
+ 'ORGANIZATION_AFFILIATION_REQUEST','ORGANIZATION_AFFILIATION_ACCEPT','ORGANIZATION_AFFILIATION_DECLINE','ORGANIZATION_AFFILIATION_WITHDRAW','ORGANIZATION_AFFILIATION_ASSIGNMENTS_UPDATE','ORGANIZATION_AFFILIATION_SUSPEND','ORGANIZATION_AFFILIATION_RESUME','ORGANIZATION_AFFILIATION_END','ORGANIZATION_AFFILIATION_LEAVE'
+ ))
+SQL),
+            new SqlMigrationStep(new MigrationStepId('003_extend_step_up_actions'), 'Allow Organization affiliation step-up actions.', <<<'SQL'
+ALTER TABLE account_step_up_grants DROP CHECK ck_step_up_grants_action,
+ ADD CONSTRAINT ck_step_up_grants_action CHECK (action IN (
+ 'MFA_ENROLL_TOTP','MFA_REGISTER_PASSKEY','MFA_ENABLE','MFA_DISABLE','MFA_REGENERATE_RECOVERY_CODES','MFA_REVOKE_TOTP','MFA_REVOKE_PASSKEY',
+ 'AUTHORIZATION_PLATFORM_ROLE_ASSIGN','AUTHORIZATION_PLATFORM_ROLE_REVOKE','AUTHORIZATION_WORKSPACE_ROLE_ASSIGN','AUTHORIZATION_WORKSPACE_ROLE_REVOKE',
+ 'TEMPORARY_PRIVILEGE_APPROVE','TEMPORARY_PRIVILEGE_ACTIVATE','TEMPORARY_PRIVILEGE_REVOKE','SUPPORT_ACCESS_PLATFORM_APPROVE','SUPPORT_ACCESS_WORKSPACE_APPROVE','SUPPORT_ACCESS_ACTIVATE','SUPPORT_ACCESS_REVOKE','SUPPORT_ACCESS_REVIEW','BREAK_GLASS_ACTIVATE','BREAK_GLASS_REVIEW',
+ 'ACCOUNT_SUSPEND','ACCOUNT_REACTIVATE','PERSON_PROFILE_SENSITIVE_UPDATE','DEPENDENT_PROFILE_CREATE','GUARDIANSHIP_REVOKE','ORGANIZATION_RETIRE','ORGANIZATION_UNIT_RETIRE',
+ 'ORGANIZATION_AFFILIATION_ACCEPT','ORGANIZATION_AFFILIATION_ACCEPT_LEADERSHIP','ORGANIZATION_AFFILIATION_SUSPEND','ORGANIZATION_AFFILIATION_RESUME','ORGANIZATION_AFFILIATION_END','ORGANIZATION_AFFILIATION_LEAVE','ORGANIZATION_LEADERSHIP_ASSIGN','ORGANIZATION_LEADERSHIP_REMOVE'
+ ))
+SQL),
+            new SqlMigrationStep(new MigrationStepId('004_extend_rate_limit_scopes'), 'Allow Organization affiliation rate-limit scopes.', <<<'SQL'
+ALTER TABLE identity_rate_limit_buckets DROP CHECK ck_identity_rate_limit_scope,
+ ADD CONSTRAINT ck_identity_rate_limit_scope CHECK (scope IN (
+ 'ACCOUNT_REGISTRATION_EMAIL','ACCOUNT_REGISTRATION_PEER','EMAIL_VERIFICATION_RESEND_EMAIL','EMAIL_VERIFICATION_RESEND_PEER','EMAIL_VERIFICATION_ATTEMPT','EMAIL_VERIFICATION_PEER','PASSWORD_AUTHENTICATION_EMAIL','PASSWORD_AUTHENTICATION_PEER','PASSWORD_RECOVERY_REQUEST_EMAIL','PASSWORD_RECOVERY_REQUEST_PEER','PASSWORD_RECOVERY_ATTEMPT','PASSWORD_RECOVERY_ATTEMPT_PEER','MFA_AUTHENTICATION_ACCOUNT','MFA_AUTHENTICATION_PEER','PASSKEY_AUTHENTICATION_PEER','STEP_UP_ACCOUNT','STEP_UP_PEER','PASSKEY_REGISTRATION_ACCOUNT','PRIVILEGED_ACCESS_REQUEST_ACCOUNT','PRIVILEGED_ACCESS_REQUEST_PEER','PRIVILEGED_ACCESS_APPROVAL_ACCOUNT','PRIVILEGED_ACCESS_ACTIVATION_ACCOUNT','BREAK_GLASS_ACTIVATION_ACCOUNT','BREAK_GLASS_ACTIVATION_PEER','ACCOUNT_STATE_OPERATION_ACCOUNT','ACCOUNT_STATE_OPERATION_PEER','PERSON_PROFILE_MUTATION_ACCOUNT','PERSON_PROFILE_MUTATION_PEER','DEPENDENT_PROFILE_CREATION_ACCOUNT','DEPENDENT_PROFILE_CREATION_PEER','ORGANIZATION_MUTATION_ACCOUNT','ORGANIZATION_MUTATION_PEER','ORGANIZATION_UNIT_MUTATION_ACCOUNT','ORGANIZATION_UNIT_MUTATION_PEER',
+ 'ORGANIZATION_AFFILIATION_REQUEST_ACCOUNT','ORGANIZATION_AFFILIATION_REQUEST_PEER','ORGANIZATION_AFFILIATION_RESPONSE_ACCOUNT','ORGANIZATION_AFFILIATION_RESPONSE_PEER','ORGANIZATION_AFFILIATION_MUTATION_ACCOUNT','ORGANIZATION_AFFILIATION_MUTATION_PEER'
+ ))
+SQL),
+            new SqlMigrationStep(new MigrationStepId('005_extend_notification_types'), 'Allow Organization affiliation security notifications.', <<<'SQL'
+ALTER TABLE account_security_notifications DROP CHECK ck_security_notifications_type,
+ ADD CONSTRAINT ck_security_notifications_type CHECK (notification_type IN (
+ 'PASSWORD_RESET_COMPLETED','MFA_ENABLED','MFA_DISABLED','TOTP_AUTHENTICATOR_ADDED','TOTP_AUTHENTICATOR_REMOVED','PASSKEY_ADDED','PASSKEY_REMOVED','RECOVERY_CODES_REGENERATED','RECOVERY_CODE_USED','PASSKEY_SUSPENDED','PLATFORM_ROLE_ASSIGNED','PLATFORM_ROLE_REVOKED','WORKSPACE_ROLE_ASSIGNED','WORKSPACE_ROLE_REVOKED','TEMPORARY_PRIVILEGE_REQUESTED','TEMPORARY_PRIVILEGE_APPROVED','TEMPORARY_PRIVILEGE_REJECTED','TEMPORARY_PRIVILEGE_ACTIVATED','TEMPORARY_PRIVILEGE_REVOKED','TEMPORARY_PRIVILEGE_EXPIRED','SUPPORT_ACCESS_REQUESTED','SUPPORT_ACCESS_PARTIALLY_APPROVED','SUPPORT_ACCESS_APPROVED','SUPPORT_ACCESS_ACTIVATED','SUPPORT_ACCESS_ENDED','SUPPORT_ACCESS_REVOKED','SUPPORT_ACCESS_REVIEW_REQUIRED','SUPPORT_ACCESS_REVIEW_OVERDUE','SUPPORT_ACCESS_REVIEW_COMPLETED','BREAK_GLASS_ACTIVATED','BREAK_GLASS_ENDED','BREAK_GLASS_EXPIRED','BREAK_GLASS_REVIEW_REQUIRED','BREAK_GLASS_REVIEW_OVERDUE','BREAK_GLASS_REVIEW_COMPLETED','ACCOUNT_SUSPENDED','ACCOUNT_REACTIVATED','PERSON_PROFILE_CREATED','PERSON_PROFILE_UPDATED','DEPENDENT_PROFILE_CREATED','GUARDIANSHIP_REVOKED',
+ 'ORGANIZATION_AFFILIATION_REQUESTED','ORGANIZATION_AFFILIATION_ACCEPTED','ORGANIZATION_AFFILIATION_DECLINED','ORGANIZATION_AFFILIATION_SUSPENDED','ORGANIZATION_AFFILIATION_RESUMED','ORGANIZATION_AFFILIATION_ENDED','ORGANIZATION_AFFILIATION_ASSIGNMENTS_CHANGED','ORGANIZATION_LEADERSHIP_CHANGED'
+ ))
+SQL),
+            new SqlMigrationStep(new MigrationStepId('006_extend_audit_subject_kinds'), 'Allow Organization affiliation audit subjects.', <<<'SQL'
+ALTER TABLE security_audit_events DROP CHECK ck_security_audit_events_subject,
+ ADD CONSTRAINT ck_security_audit_events_subject CHECK (subject_kind IN ('ACCOUNT','SESSION','DEVICE','ROLE_ASSIGNMENT','AUTHENTICATOR','RECOVERY_CODE_SET','PRIVILEGED_ACCESS','WORKSPACE','SECURITY_AUDIT','PERSON','PERSON_ROLE','GUARDIANSHIP','ORGANIZATION','ORGANIZATION_UNIT','ORGANIZATION_AFFILIATION','ORGANIZATION_AFFILIATION_ASSIGNMENT'))
+SQL),
+        ];
+    }
+
+    public function down(): array
+    {
+        return [new SqlMigrationStep(new MigrationStepId('001_drop_role_definitions'), 'Drop the Organization affiliation role catalog.', 'DROP TABLE organization_affiliation_role_definitions')];
+    }
+    public function reversible(): bool
+    {
+        return true;
+    }
+}

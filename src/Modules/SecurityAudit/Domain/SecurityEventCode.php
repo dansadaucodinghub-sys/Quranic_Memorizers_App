@@ -53,6 +53,18 @@ enum SecurityEventCode: string
     case ORGANIZATION_UNIT_CREATED = 'organizations.unit.created';
     case ORGANIZATION_UNIT_UPDATED = 'organizations.unit.updated';
     case ORGANIZATION_UNIT_RETIRED = 'organizations.unit.retired';
+    case ORGANIZATION_AFFILIATION_REQUESTED = 'organizations.affiliation.requested';
+    case ORGANIZATION_AFFILIATION_ACCEPTED = 'organizations.affiliation.accepted';
+    case ORGANIZATION_AFFILIATION_DECLINED = 'organizations.affiliation.declined';
+    case ORGANIZATION_AFFILIATION_WITHDRAWN = 'organizations.affiliation.withdrawn';
+    case ORGANIZATION_AFFILIATION_EXPIRED = 'organizations.affiliation.expired';
+    case ORGANIZATION_AFFILIATION_SUSPENDED = 'organizations.affiliation.suspended';
+    case ORGANIZATION_AFFILIATION_RESUMED = 'organizations.affiliation.resumed';
+    case ORGANIZATION_AFFILIATION_ENDED = 'organizations.affiliation.ended';
+    case ORGANIZATION_AFFILIATION_LEFT = 'organizations.affiliation.left';
+    case ORGANIZATION_AFFILIATION_ASSIGNMENTS_UPDATED = 'organizations.affiliation.assignments_updated';
+    case ORGANIZATION_AFFILIATION_LEADERSHIP_ASSIGNED = 'organizations.affiliation.leadership_assigned';
+    case ORGANIZATION_AFFILIATION_LEADERSHIP_REMOVED = 'organizations.affiliation.leadership_removed';
 
     public function severity(): SecurityEventSeverity
     {

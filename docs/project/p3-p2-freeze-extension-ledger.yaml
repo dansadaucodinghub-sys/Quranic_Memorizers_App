@@ -42,3 +42,6 @@ assurance:
   - The P3-B04 affiliation module and its dedicated bootstrap module are explicit controlled extensions. Existing
     P2 compatibility contracts remain governed by the already enumerated B01, B02, and B03 bridge lists; this
     entry never alters the historical QMDB-P2-FRZ-001 manifest or its frozen checksums.
+  - The P3-B04 compatibility bridge may correct the schema-seed retry ledger so a failed seed that is corrected
+    before retry records the checksum of the source actually applied. It is a named P2 immutable-source exception
+    in P2FreezePolicy and does not revise any applied migration or seed data.

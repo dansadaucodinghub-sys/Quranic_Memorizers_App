@@ -20,6 +20,7 @@ final class P3OrganizationsRegistryIntegrationTest extends MySqlIntegrationTestC
 {
     private PDO $connection;
     private AuthorizationMySqlFixture $fixture;
+    private bool $fixtureReady = false;
 
     protected function setUp(): void
     {
@@ -27,11 +28,14 @@ final class P3OrganizationsRegistryIntegrationTest extends MySqlIntegrationTestC
         $this->connection = $this->provider()->connection();
         $this->fixture = new AuthorizationMySqlFixture($this->connection, dirname(__DIR__, 3));
         $this->fixture->rebuild();
+        $this->fixtureReady = true;
     }
 
     protected function tearDown(): void
     {
-        $this->fixture->rebuild();
+        if ($this->fixtureReady) {
+            $this->fixture->rebuild();
+        }
         parent::tearDown();
     }
 

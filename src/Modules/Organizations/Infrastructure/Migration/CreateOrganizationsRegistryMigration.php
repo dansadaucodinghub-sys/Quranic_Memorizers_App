@@ -11,10 +11,21 @@ use Qmdb\Shared\Schema\Migration\SqlMigrationStep;
 
 final readonly class CreateOrganizationsRegistryMigration implements Migration
 {
-    public function id(): MigrationId { return new MigrationId('20260901040200_create_organizations_registry'); }
-    public function description(): string { return 'Create workspace-scoped Organization, name, classification, and jurisdiction history.'; }
-    public function dependencies(): array { return [(new CreateOrganizationClassificationAndSecurityCatalogMigration())->id()]; }
-    public function up(): array { return [
+    public function id(): MigrationId
+    {
+        return new MigrationId('20260901040200_create_organizations_registry');
+    }
+    public function description(): string
+    {
+        return 'Create workspace-scoped Organization, name, classification, and jurisdiction history.';
+    }
+    public function dependencies(): array
+    {
+        return [(new CreateOrganizationClassificationAndSecurityCatalogMigration())->id()];
+    }
+    public function up(): array
+    {
+        return [
         new SqlMigrationStep(new MigrationStepId('001_create_organizations'), 'Create tenant-owned Organization records.', <<<'SQL'
 CREATE TABLE organizations (
  id BIGINT UNSIGNED NOT NULL AUTO_INCREMENT, public_id BINARY(16) NOT NULL, workspace_id BIGINT UNSIGNED NOT NULL, registry_code VARCHAR(32) CHARACTER SET ascii COLLATE ascii_bin NOT NULL, status VARCHAR(16) CHARACTER SET ascii COLLATE ascii_bin NOT NULL DEFAULT 'ACTIVE', created_by_account_id BIGINT UNSIGNED NOT NULL, version INT UNSIGNED NOT NULL DEFAULT 1, created_at DATETIME(6) NOT NULL, updated_at DATETIME(6) NOT NULL, retired_at DATETIME(6) NULL,
@@ -40,7 +51,14 @@ CREATE TABLE organization_jurisdictions (
  PRIMARY KEY (id), UNIQUE KEY uq_organization_jurisdictions_public_id (public_id), UNIQUE KEY uq_organization_jurisdiction_active (workspace_id,organization_id,active_marker), KEY ix_organization_jurisdictions_organization (workspace_id,organization_id,status,id), CONSTRAINT fk_organization_jurisdiction_organization FOREIGN KEY (workspace_id,organization_id) REFERENCES organizations (workspace_id,id) ON DELETE RESTRICT ON UPDATE RESTRICT, CONSTRAINT fk_organization_jurisdiction_country FOREIGN KEY (country_id) REFERENCES geography_countries (id) ON DELETE RESTRICT ON UPDATE RESTRICT, CONSTRAINT fk_organization_jurisdiction_level_one FOREIGN KEY (country_id,level_one_area_id) REFERENCES geography_administrative_areas (country_id,id) ON DELETE RESTRICT ON UPDATE RESTRICT, CONSTRAINT fk_organization_jurisdiction_level_two FOREIGN KEY (country_id,level_one_area_id,level_two_area_id) REFERENCES geography_administrative_areas (country_id,parent_area_id,id) ON DELETE RESTRICT ON UPDATE RESTRICT, CONSTRAINT ck_organization_jurisdiction_level CHECK (jurisdiction_level IN ('NOT_RECORDED','COUNTRY','LEVEL_1','LEVEL_2')), CONSTRAINT ck_organization_jurisdiction_source CHECK (source_type='SELF_DECLARED'), CONSTRAINT ck_organization_jurisdiction_status CHECK (status IN ('ACTIVE','SUPERSEDED')), CONSTRAINT ck_organization_jurisdiction_shape CHECK ((jurisdiction_level='NOT_RECORDED' AND country_id IS NULL AND level_one_area_id IS NULL AND level_two_area_id IS NULL) OR (jurisdiction_level='COUNTRY' AND country_id IS NOT NULL AND level_one_area_id IS NULL AND level_two_area_id IS NULL) OR (jurisdiction_level='LEVEL_1' AND country_id IS NOT NULL AND level_one_area_id IS NOT NULL AND level_two_area_id IS NULL) OR (jurisdiction_level='LEVEL_2' AND country_id IS NOT NULL AND level_one_area_id IS NOT NULL AND level_two_area_id IS NOT NULL)), CONSTRAINT ck_organization_jurisdiction_version CHECK (version >= 1), CONSTRAINT ck_organization_jurisdiction_superseded CHECK (status <> 'SUPERSEDED' OR superseded_at IS NOT NULL)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci
 SQL),
-    ]; }
-    public function down(): array { return [new SqlMigrationStep(new MigrationStepId('001_drop_organization_jurisdictions'), 'Drop Organization jurisdiction history.', 'DROP TABLE organization_jurisdictions'),new SqlMigrationStep(new MigrationStepId('002_drop_organization_classification_assignments'), 'Drop Organization classification history.', 'DROP TABLE organization_classification_assignments'),new SqlMigrationStep(new MigrationStepId('003_drop_organization_names'), 'Drop Organization name history.', 'DROP TABLE organization_names'),new SqlMigrationStep(new MigrationStepId('004_drop_organizations'), 'Drop Organizations.', 'DROP TABLE organizations')]; }
-    public function reversible(): bool { return true; }
+        ];
+    }
+    public function down(): array
+    {
+        return [new SqlMigrationStep(new MigrationStepId('001_drop_organization_jurisdictions'), 'Drop Organization jurisdiction history.', 'DROP TABLE organization_jurisdictions'),new SqlMigrationStep(new MigrationStepId('002_drop_organization_classification_assignments'), 'Drop Organization classification history.', 'DROP TABLE organization_classification_assignments'),new SqlMigrationStep(new MigrationStepId('003_drop_organization_names'), 'Drop Organization name history.', 'DROP TABLE organization_names'),new SqlMigrationStep(new MigrationStepId('004_drop_organizations'), 'Drop Organizations.', 'DROP TABLE organizations')];
+    }
+    public function reversible(): bool
+    {
+        return true;
+    }
 }

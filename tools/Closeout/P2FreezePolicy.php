@@ -101,6 +101,7 @@ final class P2FreezePolicy
         'tests/Integration/MySql/P3OrganizationAffiliation',
         'tests/Architecture/P3OrganizationAffiliation',
         'tests/Support/MySql/P3OrganizationAffiliation',
+        'tests/Frontend/organization-affiliation-',
     ];
 
     /** @var list<string> */
@@ -129,6 +130,20 @@ final class P2FreezePolicy
         'src/Shared/Http/Routing/Security/RouteSecurityVerifier.php',
         'src/Shared/Schema/Migration/MigrationPlanner.php',
         'src/Shared/Schema/Seed/SeedPlanner.php',
+    ];
+
+    /** @var list<string> */
+    private const P3_B04_MUTABLE_EXISTING_PATHS = [
+        'resources/translations/ar.php',
+        'resources/translations/en.php',
+        'routes/web.php',
+        'src/Modules/IdentitySessions/Interface/Http/ApplicationReadinessController.php',
+        'src/Shared/Schema/State/MySqlSchemaStateRepository.php',
+        'tests/Architecture/P2RouteSecurityPolicyTest.php',
+        'tests/Architecture/SchemaFoundationArchitectureTest.php',
+        'tests/Integration/Bootstrap/FoundationCompilationTest.php',
+        'tests/Support/MySql/AuthorizationMySqlFixture.php',
+        'docs/project/project-state.md',
     ];
 
     public function __construct(private readonly PathPolicy $pathPolicy = new PathPolicy())
@@ -271,9 +286,17 @@ final class P2FreezePolicy
         return false;
     }
 
+    public function isP3B04MutableExistingPath(string $path): bool
+    {
+        return in_array(PathPolicy::normalize($path), self::P3_B04_MUTABLE_EXISTING_PATHS, true);
+    }
+
     public function isP3MutableExistingPath(string $path): bool
     {
-        return $this->isP3B01MutableExistingPath($path) || $this->isP3B02MutableExistingPath($path) || $this->isP3B03MutableExistingPath($path);
+        return $this->isP3B01MutableExistingPath($path)
+            || $this->isP3B02MutableExistingPath($path)
+            || $this->isP3B03MutableExistingPath($path)
+            || $this->isP3B04MutableExistingPath($path);
     }
 
     public function category(string $path): string

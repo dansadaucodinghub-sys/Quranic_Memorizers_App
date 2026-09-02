@@ -18,6 +18,12 @@ use Qmdb\Modules\Organizations\Infrastructure\Migration\CreateOrganizationClassi
 use Qmdb\Modules\Organizations\Infrastructure\Migration\CreateOrganizationsRegistryMigration;
 use Qmdb\Modules\Organizations\Infrastructure\Migration\CreateOrganizationUnitsMigration;
 use Qmdb\Modules\Organizations\Infrastructure\Seed\SeedOrganizationCatalogAndAuthorization;
+use Qmdb\Modules\OrganizationAffiliations\Infrastructure\Migration\CreateOrganizationAffiliationCatalogAndSecurityMigration;
+use Qmdb\Modules\OrganizationAffiliations\Infrastructure\Migration\CreateOrganizationAffiliationsMigration;
+use Qmdb\Modules\OrganizationAffiliations\Infrastructure\Migration\CreateOrganizationAffiliationAssignmentsMigration;
+use Qmdb\Modules\OrganizationAffiliations\Infrastructure\Migration\ExtendOrganizationAffiliationExpiryNotificationMigration;
+use Qmdb\Modules\OrganizationAffiliations\Infrastructure\Seed\SeedOrganizationAffiliationAuthorization;
+use Qmdb\Modules\OrganizationAffiliations\Infrastructure\Seed\SeedOrganizationAffiliationRoleDefinitions;
 use Qmdb\Modules\IdentityAccess\Infrastructure\Migration\CreateIdentityRateLimitFoundationMigration;
 use Qmdb\Modules\IdentityAccess\Infrastructure\Migration\CreateIdentityVerificationFoundationMigration;
 use Qmdb\Modules\IdentityAccountState\Infrastructure\Migration\CreateAccountStateOperationsMigration;
@@ -54,7 +60,7 @@ use SplFileInfo;
 
 final class SchemaFoundationArchitectureTest extends TestCase
 {
-    public function testProductionManifestsContainAuthorizedP1ThroughP3B02SchemaChanges(): void
+    public function testProductionManifestsContainAuthorizedP1ThroughP3B04SchemaChanges(): void
     {
         $migrationFactory = require dirname(__DIR__, 2) . '/database/migrations.php';
         $seedFactory = require dirname(__DIR__, 2) . '/database/seeds.php';
@@ -69,7 +75,7 @@ final class SchemaFoundationArchitectureTest extends TestCase
         }
 
         $ordered = $migrations->ordered();
-        self::assertCount(37, $ordered);
+        self::assertCount(41, $ordered);
         self::assertSame(
             [
                 CreateScheduledTaskRunsMigration::class,
@@ -109,6 +115,10 @@ final class SchemaFoundationArchitectureTest extends TestCase
                 CreateOrganizationClassificationAndSecurityCatalogMigration::class,
                 CreateOrganizationsRegistryMigration::class,
                 CreateOrganizationUnitsMigration::class,
+                CreateOrganizationAffiliationCatalogAndSecurityMigration::class,
+                CreateOrganizationAffiliationsMigration::class,
+                CreateOrganizationAffiliationAssignmentsMigration::class,
+                ExtendOrganizationAffiliationExpiryNotificationMigration::class,
             ],
             array_map(static fn (Migration $migration): string => $migration::class, $ordered),
         );
@@ -151,10 +161,14 @@ final class SchemaFoundationArchitectureTest extends TestCase
                 '20260901040100_create_organization_classification_and_security_catalog',
                 '20260901040200_create_organizations_registry',
                 '20260901040300_create_organization_units',
+                '20260901040400_create_organization_affiliation_catalog_and_security',
+                '20260901040500_create_organization_affiliations',
+                '20260901040600_create_organization_affiliation_assignments',
+                '20260902040401_extend_organization_affiliation_expiry_notification',
             ],
             array_map(static fn (Migration $migration): string => $migration->id()->value(), $ordered),
         );
-        self::assertCount(5, $seeds->ordered());
+        self::assertCount(7, $seeds->ordered());
         self::assertSame(
             [
                 SeedFoundationalAuthorizationCatalog::class,
@@ -162,6 +176,8 @@ final class SchemaFoundationArchitectureTest extends TestCase
                 SeedAccountStateAuthorizationCatalog::class,
                 SeedNigeriaAdministrativeGeography::class,
                 SeedOrganizationCatalogAndAuthorization::class,
+                SeedOrganizationAffiliationRoleDefinitions::class,
+                SeedOrganizationAffiliationAuthorization::class,
             ],
             array_map(static fn (object $seed): string => $seed::class, $seeds->ordered()),
         );
@@ -180,6 +196,14 @@ final class SchemaFoundationArchitectureTest extends TestCase
         self::assertStringNotContainsString('SET GLOBAL', $this->frameworkSqlOnly($schemaSource));
         self::assertStringNotContainsString('db:migrate', $routeSource);
         self::assertStringNotContainsString('db:seed', $routeSource);
+    }
+
+    public function testSchemaRetryLedgerAlwaysPersistsTheChecksumOfTheSourceItRuns(): void
+    {
+        $source = (string) file_get_contents(dirname(__DIR__, 2) . '/src/Shared/Schema/State/MySqlSchemaStateRepository.php');
+
+        self::assertSame(2, substr_count($source, 'checksum = VALUES(checksum)'));
+        self::assertSame(2, substr_count($source, 'description = VALUES(description)'));
     }
 
     public function testNoFrontendOrThirdPartyMigrationFrameworkWasIntroduced(): void

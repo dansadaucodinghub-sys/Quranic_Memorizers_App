@@ -39,6 +39,10 @@ use Qmdb\Modules\People\Infrastructure\Migration\CreatePeopleGuardianshipAndSecu
 use Qmdb\Modules\Organizations\Infrastructure\Migration\CreateOrganizationClassificationAndSecurityCatalogMigration;
 use Qmdb\Modules\Organizations\Infrastructure\Migration\CreateOrganizationsRegistryMigration;
 use Qmdb\Modules\Organizations\Infrastructure\Migration\CreateOrganizationUnitsMigration;
+use Qmdb\Modules\OrganizationAffiliations\Infrastructure\Migration\CreateOrganizationAffiliationCatalogAndSecurityMigration;
+use Qmdb\Modules\OrganizationAffiliations\Infrastructure\Migration\CreateOrganizationAffiliationsMigration;
+use Qmdb\Modules\OrganizationAffiliations\Infrastructure\Migration\CreateOrganizationAffiliationAssignmentsMigration;
+use Qmdb\Modules\OrganizationAffiliations\Infrastructure\Migration\ExtendOrganizationAffiliationExpiryNotificationMigration;
 use Qmdb\Shared\Schema\Migration\MigrationRegistry;
 use Qmdb\Shared\Schema\Migration\MigrationRegistryBuilder;
 
@@ -81,5 +85,9 @@ return static function (): MigrationRegistry {
         ->register(new CreateOrganizationClassificationAndSecurityCatalogMigration())
         ->register(new CreateOrganizationsRegistryMigration())
         ->register(new CreateOrganizationUnitsMigration())
+        ->register(new CreateOrganizationAffiliationCatalogAndSecurityMigration())
+        ->register(new CreateOrganizationAffiliationsMigration())
+        ->register(new CreateOrganizationAffiliationAssignmentsMigration())
+        ->register(new ExtendOrganizationAffiliationExpiryNotificationMigration())
         ->build();
 };

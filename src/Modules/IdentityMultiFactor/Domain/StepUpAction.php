@@ -34,11 +34,19 @@ enum StepUpAction: string
     case GUARDIANSHIP_REVOKE = 'GUARDIANSHIP_REVOKE';
     case ORGANIZATION_RETIRE = 'ORGANIZATION_RETIRE';
     case ORGANIZATION_UNIT_RETIRE = 'ORGANIZATION_UNIT_RETIRE';
+    case ORGANIZATION_AFFILIATION_ACCEPT = 'ORGANIZATION_AFFILIATION_ACCEPT';
+    case ORGANIZATION_AFFILIATION_ACCEPT_LEADERSHIP = 'ORGANIZATION_AFFILIATION_ACCEPT_LEADERSHIP';
+    case ORGANIZATION_AFFILIATION_SUSPEND = 'ORGANIZATION_AFFILIATION_SUSPEND';
+    case ORGANIZATION_AFFILIATION_RESUME = 'ORGANIZATION_AFFILIATION_RESUME';
+    case ORGANIZATION_AFFILIATION_END = 'ORGANIZATION_AFFILIATION_END';
+    case ORGANIZATION_AFFILIATION_LEAVE = 'ORGANIZATION_AFFILIATION_LEAVE';
+    case ORGANIZATION_LEADERSHIP_ASSIGN = 'ORGANIZATION_LEADERSHIP_ASSIGN';
+    case ORGANIZATION_LEADERSHIP_REMOVE = 'ORGANIZATION_LEADERSHIP_REMOVE';
 
     public function requirement(): AuthenticationAssuranceLevel
     {
         return match ($this) {
-            self::MFA_ENROLL_TOTP, self::MFA_REGISTER_PASSKEY => AuthenticationAssuranceLevel::PRIMARY,
+            self::MFA_ENROLL_TOTP, self::MFA_REGISTER_PASSKEY, self::ORGANIZATION_AFFILIATION_ACCEPT, self::ORGANIZATION_AFFILIATION_LEAVE => AuthenticationAssuranceLevel::PRIMARY,
             self::AUTHORIZATION_PLATFORM_ROLE_ASSIGN,
             self::AUTHORIZATION_PLATFORM_ROLE_REVOKE,
             self::SUPPORT_ACCESS_PLATFORM_APPROVE,
@@ -47,7 +55,7 @@ enum StepUpAction: string
             self::SUPPORT_ACCESS_REVOKE,
             self::SUPPORT_ACCESS_REVIEW,
             self::BREAK_GLASS_ACTIVATE,
-            self::BREAK_GLASS_REVIEW => AuthenticationAssuranceLevel::PHISHING_RESISTANT,
+            self::BREAK_GLASS_REVIEW, self::ORGANIZATION_LEADERSHIP_ASSIGN, self::ORGANIZATION_LEADERSHIP_REMOVE => AuthenticationAssuranceLevel::PHISHING_RESISTANT,
             self::ACCOUNT_SUSPEND, self::ACCOUNT_REACTIVATE => AuthenticationAssuranceLevel::PHISHING_RESISTANT,
             default => AuthenticationAssuranceLevel::MULTI_FACTOR,
         };
@@ -74,7 +82,15 @@ enum StepUpAction: string
             self::DEPENDENT_PROFILE_CREATE,
             self::GUARDIANSHIP_REVOKE => '/account/profile',
             self::ORGANIZATION_RETIRE,
-            self::ORGANIZATION_UNIT_RETIRE => '/workspace/organizations',
+            self::ORGANIZATION_UNIT_RETIRE,
+            self::ORGANIZATION_AFFILIATION_SUSPEND,
+            self::ORGANIZATION_AFFILIATION_RESUME,
+            self::ORGANIZATION_AFFILIATION_END,
+            self::ORGANIZATION_LEADERSHIP_ASSIGN,
+            self::ORGANIZATION_LEADERSHIP_REMOVE => '/workspace/organizations',
+            self::ORGANIZATION_AFFILIATION_ACCEPT,
+            self::ORGANIZATION_AFFILIATION_ACCEPT_LEADERSHIP,
+            self::ORGANIZATION_AFFILIATION_LEAVE => '/account/affiliations',
             default => '/account/security/authentication',
         };
     }

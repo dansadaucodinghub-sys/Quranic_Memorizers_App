@@ -26,10 +26,10 @@ final class P2RouteSecurityPolicyTest extends TestCase
         $report = $this->verifier()->verify($this->productionRoutes());
 
         self::assertTrue($report->isValid(), implode(', ', $report->errors));
-        self::assertSame(126, $report->routeCount);
-        self::assertSame(126, $report->classifiedRouteCount);
-        self::assertSame(59, $report->mutationRouteCount);
-        self::assertSame(59, $report->csrfProtectedMutationCount);
+        self::assertSame(148, $report->routeCount);
+        self::assertSame(148, $report->classifiedRouteCount);
+        self::assertSame(68, $report->mutationRouteCount);
+        self::assertSame(68, $report->csrfProtectedMutationCount);
     }
 
     public function testAnUnclassifiedRouteFailsTheClosedPolicyVerifier(): void
@@ -62,7 +62,7 @@ final class P2RouteSecurityPolicyTest extends TestCase
             $matches,
             PREG_SET_ORDER,
         );
-        self::assertCount(126, $matches);
+        self::assertCount(148, $matches);
         $routes = [];
         foreach ($matches as $match) {
             preg_match_all('/HttpMethod::([A-Z]+)/', $match['methods'], $methods);

@@ -11,10 +11,21 @@ use Qmdb\Shared\Schema\Migration\SqlMigrationStep;
 
 final readonly class CreateOrganizationUnitsMigration implements Migration
 {
-    public function id(): MigrationId { return new MigrationId('20260901040300_create_organization_units'); }
-    public function description(): string { return 'Create tenant-owned Organization Units, Unit names, and Unit location history.'; }
-    public function dependencies(): array { return [(new CreateOrganizationsRegistryMigration())->id()]; }
-    public function up(): array { return [
+    public function id(): MigrationId
+    {
+        return new MigrationId('20260901040300_create_organization_units');
+    }
+    public function description(): string
+    {
+        return 'Create tenant-owned Organization Units, Unit names, and Unit location history.';
+    }
+    public function dependencies(): array
+    {
+        return [(new CreateOrganizationsRegistryMigration())->id()];
+    }
+    public function up(): array
+    {
+        return [
         new SqlMigrationStep(new MigrationStepId('001_create_organization_units'), 'Create scoped Organization Unit hierarchy.', <<<'SQL'
 CREATE TABLE organization_units (
  id BIGINT UNSIGNED NOT NULL AUTO_INCREMENT, public_id BINARY(16) NOT NULL, workspace_id BIGINT UNSIGNED NOT NULL, organization_id BIGINT UNSIGNED NOT NULL, parent_unit_id BIGINT UNSIGNED NULL, registry_code VARCHAR(32) CHARACTER SET ascii COLLATE ascii_bin NOT NULL, unit_type VARCHAR(16) CHARACTER SET ascii COLLATE ascii_bin NOT NULL, is_primary TINYINT(1) NOT NULL DEFAULT 0, depth TINYINT UNSIGNED NOT NULL, status VARCHAR(16) CHARACTER SET ascii COLLATE ascii_bin NOT NULL DEFAULT 'ACTIVE', created_by_account_id BIGINT UNSIGNED NOT NULL, version INT UNSIGNED NOT NULL DEFAULT 1, created_at DATETIME(6) NOT NULL, updated_at DATETIME(6) NOT NULL, retired_at DATETIME(6) NULL, active_primary_marker TINYINT UNSIGNED GENERATED ALWAYS AS (CASE WHEN status='ACTIVE' AND is_primary=1 THEN 1 ELSE NULL END) STORED,
@@ -33,7 +44,14 @@ CREATE TABLE organization_unit_locations (
  PRIMARY KEY (id), UNIQUE KEY uq_organization_unit_locations_public_id (public_id), UNIQUE KEY uq_organization_unit_locations_active (workspace_id,organization_id,unit_id,active_marker), KEY ix_organization_unit_locations_area (country_id,level_one_area_id,level_two_area_id,status), CONSTRAINT fk_organization_unit_locations_unit FOREIGN KEY (workspace_id,organization_id,unit_id) REFERENCES organization_units (workspace_id,organization_id,id) ON DELETE RESTRICT ON UPDATE RESTRICT, CONSTRAINT fk_organization_unit_locations_country FOREIGN KEY (country_id) REFERENCES geography_countries (id) ON DELETE RESTRICT ON UPDATE RESTRICT, CONSTRAINT fk_organization_unit_locations_level_one FOREIGN KEY (country_id,level_one_area_id) REFERENCES geography_administrative_areas (country_id,id) ON DELETE RESTRICT ON UPDATE RESTRICT, CONSTRAINT fk_organization_unit_locations_level_two FOREIGN KEY (country_id,level_one_area_id,level_two_area_id) REFERENCES geography_administrative_areas (country_id,parent_area_id,id) ON DELETE RESTRICT ON UPDATE RESTRICT, CONSTRAINT ck_organization_unit_locations_source CHECK (source_type='SELF_DECLARED'), CONSTRAINT ck_organization_unit_locations_status CHECK (status IN ('ACTIVE','SUPERSEDED')), CONSTRAINT ck_organization_unit_locations_level_two CHECK (level_two_area_id IS NULL OR level_one_area_id IS NOT NULL), CONSTRAINT ck_organization_unit_locations_version CHECK (version >= 1), CONSTRAINT ck_organization_unit_locations_superseded CHECK (status <> 'SUPERSEDED' OR superseded_at IS NOT NULL)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci
 SQL),
-    ]; }
-    public function down(): array { return [new SqlMigrationStep(new MigrationStepId('001_drop_organization_unit_locations'), 'Drop Unit location history.', 'DROP TABLE organization_unit_locations'),new SqlMigrationStep(new MigrationStepId('002_drop_organization_unit_names'), 'Drop Unit name history.', 'DROP TABLE organization_unit_names'),new SqlMigrationStep(new MigrationStepId('003_drop_organization_units'), 'Drop Organization Units.', 'DROP TABLE organization_units')]; }
-    public function reversible(): bool { return true; }
+        ];
+    }
+    public function down(): array
+    {
+        return [new SqlMigrationStep(new MigrationStepId('001_drop_organization_unit_locations'), 'Drop Unit location history.', 'DROP TABLE organization_unit_locations'),new SqlMigrationStep(new MigrationStepId('002_drop_organization_unit_names'), 'Drop Unit name history.', 'DROP TABLE organization_unit_names'),new SqlMigrationStep(new MigrationStepId('003_drop_organization_units'), 'Drop Organization Units.', 'DROP TABLE organization_units')];
+    }
+    public function reversible(): bool
+    {
+        return true;
+    }
 }
