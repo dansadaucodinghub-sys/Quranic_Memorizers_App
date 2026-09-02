@@ -284,6 +284,7 @@ final class P2IdentityRecoveryHttpIntegrationTest extends MySqlIntegrationTestCa
             "DELETE FROM qmdb_scheduled_task_runs WHERE task_id IN ("
             . "'identity.security_notifications.deliver', 'security.privileged_access.maintain')",
         );
+        $this->markCurrentScheduleSlotSucceeded('organizations.affiliations.maintain', 900);
         $schedule = ApplicationFactory::fromCurrentProcess()->createConsoleApplication()->run(['schedule:run']);
         self::assertSame(
             ExitCode::SUCCESS,
@@ -650,6 +651,26 @@ final class P2IdentityRecoveryHttpIntegrationTest extends MySqlIntegrationTestCa
                 $this->connection->exec('DELETE FROM ' . $table);
             }
         }
+    }
+
+    private function markCurrentScheduleSlotSucceeded(string $taskId, int $intervalSeconds): void
+    {
+        $statement = $this->connection->prepare(
+            'INSERT INTO qmdb_scheduled_task_runs '
+            . '(task_id, scheduled_for, execution_id, status, attempt, claimed_at, lease_expires_at, '
+            . 'started_at, completed_at, duration_ms, version, created_at, updated_at) VALUES '
+            . '(:task_id, FROM_UNIXTIME(FLOOR(UNIX_TIMESTAMP(UTC_TIMESTAMP()) / :interval_first) * :interval_second), '
+            . ':execution_id, :status, 1, UTC_TIMESTAMP(6), UTC_TIMESTAMP(6), UTC_TIMESTAMP(6), '
+            . 'UTC_TIMESTAMP(6), 0, 3, UTC_TIMESTAMP(6), UTC_TIMESTAMP(6))',
+        );
+        $statement->execute([
+            ':task_id' => $taskId,
+            ':interval_first' => $intervalSeconds,
+            ':interval_second' => $intervalSeconds,
+            ':execution_id' => str_repeat('a', 32),
+            ':status' => 'SUCCEEDED',
+        ]);
+        self::assertSame(1, $statement->rowCount());
     }
 
     /** @return list<string> */

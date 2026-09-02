@@ -142,6 +142,7 @@ final class P2FreezePolicy
         'tests/Architecture/P2RouteSecurityPolicyTest.php',
         'tests/Architecture/SchemaFoundationArchitectureTest.php',
         'tests/Integration/Bootstrap/FoundationCompilationTest.php',
+        'tests/Integration/MySql/P2SecurityAuthorizationIntegrationTest.php',
         'tests/Support/MySql/AuthorizationMySqlFixture.php',
         'docs/project/project-state.md',
     ];

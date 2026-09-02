@@ -35,6 +35,7 @@ final class P2FreezeTest extends TestCase
         self::assertTrue($policy->isP3B04MutableExistingPath('src/Shared/Schema/State/MySqlSchemaStateRepository.php'));
         self::assertTrue($policy->isP3B04MutableExistingPath('routes/web.php'));
         self::assertTrue($policy->isP3B04MutableExistingPath('docs/project/project-state.md'));
+        self::assertTrue($policy->isP3B04MutableExistingPath('tests/Integration/MySql/P2SecurityAuthorizationIntegrationTest.php'));
         self::assertTrue($policy->isP3B02MutableExistingPath('tests/Integration/MySql/P2IdentityRecoveryHttpIntegrationTest.php'));
         self::assertFalse($policy->isIncluded('docs/closeout/p2/qmdb-p2-identity-security-tenancy-freeze.yaml'));
     }
