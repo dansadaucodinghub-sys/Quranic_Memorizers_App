@@ -207,6 +207,12 @@ final class IdentityTenancyFoundationIntegrationTest extends MySqlIntegrationTes
     {
         foreach (
             [
+                'organization_affiliation_status_events', 'organization_affiliation_role_assignments',
+                'organization_affiliation_unit_assignments', 'organization_affiliations',
+                'organization_affiliation_role_definitions', 'organization_unit_locations',
+                'organization_unit_names', 'organization_units', 'organization_jurisdictions',
+                'organization_classification_assignments', 'organization_names', 'organizations',
+                'organization_classifications',
                 'people_profile_operation_results', 'people_guardianships', 'people_memorizer_progress',
                 'people_role_profiles', 'people_person_geographies', 'people_account_links', 'people_person_names',
                 'people_persons',

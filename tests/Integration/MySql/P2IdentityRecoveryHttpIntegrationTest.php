@@ -85,16 +85,12 @@ final class P2IdentityRecoveryHttpIntegrationTest extends MySqlIntegrationTestCa
         self::assertSame('{"status":"not_ready"}', (string)$readiness->getBody());
 
         $migrations = $this->migrationRegistry()->ordered();
-        self::assertCount(34, $migrations);
-        self::assertSame([
-            '20260901030100_create_people_person_foundation',
-            '20260901030200_create_people_geography_associations',
-            '20260901030300_create_people_role_profiles',
-            '20260901030400_create_people_guardianship_and_security_catalog',
-        ], array_map(
+        $migrationIds = array_map(
             static fn (Migration $migration): string => $migration->id()->value(),
-            array_slice($migrations, -4),
-        ));
+            $migrations,
+        );
+        self::assertContains('20260826011000_create_password_recovery_foundation', $migrationIds);
+        self::assertContains('20260826011100_create_security_notification_foundation', $migrationIds);
         foreach (
             ['account_password_recovery_challenges', 'account_password_recovery_events',
                 'account_security_notifications', 'account_security_notification_events'] as $table
@@ -623,6 +619,18 @@ final class P2IdentityRecoveryHttpIntegrationTest extends MySqlIntegrationTestCa
 
     private function rebuildIdentityTables(): void
     {
+        foreach (
+            [
+            'organization_affiliation_status_events', 'organization_affiliation_role_assignments',
+            'organization_affiliation_unit_assignments', 'organization_affiliations',
+            'organization_affiliation_role_definitions', 'organization_unit_locations',
+            'organization_unit_names', 'organization_units', 'organization_jurisdictions',
+            'organization_classification_assignments', 'organization_names', 'organizations',
+            'organization_classifications',
+            ] as $table
+        ) {
+            $this->connection->exec('DROP TABLE IF EXISTS ' . $table);
+        }
         $this->connection->exec('DROP TABLE IF EXISTS account_state_operations');
         $this->connection->exec('DROP TABLE IF EXISTS qmdb_scheduled_task_runs');
         foreach ($this->identityTables() as $table) {

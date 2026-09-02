@@ -19,6 +19,7 @@
 - Added a forward-only notification-domain migration for `ORGANIZATION_AFFILIATION_EXPIRED`; no applied migration was altered.
 - Made schema-ledger retry writes reconcile description and checksum atomically, then restored the B03 seed boundary so its established checksum remains reproducible.
 - Restored the inherited B03 Organization module source to repository style so the project-wide quality gate covers the live code rather than excluding compacted source.
+- Repaired inherited MySQL fixture teardown order and catalog expectations so P2 isolation tests rebuild cleanly after the new Organization and affiliation foreign-key graph is present.
 
 ## Validation evidence
 

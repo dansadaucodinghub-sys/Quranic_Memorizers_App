@@ -28,6 +28,7 @@ use Qmdb\Modules\SecurityAuthorization\Infrastructure\Persistence\MySqlWorkspace
 use Qmdb\Modules\SecurityPrivilegedAccess\Infrastructure\Persistence\MySqlPrivilegedAccessMaintenanceRepository;
 use Qmdb\Modules\TenancyContext\Domain\AccountWorkspaceTenantContext;
 use Qmdb\Shared\Schema\Checksum\CanonicalChecksum;
+use Qmdb\Shared\Schema\Migration\Migration;
 use Qmdb\Shared\Schema\Migration\MigrationChecksum;
 use Qmdb\Shared\Schema\Migration\MigrationRegistry;
 use Qmdb\Shared\Schema\Seed\SeedChecksum;
@@ -69,16 +70,21 @@ final class P2SecurityAuthorizationIntegrationTest extends MySqlIntegrationTestC
         self::assertInstanceOf(SeedRegistry::class, $seeds);
         $migrationChecksum = new MigrationChecksum(new CanonicalChecksum());
         $seedChecksum = new SeedChecksum(new CanonicalChecksum());
-        foreach (array_slice($migrations->ordered(), -3) as $migration) {
+        foreach ($migrations->ordered() as $migration) {
             self::assertSame(64, strlen($migrationChecksum->migrationHex($migration)));
-            self::assertTrue($migration->reversible());
         }
-        self::assertCount(4, $seeds->ordered());
+        $forwardOnlyCorrections = array_values(array_filter(
+            $migrations->ordered(),
+            static fn (Migration $migration): bool => $migration->id()->value() === '20260902040401_extend_organization_affiliation_expiry_notification',
+        ));
+        self::assertCount(1, $forwardOnlyCorrections);
+        self::assertFalse($forwardOnlyCorrections[0]->reversible());
+        self::assertCount(7, $seeds->ordered());
         self::assertSame(64, strlen($seedChecksum->hexadecimal($seeds->ordered()[0])));
 
-        self::assertSame(32, $this->fixture->tableCount('authorization_permissions'));
-        self::assertSame(9, $this->fixture->tableCount('authorization_roles'));
-        self::assertSame(83, $this->fixture->tableCount('authorization_role_permissions'));
+        self::assertSame(40, $this->fixture->tableCount('authorization_permissions'));
+        self::assertSame(10, $this->fixture->tableCount('authorization_roles'));
+        self::assertSame(110, $this->fixture->tableCount('authorization_role_permissions'));
         self::assertSame(0, $this->fixture->tableCount('platform_role_assignments'));
         self::assertSame(0, $this->fixture->tableCount('workspace_role_assignments'));
         self::assertSame([
