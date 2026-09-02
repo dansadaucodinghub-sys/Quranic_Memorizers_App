@@ -87,6 +87,23 @@ final class P2FreezePolicy
     ];
 
     /** @var list<string> */
+    private const P3_B04_EXTENSION_PREFIXES = [
+        'src/Modules/OrganizationAffiliations/',
+        'src/Bootstrap/Module/OrganizationsAffiliationsModule.php',
+        'resources/views/pages/workspace-organization-affiliation-',
+        'resources/views/pages/account-affiliation',
+        'resources/views/pages/account-dependent-affiliation',
+        'resources/views/fragments/organization-affiliation-',
+        'resources/views/fragments/account-affiliation-',
+        'resources/views/fragments/affiliation-',
+        'public/assets/js/organization-affiliation-',
+        'tests/Unit/Modules/OrganizationAffiliations/',
+        'tests/Integration/MySql/P3OrganizationAffiliation',
+        'tests/Architecture/P3OrganizationAffiliation',
+        'tests/Support/MySql/P3OrganizationAffiliation',
+    ];
+
+    /** @var list<string> */
     private const P3_B02_MUTABLE_EXISTING_PATHS = [
         'src/Modules/IdentityAccess/Domain/IdempotencyOperation.php',
         'src/Modules/IdentityAccess/Infrastructure/Persistence/MySqlIdentityAccessRepository.php',
@@ -214,7 +231,7 @@ final class P2FreezePolicy
 
     public function isP3AuthorizedExtension(string $path): bool
     {
-        return $this->isP3B01Extension($path) || $this->isP3B02Extension($path) || $this->isP3B03Extension($path);
+        return $this->isP3B01Extension($path) || $this->isP3B02Extension($path) || $this->isP3B03Extension($path) || $this->isP3B04Extension($path);
     }
 
     public function isP3B01MutableExistingPath(string $path): bool
@@ -241,6 +258,17 @@ final class P2FreezePolicy
     public function isP3B03MutableExistingPath(string $path): bool
     {
         return in_array(PathPolicy::normalize($path), self::P3_B03_MUTABLE_EXISTING_PATHS, true);
+    }
+
+    public function isP3B04Extension(string $path): bool
+    {
+        foreach (self::P3_B04_EXTENSION_PREFIXES as $prefix) {
+            if (str_starts_with(PathPolicy::normalize($path), $prefix)) {
+                return true;
+            }
+        }
+
+        return false;
     }
 
     public function isP3MutableExistingPath(string $path): bool

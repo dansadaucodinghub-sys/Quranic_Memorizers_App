@@ -1,5 +1,5 @@
 ledger_id: QMDB-P3-P2-EXT-001
-authorization: QMDB-P3-B03-EXEC
+authorization: QMDB-P3-B04-EXEC
 authorized_on: 2026-09-01
 expected_p2_freeze_id: QMDB-P2-FRZ-001
 expected_p2_freeze_manifest: docs/closeout/p2/qmdb-p2-identity-security-tenancy-freeze.yaml
@@ -7,6 +7,7 @@ allowed_modules:
   - reference.geography
   - people.profiles
   - organizations.registry
+  - organizations.affiliations
 allowed_scope:
   - Nigerian country and administrative-reference data
   - geography migrations and seed registration
@@ -15,8 +16,9 @@ allowed_scope:
   - global Person, private Account self-link, bounded role-profile and Memorizer-progress foundations
   - self-declared profile-management guardianship only, with minor and step-up protections
   - controlled P2 security-catalog, CSRF, idempotency, audit, notification, and rate-limit extensions
+  - consent-aware, tenant-scoped Organization-to-Person affiliation source, private account inventories,
+    lifecycle records, assignment sets, organization retirement guards, and maintenance
 prohibited_modules:
-  - Organization affiliations, memberships, staff, leadership, and Person affiliation workflows
   - Competitions
   - Person search, discovery, merge, deletion, profile claiming, contacts, dependent Accounts and tenant-owned Person data
   - guardian consent, legal-status certification and relationship verification workflows
@@ -37,3 +39,6 @@ assurance:
   - The P3-B03 compatibility bridge may update only the P2 closed catalogs, schema planning and seed-planning
     contracts explicitly enumerated by P2FreezePolicy::P3_B03_MUTABLE_EXISTING_PATHS; changes are controlled
     extensions and do not rewrite QMDB-P2-FRZ-001.
+  - The P3-B04 affiliation module and its dedicated bootstrap module are explicit controlled extensions. Existing
+    P2 compatibility contracts remain governed by the already enumerated B01, B02, and B03 bridge lists; this
+    entry never alters the historical QMDB-P2-FRZ-001 manifest or its frozen checksums.
