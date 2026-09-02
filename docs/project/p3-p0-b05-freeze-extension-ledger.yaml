@@ -1,0 +1,21 @@
+p0_freeze_extension:
+  ledger_id: QMDB-P3-P0-EXT-002
+  authorization: QMDB-P3-B05-EXEC
+  baseline_id: QMDB-P0-FRZ-001
+  preserves_historical_baseline: true
+  implementation_revision: "5255962bac14f017c84a901a7569da3a43999b35"
+  scope: "Owner-authorized P3-B05 parameter and architecture documentation records only."
+  constraints:
+    - "The QMDB-P0-FRZ-001 manifest remains unchanged."
+    - "Each entry binds to the preceding approved P3-B02 extension hash and records one B05 replacement hash."
+    - "No product requirement, legal policy, historical closeout claim, or baseline checksum is reclassified by this ledger."
+    - "The verifier accepts only this exact ordered P3-B05 documentation list."
+  entries:
+    - path: "docs/operations/quality-attribute-parameter-register.md"
+      previous_extension_sha256: 153b27e04bca78d9c641b480d758a1f2c4495556224b181e47b936b632aba8ff
+      extension_sha256: bc5e5430deaa8f6cc4327e74d6f511568a99ebbba2fa495ac128f077001fb905
+      reason: "Records bounded private profile-claim and duplicate-resolution quality parameters."
+    - path: "docs/project/decision-register.md"
+      previous_extension_sha256: 0b3e681ce2a823742f1e3c324215a4ebefc0ee303a32d6a749fe50c4a424a6aa
+      extension_sha256: 2022292f8b06a3e037e5c375407f62b91d9f66489099d94247a8b119e965386c
+      reason: "Records the B05 pairing and non-destructive Person canonicalization decision."

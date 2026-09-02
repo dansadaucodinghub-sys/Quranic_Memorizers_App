@@ -127,6 +127,7 @@ final class P2FreezePolicy
         'tests/Support/MySql/P3IdentityResolution',
         'docs/implementation/P3-B05-',
         'docs/implementation/reports/QMDB-P3-B05-',
+        'docs/project/p3-p0-b05-freeze-extension-ledger.yaml',
     ];
 
     /** @var list<string> */

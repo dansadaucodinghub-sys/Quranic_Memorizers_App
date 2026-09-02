@@ -7,6 +7,7 @@ namespace Qmdb\Tools\Ci;
 final class FrozenBaselineVerifier
 {
     private const P3_B02_DOCUMENTATION_EXTENSION_LEDGER = 'docs/project/p3-p0-freeze-extension-ledger.yaml';
+    private const P3_B05_DOCUMENTATION_EXTENSION_LEDGER = 'docs/project/p3-p0-b05-freeze-extension-ledger.yaml';
 
     /** @var list<string> */
     private const P3_B02_DOCUMENTATION_PATHS = [
@@ -25,6 +26,12 @@ final class FrozenBaselineVerifier
         'docs/security/security-control-catalog.md',
         'docs/security/security-verification-matrix.md',
         'docs/security/threat-model.md',
+    ];
+
+    /** @var list<string> */
+    private const P3_B05_DOCUMENTATION_PATHS = [
+        'docs/operations/quality-attribute-parameter-register.md',
+        'docs/project/decision-register.md',
     ];
 
     public function __construct(private readonly string $root)
@@ -60,7 +67,10 @@ final class FrozenBaselineVerifier
         foreach ($matches as $match) {
             $baselineHashes[$match[1]] = $match[2];
         }
-        $approvedExtensions = $this->approvedP3B02DocumentationExtensions($baselineHashes, $report);
+        $approvedExtensions = $this->approvedP3B05DocumentationExtensions(
+            $this->approvedP3B02DocumentationExtensions($baselineHashes, $report),
+            $report,
+        );
         $paths = [];
         foreach ($matches as $match) {
             $relative = $match[1];
@@ -155,6 +165,67 @@ final class FrozenBaselineVerifier
         $report->check(
             count(array_unique($paths)) === count($paths),
             'P3 B02 P0 extension paths must be unique.',
+        );
+
+        return $approved;
+    }
+
+    /**
+     * @param array<string, string> $previousExtensions
+     * @return array<string, string>
+     */
+    private function approvedP3B05DocumentationExtensions(array $previousExtensions, VerificationReport $report): array
+    {
+        $ledgerPath = $this->root . '/' . self::P3_B05_DOCUMENTATION_EXTENSION_LEDGER;
+        if (!is_file($ledgerPath)) {
+            return $previousExtensions;
+        }
+        $ledger = file_get_contents($ledgerPath);
+        if (!is_string($ledger)) {
+            $report->check(false, 'P3 B05 P0 documentation-extension ledger is unreadable.');
+
+            return $previousExtensions;
+        }
+        foreach (
+            [
+                'ledger_id: QMDB-P3-P0-EXT-002',
+                'authorization: QMDB-P3-B05-EXEC',
+                'baseline_id: QMDB-P0-FRZ-001',
+                'preserves_historical_baseline: true',
+            ] as $required
+        ) {
+            $report->check(str_contains($ledger, $required), 'P3 B05 P0 extension ledger is missing: ' . $required);
+        }
+        preg_match_all(
+            '/^    - path: "([^"]+)"\R\s+previous_extension_sha256: ([a-f0-9]{64})\R\s+extension_sha256: ([a-f0-9]{64})\R\s+reason: "([^"]+)"\s*$/m',
+            $ledger,
+            $matches,
+            PREG_SET_ORDER,
+        );
+        $report->check(
+            count($matches) === count(self::P3_B05_DOCUMENTATION_PATHS),
+            'P3 B05 P0 extension ledger must contain every approved documentation extension exactly once.',
+        );
+
+        $paths = [];
+        $approved = $previousExtensions;
+        foreach ($matches as $match) {
+            $path = $match[1];
+            $paths[] = $path;
+            $previousHash = $previousExtensions[$path] ?? null;
+            $matchesPrevious = is_string($previousHash) && hash_equals($previousHash, $match[2]);
+            $report->check($matchesPrevious, 'P3 B05 P0 extension has an unrecognized previous hash: ' . $path);
+            if ($matchesPrevious) {
+                $approved[$path] = $match[3];
+            }
+        }
+        $report->check(
+            $paths === self::P3_B05_DOCUMENTATION_PATHS,
+            'P3 B05 P0 extension paths must be the ordered, approved documentation list.',
+        );
+        $report->check(
+            count(array_unique($paths)) === count($paths),
+            'P3 B05 P0 extension paths must be unique.',
         );
 
         return $approved;

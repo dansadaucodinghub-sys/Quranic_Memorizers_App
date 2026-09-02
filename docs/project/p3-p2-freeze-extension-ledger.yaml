@@ -65,3 +65,5 @@ assurance:
   - The P3-B05 compatibility bridge may record the bounded claim, duplicate-resolution, privacy and operational
     parameter decisions in the existing quality-attribute, decision, open-decision and risk registers. Those
     records document the new controlled extension without changing the historical QMDB-P2-FRZ-001 evidence.
+  - The P3-B05 P0 documentation extension ledger binds the two explicitly authorized parameter/architecture
+    records to their preceding P3-B02 extension hashes and preserves QMDB-P0-FRZ-001 unchanged.
