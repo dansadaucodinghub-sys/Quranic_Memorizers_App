@@ -66,3 +66,13 @@ idempotency enforcement; invalid Unicode/name input; exact self-link/guardianshi
 denials; MySQL uniqueness and foreign-key constraints; race handling; no sensitive audit metadata; and English/Arabic
 template/progressive selector behaviour. Physical accessibility, legal guardianship and production capacity evidence
 remain separately governed and are not claimed by these tests.
+
+## P3-B05 verification addendum
+
+The B05 evidence set covers hash-only pairing storage and resolution, expiration/revocation/attempt limits, exact
+Guardian and Platform authority, claimant multi-factor acceptance, assertion revocation, privacy-safe audit and
+notification metadata, duplicate report/consent authority, open-pair uniqueness, immutable claim/case/alias history,
+two-active-SELF-link and data-conflict blocks, transaction rollback, canonical resolver behavior, affiliation
+participant constraints, route CSRF/idempotency classification, and MySQL optimistic-concurrency races. It does not
+represent penetration testing, production HSM/key custody, legal identity or guardianship certification, physical
+authenticator validation, or a manual assistive-technology conformance review.

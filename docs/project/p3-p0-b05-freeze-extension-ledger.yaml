@@ -4,18 +4,70 @@ p0_freeze_extension:
   baseline_id: QMDB-P0-FRZ-001
   preserves_historical_baseline: true
   implementation_revision: "5255962bac14f017c84a901a7569da3a43999b35"
-  scope: "Owner-authorized P3-B05 parameter and architecture documentation records only."
+  scope: "Owner-authorized P3-B05 identity-resolution documentation records only."
   constraints:
     - "The QMDB-P0-FRZ-001 manifest remains unchanged."
     - "Each entry binds to the preceding approved P3-B02 extension hash and records one B05 replacement hash."
     - "No product requirement, legal policy, historical closeout claim, or baseline checksum is reclassified by this ledger."
-    - "The verifier accepts only this exact ordered P3-B05 documentation list."
+    - "The verifier accepts only the exact ordered P3-B02 documentation paths and their B05 replacement hashes."
   entries:
+    - path: "docs/accessibility/accessibility-verification-matrix.md"
+      previous_extension_sha256: 23ed586d8e4662f776bbd4f34e673328da9420e8f9637b41f4f3f9ea0a8ca196
+      extension_sha256: dea19e19a54b0527dfa7ca6877dcf72fe2cefa16e7fa8417f418b70d07c0a6f9
+      reason: "Records private claim and duplicate workflow accessibility evidence."
+    - path: "docs/data/02-domain-aggregate-and-ownership-model.md"
+      previous_extension_sha256: 6798ddf1dcf27853c93bc12fd0ea396b2c6bad0fdea86d4735f223ada7ade4c7
+      extension_sha256: ded72c98f6102f6043a13e71d4600570585c64abda4b37f2994a168e2bf04a50
+      reason: "Records identity-resolution aggregate ownership and controlled participants."
+    - path: "docs/data/05-table-and-column-data-dictionary.md"
+      previous_extension_sha256: 25e87b6666d64f4bc16d856d36ddfa3c0243ca2452350f48899514384f627609
+      extension_sha256: 63fd26f64a53481c74d968aa748036bf36da577eea8d644350c6d62c3d770277
+      reason: "Records B05 private table purposes and excluded pairing plaintext."
+    - path: "docs/data/06-relationship-constraint-and-integrity-catalog.md"
+      previous_extension_sha256: 127ba0716bd5d9a337593048b0b01ad959807b756ef67d4671a50e07e799a5a1
+      extension_sha256: 937e433bcd65d03073f7a32ce272be3b20c379693c0199448a3ab9f9f3da4fb8
+      reason: "Records B05 relational, lifecycle, and transaction integrity controls."
+    - path: "docs/data/07-indexing-and-query-access-patterns.md"
+      previous_extension_sha256: 4e7a450bc40885f747ea11c4fbedaeebeec243def48b3a49ddad11a1c349893d
+      extension_sha256: a4408ddb3ae1c9905f9ff76bc0dbd078ab456f0a7ab12607dd45b6c14756e639
+      reason: "Records private selector and exact-pair access patterns without Person discovery."
+    - path: "docs/data/08-record-versioning-lifecycle-and-deletion.md"
+      previous_extension_sha256: f60fd17fb0ec3f640edda36b5187e8d18a5529912625460b343d2b1eba021221
+      extension_sha256: 09141f296d9a62f31e5d9b7497e654fcfeecd7e417d2b0157550469ace998536
+      reason: "Records B05 claim, duplicate, retirement, and immutable alias lifecycle."
+    - path: "docs/data/10-data-classification-ownership-and-lineage.md"
+      previous_extension_sha256: 63ba75eca3ffa3104310934f0eab5281667596317e84556c6b2fe9cad7a59aa8
+      extension_sha256: 7c30b2d6078ccf870aac8c8125f67bcab2e4674d706b23f0a252b189b75cc817
+      reason: "Records B05 confidential data lineage and sensitive-field exclusions."
+    - path: "docs/data/mysql-logical-schema.yaml"
+      previous_extension_sha256: 6c6d659ffb9b2dc1a7e60a194d1dee7c8b2c182dd34e62a953102d748df8b01e
+      extension_sha256: 535f1fbabee2fa96b444589ab9ecdcdf39c88962a500b3b93133aa4c61432505
+      reason: "Records B05 identity-resolution tables, markers, and immutable-history controls."
+    - path: "docs/implementation/phase-and-batch-roadmap.md"
+      previous_extension_sha256: 71c8b1280c4e21539af3e42ec59edd5d4dc4e195bcf503647f3c08305a31a7b8
+      extension_sha256: a5e233b1433049116496affaa57b959a0806c0ce4670ffe72c4b1a71274c6a07
+      reason: "Records B05 completion and the bounded B06 handoff."
     - path: "docs/operations/quality-attribute-parameter-register.md"
       previous_extension_sha256: 153b27e04bca78d9c641b480d758a1f2c4495556224b181e47b936b632aba8ff
       extension_sha256: bc5e5430deaa8f6cc4327e74d6f511568a99ebbba2fa495ac128f077001fb905
       reason: "Records bounded private profile-claim and duplicate-resolution quality parameters."
+    - path: "docs/privacy/data-classification-and-handling.md"
+      previous_extension_sha256: 6faebcb5baa04be25d552d2d9f2429856859f84275f42eb2129d93bbf5afc65b
+      extension_sha256: c6d7334ae199973ec0464a34fb8afd0c7456817189fd9b0c4a8f240a8486afcd
+      reason: "Records B05 pairing, consent, and duplicate data-handling limits."
     - path: "docs/project/decision-register.md"
       previous_extension_sha256: 0b3e681ce2a823742f1e3c324215a4ebefc0ee303a32d6a749fe50c4a424a6aa
       extension_sha256: 2022292f8b06a3e037e5c375407f62b91d9f66489099d94247a8b119e965386c
       reason: "Records the B05 pairing and non-destructive Person canonicalization decision."
+    - path: "docs/security/security-control-catalog.md"
+      previous_extension_sha256: 67e7e7dd784cf57a13a023db68d584071269389b31041769cb54eafe56907f50
+      extension_sha256: 940cbde4252577d0241e1cf73583bbee30b66e6add4e38962630ef069641084a
+      reason: "Records executable B05 claim and duplicate-resolution controls."
+    - path: "docs/security/security-verification-matrix.md"
+      previous_extension_sha256: e61dbbc7c43d56d21b3b09de06e7a922cd9a81eb83372a0c63aac6cbcacb4289
+      extension_sha256: f62de6b0f2623bd81b9b52335cc66bfed001b3a91e6e6ecb73011b87ff5abfbf
+      reason: "Records B05 verification coverage and its operational limits."
+    - path: "docs/security/threat-model.md"
+      previous_extension_sha256: 64def6c5389e3a130028763fbbe28f115621e486233c3f870c8af19619acf7b6
+      extension_sha256: 229a113b503ff9adebdc6cc8230f0603ff93fe6f1292185b977f0b9d45882658
+      reason: "Records the B05 pairing, consent, canonicalization, and privacy threat boundary."

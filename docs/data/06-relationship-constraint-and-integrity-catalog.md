@@ -1369,3 +1369,13 @@ and unique active guardian/dependent pairs using generated active markers and fo
 validated against the B01 parent/child hierarchy. Transactional application checks additionally require the exact
 self-link or active guardianship, an adult Guardian with active Guardian role, a minor dependent, and preservation of
 at least one active guardian for a minor. Those cross-row rules are covered by MySQL integration and concurrency tests.
+
+## P3-B05 identity-resolution integrity addendum
+
+Pairing selector, active Account pairing, claim pairing, open Person claim, open Account claim, active assertion type,
+open duplicate pair, active manager-consent requirement, and alias source constraints are backed by unique keys or
+generated state markers. Foreign keys prevent orphaned Account, Person, guardianship, claim, consent, case, and alias
+records. Checks bound statuses, authority type, expiry, optimistic version, distinct alias targets and ordered duplicate
+pairs. Immutable triggers reject update/delete of lifecycle events and aliases. Cross-row rules remain in the locked
+application transaction: exact authority, claimant step-up, all-manager consent, SELF-link conflict, demographic,
+geography, progress, affiliation, alias and affected-record preflight, and all-participant rollback.

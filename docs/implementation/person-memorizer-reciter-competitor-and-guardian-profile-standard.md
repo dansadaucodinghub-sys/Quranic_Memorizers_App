@@ -62,3 +62,17 @@ No public Person discovery, search, merge, deletion, profile claim, contacts, me
 dependent Account, consent, legal-status certification, relationship verification, competition entry, scoring,
 certificate or tenant-owned Person record is implemented. P3-B03 is next: **Organizations, Schools, Groups, Mosques,
 and Branches Registry**.
+
+## P3-B05 profile-claim and canonicalization extension
+
+An Account and a Person remain distinct aggregates. An opaque Person registry code is not authority and cannot create
+a SELF link. P3-B05 introduces a separate Account-generated pairing, Guardian or Platform authorization, and claimant
+acceptance sequence. The accepted claim creates an active SELF link only after multi-factor step-up; it creates no
+Workspace membership or authorization role. Guardian confirmation is a QMDB workflow fact, not legal guardianship
+certification, and adult acceptance revokes active Guardian profile-management authority under the controlled People
+contract.
+
+Duplicate handling is not a Person search or automatic matching feature. A duplicate case is explicitly reported,
+requires every active manager's consent, and performs conflict preflight before any canonicalization. The source
+Person is retired, never deleted; its immutable alias resolves to the retained canonical Person. Person names are not
+automatically overwritten and Account links are neither merged nor transferred.

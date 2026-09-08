@@ -135,3 +135,12 @@ Private Person forms use normal CSRF-protected POSTs first and progressively enh
 child list. The selector sends a whitelisted field and opaque public selection; it never receives Account, Person,
 birth-date or name data. Profile data is not written to browser storage, and failed/unchanged mutations do not create
 duplicate history.
+
+## P3-B05 identity-resolution interaction
+
+Profile-claim and duplicate routes remain server-rendered, authenticated, same-origin forms with CSRF and idempotency
+controls. The identity-resolution controller enhances only approved private fragments, retains the server-rendered
+locale, handles stale requests, preserves form fallback, and never retries a mutation automatically. A visible pairing
+code is removed when the page becomes hidden and is never copied into browser storage, URL state, telemetry, or a
+fragment response. Controlled destructive dialogs provide focus trapping/return, keyboard close, accessible labels and
+live status; failed mutations keep the existing private state visible and return only safe problem detail.

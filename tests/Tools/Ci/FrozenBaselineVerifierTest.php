@@ -37,6 +37,6 @@ final class FrozenBaselineVerifierTest extends TestCase
         self::assertStringContainsString('authorization: QMDB-P3-B05-EXEC', $ledger);
         self::assertStringContainsString('baseline_id: QMDB-P0-FRZ-001', $ledger);
         self::assertStringContainsString('preserves_historical_baseline: true', $ledger);
-        self::assertSame(2, preg_match_all('/^    - path: /m', $ledger));
+        self::assertSame(15, preg_match_all('/^    - path: /m', $ledger));
     }
 }

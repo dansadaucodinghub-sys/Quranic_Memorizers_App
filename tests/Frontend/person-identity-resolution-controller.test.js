@@ -1,4 +1,5 @@
 import assert from 'node:assert/strict';
+import { readFile } from 'node:fs/promises';
 import test from 'node:test';
 import { installDom } from './test-dom.js';
 
@@ -40,4 +41,29 @@ test('a destructive profile action is confirmed in the accessible dialog before 
     assert.equal(submitted, false);
     dialog.querySelector('[data-qmdb-modal-content] button.button.danger').click();
     assert.equal(submitted, true);
+});
+
+test('identity-resolution controller has no browser-storage, URL, or network sink for pairing material', async () => {
+    const source = await readFile(new URL('../../public/assets/js/person-identity-resolution-controller.js', import.meta.url), 'utf8');
+
+    assert.equal(source.includes('localStorage'), false);
+    assert.equal(source.includes('sessionStorage'), false);
+    assert.equal(source.includes('fetch('), false);
+    assert.equal(source.includes('window.location'), false);
+    assert.match(source, /pagehide/);
+    assert.match(source, /data-qmdb-pairing-code-once/);
+});
+
+test('pairing code removal leaves no readable secret text or client-side replacement state', () => {
+    document.body.innerHTML = `<section data-qmdb-person-identity-resolution><section data-qmdb-pairing-code-once><code>QMPC-ABCDEF123456-0123456789abcdefghij_-AB</code></section></section>`;
+    const listeners = new Map();
+    const windowRef = { addEventListener: (type, handler) => listeners.set(type, handler) };
+    new PersonIdentityResolutionController({ documentRef: dom.window.document, windowRef }).start();
+
+    listeners.get('pagehide')();
+    const region = document.querySelector('[data-qmdb-pairing-code-once]');
+    assert.equal(region.hidden, true);
+    assert.equal(region.textContent, '');
+    assert.equal(document.body.textContent.includes('QMPC-'), false);
+    assert.equal(document.querySelector('[data-qmdb-pairing-code-once] code'), null);
 });

@@ -214,3 +214,14 @@ The B10 aggregate verifier composes the existing catalog verifier with Tenant Co
 route verifiers without issuing a grant or mutating data. The authorization matrix retains deny-by-default, exact
 scope, exact active assignment, and assurance-as-necessary-not-sufficient behavior under normal and exceptional
 authorization sources.
+
+## P3-B05 identity-resolution authorization extension
+
+The closed catalog adds five Platform permissions: `platform.people_profiles.view`,
+`platform.people_profile_claims.authorize`, `platform.people_profile_verifications.manage`,
+`platform.people_duplicates.view`, and `platform.people_duplicates.resolve`. It adds the system Platform role
+`platform.people_profile_reviewer` and bounded mappings for Security Administrator, the reviewer, and Authorization
+Auditor. Claim authorization, verification management, and duplicate resolution require the catalog's stated
+multi-factor or phishing-resistant assurance. Privileged Access is not an identity-resolution administrator, and no
+claim, verification assertion, duplicate case, canonical alias, Organization affiliation, or Person role creates a
+permission or Workspace membership.

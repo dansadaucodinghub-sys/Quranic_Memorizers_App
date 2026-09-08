@@ -1047,3 +1047,12 @@ associations, Person-role profiles and declared Memorizer progress. `people_guar
 aggregate: a Guardian role is not authority, and an active exact relationship is required for dependent management.
 Neither aggregate is Workspace-owned in B02; Organization affiliation, consent and public projections remain outside
 the delivered ownership model.
+
+## P3-B05 identity-resolution ownership addendum
+
+`people.identity_resolution` owns pairing, claim, verification-assertion, duplicate-case, duplicate-consent, and
+alias aggregates. Pairings belong to the requesting Account but authorize nothing until a separate authorized action
+and claimant acceptance occur. Claims and assertions are global private People records; they are not tenant ownership,
+authorization assignments, or public profile evidence. Duplicate cases coordinate two Person aggregates without
+merging Accounts. The canonicalization coordinator owns the sole transaction boundary; People and Organization
+Affiliation participants supply preflight/apply/rollback work without independent commits.

@@ -138,3 +138,12 @@ The Person profile surface is authenticated and private, with `no-store` and `no
 only necessary private values to the current self-link or exact active guardianship, renders normal server forms for
 every mutation, and uses safe locale-aware English/Arabic output. No public card, search result, profile claim or
 client-side authoritative profile state exists.
+
+## P3-B05 claim and duplicate presentation
+
+B05 exposes no public Person card, discovery, matching, verification badge, or private comparison payload. Its
+Account, Guardian, and Platform pages render only the minimum status and opaque references permitted by the server
+decision. Pairing secrets render once in a protected page and are removed by progressive client behavior when hidden.
+Claim acceptance, revocation, duplicate consent, dismissal, and canonicalization use explicit consequence language and
+the approved accessible confirmation dialog, while ordinary no-JavaScript POST forms remain the authoritative path.
+English and Arabic/RTL layouts use the same private response and error boundary.

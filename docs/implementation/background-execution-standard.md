@@ -99,3 +99,11 @@ neither event metadata nor the audit integrity key in scheduler output or logs.
 B10 validates the registered task inventory and reuses the existing scheduler concurrency, bounded lease, idempotency,
 tenant revalidation, and no-payload-logging tests. It adds no worker route, durable queue, persistent cache, external
 publisher, or schedule-triggered full audit scan.
+
+## P3-B05 claim-maintenance task
+
+`people.profile_claims.maintain` is a bounded UTC maintenance task. It expires pending pairings and claims according
+to their persisted lifecycle, appends the controlled history/audit/notification records, and is idempotent on repeat
+runs. It cannot create a claim, grant a SELF link, mutate a duplicate case, extend authority, or disclose pairing
+material. The synchronous authorization and acceptance checks remain authoritative, so scheduler delay never turns an
+expired, revoked, or unaccepted claim into an active link.

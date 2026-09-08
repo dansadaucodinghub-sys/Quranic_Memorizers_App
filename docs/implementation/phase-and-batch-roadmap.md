@@ -272,4 +272,7 @@ Later phases may prepare research or designs, but implementation cannot bypass e
 
 ## Exact next action
 
-Execute only [QMDB-P1-B01 — Core PHP Repository and Runtime Foundation](prompts/QMDB-P1-B01-core-php-repository-and-runtime-foundation.md). Do not start QMDB-P1-B02 until B01 completion evidence is accepted.
+QMDB-P3-B05 is complete: it adds private profile claims, bounded QMDB record-status assertions, explicit duplicate
+cases, management-authority consent, conflict-aware non-destructive Person canonicalization, and immutable aliases.
+The next authorized action is **QMDB-P3-B06 — People, Geography, and Organization Security Hardening and Closeout
+Preparation**. It must begin from the clean B05 release baseline; no B06 capability is implied by this roadmap update.

@@ -218,3 +218,15 @@ Guardian-role confusion, revoked/final-guardian races, invalid age/name/geograph
 public cache/referrer disclosure. Controls are exact relationship authorization, transactions/versions/unique keys,
 step-up for sensitive actions, CSRF, bounded rates, output encoding, no-store/no-referrer headers and privacy-safe
 audit/notification metadata. No public profile, consent, Organization or tenant-owned Person endpoint is introduced.
+
+## P3-B05 identity-resolution boundary update
+
+The material B05 threats are registry-code-only claim, pairing theft/brute-force/replay/logging, wrong-Account or
+wrong-Guardian authorization, review abuse, false legal-verification inference, minor self-claim, acceptance versus
+revocation/suspension/authority races, duplicate enumeration, false-positive automatic merge, missing or disputed
+manager consent, demographic/geography/progress/affiliation conflict, alias chain/cycle, partial canonicalization,
+name overwrite, Person deletion, and private metadata leakage. The boundary uses HMAC-only pairing storage, short
+lifecycles, rate limits, exact relationships, multi-factor step-up, default-deny roles, opaque references, immutable
+history, locked conflict preflight, single-transaction participants, no-store/no-referrer, output encoding, and
+minimized audit/notification data. Legal proof, external identity systems, automatic matching, public discovery, and
+Account merging remain deliberately outside the trust boundary.

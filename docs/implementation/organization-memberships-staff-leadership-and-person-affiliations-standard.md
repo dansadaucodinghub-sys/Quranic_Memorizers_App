@@ -58,3 +58,12 @@ The `organizations:affiliations:verify` command validates the role catalog and l
 ## Verification minimum
 
 Release evidence must include schema install/migrate/seed/verify; catalog and route verification; unit, architecture, frontend and real MySQL tests; a tenant-isolation negative assertion; database-enforced open-request uniqueness; immutable-history mutation rejection; and two-worker optimistic-concurrency evidence. The P2 freeze verifier must remain clean after the B04 controlled extension is committed.
+
+## P3-B05 canonicalization participant extension
+
+Organization affiliations remain tenant-owned and retain their existing consent and authorization semantics. They do
+not authorize a profile claim or a duplicate resolution. During a successful, consent-gated Person canonicalization,
+the registered Organization-affiliation participant may reassign only the duplicate Person reference inside the single
+controlled canonicalization transaction. It first reports an Organization-affiliation conflict where reassignment
+would violate the bounded contract; it never creates an affiliation, grants a role, changes Workspace membership, or
+commits independently. A rejected or blocked canonicalization leaves affiliation rows unchanged.

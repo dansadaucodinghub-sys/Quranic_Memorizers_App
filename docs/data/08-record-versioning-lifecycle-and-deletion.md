@@ -138,3 +138,12 @@ People records are not hard deleted. Name, geography, role, progress and guardia
 rows or status evidence, while current mutations use optimistic versions. Retention, Person retirement, deceased
 handling, legal correction, merge and deletion/anonymization policy remain open decisions; this foundation does not
 invent them.
+
+## P3-B05 claim, duplicate, and alias lifecycle addendum
+
+Pairings transition from active to consumed, revoked, expired, or attempts-exhausted; claims transition through
+pending acceptance, accepted, declined, revoked, or expired with immutable event history. Verification assertions are
+active or revoked historical facts. Duplicate cases move only through explicit report, consent, review, dismissal,
+block, or resolved states. Resolution does not hard-delete a Person: it retires the duplicate source, records an
+immutable alias, and retains case history. Alias chains/cycles, Account merge, self-link transfer, automatic name
+overwrite, and independently committed participant changes are prohibited.

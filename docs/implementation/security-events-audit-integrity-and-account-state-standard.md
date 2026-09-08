@@ -130,3 +130,12 @@ Person-profile creation, update, role transition, declared progress and guardian
 Security Audit categories through controlled catalog extensions. Event metadata contains only bounded action context
 and opaque references; it excludes Person names, birth dates, contact values and profile form bodies. Notification
 content follows the same minimization rule and never establishes profile authority.
+
+## P3-B05 claim and canonicalization audit extension
+
+Pairing lifecycle, Guardian/Platform authorization, claimant acceptance/decline/revocation, record-status assertion,
+duplicate reporting/consent/review, blocked resolution, canonicalization, and alias events use the existing
+tamper-evident security audit boundary. Metadata contains bounded action, status, permission/authority category and
+opaque public reference only. Pairing plaintext/selectors, HMAC values, names, birth dates, comparison material,
+guardian identity, review justification, contacts, and idempotency keys are excluded. Audit history evidences the QMDB
+workflow but never represents legal identity, legal guardianship, or government verification.

@@ -164,3 +164,13 @@ confidential personal data. They remain in authoritative private MySQL rows and 
 security notifications, URL/referrer data, browser storage and public caches. Opaque public IDs are references, not
 public-profile authorization. No export, public projection, contact record, consent record or retention automation is
 introduced; their purpose, legal basis and retention remain open governance decisions.
+
+## P3-B05 identity-resolution handling addendum
+
+Pairing selectors, claim state, assertion state, duplicate and consent case data, aliases, opaque review references,
+and related Account/Person relationships are private handling data. Pairing plaintext, names, birth dates, contacts,
+comparison values, reviewer justifications, and idempotency values are never included in audit metadata,
+notifications, URLs/referrers, browser storage, logs, release packages, or public caches. Consent is limited to
+duplicate canonicalization authority; it is distinct from Organization-affiliation consent and does not certify legal
+guardianship. The implementation retains lifecycle/alias history but does not claim a final retention period,
+government identity basis, external provider basis, or public disclosure policy.

@@ -57,3 +57,13 @@ responses, keyboard-operable ordinary forms and equivalent progressive updates. 
 Unicode and RTL rendering; lazy State/FCT child selection has a no-JavaScript form fallback. Automated template,
 route and frontend regression checks are evidence for this batch, not a claim of a completed assistive-technology
 conformance review.
+
+## P3-B05 private claim and duplicate evidence
+
+B05 renders complete authenticated English and Arabic server forms for pairing creation, Guardian/claimant responses,
+Platform review, assertions, duplicate reporting, consent, review, dismissal, and controlled resolution. Progressive
+enhancement preserves the ordinary form action and uses only approved fragments. Pairing visibility is temporary and
+the client removes a displayed one-time code when the page is hidden; it never stores it. Destructive lifecycle actions
+use labelled confirmation dialogs with keyboard close, focus return, live status, error summaries, and a full-page
+no-JavaScript fallback. Automated tests cover the approved fragment/mutation boundary and client behavior; browser,
+screen-reader, zoom, forced-colour, and physical-device testing remain release evidence to be performed separately.

@@ -562,3 +562,31 @@ read-only commands: `security:routes:verify`, `security:tenant-repositories:veri
 They supplement—not replace—the authentication, authorization, Tenant Context, privileged-access, and audit controls
 implemented by B01–B09. B10 records local automated evidence only; independent penetration testing, production key
 custody, hosting configuration, and deployment remain external operational gates.
+
+## P3-B05 profile claims and duplicate resolution
+
+P3-B05 implements a private Account-to-Person claim workflow. A registry code alone cannot authorize a claim: the
+claiming Account first creates a one-time selector-and-secret pairing code, an authorized Guardian or a Platform
+reviewer authorizes that exact Account, and the claimant accepts the resulting claim with multi-factor step-up.
+Pairing secrets are stored only as versioned HMAC values; they are Account-bound, time-bound, attempt-bound and
+one-time. A successful claim creates one active SELF link, never a Workspace membership or an authorization role.
+Adult self-management ends active Guardian profile-management authority for that Person.
+
+QMDB record-status assertions (`ACCOUNT_CLAIMED`, `GUARDIAN_CONFIRMED`, and `QMDB_RECORD_REVIEWED`) are bounded
+QMDB record history. They are not government identity verification, biometric verification, legal identity
+certification, legal guardianship certification, or permission grants.
+
+Duplicate resolution is an explicit, consent-gated review process. There is no public Person search, name/birth-date
+matching, biometric matching, or automatic merge. All active Person managers must consent; two active SELF links or
+demographic, geography, memorizer-progress, Organization-affiliation, alias, or affected-record conflicts block
+canonicalization. A resolved duplicate is retired rather than deleted, and an immutable alias points to the canonical
+Person. Account merges and self-link transfers are not implemented.
+
+Implemented scope: claim pairing, Guardian- and Platform-authorized claims, claimant acceptance/decline/revocation,
+QMDB record-status assertions, duplicate reports, manager consent, conflict preflight, canonical aliases and
+non-destructive Person canonicalization. Not implemented: government/document/NIN/passport/biometric verification,
+email/phone invitations, public verification badges or profiles, public Person search, automatic matching, Account
+merge, legal guardianship certification, competitions, judging, scoring, certificates, media, or social feeds.
+
+The next authorized batch is **QMDB-P3-B06 — People, Geography, and Organization Security Hardening and Closeout
+Preparation**.

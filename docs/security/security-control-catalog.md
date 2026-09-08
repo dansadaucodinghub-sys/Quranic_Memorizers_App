@@ -693,3 +693,14 @@ audit and privacy controls to private Person mutations. Exact active Account sel
 Person roles, opaque IDs, Workspace roles and privileged access do not grant profile access. Names and birth dates are
 excluded from audit/notification metadata, pages are no-store/no-referrer, and P2 control implementations remain
 governed extensions rather than a rewrite of the P2 freeze.
+
+## P3-B05 claim and duplicate-resolution controls
+
+P3-B05 applies a selector-and-versioned-HMAC pairing control: the plaintext pairing secret is Account-bound,
+time-limited, attempt-limited, one-time, rate-limited, and excluded from persistence, logs, audit, notifications,
+URLs, and browser storage. Exact Guardian authority or phishing-resistant Platform review authorizes a claim, but the
+claimant separately accepts with multi-factor step-up. Private verification assertions grant no permission and make no
+legal, government, biometric, or guardianship certification claim. Duplicate resolution is explicit, consent-gated,
+conflict-preflighted, transactionally participant-bound, and non-destructive; no public search or automatic matching
+control exists. Immutable events and aliases, CSRF, idempotency, no-store/no-referrer, default-deny routes, audit,
+notification minimization, database constraints, and concurrency tests provide the executable control evidence.

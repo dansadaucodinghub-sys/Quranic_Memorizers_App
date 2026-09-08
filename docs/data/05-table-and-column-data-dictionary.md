@@ -9975,3 +9975,13 @@ The executable People foundation adds `people_persons`, `people_person_names`, `
 Person names and birth dates are confidential personal data; opaque public IDs and registry codes are not access
 grants. Current/historical rows, status columns and optimistic versions preserve lifecycle evidence. The migrations,
 schema verifier and People verification command are authoritative for executable column detail.
+
+## P3-B05 identity-resolution table addendum
+
+The executable extension adds eight private tables: `people_profile_claim_pairings`, `people_profile_claims`,
+`people_profile_claim_events`, `people_profile_verification_assertions`, `people_duplicate_cases`,
+`people_duplicate_consent_requirements`, `people_duplicate_case_events`, and `people_person_aliases`. Pairing rows
+retain only selector, versioned verifier/HMAC metadata, lifecycle, attempt count, expiry and opaque references; they
+never retain a plaintext pairing secret. Claim and duplicate events are historical rows. Verification assertions are
+QMDB record history only. Alias rows preserve the retired source-to-canonical relationship and cannot be changed or
+deleted through normal application lifecycle paths.

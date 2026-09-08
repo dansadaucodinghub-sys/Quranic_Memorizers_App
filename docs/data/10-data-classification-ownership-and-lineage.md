@@ -474,3 +474,13 @@ Person, name, birth-date, geography and guardianship data are `QMDB-DCL-003` con
 module is the global owner; no Workspace owns or scopes these B02 records. Audit and notification integrations retain
 only bounded action and opaque-reference metadata, never names or birth dates. Browser storage, public caches, public
 projections and exports are not part of this batch.
+
+## P3-B05 identity-resolution lineage addendum
+
+Pairing selectors, HMAC verifiers, claims, assertions, duplicate cases, consent decisions, alias mappings, review
+references, and associated Person/Account relationships are confidential personal or restricted security data.
+Plaintext pairing secrets, names, birth dates, contact values, comparison material, review justification, and
+idempotency values are excluded from audit metadata, notifications, URLs/referrers, browser storage, release assets,
+and operational logs. The People module owns canonical Person lineage; Organization Affiliation is a constrained
+participant only. Retention periods, legal hold, independent review, external identity verification, and appeals
+remain open governance decisions.

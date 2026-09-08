@@ -775,3 +775,12 @@ Private People reads use opaque Person IDs only after exact Account self-link or
 indexes cover active Account links, current names, role state, guardian/dependent active pairs and chronology. No
 global Person-name search index or public directory query is exposed. Geography selection uses the public B01
 State/FCT-to-child lookup and does not prefetch all level-two records.
+
+## P3-B05 identity-resolution access-pattern addendum
+
+Pairing resolution begins with the selector and verifies a versioned HMAC in the Account-bound row; there is no
+registry-code, name, birth-date, contact, or public Person lookup path. Account views are indexed by claimant and
+status, reviewer queues by bounded status/time keys, and duplicate reports by exact Person/status pairs. Consent and
+case-event reads are case-scoped; canonicalization locks the ordered Person pair and bounded participant rows in a
+deterministic order. The design deliberately omits name/birth-date discovery indexes and avoids scans that could
+enumerate Persons or duplicate candidates.

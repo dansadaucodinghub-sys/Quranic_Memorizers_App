@@ -158,3 +158,13 @@ translation/view assets and controlled P2 catalog bridges. The release gate must
 analysis, focused and full Quality/MySQL/frontend suites, migration/seed/schema/People/route verifiers, P0/P1/P2
 freeze preservation, repository policy and clean committed release output. Profiles, test fixtures and runtime logs
 are excluded from release artifacts and source control.
+
+## P3-B05 release composition
+
+The B05 release includes the People Identity Resolution module, six forward-only migrations, its authorization seed,
+private routes/views/fragments, English/Arabic copy, progressive controller, claim-maintenance task, canonicalization
+participants and verifier. It excludes tests, test pairing values, pairing secret/hash material, Person data, duplicate
+comparison/review material, local database data, `.env`, logs, scanner caches, and Git locks. Final release evidence
+must cover schema/seed/People/Organization/Affiliation/identity-resolution verifiers, route security, PHP/MySQL/
+frontend regressions, scanner/SBOM/licence output, clean-install/release verification, local and Composer CI, and
+preservation of P0/P1/P2 freezes.

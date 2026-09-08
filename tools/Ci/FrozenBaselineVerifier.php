@@ -29,10 +29,7 @@ final class FrozenBaselineVerifier
     ];
 
     /** @var list<string> */
-    private const P3_B05_DOCUMENTATION_PATHS = [
-        'docs/operations/quality-attribute-parameter-register.md',
-        'docs/project/decision-register.md',
-    ];
+    private const P3_B05_DOCUMENTATION_PATHS = self::P3_B02_DOCUMENTATION_PATHS;
 
     public function __construct(private readonly string $root)
     {
