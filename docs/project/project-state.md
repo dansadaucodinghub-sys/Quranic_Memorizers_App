@@ -16,8 +16,8 @@
 | Current Phase | P3 — Nigerian Geography, Organizations, People, and Guardianship |
 | Current Batch | QMDB-P3-CLOSE — P3 Closeout |
 | Next Batch | Phase P4 (not authorized) |
-| Batch Status | IN PROGRESS |
-| Implementation Readiness | P3-CLOSE AUTHORIZED; final release and P3 freeze validation in progress |
+| Batch Status | COMPLETE / FROZEN |
+| Implementation Readiness | P3 CLOSE COMPLETE; READY FOR P4 AUTHORIZATION |
 | P2 Status | COMPLETE / FROZEN |
 
 ## Authoritative outcome
@@ -63,6 +63,24 @@ consent, public profiles, Person discovery/merge and tenant-owned Person data re
 | QMDB-P3-B04 | Organization Memberships, Staff, Leadership, and Person Affiliations | COMPLETE | Private consent-based Organization-to-Person affiliation lifecycle, fixed role catalog, assignment history, Guardian authority, leadership step-up, MySQL integrity and progressive workflow; no B05 claims or duplicate resolution |
 | QMDB-P3-B05 | Profile Claims, Verification, Consent, and Duplicate Resolution | COMPLETE | Hash-only claim pairing, authorized consent, verification assertions, duplicate review and non-destructive canonical aliases validated on MySQL |
 | QMDB-P3-B06 | People, Geography, and Organization Security Hardening and Closeout Preparation | COMPLETE | Read-only P3 security composition, Person repository scope verification, adversarial evidence and closeout readiness reconciliation |
+
+## P3 closeout completion
+
+Frozen People, Geography, Organizations, and Participation Baseline: QMDB-P3-FRZ-001
+
+Completed Closeout: QMDB-P3-CLOSE
+
+P3 Status: COMPLETE / FROZEN
+
+P3 Closeout Status: COMPLETE
+
+P3 Freeze: QMDB-P3-FRZ-001
+
+Next Phase: P4 identity pending owner approval
+
+P4 Status: NOT STARTED / NOT AUTHORIZED
+
+Implementation Status: READY FOR P4 AUTHORIZATION
 
 ## P1 batch ledger
 
@@ -302,10 +320,16 @@ Completed P3 Batches:
 - QMDB-P3-B03
 - QMDB-P3-B04
 
-Current Batch: QMDB-P3-B06 — People, Geography, and Organization Security Hardening and Closeout Preparation
+Current Batch: QMDB-P3-CLOSE — People, Geography, Organizations, and Participation Foundation Verification and Freeze
 
-P3 Status: IN PROGRESS
+P3 Status: COMPLETE / FROZEN
 
-Batch Status: COMPLETE
+Batch Status: COMPLETE / FROZEN
 
-Implementation Status: B06 COMPLETE; READY FOR P3 CLOSEOUT; P3-CLOSE NOT STARTED
+P3 Closeout Status: COMPLETE
+
+P3 Freeze: QMDB-P3-FRZ-001
+
+P4 Status: NOT STARTED / NOT AUTHORIZED
+
+Implementation Status: READY FOR P4 AUTHORIZATION

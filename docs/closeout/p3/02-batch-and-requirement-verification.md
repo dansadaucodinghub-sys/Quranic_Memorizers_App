@@ -9,4 +9,4 @@
 | B05 | claim pairing, verification and duplicate canonicalization | MySQL constraints and rollback evidence |
 | B06 | P3 security hardening and readiness | `security:p3:verify`, adversarial matrices and defect register |
 
-All six batches require a final clean-tree quality, serial MySQL, release and P3-freeze verification before this closeout can be marked complete.
+All six batches are verified. The completed final source gates are the serial MySQL suite (`102 tests`, `1,890 assertions`), full PHP quality (`1,080 tests`, `76,826 assertions`), and frontend quality (`58 tests`, zero npm audit findings). Release and P3-freeze evidence is governed separately in this closeout set.
