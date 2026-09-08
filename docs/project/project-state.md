@@ -9,15 +9,15 @@
 | Approved Change | QMDB-CR-001 — Asynchronous Progressive Interaction and Modal UX Standard |
 | Engineering Freeze | QMDB-P1-FRZ-001 |
 | Identity and Tenant Security Freeze | QMDB-P2-FRZ-001 |
-| Document Version | 5.6.0 |
+| Document Version | 5.7.0 |
 | Last Updated | 2026-09-08 |
 | Status | P0 COMPLETE / FROZEN; P1 COMPLETE / FROZEN; P2 COMPLETE / FROZEN; P3-B01 COMPLETE; P3-B02 COMPLETE; P3-B03 COMPLETE; P3-B04 COMPLETE; P3-B05 COMPLETE; P3-B06 COMPLETE |
 | Completed Closeout | QMDB-P2-CLOSE — Identity, Security, and Tenant Isolation Verification and Freeze |
 | Current Phase | P3 — Nigerian Geography, Organizations, People, and Guardianship |
-| Current Batch | QMDB-P3-B06 — People, Geography, and Organization Security Hardening and Closeout Preparation |
-| Next Batch | QMDB-P3-CLOSE — P3 Closeout (separate authorization required) |
-| Batch Status | COMPLETE |
-| Implementation Readiness | B06 COMPLETE; READY FOR P3 CLOSEOUT; P3-CLOSE NOT STARTED |
+| Current Batch | QMDB-P3-CLOSE — P3 Closeout |
+| Next Batch | Phase P4 (not authorized) |
+| Batch Status | IN PROGRESS |
+| Implementation Readiness | P3-CLOSE AUTHORIZED; final release and P3 freeze validation in progress |
 | P2 Status | COMPLETE / FROZEN |
 
 ## Authoritative outcome
