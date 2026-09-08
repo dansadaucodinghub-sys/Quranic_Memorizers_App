@@ -131,6 +131,9 @@ final readonly class P2FreezeVerifier
         $report->check($authorized, 'P3 extension ledger is invalid.');
         $report->check(is_string($contents) && str_contains($contents, 'allowed_modules:'), 'P3 extension ledger does not constrain the allowed modules.');
         $report->check(is_string($contents) && str_contains($contents, 'P3 composition bridge may update only'), 'P3 extension ledger lacks P2 integrity assurance.');
-        $report->check(str_contains($state, 'P3 Status: IN PROGRESS'), 'Project state does not record the authorized P3 transition.');
+        $report->check(
+            str_contains($state, 'P3 Status: IN PROGRESS') || str_contains($state, 'P3 Status: COMPLETE / FROZEN'),
+            'Project state does not record the authorized P3 transition.',
+        );
     }
 }
