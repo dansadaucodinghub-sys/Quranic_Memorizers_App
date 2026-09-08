@@ -136,6 +136,7 @@ final class P2FreezePolicy
     private const P3_B06_EXTENSION_PREFIXES = [
         'src/Bootstrap/Security/P3',
         'src/Bootstrap/Console/P3SecurityHardeningVerifyConsoleCommand.php',
+        'src/Bootstrap/Console/P3PersonRepositorySecurityVerifyConsoleCommand.php',
         'tests/Architecture/P3SecurityHardening',
         'tests/Security/P3',
         'docs/security/P3-',

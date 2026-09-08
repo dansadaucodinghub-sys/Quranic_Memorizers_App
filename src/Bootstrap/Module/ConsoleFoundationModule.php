@@ -8,6 +8,7 @@ use Qmdb\Bootstrap\Application;
 use Qmdb\Bootstrap\Console\ConsoleApplication;
 use Qmdb\Bootstrap\Console\P2SecurityHardeningVerifyConsoleCommand;
 use Qmdb\Bootstrap\Console\P3SecurityHardeningVerifyConsoleCommand;
+use Qmdb\Bootstrap\Console\P3PersonRepositorySecurityVerifyConsoleCommand;
 use Qmdb\Bootstrap\Security\P2SecurityHardeningVerifier;
 use Qmdb\Bootstrap\Security\P3PersonRepositorySecurityVerifier;
 use Qmdb\Bootstrap\Security\P3SecurityHardeningVerifier;
@@ -167,6 +168,13 @@ final readonly class ConsoleFoundationModule implements Module
             new ClosureServiceFactory(static fn (DependencyResolver $resolver): P3SecurityHardeningVerifyConsoleCommand =>
                 new P3SecurityHardeningVerifyConsoleCommand(ServiceReference::get($resolver, P3SecurityHardeningVerifier::class))),
         ));
+        $context->service(ServiceDefinition::factory(
+            P3PersonRepositorySecurityVerifyConsoleCommand::class,
+            self::ID,
+            [P3PersonRepositorySecurityVerifier::class],
+            new ClosureServiceFactory(static fn (DependencyResolver $resolver): P3PersonRepositorySecurityVerifyConsoleCommand =>
+                new P3PersonRepositorySecurityVerifyConsoleCommand(ServiceReference::get($resolver, P3PersonRepositorySecurityVerifier::class))),
+        ));
         $this->registerCommandMap($context);
         $context->service(ServiceDefinition::factory(
             ConsoleCommandDispatcher::class,
@@ -214,6 +222,7 @@ final readonly class ConsoleFoundationModule implements Module
             RouteSecurityVerifyConsoleCommand::class,
             P2SecurityHardeningVerifyConsoleCommand::class,
             P3SecurityHardeningVerifyConsoleCommand::class,
+            P3PersonRepositorySecurityVerifyConsoleCommand::class,
             SecurityAuditCheckpointConsoleCommand::class,
             GeographyReferenceVerifyConsoleCommand::class,
             PeopleProfilesVerifyConsoleCommand::class,
@@ -248,6 +257,7 @@ final readonly class ConsoleFoundationModule implements Module
                 $registry->register(ServiceReference::get($resolver, RouteSecurityVerifyConsoleCommand::class));
                 $registry->register(ServiceReference::get($resolver, P2SecurityHardeningVerifyConsoleCommand::class));
                 $registry->register(ServiceReference::get($resolver, P3SecurityHardeningVerifyConsoleCommand::class));
+                $registry->register(ServiceReference::get($resolver, P3PersonRepositorySecurityVerifyConsoleCommand::class));
                 $registry->register(ServiceReference::get($resolver, SecurityAuditCheckpointConsoleCommand::class));
                 $registry->register(ServiceReference::get($resolver, GeographyReferenceVerifyConsoleCommand::class));
                 $registry->register(ServiceReference::get($resolver, PeopleProfilesVerifyConsoleCommand::class));

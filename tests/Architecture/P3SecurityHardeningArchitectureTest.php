@@ -34,10 +34,12 @@ final class P3SecurityHardeningArchitectureTest extends TestCase
         $root = dirname(__DIR__, 2);
         $module = (string) file_get_contents($root . '/src/Bootstrap/Module/ConsoleFoundationModule.php');
         $command = (string) file_get_contents($root . '/src/Bootstrap/Console/P3SecurityHardeningVerifyConsoleCommand.php');
+        $personCommand = (string) file_get_contents($root . '/src/Bootstrap/Console/P3PersonRepositorySecurityVerifyConsoleCommand.php');
         $verifier = (string) file_get_contents($root . '/src/Bootstrap/Security/P3SecurityHardeningVerifier.php');
 
         self::assertStringContainsString('P3SecurityHardeningVerifyConsoleCommand', $module);
         self::assertStringContainsString("security:p3:verify", $command);
+        self::assertStringContainsString("security:person-repositories:verify", $personCommand);
         self::assertStringContainsString('P2SecurityHardeningVerifier', $verifier);
         self::assertStringContainsString('GeographyReferenceReadinessCheck', $verifier);
         self::assertStringContainsString('PeopleProfilesReadinessCheck', $verifier);
