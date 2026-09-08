@@ -10,8 +10,8 @@ p3_freeze:
   frozen_product_baseline: QMDB-P0-FRZ-001
   frozen_engineering_baseline: QMDB-P1-FRZ-001
   frozen_identity_tenant_baseline: QMDB-P2-FRZ-001
-  generated_at_utc: "2026-09-08T17:19:45Z"
-  source_revision: "d50211c8f8c91913392b8c366eb6936a133ab528"
+  generated_at_utc: "2026-09-08T18:37:16Z"
+  source_revision: "e5a6a3067538ecdc74a899d4c4c510aa115c50da"
   source_state: clean
   completed_batches:
     - QMDB-P3-B01
@@ -21,8 +21,8 @@ p3_freeze:
     - QMDB-P3-B05
     - QMDB-P3-B06
   governed_files:
-    count: 1771
-    manifest_sha256: 22fe6e0c0502aec897d4c836166ea2cd47f6e5b99df5db18dda58185cb3fc2a3
+    count: 1779
+    manifest_sha256: a8633ee7cc832e9f78d2dd5d6b37c39f495359f8245b95b6ddd0ef576ebcdb92
   files:
     - path: ".editorconfig"
       category: FROZEN_P3_PEOPLE_GEOGRAPHY_ORGANIZATIONS
@@ -86,25 +86,46 @@ p3_freeze:
       sha256: 789072f6dc4cbbdc43d1b1d3678b7e01ba8e5632a81540ac9c01a80b12b93b1d
     - path: "docs/closeout/p3/00-index.md"
       category: CONTROLLED_EXTENSION_POINT
-      sha256: 92ff866b2dfd7adb9b29351bdb4b6005f02b41690e6749bb66ccc3d3242f63a7
+      sha256: b3f2f4aaec1cd0ec8025cb53ff1f505c3179e6a745976c76d9e1adba4306aa1f
     - path: "docs/closeout/p3/01-executive-closeout-summary.md"
       category: CONTROLLED_EXTENSION_POINT
-      sha256: ea117607b4afe7a54f222f8b1483fcdc0822d08c31a42f71f1e9868d62f86491
+      sha256: fea389688afa15ab1c16a3dfd13ea61931378cb2137f80274bfda3a37cb9bdbc
     - path: "docs/closeout/p3/02-batch-and-requirement-verification.md"
       category: CONTROLLED_EXTENSION_POINT
-      sha256: 00c6bbc28020495c5b5361e3bd4f2c0251b2df55c662d121c48abb55f451c148
+      sha256: a359e5795185c84cfd85e94581b111a0dfca426fc475ead9d5135b92873e3a0c
+    - path: "docs/closeout/p3/03-geography-data-provenance-and-integrity.md"
+      category: CONTROLLED_EXTENSION_POINT
+      sha256: 5ccb58a920998aa0f824affb8c20a2d7a0cce08ccade716c9203c4598a6a105a
     - path: "docs/closeout/p3/03-security-privacy-and-authority-verification.md"
       category: CONTROLLED_EXTENSION_POINT
       sha256: 8c9999566f5ffa8e99f05a8312d8575d6b097e71bcc734ebe170c221590e9de0
     - path: "docs/closeout/p3/04-data-tenancy-and-canonicalization-verification.md"
       category: CONTROLLED_EXTENSION_POINT
       sha256: a5e080962fbaa11eeee831e36335740e41b46b2c149dd3a98e17c4511052f96a
+    - path: "docs/closeout/p3/04-people-privacy-guardianship-and-identity-resolution.md"
+      category: CONTROLLED_EXTENSION_POINT
+      sha256: 19e9fcd0ecfd39dba38a2503777c38a2c6ffb76d746aeaf722bb6355dc7017fa
     - path: "docs/closeout/p3/05-accessibility-and-progressive-interaction-verification.md"
       category: CONTROLLED_EXTENSION_POINT
       sha256: 8a01ba9c81cf0187c6f0326b5c20dcc717de2503bd73efcf6843a8c7db198af6
+    - path: "docs/closeout/p3/05-organizations-affiliations-and-tenant-isolation.md"
+      category: CONTROLLED_EXTENSION_POINT
+      sha256: fa53be905032f0f395055d54c32ab20eda5ae904202176484c22cb37c2f1271c
     - path: "docs/closeout/p3/06-operations-release-and-deferred-evidence.md"
       category: CONTROLLED_EXTENSION_POINT
       sha256: bea610e2a885e17c73cd8d76e9bf4aa7d2e3635019d812a978362f4a61504e40
+    - path: "docs/closeout/p3/06-security-accessibility-and-progressive-interaction.md"
+      category: CONTROLLED_EXTENSION_POINT
+      sha256: 158073def56fc3bb410cb88a9a338c2ec4d20fc18f33abbe3563486f7492c883
+    - path: "docs/closeout/p3/07-operations-release-and-supply-chain.md"
+      category: CONTROLLED_EXTENSION_POINT
+      sha256: 60da3cf8af7e06f9a0e073b060b6d80a26c04b4453caf5326504759172902de4
+    - path: "docs/closeout/p3/08-deferred-evidence-register.md"
+      category: CONTROLLED_EXTENSION_POINT
+      sha256: dfc336c53265102ee7f8f0c83d4647c6c4b2374adc3ad40c98ce737d71453d27
+    - path: "docs/closeout/p3/09-p4-readiness-assessment.md"
+      category: CONTROLLED_EXTENSION_POINT
+      sha256: 42c1cb57002d6ac3f84bd1c663fd11f5551bd14e2bcc9e9bf1dfafd4cff16066
     - path: "docs/implementation/P1-engineering-foundation-backlog.md"
       category: CONTROLLED_EXTENSION_POINT
       sha256: 38e17177df134c056f8e28d39f99da9e1fdd5cf16b054be42793d9700daa17a2
@@ -4538,7 +4559,7 @@ p3_freeze:
       sha256: 42af100d0353b5d03421a00bf1975efb0528eaa528475f616e7146873ee54cf1
     - path: "tests/Integration/MySql/P3IdentityResolutionConstraintIntegrationTest.php"
       category: FROZEN_P3_PEOPLE_GEOGRAPHY_ORGANIZATIONS
-      sha256: 30b2e0685b1a1366e79cc915beaa792b44ceb71b5e8b5e9bafec8e7ace79462c
+      sha256: e5184633e1b218ac05f926a545d6c6335b1b524cc4cde2fa2ef87750763f4f00
     - path: "tests/Integration/MySql/P3IdentityResolutionIntegrationTest.php"
       category: FROZEN_P3_PEOPLE_GEOGRAPHY_ORGANIZATIONS
       sha256: b9eee1363bd993b20eec0a924fd0197c27fc5c4bd07c6c9a33e258ced629d656
@@ -4862,7 +4883,10 @@ p3_freeze:
       sha256: 512e65d1aed6d4bdea01250f3bb911967a30b3ee437700c5a4623259e7fea3f8
     - path: "tests/Tools/Closeout/P2FreezeTest.php"
       category: FROZEN_P3_PEOPLE_GEOGRAPHY_ORGANIZATIONS
-      sha256: b60a40f60e9cd9c8cecf04449bcad06ab2b5b32a30f587849f379db68be91fea
+      sha256: 50da33a7bdb2a7bb5d6080cd4694e660786637851dac0dd50fee2ad0acb54ca9
+    - path: "tests/Tools/Closeout/P3FreezeTest.php"
+      category: FROZEN_P3_PEOPLE_GEOGRAPHY_ORGANIZATIONS
+      sha256: b41ceea323f5352d39e61cb6c3f7552ae6fd0e1e1244b57a8db7acac7836c521
     - path: "tests/Tools/Sbom/ProductionSbomTest.php"
       category: FROZEN_P3_PEOPLE_GEOGRAPHY_ORGANIZATIONS
       sha256: 8a67a0cedbbf8f2c6004bcfb8373f5dcd7eb051e4663b4acd8825e68cc456477
@@ -5216,7 +5240,7 @@ p3_freeze:
       sha256: 8a2410706d4a318f3209a199a9b5061dfcb07290f73483f9fe10b7739fa6cdd4
     - path: "tools/Closeout/P2FreezePolicy.php"
       category: FROZEN_P3_PEOPLE_GEOGRAPHY_ORGANIZATIONS
-      sha256: b1b48781c1a763ef2177f6cdf602d7996de4f1c2c0d94a94294f39befbec3858
+      sha256: 2d8dfdcad2b7edab88c738d40389fa3eb95276b246b270f07b61d54266fd0be3
     - path: "tools/Closeout/P2FreezeVerifier.php"
       category: FROZEN_P3_PEOPLE_GEOGRAPHY_ORGANIZATIONS
       sha256: f9a6901c77b633e56407d4607498c9b1ee03a193da260123230ee7508efb27e7
@@ -5228,7 +5252,7 @@ p3_freeze:
       sha256: f1d454ab31c5d6a1475ab8fed441612f87fd07a76f4c1baa76b8301431a8d1a2
     - path: "tools/Closeout/P3FreezeVerifier.php"
       category: FROZEN_P3_PEOPLE_GEOGRAPHY_ORGANIZATIONS
-      sha256: 3fd51c52216f9583c53c3694351a204f56578922f06bbe182aa629ca94a898b6
+      sha256: 7d2accb412a19acaf8d6bf88c6c48f07638bc2cc39fe3bf96c664ec1dbf20317
     - path: "tools/Closeout/generate-engineering-freeze.php"
       category: FROZEN_P3_PEOPLE_GEOGRAPHY_ORGANIZATIONS
       sha256: 16ef5fb46b3da8841b81b551b5c447fa276c307caaa4bbf2838040b1e593185f
