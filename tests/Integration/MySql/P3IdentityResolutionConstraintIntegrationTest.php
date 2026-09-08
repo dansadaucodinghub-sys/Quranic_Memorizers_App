@@ -36,7 +36,7 @@ final class P3IdentityResolutionConstraintIntegrationTest extends MySqlIntegrati
         [$account] = $this->fixture->account();
         $pairing = $this->insertPairing($account, 'AAAABBBBCCCC');
 
-        $this->assertRejected(fn (): bool => $this->insertPairing($account, 'AAAABBBBCCCD'));
+        $this->assertRejected(fn () => $this->insertPairing($account, 'AAAABBBBCCCD'));
         $this->assertRejected(fn (): bool => $this->connection->prepare('UPDATE people_profile_claim_pairings SET hmac_key_version = 0 WHERE id = :id')->execute(['id' => $pairing]));
         $this->assertRejected(fn (): bool => $this->connection->prepare('UPDATE people_profile_claim_pairings SET attempt_count = max_attempts + 1 WHERE id = :id')->execute(['id' => $pairing]));
         $this->assertRejected(fn (): bool => $this->connection->prepare("UPDATE people_profile_claim_pairings SET status = 'CONSUMED' WHERE id = :id")->execute(['id' => $pairing]));
@@ -54,7 +54,7 @@ final class P3IdentityResolutionConstraintIntegrationTest extends MySqlIntegrati
         $person = $this->insertPerson($actor, 'QMP-B05-CONSTRAINT-001');
         $first = $this->insertAssertion($person, $actor, 'ACCOUNT_CLAIMED', 'ACCOUNT', 'ACTIVE');
 
-        $this->assertRejected(fn (): bool => $this->insertAssertion($person, $actor, 'ACCOUNT_CLAIMED', 'ACCOUNT', 'ACTIVE'));
+        $this->assertRejected(fn () => $this->insertAssertion($person, $actor, 'ACCOUNT_CLAIMED', 'ACCOUNT', 'ACTIVE'));
         self::assertTrue($this->connection->prepare("UPDATE people_profile_verification_assertions SET status = 'REVOKED', revoked_at = UTC_TIMESTAMP(6), version = version + 1 WHERE id = :id")->execute(['id' => $first]));
         $second = $this->insertAssertion($person, $actor, 'ACCOUNT_CLAIMED', 'ACCOUNT', 'ACTIVE');
         self::assertGreaterThan($first, $second);
@@ -70,16 +70,16 @@ final class P3IdentityResolutionConstraintIntegrationTest extends MySqlIntegrati
         $second = $this->insertPerson($reporter, 'QMP-B05-CONSTRAINT-003');
         $case = $this->insertOpenCase($first, $second, $reporter);
 
-        $this->assertRejected(fn (): bool => $this->insertOpenCase($second, $first, $reporter));
+        $this->assertRejected(fn () => $this->insertOpenCase($second, $first, $reporter));
         $consent = $this->insertConsent($case, $first, $authority, 'SELF', null);
         self::assertGreaterThan(0, $consent);
-        $this->assertRejected(fn (): bool => $this->insertConsent($case, $first, $authority, 'SELF', null));
-        $this->assertRejected(fn (): bool => $this->insertConsent($case, $first, $authority, 'GUARDIAN', null));
+        $this->assertRejected(fn () => $this->insertConsent($case, $first, $authority, 'SELF', null));
+        $this->assertRejected(fn () => $this->insertConsent($case, $first, $authority, 'GUARDIAN', null));
 
         $alias = $this->insertAlias($second, $first, $case, $reporter);
         self::assertGreaterThan(0, $alias);
-        $this->assertRejected(fn (): bool => $this->insertAlias($second, $first, $case, $reporter));
-        $this->assertRejected(fn (): bool => $this->insertAlias($first, $first, $case, $reporter));
+        $this->assertRejected(fn () => $this->insertAlias($second, $first, $case, $reporter));
+        $this->assertRejected(fn () => $this->insertAlias($first, $first, $case, $reporter));
 
         $explain = $this->connection->prepare('EXPLAIN FORMAT=JSON SELECT id FROM people_duplicate_consent_requirements WHERE authority_account_id = :account_id AND decision = :decision');
         $explain->execute(['account_id' => $authority, 'decision' => 'PENDING']);
@@ -146,7 +146,7 @@ final class P3IdentityResolutionConstraintIntegrationTest extends MySqlIntegrati
         return (int) $statement->fetchColumn();
     }
 
-    /** @param callable(): bool $operation */
+    /** @param callable(): mixed $operation */
     private function assertRejected(callable $operation): void
     {
         try {
