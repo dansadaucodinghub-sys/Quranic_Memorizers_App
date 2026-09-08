@@ -1,0 +1,15 @@
+p0_freeze_extension:
+  ledger_id: QMDB-P3-P0-EXT-003
+  authorization: QMDB-P3-B06-EXEC
+  baseline_id: QMDB-P0-FRZ-001
+  preserves_historical_baseline: true
+  scope: "B06 records the security-hardening completion handoff without changing the frozen P0 baseline."
+  constraints:
+    - "The QMDB-P0-FRZ-001 manifest remains unchanged."
+    - "The entry binds to the preceding approved B05 extension hash."
+    - "The verifier accepts only this explicit controlled documentation replacement."
+  entries:
+    - path: "docs/implementation/phase-and-batch-roadmap.md"
+      previous_extension_sha256: a5e233b1433049116496affaa57b959a0806c0ce4670ffe72c4b1a71274c6a07
+      extension_sha256: 85d62f6aae27b4a58dfd8516b5657fce4f44272f7fc3cab7b439fd4ed8d7e3a4
+      reason: "Records B06 completion and the separate P3 closeout handoff."

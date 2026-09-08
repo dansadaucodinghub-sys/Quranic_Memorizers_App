@@ -133,6 +133,19 @@ final class P2FreezePolicy
     ];
 
     /** @var list<string> */
+    private const P3_B06_EXTENSION_PREFIXES = [
+        'src/Bootstrap/Security/P3',
+        'src/Bootstrap/Console/P3SecurityHardeningVerifyConsoleCommand.php',
+        'tests/Architecture/P3SecurityHardening',
+        'tests/Security/P3',
+        'docs/security/P3-',
+        'docs/operations/P3-security-performance-baseline.md',
+        'docs/implementation/reports/QMDB-P3-B06-',
+        'docs/implementation/people-geography-and-organization-security-hardening-standard.md',
+        'docs/project/p3-p0-b06-freeze-extension-ledger.yaml',
+    ];
+
+    /** @var list<string> */
     private const P3_B02_MUTABLE_EXISTING_PATHS = [
         'src/Modules/IdentityAccess/Domain/IdempotencyOperation.php',
         'src/Modules/IdentityAccess/Infrastructure/Persistence/MySqlIdentityAccessRepository.php',
@@ -254,6 +267,55 @@ final class P2FreezePolicy
         'docs/project/p3-p2-freeze-extension-ledger.yaml',
     ];
 
+    /** @var list<string> */
+    private const P3_B06_MUTABLE_EXISTING_PATHS = [
+        'README.md',
+        'src/Bootstrap/ApplicationMetadata.php',
+        'src/Bootstrap/Module/ConsoleFoundationModule.php',
+        'tests/Architecture/P3IdentityResolutionSecurityArchitectureTest.php',
+        'tests/Unit/ApplicationMetadataTest.php',
+        'tests/Unit/Shared/Application/SystemInformationTest.php',
+        'tests/Integration/ConsoleApplicationTest.php',
+        'tests/Integration/Http/HttpRoutesTest.php',
+        'tests/Integration/Bootstrap/FoundationCompilationTest.php',
+        'tests/Integration/Bootstrap/ApplicationFactoryTest.php',
+        'tests/Integration/Console/BackgroundConsoleIntegrationTest.php',
+        'tools/Closeout/P2FreezePolicy.php',
+        'tools/Closeout/P2FreezeVerifier.php',
+        'tools/Ci/FrozenBaselineVerifier.php',
+        'tests/Tools/Closeout/P2FreezeTest.php',
+        'tests/Tools/Ci/FrozenBaselineVerifierTest.php',
+        'docs/implementation/P3-requirements-to-batches.md',
+        'docs/implementation/phase-and-batch-roadmap.md',
+        'docs/implementation/nigerian-administrative-geography-and-jurisdiction-standard.md',
+        'docs/implementation/person-memorizer-reciter-competitor-and-guardian-profile-standard.md',
+        'docs/implementation/organizations-schools-groups-mosques-and-branches-standard.md',
+        'docs/implementation/organization-memberships-staff-leadership-and-person-affiliations-standard.md',
+        'docs/implementation/profile-claims-verification-consent-and-duplicate-resolution-standard.md',
+        'docs/data/mysql-logical-schema.yaml',
+        'docs/data/02-domain-aggregate-and-ownership-model.md',
+        'docs/data/05-table-and-column-data-dictionary.md',
+        'docs/data/06-relationship-constraint-and-integrity-catalog.md',
+        'docs/data/07-indexing-and-query-access-patterns.md',
+        'docs/data/08-record-versioning-lifecycle-and-deletion.md',
+        'docs/data/09-tenant-isolation-data-model.md',
+        'docs/data/10-data-classification-ownership-and-lineage.md',
+        'docs/security/security-control-catalog.md',
+        'docs/security/security-verification-matrix.md',
+        'docs/security/threat-model.md',
+        'docs/privacy/data-classification-and-handling.md',
+        'docs/accessibility/accessibility-verification-matrix.md',
+        'docs/implementation/frontend-interaction-standard.md',
+        'docs/implementation/presentation-and-progressive-interaction-standard.md',
+        'docs/implementation/ci-build-and-release-standard.md',
+        'docs/operations/quality-attribute-parameter-register.md',
+        'docs/project/decision-register.md',
+        'docs/project/open-decisions.md',
+        'docs/project/risk-register.md',
+        'docs/project/project-state.md',
+        'docs/project/p3-p2-freeze-extension-ledger.yaml',
+    ];
+
     public function __construct(private readonly PathPolicy $pathPolicy = new PathPolicy())
     {
     }
@@ -354,7 +416,7 @@ final class P2FreezePolicy
 
     public function isP3AuthorizedExtension(string $path): bool
     {
-        return $this->isP3B01Extension($path) || $this->isP3B02Extension($path) || $this->isP3B03Extension($path) || $this->isP3B04Extension($path) || $this->isP3B05Extension($path);
+        return $this->isP3B01Extension($path) || $this->isP3B02Extension($path) || $this->isP3B03Extension($path) || $this->isP3B04Extension($path) || $this->isP3B05Extension($path) || $this->isP3B06Extension($path);
     }
 
     public function isP3B01MutableExistingPath(string $path): bool
@@ -415,13 +477,30 @@ final class P2FreezePolicy
         return in_array(PathPolicy::normalize($path), self::P3_B05_MUTABLE_EXISTING_PATHS, true);
     }
 
+    public function isP3B06Extension(string $path): bool
+    {
+        foreach (self::P3_B06_EXTENSION_PREFIXES as $prefix) {
+            if (str_starts_with(PathPolicy::normalize($path), $prefix)) {
+                return true;
+            }
+        }
+
+        return false;
+    }
+
+    public function isP3B06MutableExistingPath(string $path): bool
+    {
+        return in_array(PathPolicy::normalize($path), self::P3_B06_MUTABLE_EXISTING_PATHS, true);
+    }
+
     public function isP3MutableExistingPath(string $path): bool
     {
         return $this->isP3B01MutableExistingPath($path)
             || $this->isP3B02MutableExistingPath($path)
             || $this->isP3B03MutableExistingPath($path)
             || $this->isP3B04MutableExistingPath($path)
-            || $this->isP3B05MutableExistingPath($path);
+            || $this->isP3B05MutableExistingPath($path)
+            || $this->isP3B06MutableExistingPath($path);
     }
 
     public function category(string $path): string

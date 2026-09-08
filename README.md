@@ -588,5 +588,10 @@ non-destructive Person canonicalization. Not implemented: government/document/NI
 email/phone invitations, public verification badges or profiles, public Person search, automatic matching, Account
 merge, legal guardianship certification, competitions, judging, scoring, certificates, media, or social feeds.
 
-The next authorized batch is **QMDB-P3-B06 — People, Geography, and Organization Security Hardening and Closeout
-Preparation**.
+## P3-B06 security hardening
+
+P3-B06 is complete. It adds the bounded, read-only `security:p3:verify` command, which composes the frozen P2
+security boundary with the Geography, People, Organization, affiliation and identity-resolution checks and an explicit
+Person repository scope verifier. It adds no route, migration, seed, feature workflow or public discovery surface.
+
+The next permitted work is **QMDB-P3-CLOSE**; it remains a separate closeout authorization and has not been started.

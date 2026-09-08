@@ -1,5 +1,5 @@
 ledger_id: QMDB-P3-P2-EXT-001
-authorization: QMDB-P3-B05-EXEC
+authorization: QMDB-P3-B06-EXEC
 authorized_on: 2026-09-02
 expected_p2_freeze_id: QMDB-P2-FRZ-001
 expected_p2_freeze_manifest: docs/closeout/p2/qmdb-p2-identity-security-tenancy-freeze.yaml
@@ -21,6 +21,8 @@ allowed_scope:
     lifecycle records, assignment sets, organization retirement guards, and maintenance
   - private Account-to-Person claim pairing, Guardian or QMDB record-review authorization, private
     record-status assertions, consent-gated duplicate cases, canonical aliases, and bounded maintenance
+  - bounded read-only P3 security composition, Person repository scope verification, adversarial-test evidence,
+    privacy/control reconciliation and closeout-readiness reporting without P3-CLOSE execution
 prohibited_modules:
   - Competitions
   - Person search, discovery, deletion, contacts, dependent Accounts and tenant-owned Person data
@@ -67,3 +69,6 @@ assurance:
     records document the new controlled extension without changing the historical QMDB-P2-FRZ-001 evidence.
   - The P3-B05 P0 documentation extension ledger binds the two explicitly authorized parameter/architecture
     records to their preceding P3-B02 extension hashes and preserves QMDB-P0-FRZ-001 unchanged.
+  - The P3-B06 compatibility bridge may add only bounded verifier source, focused security architecture tests and
+    named evidence records. It may update only P2FreezePolicy::P3_B06_MUTABLE_EXISTING_PATHS and does not alter
+    QMDB-P2-FRZ-001 or execute P3-CLOSE.

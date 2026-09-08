@@ -13,7 +13,16 @@
 | Integration boundary | Canonicalization participants run in one controlled transaction and cannot independently commit, create affiliations, roles, memberships, or Account transfers. |
 | Explicit exclusions | Public Person discovery, automatic matching, legal/government identity verification, document/biometric handling, Account merge, self-link transfer, B06 implementation, competitions, media, and social features. |
 
+## QMDB-P3-B06
+
+| Control | Delivered B06 boundary |
+| --- | --- |
+| Batch | QMDB-P3-B06 — People, Geography, and Organization Security Hardening and Closeout Preparation |
+| Status | COMPLETE — executable bounded security composition, repository scope verification and adversarial evidence reconciliation |
+| Runtime verifier | `security:p3:verify` composes P2, Geography, People, Organizations, affiliations, identity resolution and Person repository scope checks without data mutation. |
+| Scope preservation | No migration, seed, route, public discovery interface, feature workflow, P3 freeze or P3-CLOSE execution. |
+| Deferred evidence | Hosted, manual accessibility, independent penetration, production operations and production-volume evidence remain explicitly non-blocking operational evidence. |
+
 ## Handoff
 
-The next authorized batch is **QMDB-P3-B06 — People, Geography, and Organization Security Hardening and Closeout
-Preparation**. It begins only from the clean, committed B05 release baseline; this record does not implement it.
+The next permitted batch is **QMDB-P3-CLOSE**. It requires separate authorization; B06 does not begin it.

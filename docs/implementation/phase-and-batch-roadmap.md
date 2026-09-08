@@ -272,7 +272,7 @@ Later phases may prepare research or designs, but implementation cannot bypass e
 
 ## Exact next action
 
-QMDB-P3-B05 is complete: it adds private profile claims, bounded QMDB record-status assertions, explicit duplicate
-cases, management-authority consent, conflict-aware non-destructive Person canonicalization, and immutable aliases.
-The next authorized action is **QMDB-P3-B06 — People, Geography, and Organization Security Hardening and Closeout
-Preparation**. It must begin from the clean B05 release baseline; no B06 capability is implied by this roadmap update.
+QMDB-P3-B06 is complete: it adds a bounded P3 security verifier, explicit Person repository scope verification,
+focused architecture evidence, threat/control reconciliation and deferred operational-evidence tracking. It does not
+change the P2 frozen semantics or create P3 closeout artifacts. The next authorized action is **QMDB-P3-CLOSE** and
+requires its own execution authorization.

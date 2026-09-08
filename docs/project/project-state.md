@@ -9,15 +9,15 @@
 | Approved Change | QMDB-CR-001 — Asynchronous Progressive Interaction and Modal UX Standard |
 | Engineering Freeze | QMDB-P1-FRZ-001 |
 | Identity and Tenant Security Freeze | QMDB-P2-FRZ-001 |
-| Document Version | 5.5.0 |
-| Last Updated | 2026-09-02 |
-| Status | P0 COMPLETE / FROZEN; P1 COMPLETE / FROZEN; P2 COMPLETE / FROZEN; P3-B01 COMPLETE; P3-B02 COMPLETE; P3-B03 COMPLETE; P3-B04 COMPLETE; P3-B05 COMPLETE |
+| Document Version | 5.6.0 |
+| Last Updated | 2026-09-08 |
+| Status | P0 COMPLETE / FROZEN; P1 COMPLETE / FROZEN; P2 COMPLETE / FROZEN; P3-B01 COMPLETE; P3-B02 COMPLETE; P3-B03 COMPLETE; P3-B04 COMPLETE; P3-B05 COMPLETE; P3-B06 COMPLETE |
 | Completed Closeout | QMDB-P2-CLOSE — Identity, Security, and Tenant Isolation Verification and Freeze |
 | Current Phase | P3 — Nigerian Geography, Organizations, People, and Guardianship |
-| Current Batch | QMDB-P3-B05 — Profile Claims, Verification, Consent, and Duplicate Resolution |
-| Next Batch | QMDB-P3-B06 — People, Geography, and Organization Security Hardening and Closeout Preparation |
+| Current Batch | QMDB-P3-B06 — People, Geography, and Organization Security Hardening and Closeout Preparation |
+| Next Batch | QMDB-P3-CLOSE — P3 Closeout (separate authorization required) |
 | Batch Status | COMPLETE |
-| Implementation Readiness | B05 COMPLETE; B06 AUTHORIZED FROM THE CLEAN B05 RELEASE BASELINE; P3 REMAINS IN PROGRESS |
+| Implementation Readiness | B06 COMPLETE; READY FOR P3 CLOSEOUT; P3-CLOSE NOT STARTED |
 | P2 Status | COMPLETE / FROZEN |
 
 ## Authoritative outcome
@@ -62,6 +62,7 @@ consent, public profiles, Person discovery/merge and tenant-owned Person data re
 | QMDB-P3-B03 | Organizations, Schools, Groups, Mosques, and Branches Registry | COMPLETE | Workspace-owned registry, governed classifications, self-declared jurisdiction and immutable Unit hierarchy; no membership, staff, leadership or Person affiliation |
 | QMDB-P3-B04 | Organization Memberships, Staff, Leadership, and Person Affiliations | COMPLETE | Private consent-based Organization-to-Person affiliation lifecycle, fixed role catalog, assignment history, Guardian authority, leadership step-up, MySQL integrity and progressive workflow; no B05 claims or duplicate resolution |
 | QMDB-P3-B05 | Profile Claims, Verification, Consent, and Duplicate Resolution | COMPLETE | Hash-only claim pairing, authorized consent, verification assertions, duplicate review and non-destructive canonical aliases validated on MySQL |
+| QMDB-P3-B06 | People, Geography, and Organization Security Hardening and Closeout Preparation | COMPLETE | Read-only P3 security composition, Person repository scope verification, adversarial evidence and closeout readiness reconciliation |
 
 ## P1 batch ledger
 
@@ -301,10 +302,10 @@ Completed P3 Batches:
 - QMDB-P3-B03
 - QMDB-P3-B04
 
-Current Batch: QMDB-P3-B05 — Profile Claims, Verification, Consent, and Duplicate Resolution
+Current Batch: QMDB-P3-B06 — People, Geography, and Organization Security Hardening and Closeout Preparation
 
 P3 Status: IN PROGRESS
 
 Batch Status: COMPLETE
 
-Implementation Status: B05 COMPLETE; B06 AUTHORIZED FROM CLEAN B05 RELEASE BASELINE; P3-B06 NOT YET IMPLEMENTED
+Implementation Status: B06 COMPLETE; READY FOR P3 CLOSEOUT; P3-CLOSE NOT STARTED

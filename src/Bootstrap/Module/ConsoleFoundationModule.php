@@ -7,7 +7,15 @@ namespace Qmdb\Bootstrap\Module;
 use Qmdb\Bootstrap\Application;
 use Qmdb\Bootstrap\Console\ConsoleApplication;
 use Qmdb\Bootstrap\Console\P2SecurityHardeningVerifyConsoleCommand;
+use Qmdb\Bootstrap\Console\P3SecurityHardeningVerifyConsoleCommand;
 use Qmdb\Bootstrap\Security\P2SecurityHardeningVerifier;
+use Qmdb\Bootstrap\Security\P3PersonRepositorySecurityVerifier;
+use Qmdb\Bootstrap\Security\P3SecurityHardeningVerifier;
+use Qmdb\Modules\Geography\Application\GeographyReferenceReadinessCheck;
+use Qmdb\Modules\IdentityResolution\Application\PeopleIdentityResolutionReadinessCheck;
+use Qmdb\Modules\OrganizationAffiliations\Application\OrganizationAffiliationsReadinessCheck;
+use Qmdb\Modules\Organizations\Application\OrganizationsRegistryReadinessCheck;
+use Qmdb\Modules\People\Application\PeopleProfilesReadinessCheck;
 use Qmdb\Modules\SecurityAudit\Application\SecurityAuditControlVerifier;
 use Qmdb\Modules\SecurityAuthorization\Application\AuthorizationCatalogVerifier;
 use Qmdb\Modules\SecurityPrivilegedAccess\Application\PrivilegedAccessSchemaVerifier;
@@ -124,6 +132,41 @@ final readonly class ConsoleFoundationModule implements Module
                     ServiceReference::get($resolver, P2SecurityHardeningVerifier::class),
                 )),
         ));
+        $context->service(ServiceDefinition::instance(
+            P3PersonRepositorySecurityVerifier::class,
+            self::ID,
+            new P3PersonRepositorySecurityVerifier(dirname(__DIR__, 3)),
+        ));
+        $context->service(ServiceDefinition::factory(
+            P3SecurityHardeningVerifier::class,
+            self::ID,
+            [
+                P2SecurityHardeningVerifier::class,
+                GeographyReferenceReadinessCheck::class,
+                PeopleProfilesReadinessCheck::class,
+                OrganizationsRegistryReadinessCheck::class,
+                OrganizationAffiliationsReadinessCheck::class,
+                PeopleIdentityResolutionReadinessCheck::class,
+                P3PersonRepositorySecurityVerifier::class,
+            ],
+            new ClosureServiceFactory(static fn (DependencyResolver $resolver): P3SecurityHardeningVerifier =>
+                new P3SecurityHardeningVerifier(
+                    ServiceReference::get($resolver, P2SecurityHardeningVerifier::class),
+                    ServiceReference::get($resolver, GeographyReferenceReadinessCheck::class),
+                    ServiceReference::get($resolver, PeopleProfilesReadinessCheck::class),
+                    ServiceReference::get($resolver, OrganizationsRegistryReadinessCheck::class),
+                    ServiceReference::get($resolver, OrganizationAffiliationsReadinessCheck::class),
+                    ServiceReference::get($resolver, PeopleIdentityResolutionReadinessCheck::class),
+                    ServiceReference::get($resolver, P3PersonRepositorySecurityVerifier::class),
+                )),
+        ));
+        $context->service(ServiceDefinition::factory(
+            P3SecurityHardeningVerifyConsoleCommand::class,
+            self::ID,
+            [P3SecurityHardeningVerifier::class],
+            new ClosureServiceFactory(static fn (DependencyResolver $resolver): P3SecurityHardeningVerifyConsoleCommand =>
+                new P3SecurityHardeningVerifyConsoleCommand(ServiceReference::get($resolver, P3SecurityHardeningVerifier::class))),
+        ));
         $this->registerCommandMap($context);
         $context->service(ServiceDefinition::factory(
             ConsoleCommandDispatcher::class,
@@ -170,6 +213,7 @@ final readonly class ConsoleFoundationModule implements Module
             SecurityAuditVerifyConsoleCommand::class,
             RouteSecurityVerifyConsoleCommand::class,
             P2SecurityHardeningVerifyConsoleCommand::class,
+            P3SecurityHardeningVerifyConsoleCommand::class,
             SecurityAuditCheckpointConsoleCommand::class,
             GeographyReferenceVerifyConsoleCommand::class,
             PeopleProfilesVerifyConsoleCommand::class,
@@ -203,6 +247,7 @@ final readonly class ConsoleFoundationModule implements Module
                 $registry->register(ServiceReference::get($resolver, SecurityAuditVerifyConsoleCommand::class));
                 $registry->register(ServiceReference::get($resolver, RouteSecurityVerifyConsoleCommand::class));
                 $registry->register(ServiceReference::get($resolver, P2SecurityHardeningVerifyConsoleCommand::class));
+                $registry->register(ServiceReference::get($resolver, P3SecurityHardeningVerifyConsoleCommand::class));
                 $registry->register(ServiceReference::get($resolver, SecurityAuditCheckpointConsoleCommand::class));
                 $registry->register(ServiceReference::get($resolver, GeographyReferenceVerifyConsoleCommand::class));
                 $registry->register(ServiceReference::get($resolver, PeopleProfilesVerifyConsoleCommand::class));

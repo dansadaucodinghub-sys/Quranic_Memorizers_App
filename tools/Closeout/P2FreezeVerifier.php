@@ -127,7 +127,7 @@ final readonly class P2FreezeVerifier
             return;
         }
         $contents = file_get_contents($ledger);
-        $authorized = is_string($contents) && (str_contains($contents, 'authorization: QMDB-P3-OPEN-B01') || str_contains($contents, 'authorization: QMDB-P3-B02-EXEC') || str_contains($contents, 'authorization: QMDB-P3-B03-EXEC') || str_contains($contents, 'authorization: QMDB-P3-B04-EXEC') || str_contains($contents, 'authorization: QMDB-P3-B05-EXEC'));
+        $authorized = is_string($contents) && (str_contains($contents, 'authorization: QMDB-P3-OPEN-B01') || str_contains($contents, 'authorization: QMDB-P3-B02-EXEC') || str_contains($contents, 'authorization: QMDB-P3-B03-EXEC') || str_contains($contents, 'authorization: QMDB-P3-B04-EXEC') || str_contains($contents, 'authorization: QMDB-P3-B05-EXEC') || str_contains($contents, 'authorization: QMDB-P3-B06-EXEC'));
         $report->check($authorized, 'P3 extension ledger is invalid.');
         $report->check(is_string($contents) && str_contains($contents, 'allowed_modules:'), 'P3 extension ledger does not constrain the allowed modules.');
         $report->check(is_string($contents) && str_contains($contents, 'P3 composition bridge may update only'), 'P3 extension ledger lacks P2 integrity assurance.');

@@ -33,7 +33,7 @@ final class SystemInformationTest extends TestCase
         self::assertSame('QMDB', $information->applicationCode());
         self::assertSame('QMDB-P0-FRZ-001', $information->frozenBaseline());
         self::assertSame('P3', $information->currentPhase());
-        self::assertSame('QMDB-P3-B05', $information->currentBatch());
+        self::assertSame('QMDB-P3-B06', $information->currentBatch());
         self::assertSame('test', $information->environment());
         self::assertSame('UTC', $information->timezone());
         self::assertSame('8.5.7', $information->phpVersion());

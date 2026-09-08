@@ -95,7 +95,7 @@ final class P3IdentityResolutionSecurityArchitectureTest extends TestCase
         self::assertStringContainsString('no-store', $controller);
     }
 
-    public function testB05MigrationsAndSeedAreExplicitlyRegisteredWithoutP3B06Source(): void
+    public function testB05MigrationsAndSeedRemainExplicitlyRegisteredWithoutFuturePhaseSource(): void
     {
         $root = dirname(__DIR__, 2);
         $migrations = (string) file_get_contents($root . '/database/migrations.php');
@@ -107,8 +107,8 @@ final class P3IdentityResolutionSecurityArchitectureTest extends TestCase
         }
         self::assertStringContainsString('SeedPeopleIdentityResolutionAuthorization', $seeds);
         self::assertStringContainsString('people.identity_resolution', $module);
-        self::assertDirectoryDoesNotExist($root . '/src/Modules/PeopleGeographyOrganizationSecurityHardening');
-        self::assertFileDoesNotExist($root . '/src/Bootstrap/Module/PeopleGeographyOrganizationSecurityHardeningModule.php');
+        self::assertDirectoryDoesNotExist($root . '/src/Modules/Competitions');
+        self::assertFileDoesNotExist($root . '/src/Bootstrap/Module/PhaseFourModule.php');
     }
 
     public function testClaimAuthorizationAndAcceptanceRemainSeparateDualConsentWorkflows(): void
