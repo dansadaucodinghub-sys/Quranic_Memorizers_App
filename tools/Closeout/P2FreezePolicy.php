@@ -113,7 +113,7 @@ final class P2FreezePolicy
         'src/Modules/People/Application/PersonManagementAuthoritySnapshotProvider.php',
         'src/Modules/People/Application/PersonVerificationProjectionProvider.php',
         'src/Modules/OrganizationAffiliations/Application/OrganizationAffiliationPersonCanonicalizationParticipant.php',
-        'resources/views/pages/account-profile-claim-',
+        'resources/views/pages/account-profile-claim',
         'resources/views/pages/account-dependent-profile-claim-',
         'resources/views/pages/account-person-duplicate-',
         'resources/views/pages/platform-profile-',
