@@ -9,8 +9,8 @@ engineering_freeze:
   closeout_batch: QMDB-P1-CLOSE
   freeze_status: APPROVED
   readiness: P1_COMPLETE
-  generated_at_utc: "2026-09-08T18:23:29Z"
-  source_revision: "d42a372992bd54b58aeea91d09d18539270bd091"
+  generated_at_utc: "2026-09-08T18:38:49Z"
+  source_revision: "eb0810d445bff5b2501632204a3f03d2195a5ce8"
   source_state: governed_clean
   completed_batches:
     - QMDB-P1-B01
@@ -5178,7 +5178,7 @@ engineering_freeze:
       sha256: 2d8dfdcad2b7edab88c738d40389fa3eb95276b246b270f07b61d54266fd0be3
     - path: "tools/Closeout/P2FreezeVerifier.php"
       category: FROZEN_ENGINEERING_FOUNDATION
-      sha256: f9a6901c77b633e56407d4607498c9b1ee03a193da260123230ee7508efb27e7
+      sha256: a6da4e7fa4cb973ea3e6f8ed49386b583c970a821f9e2f5b3a5ca3cea42f865b
     - path: "tools/Closeout/P3FreezeGenerator.php"
       category: FROZEN_ENGINEERING_FOUNDATION
       sha256: 4d26ab39c6c13155f6551bc3dd83d73f91901527df0caf450987088fd0d09ab8
