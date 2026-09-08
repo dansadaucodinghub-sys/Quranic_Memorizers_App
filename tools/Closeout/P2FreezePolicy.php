@@ -147,6 +147,14 @@ final class P2FreezePolicy
     ];
 
     /** @var list<string> */
+    private const P3_CLOSE_EXTENSION_PREFIXES = [
+        'tools/Closeout/P3Freeze',
+        'tools/ci/generate-p3-freeze.php',
+        'tools/ci/verify-p3-freeze.php',
+        'docs/closeout/p3/',
+    ];
+
+    /** @var list<string> */
     private const P3_B02_MUTABLE_EXISTING_PATHS = [
         'src/Modules/IdentityAccess/Domain/IdempotencyOperation.php',
         'src/Modules/IdentityAccess/Infrastructure/Persistence/MySqlIdentityAccessRepository.php',
@@ -417,7 +425,7 @@ final class P2FreezePolicy
 
     public function isP3AuthorizedExtension(string $path): bool
     {
-        return $this->isP3B01Extension($path) || $this->isP3B02Extension($path) || $this->isP3B03Extension($path) || $this->isP3B04Extension($path) || $this->isP3B05Extension($path) || $this->isP3B06Extension($path);
+        return $this->isP3B01Extension($path) || $this->isP3B02Extension($path) || $this->isP3B03Extension($path) || $this->isP3B04Extension($path) || $this->isP3B05Extension($path) || $this->isP3B06Extension($path) || $this->isP3CloseExtension($path);
     }
 
     public function isP3B01MutableExistingPath(string $path): bool
@@ -492,6 +500,17 @@ final class P2FreezePolicy
     public function isP3B06MutableExistingPath(string $path): bool
     {
         return in_array(PathPolicy::normalize($path), self::P3_B06_MUTABLE_EXISTING_PATHS, true);
+    }
+
+    public function isP3CloseExtension(string $path): bool
+    {
+        foreach (self::P3_CLOSE_EXTENSION_PREFIXES as $prefix) {
+            if (str_starts_with(PathPolicy::normalize($path), $prefix)) {
+                return true;
+            }
+        }
+
+        return false;
     }
 
     public function isP3MutableExistingPath(string $path): bool

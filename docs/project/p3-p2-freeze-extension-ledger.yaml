@@ -1,5 +1,5 @@
 ledger_id: QMDB-P3-P2-EXT-001
-authorization: QMDB-P3-B06-EXEC
+authorization: QMDB-P3-CLOSE
 authorized_on: 2026-09-02
 expected_p2_freeze_id: QMDB-P2-FRZ-001
 expected_p2_freeze_manifest: docs/closeout/p2/qmdb-p2-identity-security-tenancy-freeze.yaml
@@ -23,6 +23,7 @@ allowed_scope:
     record-status assertions, consent-gated duplicate cases, canonical aliases, and bounded maintenance
   - bounded read-only P3 security composition, Person repository scope verification, adversarial-test evidence,
     privacy/control reconciliation and closeout-readiness reporting without P3-CLOSE execution
+  - P3 closeout records and generated P3-freeze tooling only; no P4 production capability
 prohibited_modules:
   - Competitions
   - Person search, discovery, deletion, contacts, dependent Accounts and tenant-owned Person data
