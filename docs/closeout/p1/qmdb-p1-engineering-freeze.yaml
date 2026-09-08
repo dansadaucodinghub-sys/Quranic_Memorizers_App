@@ -9,8 +9,8 @@ engineering_freeze:
   closeout_batch: QMDB-P1-CLOSE
   freeze_status: APPROVED
   readiness: P1_COMPLETE
-  generated_at_utc: "2026-09-02T19:44:21Z"
-  source_revision: "18d84da482a50821903b9d3517f8702b3442a057"
+  generated_at_utc: "2026-09-08T15:46:25Z"
+  source_revision: "fe49656250181dfb3165f3b3c86bfd8fe0a52ee6"
   source_state: governed_clean
   completed_batches:
     - QMDB-P1-B01
@@ -84,7 +84,7 @@ engineering_freeze:
       sha256: 68ca3fba3b7e864770cb61aeb306d4bd4354b68ab4dd38450860c5d823e42a53
     - path: "README.md"
       category: CONTROLLED_EXTENSION_POINT
-      sha256: 06c536d15a63ee3b53b45fe1e8ddcabd1bbc85d6a1863943f2354b0b0c6b9cd0
+      sha256: 66260a28339b77e3a78f018809e6d158655dcd456420b6b07037f6eff9f7e6d4
     - path: "bin/console"
       category: FROZEN_ENGINEERING_FOUNDATION
       sha256: a77ede49773737522a05ebdf5246c6ba8819cada2de1d7d2023a8fdbedc00f0c
@@ -118,6 +118,9 @@ engineering_freeze:
     - path: "docs/implementation/P3-B03-organizations-registry.md"
       category: FROZEN_ENGINEERING_FOUNDATION
       sha256: c927290a341ffb16b39ea1532e12a6fd6091b447d1797f167c0f44570585039a
+    - path: "docs/implementation/P3-requirements-to-batches.md"
+      category: FROZEN_ENGINEERING_FOUNDATION
+      sha256: 42e9e645aef61fdc9ddfb4809cc67e1b20371354b91010e9b084370b70973bb6
     - path: "docs/implementation/README.md"
       category: FROZEN_ENGINEERING_FOUNDATION
       sha256: b6a0a3976ff64fa6520c1e6854c78324b671262ddc75bf7d52c82567c49c23d9
@@ -129,16 +132,16 @@ engineering_freeze:
       sha256: 517a1518dcf4cf1c5ec4b0f6046c4450a4a784ca61405160542838a9917b6523
     - path: "docs/implementation/background-execution-standard.md"
       category: FROZEN_ENGINEERING_FOUNDATION
-      sha256: c3b3f2eeadf50a68fcbdd5b680eb13065a0a539a96c3a23dbad412fc78ae9d38
+      sha256: d64a1a962bf297842f563bf2fb3cf132171eb8bda33376699bb84f50d850b269
     - path: "docs/implementation/ci-build-and-release-standard.md"
       category: FROZEN_ENGINEERING_FOUNDATION
-      sha256: 7a5f7c89eee30591ca968abf0d72e979003a6295f1bfb18e3b28d3b7b58c91f1
+      sha256: 96aa0a23714ed9f3f76b664ffdb7ac33a1aeedaa74ca463cc26da0206b3d7f42
     - path: "docs/implementation/definition-of-ready-and-done.md"
       category: FROZEN_ENGINEERING_FOUNDATION
       sha256: e17771e9e1e41e436e16fcf7d9c5044cdf4f89d978e1ce769b7966b1534e4258
     - path: "docs/implementation/frontend-interaction-standard.md"
       category: FROZEN_ENGINEERING_FOUNDATION
-      sha256: 2722987ad3c9fb0113158bad7d06651ca647f72715f55c65371c94f7393d7e78
+      sha256: 86564bc6d3baf0fb566df67cf7d5ccb548511f46e8031b8b7503461bf4a8dc11
     - path: "docs/implementation/identity-and-tenant-security-hardening-standard.md"
       category: FROZEN_ENGINEERING_FOUNDATION
       sha256: f492e3a4ae93609a80ced04823e21f43b9d96d949aeba131845431b97d3709a6
@@ -150,7 +153,7 @@ engineering_freeze:
       sha256: c7b749bb2af448e36cdbf9afcb635448aaf2b3449914676e3a438c7e737cb973
     - path: "docs/implementation/organization-memberships-staff-leadership-and-person-affiliations-standard.md"
       category: FROZEN_ENGINEERING_FOUNDATION
-      sha256: da3219d190a940c733c110831291e6301751268b5db420959b4ee7bdb17da5eb
+      sha256: af0132888e93eceec430611105d430a1634c284f278f736f2652e1f09b3cbe00
     - path: "docs/implementation/p3-b02-requirements-to-batches.md"
       category: FROZEN_ENGINEERING_FOUNDATION
       sha256: 1177275db2e74e3570795e5383d082103d7401f7810fc7fcf1b42e7ef0ff22b4
@@ -159,28 +162,31 @@ engineering_freeze:
       sha256: ef1ab6e40768aba5130815f241297521765ffc7eeb852bca1f7c7a92cab7ff73
     - path: "docs/implementation/person-memorizer-reciter-competitor-and-guardian-profile-standard.md"
       category: FROZEN_ENGINEERING_FOUNDATION
-      sha256: 91f66fde590c2ac13e5e6106c9715d4d55a0b0a49bc6e9815d1be34598bde3e1
+      sha256: 9843b0bb38b0ace0fa401f917c98d57c033dc157ae135e03b44f51d3f38cc084
     - path: "docs/implementation/phase-and-batch-roadmap.md"
       category: FROZEN_ENGINEERING_FOUNDATION
-      sha256: 71c8b1280c4e21539af3e42ec59edd5d4dc4e195bcf503647f3c08305a31a7b8
+      sha256: a5e233b1433049116496affaa57b959a0806c0ce4670ffe72c4b1a71274c6a07
     - path: "docs/implementation/presentation-and-progressive-interaction-standard.md"
       category: FROZEN_ENGINEERING_FOUNDATION
-      sha256: 3cfa8768a75c1042d0f37eaf8443786dcda7e4b06ae9b786f55436f46910af3b
+      sha256: fa411077c520443f9c61ac1865e536c7d184d4fd8f01fa284c695f618bdf7b20
     - path: "docs/implementation/privileged-access-temporary-support-and-break-glass-standard.md"
       category: FROZEN_ENGINEERING_FOUNDATION
       sha256: a4cf786cf70fd6f57f9f92613c786fb449c9245f591cb1c8bb716c0f7b4a841e
+    - path: "docs/implementation/profile-claims-verification-consent-and-duplicate-resolution-standard.md"
+      category: FROZEN_ENGINEERING_FOUNDATION
+      sha256: 0219d49a622f7e46976f6416886ec222c65752697195568e16f8009b5c493e7f
     - path: "docs/implementation/requirements-to-implementation-map.md"
       category: FROZEN_ENGINEERING_FOUNDATION
       sha256: df3e88784be2dad63d6808a94c5ee0064ad3316c94c6431b48eb5968c65988d2
     - path: "docs/implementation/roles-permissions-and-scoped-authorization-standard.md"
       category: FROZEN_ENGINEERING_FOUNDATION
-      sha256: 459b5cd5fcd86050b945e6ce1a60c1fd49382c9c4b9fbb3c2108bcbe8fdd9114
+      sha256: a1797b7f52957d0ccd1d187ab5babb7e3ef1058d2ace39ae690503f7448e0b52
     - path: "docs/implementation/secure-session-cookie-and-device-standard.md"
       category: FROZEN_ENGINEERING_FOUNDATION
       sha256: 652da91d843cf0b7051f53ff5b87622ee94fc04c34b18982937ee0f6071b80e4
     - path: "docs/implementation/security-events-audit-integrity-and-account-state-standard.md"
       category: FROZEN_ENGINEERING_FOUNDATION
-      sha256: 0edb00ccc8f40d9a1c5e8db2980bda33cec297536ad0ca297f0b61000f5bedc2
+      sha256: fa4fa66905e519db6cbd9303e1f141ce03cc155cd3f2184ae64b00c23572facf
     - path: "docs/implementation/tenant-context-workspace-switching-and-data-access-standard.md"
       category: FROZEN_ENGINEERING_FOUNDATION
       sha256: 1e396841f617beb18112a923128e60bd42e05d7a7c59950ba61ed03edde10ef5
@@ -4284,7 +4290,7 @@ engineering_freeze:
       sha256: 7dc196f80f308ef4c909c6e9b20730cb7884590e2481be46aae94278ca71698f
     - path: "tests/Architecture/P3IdentityResolutionSecurityArchitectureTest.php"
       category: FROZEN_ENGINEERING_FOUNDATION
-      sha256: 8af54e51a0b2ae20469383d8951bd299008d456caf9434f0ffa2dfa4e5720d95
+      sha256: 335a532edae6bdd7621e431a67bd7085df49e09edab546ccfb36fbfb7fb97e33
     - path: "tests/Architecture/P3OrganizationAffiliationSecurityArchitectureTest.php"
       category: FROZEN_ENGINEERING_FOUNDATION
       sha256: cbf65504b6d2ea12e1bbd131d963ebeaf874358ff178b13c23cae42c5fa28811
@@ -4332,7 +4338,7 @@ engineering_freeze:
       sha256: d86a4d52f13ff2b59feb761a78865eb1187bbf3018d321765adba74beca09c8f
     - path: "tests/Frontend/person-identity-resolution-controller.test.js"
       category: FROZEN_ENGINEERING_FOUNDATION
-      sha256: ce96fe5ef8ba5138e760bcb9758995541662e8949bf09cf13c53b48472fa1422
+      sha256: 622e25d9149600b410fd0729ba78728b35b6d46437212c661b8b7d429255e075
     - path: "tests/Frontend/progressive-form-controller.test.js"
       category: FROZEN_ENGINEERING_FOUNDATION
       sha256: 86e2c7f656fd83c259f1170f00e79f625a64e9fc6903556f686439fb353cfa6c
@@ -4462,6 +4468,9 @@ engineering_freeze:
     - path: "tests/Integration/MySql/P2WebAuthnCeremonyIntegrationTest.php"
       category: FROZEN_ENGINEERING_FOUNDATION
       sha256: 42af100d0353b5d03421a00bf1975efb0528eaa528475f616e7146873ee54cf1
+    - path: "tests/Integration/MySql/P3IdentityResolutionConstraintIntegrationTest.php"
+      category: FROZEN_ENGINEERING_FOUNDATION
+      sha256: 30b2e0685b1a1366e79cc915beaa792b44ceb71b5e8b5e9bafec8e7ace79462c
     - path: "tests/Integration/MySql/P3IdentityResolutionIntegrationTest.php"
       category: FROZEN_ENGINEERING_FOUNDATION
       sha256: b9eee1363bd993b20eec0a924fd0197c27fc5c4bd07c6c9a33e258ced629d656
@@ -4770,7 +4779,7 @@ engineering_freeze:
       sha256: fddbe7924d281021b55759cdcd4d8cb99023498012040f4bba8e595ac880aee8
     - path: "tests/Tools/Ci/FrozenBaselineVerifierTest.php"
       category: FROZEN_ENGINEERING_FOUNDATION
-      sha256: b4e56e4fe05d0f3229e021f95e414a24d21734f37671dda4c11bb6dd3bea862e
+      sha256: f914abaefe9a4befcd60924418f9c4e4e8af80c25d7fa6821992a51ebb1c3556
     - path: "tests/Tools/Ci/MarkdownLinkVerifierTest.php"
       category: FROZEN_ENGINEERING_FOUNDATION
       sha256: 670a88467b49675a353645ae9d03d4c19a01845b28b463b7c81f44147333847c
@@ -4837,6 +4846,9 @@ engineering_freeze:
     - path: "tests/Unit/Modules/IdentityRecovery/PasswordRecoveryTokenTest.php"
       category: FROZEN_ENGINEERING_FOUNDATION
       sha256: 3206acc4febe5927e422b727c126f0720056012db750c26ba86230a27a233656
+    - path: "tests/Unit/Modules/IdentityResolution/IdentityResolutionDomainTest.php"
+      category: FROZEN_ENGINEERING_FOUNDATION
+      sha256: c20b2560fa4a897b905388bc24b4a5199f303ce37a39efa3709be87a13a688e4
     - path: "tests/Unit/Modules/IdentitySecurityNotifications/SecurityNotificationTest.php"
       category: FROZEN_ENGINEERING_FOUNDATION
       sha256: 01a5dddc30daffda11d08445af0fc7fcfb888e588604f3df0b0abab72ceb6424
@@ -5070,7 +5082,7 @@ engineering_freeze:
       sha256: 11415f9bf3d577806177b50644c551952ca001d71c2db8084a62ba22a00fbeba
     - path: "tools/Ci/FrozenBaselineVerifier.php"
       category: FROZEN_ENGINEERING_FOUNDATION
-      sha256: 8501ce585afa1774f831f91319d4a19fac12b56499694465c321c5f088126cea
+      sha256: be57c9a47941cc3aad98d9a83ae3cef78ac376e142a81f3e11c902b22f08c733
     - path: "tools/Ci/LocalCiRunner.php"
       category: FROZEN_ENGINEERING_FOUNDATION
       sha256: 88a4b1cd6c921ace1dd1e28aa3f69670562c6e023841493091e970f18dcd4d1a
@@ -5130,7 +5142,7 @@ engineering_freeze:
       sha256: 8a2410706d4a318f3209a199a9b5061dfcb07290f73483f9fe10b7739fa6cdd4
     - path: "tools/Closeout/P2FreezePolicy.php"
       category: FROZEN_ENGINEERING_FOUNDATION
-      sha256: 44f86b85e02b9b15e813b037c1de2db49dc81ee189e75779caff9ca214f0dc2e
+      sha256: 156ade289f666b484cddd899e72fc9254322420bcdcce0311335c7ab4bbfce96
     - path: "tools/Closeout/P2FreezeVerifier.php"
       category: FROZEN_ENGINEERING_FOUNDATION
       sha256: a5681eb7606e24e3ccd8ffc477398943dd122ee38d11520935265f8fa040f489
