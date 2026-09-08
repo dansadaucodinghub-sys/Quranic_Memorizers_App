@@ -37,10 +37,22 @@ final readonly class P3FreezeVerifier
         }
         $report->check($paths === array_column($this->policy->entries($root), 'path'), 'P3 freeze governed-file inventory has drifted.');
         $report->check($paths === array_values(array_unique($paths)), 'P3 freeze paths must be unique.');
-        $runner = new ProcessRunner();
-        $status = $runner->run(['git', 'status', '--porcelain=v1', '--untracked-files=all'], $root);
-        $report->check($status->exitCode === 0 && trim($status->stdout) === '', 'P3 freeze verification requires a clean working tree.');
+        $this->verifyRevision($root, $yaml, $report);
 
         return $report;
+    }
+
+    private function verifyRevision(string $root, string $yaml, VerificationReport $report): void
+    {
+        $matched = preg_match('/^\s*source_revision: "([a-f0-9]{40})"\s*$/m', $yaml, $matches) === 1;
+        $report->check($matched, 'P3 freeze source revision is missing or invalid.');
+        if (!$matched) {
+            return;
+        }
+        $runner = new ProcessRunner();
+        $ancestor = $runner->run(['git', 'merge-base', '--is-ancestor', $matches[1], 'HEAD'], $root);
+        $report->check($ancestor->exitCode === 0, 'P3 freeze source revision is not an ancestor of HEAD.');
+        $status = $runner->run(['git', 'status', '--porcelain=v1', '--untracked-files=all'], $root);
+        $report->check($status->exitCode === 0 && trim($status->stdout) === '', 'P3 freeze verification requires a clean working tree.');
     }
 }
