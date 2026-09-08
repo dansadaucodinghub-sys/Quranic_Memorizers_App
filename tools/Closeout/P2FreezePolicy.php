@@ -149,8 +149,9 @@ final class P2FreezePolicy
     /** @var list<string> */
     private const P3_CLOSE_EXTENSION_PREFIXES = [
         'tools/Closeout/P3Freeze',
-        'tools/ci/generate-p3-freeze.php',
-        'tools/ci/verify-p3-freeze.php',
+        'tools/Ci/generate-p3-freeze.php',
+        'tools/Ci/verify-p3-freeze.php',
+        'tests/Tools/Closeout/P3FreezeTest.php',
         'docs/closeout/p3/',
     ];
 
