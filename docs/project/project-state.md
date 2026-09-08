@@ -11,13 +11,13 @@
 | Identity and Tenant Security Freeze | QMDB-P2-FRZ-001 |
 | Document Version | 5.5.0 |
 | Last Updated | 2026-09-02 |
-| Status | P0 COMPLETE / FROZEN; P1 COMPLETE / FROZEN; P2 COMPLETE / FROZEN; P3-B01 COMPLETE; P3-B02 COMPLETE; P3-B03 COMPLETE; P3-B04 COMPLETE |
+| Status | P0 COMPLETE / FROZEN; P1 COMPLETE / FROZEN; P2 COMPLETE / FROZEN; P3-B01 COMPLETE; P3-B02 COMPLETE; P3-B03 COMPLETE; P3-B04 COMPLETE; P3-B05 COMPLETE |
 | Completed Closeout | QMDB-P2-CLOSE — Identity, Security, and Tenant Isolation Verification and Freeze |
 | Current Phase | P3 — Nigerian Geography, Organizations, People, and Guardianship |
 | Current Batch | QMDB-P3-B05 — Profile Claims, Verification, Consent, and Duplicate Resolution |
 | Next Batch | QMDB-P3-B06 — People, Geography, and Organization Security Hardening and Closeout Preparation |
-| Batch Status | NOT STARTED |
-| Implementation Readiness | B04 COMPLETE; B05 AUTHORIZED AND MAY START ONLY FROM THE CLEAN B04 RELEASE BASELINE; P3 REMAINS IN PROGRESS |
+| Batch Status | COMPLETE |
+| Implementation Readiness | B05 COMPLETE; B06 AUTHORIZED FROM THE CLEAN B05 RELEASE BASELINE; P3 REMAINS IN PROGRESS |
 | P2 Status | COMPLETE / FROZEN |
 
 ## Authoritative outcome
@@ -61,7 +61,7 @@ consent, public profiles, Person discovery/merge and tenant-owned Person data re
 | QMDB-P3-B02 | Person, Memorizer, Reciter, Competitor, and Guardian Profile Foundation | COMPLETE | Private global Person/profile foundation; no consent, public discovery, merge, Organizations or tenant-owned Person data |
 | QMDB-P3-B03 | Organizations, Schools, Groups, Mosques, and Branches Registry | COMPLETE | Workspace-owned registry, governed classifications, self-declared jurisdiction and immutable Unit hierarchy; no membership, staff, leadership or Person affiliation |
 | QMDB-P3-B04 | Organization Memberships, Staff, Leadership, and Person Affiliations | COMPLETE | Private consent-based Organization-to-Person affiliation lifecycle, fixed role catalog, assignment history, Guardian authority, leadership step-up, MySQL integrity and progressive workflow; no B05 claims or duplicate resolution |
-| QMDB-P3-B05 | Profile Claims, Verification, Consent, and Duplicate Resolution | NOT STARTED | Authorized after the clean B04 release baseline; no B06 work is implied |
+| QMDB-P3-B05 | Profile Claims, Verification, Consent, and Duplicate Resolution | COMPLETE | Hash-only claim pairing, authorized consent, verification assertions, duplicate review and non-destructive canonical aliases validated on MySQL |
 
 ## P1 batch ledger
 
@@ -305,6 +305,6 @@ Current Batch: QMDB-P3-B05 — Profile Claims, Verification, Consent, and Duplic
 
 P3 Status: IN PROGRESS
 
-Batch Status: NOT STARTED
+Batch Status: COMPLETE
 
-Implementation Status: B04 COMPLETE; B05 AUTHORIZED FROM CLEAN B04 RELEASE BASELINE ONLY; P3-B06 PROHIBITED
+Implementation Status: B05 COMPLETE; B06 AUTHORIZED FROM CLEAN B05 RELEASE BASELINE; P3-B06 NOT YET IMPLEMENTED
