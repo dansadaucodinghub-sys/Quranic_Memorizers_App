@@ -9,15 +9,15 @@
 | Approved Change | QMDB-CR-001 — Asynchronous Progressive Interaction and Modal UX Standard |
 | Engineering Freeze | QMDB-P1-FRZ-001 |
 | Identity and Tenant Security Freeze | QMDB-P2-FRZ-001 |
-| Document Version | 5.7.0 |
-| Last Updated | 2026-09-08 |
-| Status | P0 COMPLETE / FROZEN; P1 COMPLETE / FROZEN; P2 COMPLETE / FROZEN; P3-B01 COMPLETE; P3-B02 COMPLETE; P3-B03 COMPLETE; P3-B04 COMPLETE; P3-B05 COMPLETE; P3-B06 COMPLETE |
+| Document Version | 5.8.0 |
+| Last Updated | 2026-09-09 |
+| Status | P0 COMPLETE / FROZEN; P1 COMPLETE / FROZEN; P2 COMPLETE / FROZEN; P3 COMPLETE / FROZEN; P4-B01 AUTHORIZED |
 | Completed Closeout | QMDB-P2-CLOSE — Identity, Security, and Tenant Isolation Verification and Freeze |
-| Current Phase | P3 — Nigerian Geography, Organizations, People, and Guardianship |
-| Current Batch | QMDB-P3-CLOSE — P3 Closeout |
-| Next Batch | Phase P4 (not authorized) |
-| Batch Status | COMPLETE / FROZEN |
-| Implementation Readiness | P3 CLOSE COMPLETE; READY FOR P4 AUTHORIZATION |
+| Current Phase | P4 — Competition Programs, Editions, and Rulebooks |
+| Current Batch | QMDB-P4-B01 — Competition Program and Edition Foundation |
+| Next Batch | QMDB-P4-B01 execution only; P4-B02 is not authorized |
+| Batch Status | AUTHORIZED / NOT STARTED |
+| Implementation Readiness | P3 RELEASE RECOVERED; READY FOR P4-B01 ONLY |
 | P2 Status | COMPLETE / FROZEN |
 
 ## Authoritative outcome
@@ -76,11 +76,13 @@ P3 Closeout Status: COMPLETE
 
 P3 Freeze: QMDB-P3-FRZ-001
 
-Next Phase: P4 identity pending owner approval
+P3 Release Recovery: COMPLETE — QMDB-TRIVY-DB-RECOVERY-001 clean release verification passed
 
-P4 Status: NOT STARTED / NOT AUTHORIZED
+Next Phase: P4-B01 authorized by QMDB-P4-OPEN-B01 after P3 release recovery
 
-Implementation Status: READY FOR P4 AUTHORIZATION
+P4 Status: AUTHORIZED / NOT STARTED
+
+Implementation Status: READY FOR P4-B01 ONLY; P4-B02 NOT AUTHORIZED
 
 ## P1 batch ledger
 

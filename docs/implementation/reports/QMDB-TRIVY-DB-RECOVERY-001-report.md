@@ -2,8 +2,9 @@
 
 ## Recovery Result
 
-**RECOVERY IMPLEMENTED — final clean-commit release verification pending.** The repository no longer allows an
-artifact scan to initiate an uncontrolled Trivy DB download or to use an unvalidated cache.
+**RECOVERY COMPLETE.** The repaired P3 release artifact passed clean-commit verification at
+`06450fae88f92a4ea90c42e0321a40e1b7377939`. The repository no longer allows an artifact scan to initiate an
+uncontrolled Trivy DB download or to use an unvalidated cache.
 
 ## Starting State
 
@@ -45,17 +46,19 @@ remain until final release/freeze validation finishes.
 
 ## Validation
 
-Focused recovery checks pass: PHPUnit `18 tests, 98 assertions`; PHPCS with warnings disabled passes; PHPStan reports
-no errors. The real controlled extracted-artifact Trivy scan passes with exit `0`.
+Focused recovery checks pass: PHPUnit `22 tests, 147 assertions`; PHPCS with warnings disabled passes; PHPStan reports
+no errors. The real controlled extracted-artifact Trivy scan passes with exit `0`. The clean release verifier reports
+3,350 files, 3,120 PHP files linted, Gitleaks and Trivy pass, CLI/HTTP pass, MySQL readiness `200`, archive SHA-256
+`cc8d9a640664cf05bab0fb9df80c9f1b908129a35ec3b9c01ccf1c51a6e3fba5`, and `release_eligible=true`.
 
 ## P3 Final State
 
-P3 is still **RELEASE RECOVERY IN PROGRESS** until the implementation is committed, a clean release is built and
-verified, all frozen baselines are rechecked, and the required Engineering/P3 freeze reconciliation completes.
+P3 release verification is complete. P0 and P2 frozen-baseline checks pass; the Engineering and P3 manifests are
+forward-refreshed after this evidence commit, without rewriting the P0 or P2 historical manifests.
 
 ## P4-B01 Resumption
 
-P4-B01 remains prohibited until the preceding P3 recovery gates pass. P4-B02 remains out of scope.
+P4-B01 may begin only after the recorded Engineering/P3 freeze refresh and verification. P4-B02 remains out of scope.
 
 ## Deferred Operational Evidence
 
@@ -69,5 +72,5 @@ malformed, schema-incompatible, unreadable, or future-dated cache fails closed r
 
 ## Final Project State
 
-This report records the implementation recovery checkpoint only. The authoritative P3/P4 state changes after the
-clean committed release, freeze and baseline validation gates terminate successfully.
+The authoritative transition is P3 `COMPLETE / FROZEN` after the final freeze commit. P4-B01 is authorized next;
+P4-B02 is not authorized.
