@@ -19,6 +19,10 @@
         {
           "path": "docs/implementation/reports/QMDB-P4-requirement-inventory.md",
           "sha256": "2ea56ca415736522e124d80298836214569b317b11b3db0254b68a808b151520"
+        },
+        {
+          "path": "tests/Tools/Closeout/P3GovernanceRefreshFreezePolicyTest.php",
+          "sha256": "55fe01b208a62c3f35b120494dcffd63ad16482abb4753db4c1bcefd4b16c9c6"
         }
       ],
       "modified_extension_points": [
@@ -31,9 +35,19 @@
           "previous_entries_unchanged": true,
           "previous_sha256": "209a3f93757f9cef3d68e03b36d0080dab81272e9674c1f76e418612dcb94bf5",
           "sha256": "271948517e77596b7953b26645e79e41722e720393f83f0661d2af4371cd3453"
+        },
+        {
+          "path": "tools/Closeout/P3GovernanceRefreshFreezePolicy.php",
+          "change_type": "APPEND_ONLY",
+          "added_entries": [
+            "P4 report inventory is ledger-enforced"
+          ],
+          "previous_entries_unchanged": true,
+          "previous_sha256": "0fa650dcc712d3b56de90075abea26f82c243fe90e863f562a006df6b57ac371",
+          "sha256": "53f1e8e21838e1a0c63134a66285a6bd9dbd447f439828dc38960f524d491e6f"
         }
       ],
-      "entry_sha256": "a97f8003970fd3d949f588739240d25cdd09b61a1a3cd93f390afbadc92994bf"
+      "entry_sha256": "86119368e07d5231c69c769dacf5a016067a7220ee5b9ce07ce5a41bf18f7a74"
     }
   ]
 }

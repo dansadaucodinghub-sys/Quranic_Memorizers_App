@@ -45,6 +45,7 @@ final class P3GovernanceRefreshFreezePolicy
         return $path === 'docs/project/change-requests/QMDB-CR-002-post-p3-additive-extension-governance.md'
             || $path === 'docs/implementation/reports/QMDB-PHASE-MAPPING-CORRECTION-001.md'
             || $path === 'docs/implementation/reports/QMDB-P4-B01-scope-resolution.md'
+            || str_starts_with($path, 'docs/implementation/reports/QMDB-P4-')
             || $path === 'docs/closeout/p3/p3-freeze-supersession-equivalence.md';
     }
 }
