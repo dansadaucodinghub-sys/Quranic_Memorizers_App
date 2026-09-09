@@ -24,6 +24,8 @@ allowed_scope:
   - bounded read-only P3 security composition, Person repository scope verification, adversarial-test evidence,
     privacy/control reconciliation and closeout-readiness reporting without P3-CLOSE execution
   - P3 closeout records and generated P3-freeze tooling only; no P4 production capability
+  - post-closeout release-recovery tooling for validated Trivy DB acquisition and extracted-artifact scanning;
+    no P4 production capability
 prohibited_modules:
   - Competitions
   - Person search, discovery, deletion, contacts, dependent Accounts and tenant-owned Person data
@@ -73,3 +75,6 @@ assurance:
   - The P3-B06 compatibility bridge may add only bounded verifier source, focused security architecture tests and
     named evidence records. It may update only P2FreezePolicy::P3_B06_MUTABLE_EXISTING_PATHS and does not alter
     QMDB-P2-FRZ-001 or execute P3-CLOSE.
+  - QMDB-TRIVY-DB-RECOVERY-001 may add only fail-closed Trivy DB cache validation, approved official-registry
+    fallback, atomic publication, scanner tests and named release-tool bridges. It does not change any P2 runtime
+    identity, authorization, session, tenant or database behavior and does not revise QMDB-P2-FRZ-001.

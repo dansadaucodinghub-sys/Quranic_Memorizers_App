@@ -144,6 +144,9 @@ final class P2FreezePolicy
         'docs/implementation/reports/QMDB-P3-B06-',
         'docs/implementation/people-geography-and-organization-security-hardening-standard.md',
         'docs/project/p3-p0-b06-freeze-extension-ledger.yaml',
+        'tools/Security/Trivy',
+        'tools/Security/scan-trivy.php',
+        'tests/Tools/Security/Trivy',
     ];
 
     /** @var list<string> */
@@ -279,6 +282,7 @@ final class P2FreezePolicy
 
     /** @var list<string> */
     private const P3_B06_MUTABLE_EXISTING_PATHS = [
+        '.gitignore',
         'README.md',
         'src/Bootstrap/ApplicationMetadata.php',
         'src/Bootstrap/Module/ConsoleFoundationModule.php',
@@ -292,9 +296,14 @@ final class P2FreezePolicy
         'tests/Integration/Console/BackgroundConsoleIntegrationTest.php',
         'tools/Closeout/P2FreezePolicy.php',
         'tools/Closeout/P2FreezeVerifier.php',
+        'tools/Closeout/EngineeringFreezePolicy.php',
+        'tools/Build/ReleaseArtifactVerifier.php',
+        'tools/Security/run-filesystem-scan.sh',
+        'tools/windows/run-qmdb-filesystem-scan.ps1',
         'tools/Ci/FrozenBaselineVerifier.php',
         'tests/Tools/Closeout/P2FreezeTest.php',
         'tests/Tools/Ci/FrozenBaselineVerifierTest.php',
+        'tests/Architecture/SupplyChainArchitectureTest.php',
         'docs/implementation/P3-requirements-to-batches.md',
         'docs/implementation/phase-and-batch-roadmap.md',
         'docs/implementation/nigerian-administrative-geography-and-jurisdiction-standard.md',
