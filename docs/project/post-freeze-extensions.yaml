@@ -1,5 +1,39 @@
 {
   "ledger_id": "QMDB-P3-POST-FREEZE-EXT-001",
   "base_freeze": "QMDB-P3-FRZ-003",
-  "entries": []
+  "entries": [
+    {
+      "extension_id": "QMDB-P3-EXT-001",
+      "authorizing_change": "QMDB-CR-002",
+      "authorizing_instruction": "QMDB-P4-B01-SCOPE-RECOVERY-EXEC",
+      "base_freeze": "QMDB-P3-FRZ-003",
+      "phase": "P4",
+      "batch": "QMDB-P4-B01",
+      "scope_status": "P4_B01_SCOPE_UNRESOLVED",
+      "previous_entry_sha256": "2e422faed4209a0a33e5f35c0cfb7f9aea8c784a674ce5b1dceabdf9fd8f5260",
+      "new_files": [
+        {
+          "path": "docs/implementation/reports/QMDB-P4-B01-scope-blocker-analysis.md",
+          "sha256": "cf6a7a4b887cc284c556bafb149d78a6c96d1e42253362beb6f97c1e17685ae8"
+        },
+        {
+          "path": "docs/implementation/reports/QMDB-P4-requirement-inventory.md",
+          "sha256": "2ea56ca415736522e124d80298836214569b317b11b3db0254b68a808b151520"
+        }
+      ],
+      "modified_extension_points": [
+        {
+          "path": "docs/implementation/reports/QMDB-P4-B01-scope-resolution.md",
+          "change_type": "APPEND_ONLY",
+          "added_entries": [
+            "QMDB-P4-B01-SCOPE-RECOVERY-EXEC: CASE_D dependency finding"
+          ],
+          "previous_entries_unchanged": true,
+          "previous_sha256": "209a3f93757f9cef3d68e03b36d0080dab81272e9674c1f76e418612dcb94bf5",
+          "sha256": "271948517e77596b7953b26645e79e41722e720393f83f0661d2af4371cd3453"
+        }
+      ],
+      "entry_sha256": "a97f8003970fd3d949f588739240d25cdd09b61a1a3cd93f390afbadc92994bf"
+    }
+  ]
 }
