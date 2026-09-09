@@ -9,8 +9,8 @@ engineering_freeze:
   closeout_batch: QMDB-P1-CLOSE
   freeze_status: APPROVED
   readiness: P1_COMPLETE
-  generated_at_utc: "2026-09-09T12:46:59Z"
-  source_revision: "41eb50f673249e2b945fcc442e4f31b42e7e892b"
+  generated_at_utc: "2026-09-09T17:31:18Z"
+  source_revision: "cffdce76e76c2b7544299c1f7ca6a3f738015575"
   source_state: governed_clean
   completed_batches:
     - QMDB-P1-B01
@@ -4822,6 +4822,9 @@ engineering_freeze:
     - path: "tests/Tools/Closeout/P3FreezeTest.php"
       category: FROZEN_ENGINEERING_FOUNDATION
       sha256: b41ceea323f5352d39e61cb6c3f7552ae6fd0e1e1244b57a8db7acac7836c521
+    - path: "tests/Tools/Closeout/P3GovernanceRefreshFreezePolicyTest.php"
+      category: FROZEN_ENGINEERING_FOUNDATION
+      sha256: 55fe01b208a62c3f35b120494dcffd63ad16482abb4753db4c1bcefd4b16c9c6
     - path: "tests/Tools/Closeout/P3SupersedingFreezeTest.php"
       category: FROZEN_ENGINEERING_FOUNDATION
       sha256: e40def9f37bf588a39f480e70241dec121a589a5090802f8b664ac72d1e917b7
@@ -5196,7 +5199,7 @@ engineering_freeze:
       sha256: 8a2410706d4a318f3209a199a9b5061dfcb07290f73483f9fe10b7739fa6cdd4
     - path: "tools/Closeout/P2FreezePolicy.php"
       category: FROZEN_ENGINEERING_FOUNDATION
-      sha256: 53c0fdd2bdd864c3514a7c11782519773c6082c43a2b5a93e7c4aa244dee2dc2
+      sha256: 4ac6a139acd89a25280bb555a2ddea74a6e29cdbdbe55fac71f8142a9ea81c45
     - path: "tools/Closeout/P2FreezeVerifier.php"
       category: FROZEN_ENGINEERING_FOUNDATION
       sha256: a6da4e7fa4cb973ea3e6f8ed49386b583c970a821f9e2f5b3a5ca3cea42f865b
@@ -5214,7 +5217,7 @@ engineering_freeze:
       sha256: 93a02b57e8f6e11b759d869135fcfd04e50e6dbdd23170eb1c321ca15eaadce3
     - path: "tools/Closeout/P3GovernanceRefreshFreezePolicy.php"
       category: FROZEN_ENGINEERING_FOUNDATION
-      sha256: 0fa650dcc712d3b56de90075abea26f82c243fe90e863f562a006df6b57ac371
+      sha256: 53f1e8e21838e1a0c63134a66285a6bd9dbd447f439828dc38960f524d491e6f
     - path: "tools/Closeout/P3GovernanceRefreshFreezeVerifier.php"
       category: FROZEN_ENGINEERING_FOUNDATION
       sha256: 94e4a3e6e712baa3522511d139f199fd7a61d4f8e93dc8d49d269a601741d4e4
