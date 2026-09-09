@@ -9,15 +9,15 @@
 | Approved Change | QMDB-CR-001 — Asynchronous Progressive Interaction and Modal UX Standard |
 | Engineering Freeze | QMDB-P1-FRZ-001 |
 | Identity and Tenant Security Freeze | QMDB-P2-FRZ-001 |
-| Document Version | 5.9.0 |
+| Document Version | 5.10.0 |
 | Last Updated | 2026-09-09 |
-| Status | P0 COMPLETE / FROZEN; P1 COMPLETE / FROZEN; P2 COMPLETE / FROZEN; P3 COMPLETE / FROZEN; P4 SCOPE RESOLUTION PENDING |
+| Status | P0 COMPLETE / FROZEN; P1 COMPLETE / FROZEN; P2 COMPLETE / FROZEN; P3 COMPLETE / FROZEN; P4 SOURCE-GOVERNANCE SCOPE RESOLUTION PENDING |
 | Completed Closeout | QMDB-P2-CLOSE — Identity, Security, and Tenant Isolation Verification and Freeze |
 | Current Phase | P4 — Qur’an Reference and Governance |
-| Current Batch | QMDB-P4-B01 — Qur’an Reference and Governance Scope Resolution |
-| Next Batch | Repository-defined P4 batch allocation required; P4-B02 and P5 are not authorized |
+| Current Batch | QMDB-P4-B01 — Qur’an Reference and Governance Scope Recovery |
+| Next Batch | Qualified source and canonical-storage decisions plus repository-defined P4 batch allocation required; P4-B02 and P5 are not authorized |
 | Batch Status | BLOCKED / SCOPE UNRESOLVED |
-| Implementation Readiness | P3 GOVERNANCE REPAIRED; P4 PHASE CONFIRMED; BATCH ALLOCATION REQUIRED |
+| Implementation Readiness | P3 GOVERNANCE REPAIRED; P4 PHASE CONFIRMED; CASE D SOURCE-GOVERNANCE AND BATCH-ALLOCATION RESOLUTION REQUIRED |
 | P2 Status | COMPLETE / FROZEN |
 
 ## Authoritative outcome
@@ -89,6 +89,11 @@ Next Phase: P4 — Qur’an Reference and Governance
 P4 Status: NOT STARTED / PHASE AUTHORIZED; BATCH SCOPE UNRESOLVED
 
 Implementation Status: P4_SCOPE_UNRESOLVED; P4-B01 BLOCKED; P4-B02 AND P5 NOT AUTHORIZED
+
+P4-B01 Scope Recovery: CASE D — no production-usable B01 may be derived until OD-054 canonical Arabic collation and
+OD-063 qualified Qur’an source/release process are resolved. OD-055 remains a separate prerequisite for any
+search-normalization scope. The requirement inventory and blocker analysis are recorded under
+`docs/implementation/reports/`; no Qur’an or Competition production source was created.
 
 ## P1 batch ledger
 
