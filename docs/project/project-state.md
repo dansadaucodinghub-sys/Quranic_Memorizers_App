@@ -14,10 +14,10 @@
 | Status | P0 COMPLETE / FROZEN; P1 COMPLETE / FROZEN; P2 COMPLETE / FROZEN; P3 COMPLETE / FROZEN; P4 SCOPE RESOLUTION PENDING |
 | Completed Closeout | QMDB-P2-CLOSE — Identity, Security, and Tenant Isolation Verification and Freeze |
 | Current Phase | P4 — Qur’an Reference and Governance |
-| Current Batch | QMDB-GOV-RECOVERY-P4-B01 — Post-P3 Additive Extension Governance |
+| Current Batch | QMDB-P4-B01 — Qur’an Reference and Governance Scope Resolution |
 | Next Batch | Repository-defined P4 batch allocation required; P4-B02 and P5 are not authorized |
-| Batch Status | GOVERNANCE IN PROGRESS |
-| Implementation Readiness | P3 RELEASE RECOVERED; P4 PHASE CONFIRMED; BATCH SCOPE UNRESOLVED |
+| Batch Status | BLOCKED / SCOPE UNRESOLVED |
+| Implementation Readiness | P3 GOVERNANCE REPAIRED; P4 PHASE CONFIRMED; BATCH ALLOCATION REQUIRED |
 | P2 Status | COMPLETE / FROZEN |
 
 ## Authoritative outcome
@@ -76,17 +76,19 @@ P3 Closeout Status: COMPLETE
 
 P3 Historical Freeze: QMDB-P3-FRZ-001 — VALID / SUPERSEDED FOR GOVERNANCE
 
-Effective P3 Freeze: QMDB-P3-FRZ-002 — PENDING GOVERNANCE FREEZE GENERATION
+Effective P3 Freeze: QMDB-P3-FRZ-002 — EFFECTIVE GOVERNANCE-CORRECTED BASELINE
 
 P3 Freeze Supersession Reason: Post-P3 additive extension governance correction only; P3 product scope unchanged
+
+Approved Governance Change: QMDB-CR-002 — Post-P3 Additive Extension Governance
 
 P3 Release Recovery: COMPLETE — QMDB-TRIVY-DB-RECOVERY-001 clean release verification passed
 
 Next Phase: P4 — Qur’an Reference and Governance
 
-P4 Status: NOT STARTED / AUTHORIZED AT PHASE LEVEL ONLY
+P4 Status: NOT STARTED / PHASE AUTHORIZED; BATCH SCOPE UNRESOLVED
 
-Implementation Status: GOVERNANCE REPAIR IN PROGRESS; P4-B01 SCOPE RESOLUTION REQUIRED; P4-B02 AND P5 NOT AUTHORIZED
+Implementation Status: P4_SCOPE_UNRESOLVED; P4-B01 BLOCKED; P4-B02 AND P5 NOT AUTHORIZED
 
 ## P1 batch ledger
 
