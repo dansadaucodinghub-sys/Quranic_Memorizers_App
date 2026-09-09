@@ -76,7 +76,7 @@ P3 Closeout Status: COMPLETE
 
 P3 Historical Freeze: QMDB-P3-FRZ-001 — VALID / SUPERSEDED FOR GOVERNANCE
 
-Effective P3 Freeze: QMDB-P3-FRZ-003 — PENDING FINAL GOVERNANCE FREEZE GENERATION
+Effective P3 Freeze: QMDB-P3-FRZ-003 — EFFECTIVE GOVERNANCE-CORRECTED BASELINE
 
 P3 Freeze Supersession Reason: Post-P3 additive extension governance correction only; P3 product scope unchanged
 
