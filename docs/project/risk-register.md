@@ -22,6 +22,15 @@ Track material security, privacy, continuity and logical-data risks from B03 and
 
 Likelihood: Low, Medium or High. Impact: Low, Medium, High or Critical. Current Risk Level: Low, Moderate, High or Critical. Qualitative values do not constitute risk acceptance; every Open risk requires verification and accountable treatment.
 
+## Post-P3 governance risks
+
+| Risk | Control | Disposition |
+| --- | --- | --- |
+| Future-phase source invalidates P3 evidence | Historical checksum verification plus a strict successor ledger | MITIGATED_BY_GOVERNANCE_CONTROL |
+| Overly broad phase authorization | Exact batch, path, checksum and append-only registry assertions | MITIGATED_BY_GOVERNANCE_CONTROL |
+| Qur’an source provenance is unknown | No source, dataset, or import may be fabricated before a uniquely approved P4 batch scope | OPEN; BLOCKS_QURAN_REFERENCE_IMPLEMENTATION |
+| Competition appears in P4 | Frozen P5 assignment and architecture/scope prohibition | MITIGATED_BY_GOVERNANCE_CONTROL |
+
 | Risk ID | Title | Category | Description | Affected Assets | Affected Modules | Cause | Consequence | Likelihood | Impact | Current Risk Level | Planned Controls | Residual Risk | Risk Owner Role | Review Phase | Trigger for Reassessment | Status | Acceptance Scenarios |
 | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- |
 | QMDB-RSK-001 | Cross-tenant leakage | Security/Privacy | Workspace scope or relationship failure exposes/corrupts another tenant. | Workspace records | All tenant-owned modules | Missing context, IDOR, cache/job/export scope | Personal/official data breach | Medium | Critical | Critical | QMDB-CTL-005; QMDB-CTL-008; QMDB-CTL-020 | Moderate after verified isolation | Security and Privacy Governance | P2 and each tenant module | Boundary/provider/change or incident | Open | QMDB-NFAS-004; QMDB-NFAS-005; QMDB-NFAS-019 through QMDB-NFAS-023 |

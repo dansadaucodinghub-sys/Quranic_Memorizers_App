@@ -152,10 +152,19 @@ final class P2FreezePolicy
     /** @var list<string> */
     private const P3_CLOSE_EXTENSION_PREFIXES = [
         'tools/Closeout/P3Freeze',
+        'tools/Closeout/P3HistoricalFreezeVerifier.php',
+        'tools/Closeout/P3SupersedingFreezePolicy.php',
+        'tools/Closeout/P3SupersedingFreezeGenerator.php',
+        'tools/Closeout/P3SupersedingFreezeVerifier.php',
+        'tools/Closeout/PostP3ExtensionLedger.php',
         'tools/Ci/generate-p3-freeze.php',
         'tools/Ci/verify-p3-freeze.php',
+        'tools/Ci/generate-p3-superseding-freeze.php',
+        'tools/Ci/verify-p3-superseding-freeze.php',
         'tests/Tools/Closeout/P3FreezeTest.php',
+        'tests/Tools/Closeout/P3SupersedingFreezeTest.php',
         'docs/closeout/p3/',
+        'docs/project/post-freeze-extensions.yaml',
     ];
 
     /** @var list<string> */

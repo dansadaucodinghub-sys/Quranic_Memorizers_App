@@ -9,15 +9,15 @@
 | Approved Change | QMDB-CR-001 — Asynchronous Progressive Interaction and Modal UX Standard |
 | Engineering Freeze | QMDB-P1-FRZ-001 |
 | Identity and Tenant Security Freeze | QMDB-P2-FRZ-001 |
-| Document Version | 5.8.0 |
+| Document Version | 5.9.0 |
 | Last Updated | 2026-09-09 |
-| Status | P0 COMPLETE / FROZEN; P1 COMPLETE / FROZEN; P2 COMPLETE / FROZEN; P3 COMPLETE / FROZEN; P4-B01 AUTHORIZED |
+| Status | P0 COMPLETE / FROZEN; P1 COMPLETE / FROZEN; P2 COMPLETE / FROZEN; P3 COMPLETE / FROZEN; P4 SCOPE RESOLUTION PENDING |
 | Completed Closeout | QMDB-P2-CLOSE — Identity, Security, and Tenant Isolation Verification and Freeze |
-| Current Phase | P4 — Competition Programs, Editions, and Rulebooks |
-| Current Batch | QMDB-P4-B01 — Competition Program and Edition Foundation |
-| Next Batch | QMDB-P4-B01 execution only; P4-B02 is not authorized |
-| Batch Status | AUTHORIZED / NOT STARTED |
-| Implementation Readiness | P3 RELEASE RECOVERED; READY FOR P4-B01 ONLY |
+| Current Phase | P4 — Qur’an Reference and Governance |
+| Current Batch | QMDB-GOV-RECOVERY-P4-B01 — Post-P3 Additive Extension Governance |
+| Next Batch | Repository-defined P4 batch allocation required; P4-B02 and P5 are not authorized |
+| Batch Status | GOVERNANCE IN PROGRESS |
+| Implementation Readiness | P3 RELEASE RECOVERED; P4 PHASE CONFIRMED; BATCH SCOPE UNRESOLVED |
 | P2 Status | COMPLETE / FROZEN |
 
 ## Authoritative outcome
@@ -66,7 +66,7 @@ consent, public profiles, Person discovery/merge and tenant-owned Person data re
 
 ## P3 closeout completion
 
-Frozen People, Geography, Organizations, and Participation Baseline: QMDB-P3-FRZ-001
+Historical People, Geography, Organizations, and Participation Baseline: QMDB-P3-FRZ-001
 
 Completed Closeout: QMDB-P3-CLOSE
 
@@ -74,15 +74,19 @@ P3 Status: COMPLETE / FROZEN
 
 P3 Closeout Status: COMPLETE
 
-P3 Freeze: QMDB-P3-FRZ-001
+P3 Historical Freeze: QMDB-P3-FRZ-001 — VALID / SUPERSEDED FOR GOVERNANCE
+
+Effective P3 Freeze: QMDB-P3-FRZ-002 — PENDING GOVERNANCE FREEZE GENERATION
+
+P3 Freeze Supersession Reason: Post-P3 additive extension governance correction only; P3 product scope unchanged
 
 P3 Release Recovery: COMPLETE — QMDB-TRIVY-DB-RECOVERY-001 clean release verification passed
 
-Next Phase: P4-B01 authorized by QMDB-P4-OPEN-B01 after P3 release recovery
+Next Phase: P4 — Qur’an Reference and Governance
 
-P4 Status: AUTHORIZED / NOT STARTED
+P4 Status: NOT STARTED / AUTHORIZED AT PHASE LEVEL ONLY
 
-Implementation Status: READY FOR P4-B01 ONLY; P4-B02 NOT AUTHORIZED
+Implementation Status: GOVERNANCE REPAIR IN PROGRESS; P4-B01 SCOPE RESOLUTION REQUIRED; P4-B02 AND P5 NOT AUTHORIZED
 
 ## P1 batch ledger
 

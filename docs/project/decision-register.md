@@ -629,6 +629,16 @@ The detailed requirements therefore keep MySQL/InnoDB and the secure Core PHP mo
 - [Open decisions](open-decisions.md)
 - [P0-B01 requirements](../requirements/P0-B01-requirements.md)
 
+## ADR-057 — Post-P3 additive extension governance
+
+- **Status:** Approved by QMDB-GOV-RECOVERY-P4-B01.
+- **Decision:** Keep the frozen P4 Qur’an Reference and Governance / P5 Competition mapping. Preserve
+  `QMDB-P3-FRZ-001` as historical evidence and introduce an effective P3 successor that permits only exact,
+  checksum-bound, hash-chained, owner-authorized P4-B01 additions.
+- **Security impact:** Frozen P3 content remains fail-closed; unknown files, deleted entries, broad grants, and
+  changed baseline files are rejected. Shared-registry changes require an explicit append-only assertion.
+- **Constraint:** This does not authorize P4-B02, P5, a Qur’an dataset, or a fallback P4 batch scope.
+
 ## P3-B02 implemented decisions
 
 - A Person is global and distinct from a User Account or Workspace-owned business record; one active SELF Account link
