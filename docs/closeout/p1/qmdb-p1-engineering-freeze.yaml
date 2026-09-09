@@ -9,8 +9,8 @@ engineering_freeze:
   closeout_batch: QMDB-P1-CLOSE
   freeze_status: APPROVED
   readiness: P1_COMPLETE
-  generated_at_utc: "2026-09-08T18:38:49Z"
-  source_revision: "eb0810d445bff5b2501632204a3f03d2195a5ce8"
+  generated_at_utc: "2026-09-09T10:35:52Z"
+  source_revision: "3eb69e4b09333a52526600a44b8a79e7426e80c9"
   source_state: governed_clean
   completed_batches:
     - QMDB-P1-B01
@@ -75,7 +75,7 @@ engineering_freeze:
       sha256: 103273ddb3c2881fc4156a428724818ad98d6a3c9de83b020cefeecc1f7a9d9e
     - path: ".gitignore"
       category: CONTROLLED_EXTENSION_POINT
-      sha256: 66aaa483518946e3179538ef773d8fe36e3c319ffdeab9e8cd0bd8c80c8e8734
+      sha256: 68d0087affeac01f37ebc398b7c2d1109efd75cf929dcfae1fe1d581dd739d5d
     - path: ".npmrc"
       category: CONTROLLED_EXTENSION_POINT
       sha256: c17fc696faf4477ca21e0c08f876cd73b890b9348aee8bd55f57babfeaa78f19
@@ -135,7 +135,7 @@ engineering_freeze:
       sha256: d64a1a962bf297842f563bf2fb3cf132171eb8bda33376699bb84f50d850b269
     - path: "docs/implementation/ci-build-and-release-standard.md"
       category: FROZEN_ENGINEERING_FOUNDATION
-      sha256: 96aa0a23714ed9f3f76b664ffdb7ac33a1aeedaa74ca463cc26da0206b3d7f42
+      sha256: 6de6330deb22d1d48184cb22f0925b46a54632c2ac21a2865c7654880f183646
     - path: "docs/implementation/definition-of-ready-and-done.md"
       category: FROZEN_ENGINEERING_FOUNDATION
       sha256: e17771e9e1e41e436e16fcf7d9c5044cdf4f89d978e1ce769b7966b1534e4258
@@ -4338,7 +4338,7 @@ engineering_freeze:
       sha256: cc9ffc435c1d694da575157877aca5568a80afd572aad4c98c1b9a9f202465a1
     - path: "tests/Architecture/SupplyChainArchitectureTest.php"
       category: FROZEN_ENGINEERING_FOUNDATION
-      sha256: 534ab742cd70dd0857c3154b9679b969a0d6661ca11ab723c19ac1c250e7dbef
+      sha256: 75a9ea2732527d8fce87d50f3430895073975c90809f2b14afaf2c84c1c12974
     - path: "tests/Frontend/fetch-client.test.js"
       category: FROZEN_ENGINEERING_FOUNDATION
       sha256: 287d1ef774c011194ddf318535bbce34ab2dc4f296383d1d9215345d5d634dec
@@ -4818,7 +4818,7 @@ engineering_freeze:
       sha256: 512e65d1aed6d4bdea01250f3bb911967a30b3ee437700c5a4623259e7fea3f8
     - path: "tests/Tools/Closeout/P2FreezeTest.php"
       category: FROZEN_ENGINEERING_FOUNDATION
-      sha256: 50da33a7bdb2a7bb5d6080cd4694e660786637851dac0dd50fee2ad0acb54ca9
+      sha256: e94782033b5ca7a77209c9486d6af113ff0d27e33143092fd93b0e2256e0bde2
     - path: "tests/Tools/Closeout/P3FreezeTest.php"
       category: FROZEN_ENGINEERING_FOUNDATION
       sha256: b41ceea323f5352d39e61cb6c3f7552ae6fd0e1e1244b57a8db7acac7836c521
@@ -4828,6 +4828,12 @@ engineering_freeze:
     - path: "tests/Tools/Security/SensitiveContentScannerTest.php"
       category: FROZEN_ENGINEERING_FOUNDATION
       sha256: da0090f0ddbae1b0ef6193d580b9dba3813f785014f3cfccebd956f7d0b27903
+    - path: "tests/Tools/Security/TrivyDatabaseCacheTest.php"
+      category: FROZEN_ENGINEERING_FOUNDATION
+      sha256: 9d9dff5611e34261c8b6bd3a25df16862eda41b764b809426948627d0337ebb1
+    - path: "tests/Tools/Security/TrivyFilesystemScannerTest.php"
+      category: FROZEN_ENGINEERING_FOUNDATION
+      sha256: 1aeaae827dc327e01cfca5930445586002e33776d2eccb05d482edb49b9a8811
     - path: "tests/Tools/Support/ProcessRunnerTest.php"
       category: FROZEN_ENGINEERING_FOUNDATION
       sha256: 02d82d1d25ce2093681851240f6f62352ef586e219570a6043d76b878eaa18da
@@ -5082,7 +5088,7 @@ engineering_freeze:
       sha256: cfc7f81b08f8628a3ca87fc1e2ed60292f2f732d4446559cc2929bbbf319e52a
     - path: "tools/Build/ReleaseArtifactVerifier.php"
       category: FROZEN_ENGINEERING_FOUNDATION
-      sha256: f20ad672e6eb6c68e39ed52b23cbde323b746279b788b90c8a3de7dfd8fba009
+      sha256: fe1dfc3afd4e6fc4e71861b78d3768fbe987c5e893ff343b413e7d25f99e3ac2
     - path: "tools/Build/ReleaseBuilder.php"
       category: FROZEN_ENGINEERING_FOUNDATION
       sha256: 3fd225bd018e722c916a29f4c786cd7678554ddc35c92e8f739b09c4749689fa
@@ -5166,7 +5172,7 @@ engineering_freeze:
       sha256: dc53896911fcde23b324d68fff9ff3ebfa664a9a62c9f623494d7790b0ac144d
     - path: "tools/Closeout/EngineeringFreezePolicy.php"
       category: FROZEN_ENGINEERING_FOUNDATION
-      sha256: a50e4ba92857ac5de795bf126f3bce8f4d08d56a488f8767339bd8effd1ab295
+      sha256: 15509f02f786782ac4b60bf677bb3dedaca996453cf029d237a40e823646dbbd
     - path: "tools/Closeout/EngineeringFreezeVerifier.php"
       category: FROZEN_ENGINEERING_FOUNDATION
       sha256: 27186f129e933795fd9b75c4cf1fba4a6968316487ab74d2fd0f2d2db3b51239
@@ -5175,7 +5181,7 @@ engineering_freeze:
       sha256: 8a2410706d4a318f3209a199a9b5061dfcb07290f73483f9fe10b7739fa6cdd4
     - path: "tools/Closeout/P2FreezePolicy.php"
       category: FROZEN_ENGINEERING_FOUNDATION
-      sha256: 2d8dfdcad2b7edab88c738d40389fa3eb95276b246b270f07b61d54266fd0be3
+      sha256: a99a2a513fbac7ffdc1818720072651e7377f92b6b98e0a750c722021f291ab3
     - path: "tools/Closeout/P2FreezeVerifier.php"
       category: FROZEN_ENGINEERING_FOUNDATION
       sha256: a6da4e7fa4cb973ea3e6f8ed49386b583c970a821f9e2f5b3a5ca3cea42f865b
@@ -5227,6 +5233,15 @@ engineering_freeze:
     - path: "tools/Security/SensitiveContentScanner.php"
       category: FROZEN_ENGINEERING_FOUNDATION
       sha256: 2acde077c28b2a7e11bc054b7b03dbe3dccf372cee87a8ece589a8dcdc4f9c78
+    - path: "tools/Security/TrivyDatabaseCache.php"
+      category: FROZEN_ENGINEERING_FOUNDATION
+      sha256: d6ba3b832fee0ce0c92545ae8c7764fc740dc68339d2224f1cacd78e968b8c17
+    - path: "tools/Security/TrivyDatabaseException.php"
+      category: FROZEN_ENGINEERING_FOUNDATION
+      sha256: 0ab95be9d25a69164f07161330a378010e4f69e1a3ead717cd1625565dfa96db
+    - path: "tools/Security/TrivyFilesystemScanner.php"
+      category: FROZEN_ENGINEERING_FOUNDATION
+      sha256: c7885d4b9ecb5f740651cb5d035d4036853053ed50cafca2a86e23935b6dbbd2
     - path: "tools/Security/gitleaks.toml"
       category: FROZEN_ENGINEERING_FOUNDATION
       sha256: 4f4b300bf64f7c3a7d844031280058b221dbe360b8b0d8316fdca0373ad43bc5
@@ -5235,10 +5250,13 @@ engineering_freeze:
       sha256: 8b4bc2c5c170d864d363bd829dc913d4007fb469444e01350005b5155079d0ba
     - path: "tools/Security/run-filesystem-scan.sh"
       category: FROZEN_ENGINEERING_FOUNDATION
-      sha256: 4f889561cc91e8029aaebfa7c11dad2316f6730bf0d787f88ddd7f6ce6ca40d1
+      sha256: fdd708e514b551fcb0ced5c28f7cbce86043b553f940fa6a04971a1c5d0d7783
     - path: "tools/Security/run-secret-scan.sh"
       category: FROZEN_ENGINEERING_FOUNDATION
       sha256: 8b33ecb99cddc8773f8d9f1a2b9c09d04be70ebd1434b4d8355d38a87219a6b5
+    - path: "tools/Security/scan-trivy.php"
+      category: FROZEN_ENGINEERING_FOUNDATION
+      sha256: 0a6a978735527a842562a5fde671eea1584d795367085099201e2df6abbac5c7
     - path: "tools/Security/tool-versions.json"
       category: FROZEN_ENGINEERING_FOUNDATION
       sha256: 4a1f66ae0fe928df891cd5aa2128bbc1bed6fa0bf438f409b295e60c5565a28f
@@ -5280,7 +5298,7 @@ engineering_freeze:
       sha256: 078505ef9bf801a6ca84e3a9f21b60cb77985d1c465e2d32a0375183ea30bd73
     - path: "tools/windows/run-qmdb-filesystem-scan.ps1"
       category: FROZEN_ENGINEERING_FOUNDATION
-      sha256: 917febe724dbfe394fae98324e052dc7b306e9caa6244bcbefc7c17d20a68cc8
+      sha256: 443e9308fc59c8078017dbfcb6f66d37333ef1d53312b132c4d0d189a1c95f37
     - path: "tools/windows/run-qmdb-secret-scan.ps1"
       category: FROZEN_ENGINEERING_FOUNDATION
       sha256: b27c36c1e643d4874d45735ef476e9337907a2ca96905fdf5747166691414f02
