@@ -114,6 +114,7 @@ final readonly class EngineeringFreezeGenerator
             '  excluded_generated_files:',
             '    - .git/',
             '    - .runtime/',
+            '    - var/cache/',
             '    - .phpstan.cache/',
             '    - build/',
             '    - coverage/',
