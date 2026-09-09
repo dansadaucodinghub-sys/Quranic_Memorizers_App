@@ -273,6 +273,7 @@ This keyed table supplies the closeout fields required for every open risk. It d
 | SBOM scope error | Lock-derived runtime-only inventory, development exclusion, deterministic validator | MITIGATED in 3 SBOM tests and 99 validation checks |
 | Unknown runtime licence | Build blocks unknown runtime licences and records review classifications | MITIGATED for current 15 runtime packages |
 | Vulnerability or misconfiguration bypass | Trivy HIGH/CRITICAL fail-closed gate; no broad ignore or continue-on-error | OPEN until hosted scan execution |
+| Trivy DB acquisition failure or stale cache accepted as clean | Schema-2 metadata validation, 48-hour freshness ceiling, official-registry fallback, atomic cache publication and `--skip-db-update` only after validation | MITIGATED locally by QMDB-TRIVY-DB-RECOVERY-001; hosted execution remains required |
 | Broad secret-scanner allowlist | Narrow path-and-regex Gitleaks configuration only | MITIGATED in configuration; hosted behavior OPEN |
 | Artifact uploaded before verification | Workflow policy enforces verify step before SHA-pinned upload action | MITIGATED in source/tests; hosted execution OPEN |
 | Hosted CI not executed | Project state remains blocked and no hosted success is claimed | OPEN blocker |

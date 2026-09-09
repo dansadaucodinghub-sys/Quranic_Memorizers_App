@@ -62,6 +62,7 @@ final class EngineeringFreezePolicy
     public const GENERATED_PATHS = [
         '.git/',
         '.runtime/',
+        'var/cache/',
         '.phpstan.cache/',
         'build/',
         'coverage/',

@@ -20,16 +20,5 @@ $resolvedTarget = if ([string]::IsNullOrWhiteSpace($Target)) {
 if (-not (Test-Path -LiteralPath $resolvedTarget -PathType Container)) {
     throw 'Filesystem scan target is not a directory.'
 }
-New-Item -ItemType Directory -Force -Path $reportRoot | Out-Null
-
-& $binary filesystem --scanners vuln,secret,misconfig --severity HIGH,CRITICAL --exit-code 1 `
-    --timeout 15m `
-    --format json --output (Join-Path $reportRoot "trivy-$Mode.json") `
-    --skip-dirs .git --skip-dirs .runtime --skip-dirs .build `
-    --skip-dirs .phpstan.cache --skip-dirs .phpunit.cache `
-    --skip-dirs node_modules --skip-dirs build $resolvedTarget
-if ($LASTEXITCODE -ne 0) {
-    exit $LASTEXITCODE
-}
-
-Write-Output "Trivy $Mode filesystem scan: PASS"
+& php (Join-Path $projectRoot 'tools\security\scan-trivy.php') $Mode $resolvedTarget
+exit $LASTEXITCODE

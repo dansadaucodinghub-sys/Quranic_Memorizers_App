@@ -8,6 +8,7 @@
 /reports/
 /.build/
 /.runtime/
+/var/cache/
 *.tar
 *.tar.gz
 SHA256SUMS

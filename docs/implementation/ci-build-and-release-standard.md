@@ -31,6 +31,22 @@ release assets and verifies their SHA-256 values before extraction or execution.
 working tree, staging, and extracted artifacts. Trivy covers vulnerabilities, secrets, and misconfiguration. Scanner
 findings fail the hosted gate; broad allowlists and vulnerability ignores are prohibited.
 
+### Trivy database acquisition and cache control
+
+`tools/security/scan-trivy.php` is the only filesystem-scan entry point. It uses the ignored, release-excluded
+`var/cache/trivy` cache and validates the `db/trivy.db` bytes plus `db/metadata.json` before scanning. Schema version
+must be `2`; `UpdatedAt` and `DownloadedAt` may not be materially future-dated; the database may not be more than 48
+hours old; and `NextUpdate` must be in the future. Acquisition writes to a sibling temporary cache and atomically
+replaces only the validated `db` directory, preserving the last published database on a failed candidate.
+
+When a refresh is required, approved official repositories are tried in this fixed order: `mirror.gcr.io/aquasec/trivy-db:2`,
+`ghcr.io/aquasecurity/trivy-db:2`, `public.ecr.aws/aquasecurity/trivy-db:2`, then
+`docker.io/aquasec/trivy-db:2`. A successful scan always passes the same governed cache with `--skip-db-update`; that
+flag is never used before a valid database exists. Exit categories are explicit: findings `10`, database unavailable
+`20`, stale `21`, schema mismatch `22`, metadata invalid `23`, cache unreadable `24`, execution `30`, report invalid
+`31`, artifact invalid `32`, and policy/configuration `40`. No stale cache, failed download, or malformed report is
+treated as a clean scan.
+
 ## Repository-owned verification
 
 The `tools/ci` entry points validate repository paths, sensitive content, frozen hashes, workflow security, internal

@@ -97,8 +97,13 @@ final class SupplyChainArchitectureTest extends TestCase
         $trivy = (string) file_get_contents($root . '/tools/windows/run-qmdb-filesystem-scan.ps1');
         self::assertStringContainsString('Get-FileHash -Algorithm SHA256', $installer);
         self::assertStringContainsString('--redact', $gitleaks);
-        self::assertStringContainsString('--scanners vuln,secret,misconfig', $trivy);
-        self::assertStringContainsString('--severity HIGH,CRITICAL', $trivy);
+        self::assertStringContainsString('scan-trivy.php', $trivy);
+        $scanner = (string) file_get_contents($root . '/tools/Security/TrivyFilesystemScanner.php');
+        self::assertStringContainsString('--scanners', $scanner);
+        self::assertStringContainsString('vuln,secret,misconfig', $scanner);
+        self::assertStringContainsString('--severity', $scanner);
+        self::assertStringContainsString('HIGH,CRITICAL', $scanner);
+        self::assertStringContainsString('--skip-db-update', $scanner);
     }
 
     /** @return array{string, string} */

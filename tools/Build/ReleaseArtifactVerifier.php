@@ -6,6 +6,7 @@ namespace Qmdb\Tools\Build;
 
 use Qmdb\Tools\Sbom\SbomValidator;
 use Qmdb\Tools\Security\SensitiveContentScanner;
+use Qmdb\Tools\Security\TrivyFilesystemScanner;
 use Qmdb\Tools\Support\FileSystem;
 use Qmdb\Tools\Support\JsonFile;
 use Qmdb\Tools\Support\ProcessRunner;
@@ -424,24 +425,7 @@ final class ReleaseArtifactVerifier
             throw new \RuntimeException('Pinned Gitleaks is mandatory in CI artifact verification.');
         }
         if (is_file($trivy)) {
-            $result = $this->runner->run([
-                $trivy,
-                'filesystem',
-                '--scanners',
-                'vuln,secret,misconfig',
-                '--severity',
-                'HIGH,CRITICAL',
-                '--exit-code',
-                '1',
-                '--format',
-                'json',
-                '--output',
-                $sourceRoot . '/build/reports/trivy-artifact.json',
-                $extracted,
-            ], $sourceRoot);
-            if ($result->exitCode !== 0) {
-                throw new \RuntimeException('Trivy artifact scan failed.');
-            }
+            (new TrivyFilesystemScanner())->scan($sourceRoot, $extracted, 'artifact');
             $statuses['trivy'] = 'pass';
         } elseif ($required) {
             throw new \RuntimeException('Pinned Trivy is mandatory in CI artifact verification.');
