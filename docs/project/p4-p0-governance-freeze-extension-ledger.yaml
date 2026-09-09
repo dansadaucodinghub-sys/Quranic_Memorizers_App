@@ -1,0 +1,11 @@
+p0_freeze_extension:
+  ledger_id: QMDB-P4-P0-GOV-EXT-001
+  authorization: QMDB-CR-002
+  baseline_id: QMDB-P0-FRZ-001
+  preserves_historical_baseline: true
+  scope: "Post-P3 governance correction only; no P4 product requirement is changed."
+  entries:
+    - path: "docs/project/decision-register.md"
+      previous_extension_sha256: 2022292f8b06a3e037e5c375407f62b91d9f66489099d94247a8b119e965386c
+      extension_sha256: 5ab9c63214e2916be5eaa52875b8367b1b76dd12ff3f1110f9e59feeea136f5d
+      reason: "Records only ADR-057 post-P3 additive extension governance."

@@ -39,4 +39,15 @@ final class FrozenBaselineVerifierTest extends TestCase
         self::assertStringContainsString('preserves_historical_baseline: true', $ledger);
         self::assertSame(15, preg_match_all('/^    - path: /m', $ledger));
     }
+
+    public function testP4GovernanceExtensionIsLimitedToTheDecisionRegister(): void
+    {
+        $ledger = file_get_contents(dirname(__DIR__, 3) . '/docs/project/p4-p0-governance-freeze-extension-ledger.yaml');
+
+        self::assertIsString($ledger);
+        self::assertStringContainsString('ledger_id: QMDB-P4-P0-GOV-EXT-001', $ledger);
+        self::assertStringContainsString('authorization: QMDB-CR-002', $ledger);
+        self::assertSame(1, preg_match_all('/^    - path: /m', $ledger));
+        self::assertStringContainsString('docs/project/decision-register.md', $ledger);
+    }
 }

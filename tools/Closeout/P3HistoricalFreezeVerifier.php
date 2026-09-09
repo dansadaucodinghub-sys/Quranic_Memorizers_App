@@ -13,7 +13,9 @@ final class P3HistoricalFreezeVerifier
     /** @var list<string> */
     private const GOVERNANCE_MUTABLE_PATHS = [
         'tools/Ci/verify-p3-freeze.php',
+        'tools/Ci/FrozenBaselineVerifier.php',
         'tools/Closeout/P2FreezePolicy.php',
+        'tests/Tools/Ci/FrozenBaselineVerifierTest.php',
     ];
 
     public function verify(string $root): VerificationReport

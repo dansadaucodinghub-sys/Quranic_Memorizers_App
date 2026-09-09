@@ -9,6 +9,7 @@ final class FrozenBaselineVerifier
     private const P3_B02_DOCUMENTATION_EXTENSION_LEDGER = 'docs/project/p3-p0-freeze-extension-ledger.yaml';
     private const P3_B05_DOCUMENTATION_EXTENSION_LEDGER = 'docs/project/p3-p0-b05-freeze-extension-ledger.yaml';
     private const P3_B06_DOCUMENTATION_EXTENSION_LEDGER = 'docs/project/p3-p0-b06-freeze-extension-ledger.yaml';
+    private const P4_GOVERNANCE_DOCUMENTATION_EXTENSION_LEDGER = 'docs/project/p4-p0-governance-freeze-extension-ledger.yaml';
 
     /** @var list<string> */
     private const P3_B02_DOCUMENTATION_PATHS = [
@@ -77,6 +78,7 @@ final class FrozenBaselineVerifier
             ),
             $report,
         );
+        $approvedExtensions = $this->approvedP4GovernanceDocumentationExtensions($approvedExtensions, $report);
         $paths = [];
         foreach ($matches as $match) {
             $relative = $match[1];
@@ -273,6 +275,36 @@ final class FrozenBaselineVerifier
         $report->check($paths === self::P3_B06_DOCUMENTATION_PATHS, 'P3 B06 P0 extension paths must be the ordered, approved documentation list.');
         $report->check(count(array_unique($paths)) === count($paths), 'P3 B06 P0 extension paths must be unique.');
 
+        return $approved;
+    }
+
+    /**
+     * @param array<string, string> $previousExtensions
+     * @return array<string, string>
+     */
+    private function approvedP4GovernanceDocumentationExtensions(array $previousExtensions, VerificationReport $report): array
+    {
+        $ledger = file_get_contents($this->root . '/' . self::P4_GOVERNANCE_DOCUMENTATION_EXTENSION_LEDGER);
+        if (!is_string($ledger)) {
+            $report->check(false, 'P4 governance P0 extension ledger is unreadable.');
+            return $previousExtensions;
+        }
+        foreach (['ledger_id: QMDB-P4-P0-GOV-EXT-001', 'authorization: QMDB-CR-002', 'baseline_id: QMDB-P0-FRZ-001', 'preserves_historical_baseline: true'] as $required) {
+            $report->check(str_contains($ledger, $required), 'P4 governance P0 extension ledger is missing: ' . $required);
+        }
+        preg_match_all('/^    - path: "([^"]+)"\R\s+previous_extension_sha256: ([a-f0-9]{64})\R\s+extension_sha256: ([a-f0-9]{64})\R\s+reason: "([^\"]+)"\s*$/m', $ledger, $matches, PREG_SET_ORDER);
+        $report->check(count($matches) === 1, 'P4 governance P0 extension ledger must contain exactly one entry.');
+        $approved = $previousExtensions;
+        if (count($matches) !== 1) {
+            return $approved;
+        }
+        $entry = $matches[0];
+        $report->check($entry[1] === 'docs/project/decision-register.md', 'P4 governance P0 extension path is not approved.');
+        $previous = $previousExtensions[$entry[1]] ?? null;
+        $report->check(is_string($previous) && hash_equals($previous, $entry[2]), 'P4 governance P0 extension has an unrecognized previous hash.');
+        if (is_string($previous) && hash_equals($previous, $entry[2])) {
+            $approved[$entry[1]] = $entry[3];
+        }
         return $approved;
     }
 }

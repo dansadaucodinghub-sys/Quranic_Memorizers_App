@@ -24,7 +24,7 @@ final class PostP3ExtensionLedger
         $ledger = json_decode($contents, true, 512, JSON_THROW_ON_ERROR);
         if (!is_array($ledger)
             || ($ledger['ledger_id'] ?? null) !== self::ID
-            || ($ledger['base_freeze'] ?? null) !== 'QMDB-P3-FRZ-002'
+            || ($ledger['base_freeze'] ?? null) !== 'QMDB-P3-FRZ-003'
             || !is_array($ledger['entries'] ?? null)) {
             throw new \RuntimeException('Post-P3 extension ledger has an invalid identity.');
         }
@@ -44,7 +44,7 @@ final class PostP3ExtensionLedger
                 || !preg_match('/^QMDB-P3-EXT-[0-9]{3}$/', $entry['extension_id'])
                 || isset($ids[$entry['extension_id']])
                 || ($entry['authorizing_change'] ?? null) !== 'QMDB-CR-002'
-                || ($entry['base_freeze'] ?? null) !== 'QMDB-P3-FRZ-002'
+                || ($entry['base_freeze'] ?? null) !== 'QMDB-P3-FRZ-003'
                 || ($entry['phase'] ?? null) !== 'P4'
                 || ($entry['batch'] ?? null) !== 'QMDB-P4-B01'
                 || ($entry['previous_entry_sha256'] ?? null) !== $previous
@@ -63,7 +63,7 @@ final class PostP3ExtensionLedger
 
     public function genesisHash(): string
     {
-        return hash('sha256', self::ID . "\nQMDB-P3-FRZ-002\n");
+        return hash('sha256', self::ID . "\nQMDB-P3-FRZ-003\n");
     }
 
     /** @param array<string,mixed> $entry */
