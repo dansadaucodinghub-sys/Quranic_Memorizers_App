@@ -168,6 +168,7 @@ final class P2FreezePolicy
         'tools/Ci/verify-p3-governance-refresh-freeze.php',
         'tests/Tools/Closeout/P3FreezeTest.php',
         'tests/Tools/Closeout/P3SupersedingFreezeTest.php',
+        'tests/Tools/Closeout/P3GovernanceRefreshFreezePolicyTest.php',
         'docs/closeout/p3/',
         'docs/project/post-freeze-extensions.yaml',
     ];

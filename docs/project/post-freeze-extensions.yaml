@@ -37,6 +37,16 @@
           "sha256": "271948517e77596b7953b26645e79e41722e720393f83f0661d2af4371cd3453"
         },
         {
+          "path": "tools/Closeout/P2FreezePolicy.php",
+          "change_type": "APPEND_ONLY",
+          "added_entries": [
+            "tests/Tools/Closeout/P3GovernanceRefreshFreezePolicyTest.php"
+          ],
+          "previous_entries_unchanged": true,
+          "previous_sha256": "53c0fdd2bdd864c3514a7c11782519773c6082c43a2b5a93e7c4aa244dee2dc2",
+          "sha256": "4ac6a139acd89a25280bb555a2ddea74a6e29cdbdbe55fac71f8142a9ea81c45"
+        },
+        {
           "path": "tools/Closeout/P3GovernanceRefreshFreezePolicy.php",
           "change_type": "APPEND_ONLY",
           "added_entries": [
@@ -47,7 +57,7 @@
           "sha256": "53f1e8e21838e1a0c63134a66285a6bd9dbd447f439828dc38960f524d491e6f"
         }
       ],
-      "entry_sha256": "86119368e07d5231c69c769dacf5a016067a7220ee5b9ce07ce5a41bf18f7a74"
+      "entry_sha256": "238f45f43e1a82eaee705edaf8bfd50d2415acb17959dae2f7b3aa466bbee895"
     }
   ]
 }
