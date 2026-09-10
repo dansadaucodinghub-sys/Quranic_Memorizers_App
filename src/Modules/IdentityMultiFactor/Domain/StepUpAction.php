@@ -52,6 +52,9 @@ enum StepUpAction: string
     case PROFILE_DUPLICATE_CONSENT = 'PROFILE_DUPLICATE_CONSENT';
     case PROFILE_DUPLICATE_DISMISS = 'PROFILE_DUPLICATE_DISMISS';
     case PROFILE_DUPLICATE_RESOLVE = 'PROFILE_DUPLICATE_RESOLVE';
+    case QURAN_RELEASE_APPROVE = 'QURAN_RELEASE_APPROVE';
+    case QURAN_RELEASE_ACTIVATE = 'QURAN_RELEASE_ACTIVATE';
+    case QURAN_RELEASE_REJECT = 'QURAN_RELEASE_REJECT';
 
     public function requirement(): AuthenticationAssuranceLevel
     {
@@ -68,6 +71,7 @@ enum StepUpAction: string
             self::BREAK_GLASS_REVIEW, self::ORGANIZATION_LEADERSHIP_ASSIGN, self::ORGANIZATION_LEADERSHIP_REMOVE,
             self::PROFILE_CLAIM_AUTHORIZE_PLATFORM, self::PROFILE_VERIFICATION_RECORD,
             self::PROFILE_VERIFICATION_REVOKE, self::PROFILE_DUPLICATE_RESOLVE => AuthenticationAssuranceLevel::PHISHING_RESISTANT,
+            self::QURAN_RELEASE_APPROVE, self::QURAN_RELEASE_ACTIVATE, self::QURAN_RELEASE_REJECT => AuthenticationAssuranceLevel::PHISHING_RESISTANT,
             self::ACCOUNT_SUSPEND, self::ACCOUNT_REACTIVATE => AuthenticationAssuranceLevel::PHISHING_RESISTANT,
             default => AuthenticationAssuranceLevel::MULTI_FACTOR,
         };
@@ -113,6 +117,9 @@ enum StepUpAction: string
             self::PROFILE_VERIFICATION_REVOKE,
             self::PROFILE_DUPLICATE_DISMISS,
             self::PROFILE_DUPLICATE_RESOLVE => '/platform/people/profile-claims',
+            self::QURAN_RELEASE_APPROVE,
+            self::QURAN_RELEASE_ACTIVATE,
+            self::QURAN_RELEASE_REJECT => '/platform/quran/releases',
             default => '/account/security/authentication',
         };
     }

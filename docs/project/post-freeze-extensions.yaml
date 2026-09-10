@@ -117,6 +117,27 @@
       ],
       "modified_extension_points": [],
       "entry_sha256": "98d5839223f293b15bcccaf9044569b0d5a0307e671e5bacb31eef3017801569"
+    },
+    {
+      "extension_id":"QMDB-P3-EXT-005",
+      "authorizing_change":"QMDB-CR-003",
+      "authorizing_instruction":"QMDB-P4-AUTH-DECOMPOSE-B01-EXEC",
+      "base_freeze":"QMDB-P3-FRZ-003",
+      "phase":"P4",
+      "batch":"QMDB-P4-B01",
+      "previous_entry_sha256":"98d5839223f293b15bcccaf9044569b0d5a0307e671e5bacb31eef3017801569",
+      "new_files":[{"path":"src/Modules/QuranReferenceGovernance/Interface/Console/QuranSourceArtifactRegisterConsoleCommand.php","sha256":"5006dc5db0f102832be74b224944785548b904795ac26f8fea0d9c357054285b"}],
+      "modified_extension_points":[
+        {"path":"src/Bootstrap/Module/QuranReferenceGovernanceModule.php","change_type":"APPEND_ONLY","added_entries":["quran:source-artifact:register service"],"previous_entries_unchanged":true,"previous_sha256":"5ea53a5e830f2df0377ee945d1b095c7f8984dc33f1f5a5894c190b1bef6befa","sha256":"4a0faa25a65f27944086cb37051f09e2296584e616d5b7aab147c89283d04e94"},
+        {"path":"src/Bootstrap/Module/ConsoleFoundationModule.php","change_type":"APPEND_ONLY","added_entries":["quran:source-artifact:register command map"],"previous_entries_unchanged":true,"previous_sha256":"fd1c1b9ace09eeaedd3c2a77b71bb9e0c70cc1f3de32265f4f6d821a42d41d9d","sha256":"10c16ee1cfa46eaefaaca9dd5ea1ac51d7297ab6ed586b8b7f3b9b79bec8196e"},
+        {"path":"tests/Unit/Modules/QuranReferenceGovernance/QuranReleaseGovernanceTest.php","change_type":"APPEND_ONLY","added_entries":["approved child artifact path test"],"previous_entries_unchanged":true,"previous_sha256":"b35c26d42170983adb65f2ec05a0215f6153b58683f0771f3fea05ad993a5719","sha256":"4e46d22e8506bdcda6c65cba7d3756967037ed6447c4453db341f354eab64d5b"},
+        {"path":"src/Modules/SecurityWeb/Csrf/CsrfAction.php","change_type":"APPEND_ONLY","added_entries":["Qur’an release mutation actions"],"previous_entries_unchanged":true,"previous_sha256":"db54ed5a65bbeb22661d6887618042971378bb9bba4df25197fc592bdc59af47","sha256":"223fb52d92951e4c6a3d4076a62d447b9a44aac49f9b3eede4fd10e03b447c8a"},
+        {"path":"src/Modules/IdentityAccess/Security/RateLimit/IdentityRateLimitScope.php","change_type":"APPEND_ONLY","added_entries":["Qur’an governance account and peer scopes"],"previous_entries_unchanged":true,"previous_sha256":"1f6cb9dae773da5c4d818501cbd0caaefa1f5d02b0f945b64a4c4112647bb78a","sha256":"39e606240450480abdc845e625059dd6c8d65e34e8f0272c30af2109408fee57"},
+        {"path":"src/Modules/IdentityMultiFactor/Domain/StepUpAction.php","change_type":"APPEND_ONLY","added_entries":["Qur’an release approval activation and rejection actions"],"previous_entries_unchanged":true,"previous_sha256":"663555a2be792962ba974177f97cf7ceae922422ea5b24583765ca1a4aa1fa2c","sha256":"6c80d130dc69ca64bb5afebab01c0acb5452ad26fc3af706844c5168f871808b"},
+        {"path":"src/Modules/SecurityAudit/Domain/SecurityEventSubjectKind.php","change_type":"APPEND_ONLY","added_entries":["Qur’an source and release audit subjects"],"previous_entries_unchanged":true,"previous_sha256":"7895371a082e81c7ec4940278cc927dcff95e4aa50fd4962ae4c93ddbe31cb69","sha256":"48f410dfcb8180f034d1c2148722a88de28b86e1175c02eac521792d44baccc0"},
+        {"path":"src/Modules/SecurityAudit/Domain/SecurityEventCode.php","change_type":"APPEND_ONLY","added_entries":["Qur’an release lifecycle audit codes"],"previous_entries_unchanged":true,"previous_sha256":"efe6c9a0131620d92b5e18a2bb1c21edacfb115bdb58c31f18ac8fb124b6a8df","sha256":"b8661af48fde1ad5dd459399b4782af5d6e3dc1405c45d4fe1fda6b0a0b00eb2"}
+      ],
+      "entry_sha256":"aed16e1ed75b3fa03d212112cee66ff3620ceb2c604ecd0615d479472dee19d6"
     }
   ]
 }

@@ -28,4 +28,18 @@ final class QuranReleaseGovernanceTest extends TestCase
             try { $guard->resolve(__DIR__, $invalid); self::fail('Unsafe path was accepted.'); } catch (InvalidArgumentException) { self::addToAssertionCount(1); }
         }
     }
+
+    public function testArtifactPathGuardAcceptsOnlyAnExistingChildFile(): void
+    {
+        $directory = sys_get_temp_dir() . '/qmdb-quran-artifact-' . bin2hex(random_bytes(4));
+        mkdir($directory, 0700, true);
+        $path = $directory . '/source.txt';
+        file_put_contents($path, 'metadata-only-fixture');
+        try {
+            self::assertSame(realpath($path), (new QuranSourceArtifactPathGuard())->resolve($directory, 'source.txt'));
+        } finally {
+            unlink($path);
+            rmdir($directory);
+        }
+    }
 }

@@ -59,6 +59,7 @@ use Qmdb\Modules\IdentityResolution\Interface\Console\PeopleIdentityResolutionVe
 use Qmdb\Modules\QuranReferenceGovernance\Interface\Console\P4DecompositionVerifyConsoleCommand;
 use Qmdb\Modules\QuranReferenceGovernance\Interface\Console\QuranGovernanceVerifyConsoleCommand;
 use Qmdb\Modules\QuranReferenceGovernance\Interface\Console\QuranSourcesVerifyConsoleCommand;
+use Qmdb\Modules\QuranReferenceGovernance\Interface\Console\QuranSourceArtifactRegisterConsoleCommand;
 
 final readonly class ConsoleFoundationModule implements Module
 {
@@ -235,6 +236,7 @@ final readonly class ConsoleFoundationModule implements Module
             PeopleIdentityResolutionVerifyConsoleCommand::class,
             P4DecompositionVerifyConsoleCommand::class,
             QuranSourcesVerifyConsoleCommand::class,
+            QuranSourceArtifactRegisterConsoleCommand::class,
             QuranGovernanceVerifyConsoleCommand::class,
         ];
         $context->service(ServiceDefinition::factory(
@@ -273,6 +275,7 @@ final readonly class ConsoleFoundationModule implements Module
                 $registry->register(ServiceReference::get($resolver, PeopleIdentityResolutionVerifyConsoleCommand::class));
                 $registry->register(ServiceReference::get($resolver, P4DecompositionVerifyConsoleCommand::class));
                 $registry->register(ServiceReference::get($resolver, QuranSourcesVerifyConsoleCommand::class));
+                $registry->register(ServiceReference::get($resolver, QuranSourceArtifactRegisterConsoleCommand::class));
                 $registry->register(ServiceReference::get($resolver, QuranGovernanceVerifyConsoleCommand::class));
 
                 return $registry->build();

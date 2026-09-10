@@ -80,4 +80,9 @@ enum CsrfAction: string
     case ORGANIZATION_AFFILIATION_RESUME = 'organization.affiliation.resume';
     case ORGANIZATION_AFFILIATION_END = 'organization.affiliation.end';
     case ORGANIZATION_AFFILIATION_LEAVE = 'organization.affiliation.leave';
+    case QURAN_RELEASE_STAGE = 'quran.release.stage';
+    case QURAN_RELEASE_VALIDATE = 'quran.release.validate';
+    case QURAN_RELEASE_APPROVE = 'quran.release.approve';
+    case QURAN_RELEASE_ACTIVATE = 'quran.release.activate';
+    case QURAN_RELEASE_REJECT = 'quran.release.reject';
 }

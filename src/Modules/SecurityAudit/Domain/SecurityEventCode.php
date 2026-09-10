@@ -82,6 +82,12 @@ enum SecurityEventCode: string
     case PERSON_DUPLICATE_BLOCKED = 'people.duplicate.blocked';
     case PERSON_DUPLICATE_RESOLVED = 'people.duplicate.resolved';
     case PERSON_CANONICALIZED = 'people.person.canonicalized';
+    case QURAN_RELEASE_STAGED = 'quran.release.staged';
+    case QURAN_RELEASE_VALIDATED = 'quran.release.validated';
+    case QURAN_RELEASE_APPROVED = 'quran.release.approved';
+    case QURAN_RELEASE_ACTIVATED = 'quran.release.activated';
+    case QURAN_RELEASE_SUPERSEDED = 'quran.release.superseded';
+    case QURAN_RELEASE_REJECTED = 'quran.release.rejected';
 
     public function severity(): SecurityEventSeverity
     {

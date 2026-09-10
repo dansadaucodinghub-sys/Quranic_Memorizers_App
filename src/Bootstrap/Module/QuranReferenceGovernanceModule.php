@@ -7,6 +7,8 @@ namespace Qmdb\Bootstrap\Module;
 use Qmdb\Modules\QuranReferenceGovernance\Interface\Console\P4DecompositionVerifyConsoleCommand;
 use Qmdb\Modules\QuranReferenceGovernance\Interface\Console\QuranGovernanceVerifyConsoleCommand;
 use Qmdb\Modules\QuranReferenceGovernance\Interface\Console\QuranSourcesVerifyConsoleCommand;
+use Qmdb\Modules\QuranReferenceGovernance\Interface\Console\QuranSourceArtifactRegisterConsoleCommand;
+use Qmdb\Modules\QuranReferenceGovernance\Domain\QuranSourceArtifactPathGuard;
 use Qmdb\Shared\Database\Connection\DatabaseConnectionProvider;
 use Qmdb\Shared\DependencyInjection\ClosureServiceFactory;
 use Qmdb\Shared\DependencyInjection\DependencyResolver;
@@ -26,5 +28,7 @@ final readonly class QuranReferenceGovernanceModule implements Module
         $context->service(ServiceDefinition::factory(P4DecompositionVerifyConsoleCommand::class, 'quran.reference_governance', [], new ClosureServiceFactory(fn(DependencyResolver $r) => new P4DecompositionVerifyConsoleCommand($this->projectRoot))));
         $context->service(ServiceDefinition::factory(QuranSourcesVerifyConsoleCommand::class, 'quran.reference_governance', [DatabaseConnectionProvider::class], new ClosureServiceFactory(fn(DependencyResolver $r) => new QuranSourcesVerifyConsoleCommand(ServiceReference::get($r, DatabaseConnectionProvider::class)))));
         $context->service(ServiceDefinition::factory(QuranGovernanceVerifyConsoleCommand::class, 'quran.reference_governance', [DatabaseConnectionProvider::class], new ClosureServiceFactory(fn(DependencyResolver $r) => new QuranGovernanceVerifyConsoleCommand(ServiceReference::get($r, DatabaseConnectionProvider::class)))));
+        $context->service(ServiceDefinition::instance(QuranSourceArtifactPathGuard::class, 'quran.reference_governance', new QuranSourceArtifactPathGuard()));
+        $context->service(ServiceDefinition::factory(QuranSourceArtifactRegisterConsoleCommand::class, 'quran.reference_governance', [DatabaseConnectionProvider::class, QuranSourceArtifactPathGuard::class], new ClosureServiceFactory(fn(DependencyResolver $r) => new QuranSourceArtifactRegisterConsoleCommand($this->projectRoot . '/resources/quran-source-artifacts', ServiceReference::get($r, DatabaseConnectionProvider::class), ServiceReference::get($r, QuranSourceArtifactPathGuard::class)))));
     }
 }
