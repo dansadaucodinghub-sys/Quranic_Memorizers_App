@@ -1,12 +1,5 @@
 # Architecture Decision Register
 
-## P4 source governance decisions
-
-- P4 remains Qur’an Reference and Governance; P5 remains Competition Configuration and Registration.
-- Tanzil Uthmani Qur’an Text v1.1 is the approved verbatim canonical source; Tanzil metadata v1.0 and Simple Clean v1.1 are separately governed sources.
-- Canonical source-preserved Arabic uses column-level `utf8mb4_0900_bin` without post-acquisition Unicode normalization.
-- Search is B03-only and must not derive Simple Clean content by altering canonical Uthmani source text.
-
 | Document control | Value |
 | --- | --- |
 | Project | Qur’an Memorizer DB |
