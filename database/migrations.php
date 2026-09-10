@@ -49,6 +49,8 @@ use Qmdb\Modules\IdentityResolution\Infrastructure\Migration\CreatePersonDuplica
 use Qmdb\Modules\IdentityResolution\Infrastructure\Migration\CreatePersonCanonicalAliasesMigration;
 use Qmdb\Modules\IdentityResolution\Infrastructure\Migration\ExtendIdentityResolutionSecurityCatalogMigration;
 use Qmdb\Modules\IdentityResolution\Infrastructure\Migration\ExtendIdentityResolutionReviewIdempotencyMigration;
+use Qmdb\Modules\QuranReferenceGovernance\Infrastructure\Migration\CreateQuranReferenceGovernanceMigration;
+use Qmdb\Modules\QuranReferenceGovernance\Infrastructure\Migration\ExtendQuranGovernanceSecurityCatalogMigration;
 use Qmdb\Shared\Schema\Migration\MigrationRegistry;
 use Qmdb\Shared\Schema\Migration\MigrationRegistryBuilder;
 
@@ -101,5 +103,7 @@ return static function (): MigrationRegistry {
         ->register(new CreatePersonCanonicalAliasesMigration())
         ->register(new ExtendIdentityResolutionSecurityCatalogMigration())
         ->register(new ExtendIdentityResolutionReviewIdempotencyMigration())
+        ->register(new CreateQuranReferenceGovernanceMigration())
+        ->register(new ExtendQuranGovernanceSecurityCatalogMigration())
         ->build();
 };

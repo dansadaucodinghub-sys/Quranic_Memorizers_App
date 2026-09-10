@@ -10,6 +10,8 @@ use Qmdb\Modules\Organizations\Infrastructure\Seed\SeedOrganizationCatalogAndAut
 use Qmdb\Modules\OrganizationAffiliations\Infrastructure\Seed\SeedOrganizationAffiliationRoleDefinitions;
 use Qmdb\Modules\OrganizationAffiliations\Infrastructure\Seed\SeedOrganizationAffiliationAuthorization;
 use Qmdb\Modules\IdentityResolution\Infrastructure\Seed\SeedPeopleIdentityResolutionAuthorization;
+use Qmdb\Modules\QuranReferenceGovernance\Infrastructure\Seed\SeedQuranReferenceSources;
+use Qmdb\Modules\QuranReferenceGovernance\Infrastructure\Seed\SeedQuranGovernanceAuthorization;
 use Qmdb\Shared\Schema\Seed\SeedRegistry;
 use Qmdb\Shared\Schema\Seed\SeedRegistryBuilder;
 
@@ -23,5 +25,7 @@ return static function (): SeedRegistry {
         ->register(new SeedOrganizationAffiliationRoleDefinitions())
         ->register(new SeedOrganizationAffiliationAuthorization())
         ->register(new SeedPeopleIdentityResolutionAuthorization())
+        ->register(new SeedQuranReferenceSources())
+        ->register(new SeedQuranGovernanceAuthorization())
         ->build();
 };

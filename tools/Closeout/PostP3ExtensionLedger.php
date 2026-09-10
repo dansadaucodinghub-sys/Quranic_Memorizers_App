@@ -43,7 +43,7 @@ final class PostP3ExtensionLedger
                 || !is_string($entry['extension_id'] ?? null)
                 || !preg_match('/^QMDB-P3-EXT-[0-9]{3}$/', $entry['extension_id'])
                 || isset($ids[$entry['extension_id']])
-                || ($entry['authorizing_change'] ?? null) !== 'QMDB-CR-002'
+                || !in_array($entry['authorizing_change'] ?? null, ['QMDB-CR-002', 'QMDB-CR-003'], true)
                 || ($entry['base_freeze'] ?? null) !== 'QMDB-P3-FRZ-003'
                 || ($entry['phase'] ?? null) !== 'P4'
                 || ($entry['batch'] ?? null) !== 'QMDB-P4-B01'
@@ -103,12 +103,14 @@ final class PostP3ExtensionLedger
                     || !is_string($point['path'] ?? null)
                     || !is_string($point['previous_sha256'] ?? null)
                     || !is_string($point['sha256'] ?? null)
-                    || !is_array($point['added_entries'] ?? null)
-                    || isset($paths[$point['path']])) {
+                || !is_array($point['added_entries'] ?? null)) {
                     throw new \RuntimeException('Post-P3 extension-point authorization is invalid.');
                 }
+                if (isset($paths[$point['path']]) && $paths[$point['path']]['sha256'] !== $point['previous_sha256']) {
+                    throw new \RuntimeException('Post-P3 extension-point sequence is invalid.');
+                }
                 $paths[$point['path']] = [
-                    'previous_sha256' => $point['previous_sha256'],
+                    'previous_sha256' => $paths[$point['path']]['previous_sha256'] ?? $point['previous_sha256'],
                     'sha256' => $point['sha256'],
                 ];
             }

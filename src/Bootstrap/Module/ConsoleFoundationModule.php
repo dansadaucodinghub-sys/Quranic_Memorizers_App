@@ -56,6 +56,9 @@ use Qmdb\Modules\People\Interface\Console\PeopleProfilesVerifyConsoleCommand;
 use Qmdb\Modules\Organizations\Interface\Console\OrganizationsRegistryVerifyConsoleCommand;
 use Qmdb\Modules\OrganizationAffiliations\Interface\Console\OrganizationAffiliationsVerifyConsoleCommand;
 use Qmdb\Modules\IdentityResolution\Interface\Console\PeopleIdentityResolutionVerifyConsoleCommand;
+use Qmdb\Modules\QuranReferenceGovernance\Interface\Console\P4DecompositionVerifyConsoleCommand;
+use Qmdb\Modules\QuranReferenceGovernance\Interface\Console\QuranGovernanceVerifyConsoleCommand;
+use Qmdb\Modules\QuranReferenceGovernance\Interface\Console\QuranSourcesVerifyConsoleCommand;
 
 final readonly class ConsoleFoundationModule implements Module
 {
@@ -84,6 +87,7 @@ final readonly class ConsoleFoundationModule implements Module
             new ModuleId('organizations.registry'),
             new ModuleId('organizations.affiliations'),
             new ModuleId('people.identity_resolution'),
+            new ModuleId('quran.reference_governance'),
         ];
     }
 
@@ -229,6 +233,9 @@ final readonly class ConsoleFoundationModule implements Module
             OrganizationsRegistryVerifyConsoleCommand::class,
             OrganizationAffiliationsVerifyConsoleCommand::class,
             PeopleIdentityResolutionVerifyConsoleCommand::class,
+            P4DecompositionVerifyConsoleCommand::class,
+            QuranSourcesVerifyConsoleCommand::class,
+            QuranGovernanceVerifyConsoleCommand::class,
         ];
         $context->service(ServiceDefinition::factory(
             ConsoleCommandMap::class,
@@ -264,6 +271,9 @@ final readonly class ConsoleFoundationModule implements Module
                 $registry->register(ServiceReference::get($resolver, OrganizationsRegistryVerifyConsoleCommand::class));
                 $registry->register(ServiceReference::get($resolver, OrganizationAffiliationsVerifyConsoleCommand::class));
                 $registry->register(ServiceReference::get($resolver, PeopleIdentityResolutionVerifyConsoleCommand::class));
+                $registry->register(ServiceReference::get($resolver, P4DecompositionVerifyConsoleCommand::class));
+                $registry->register(ServiceReference::get($resolver, QuranSourcesVerifyConsoleCommand::class));
+                $registry->register(ServiceReference::get($resolver, QuranGovernanceVerifyConsoleCommand::class));
 
                 return $registry->build();
             }),

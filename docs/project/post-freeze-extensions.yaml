@@ -58,6 +58,37 @@
         }
       ],
       "entry_sha256": "238f45f43e1a82eaee705edaf8bfd50d2415acb17959dae2f7b3aa466bbee895"
+    },
+    {
+      "extension_id": "QMDB-P3-EXT-002",
+      "authorizing_change": "QMDB-CR-003",
+      "authorizing_instruction": "QMDB-P4-AUTH-DECOMPOSE-B01-EXEC",
+      "base_freeze": "QMDB-P3-FRZ-003",
+      "phase": "P4",
+      "batch": "QMDB-P4-B01",
+      "previous_entry_sha256": "238f45f43e1a82eaee705edaf8bfd50d2415acb17959dae2f7b3aa466bbee895",
+      "new_files": [
+        {"path":"docs/implementation/P4-quran-reference-and-governance-decomposition.md","sha256":"43e1a9c588086a43a313e85f78a7a7e3f4b26ea4ea3a052df3592b894f179b0e"},
+        {"path":"docs/implementation/reports/QMDB-P4-authority-resolution-report.md","sha256":"583b765b40de529789af882a0afdb1dd5bf138e275570a47880472b709a70ce3"},
+        {"path":"src/Bootstrap/Module/QuranReferenceGovernanceModule.php","sha256":"5ea53a5e830f2df0377ee945d1b095c7f8984dc33f1f5a5894c190b1bef6befa"},
+        {"path":"src/Modules/QuranReferenceGovernance/Infrastructure/Migration/CreateQuranReferenceGovernanceMigration.php","sha256":"31dfb183c4d6ab729558f4d9e098a59ce2ba83f0e9a91baf65ec96462c204f66"},
+        {"path":"src/Modules/QuranReferenceGovernance/Infrastructure/Migration/ExtendQuranGovernanceSecurityCatalogMigration.php","sha256":"71b3fae8b8e9fcc2719e6bba3080aa4e420673cf37144fdfb5fbeff46e7aa4a7"},
+        {"path":"src/Modules/QuranReferenceGovernance/Infrastructure/Seed/SeedQuranGovernanceAuthorization.php","sha256":"f5b4c6d75e8b847d70b1001d26fbc685abdf87d0aa283b7577ff162a4f15b228"},
+        {"path":"src/Modules/QuranReferenceGovernance/Infrastructure/Seed/SeedQuranReferenceSources.php","sha256":"0c19ce726ac3307ffbfc7f0791f52c4a1cbd9b759d1c6b4ba8f4fb76f6c7e0ac"},
+        {"path":"src/Modules/QuranReferenceGovernance/Interface/Console/P4DecompositionVerifyConsoleCommand.php","sha256":"cec6bc0a4fbf27819bde331cd96f2d9ccb62e7325686d3e16b7bd535ff5f15bb"},
+        {"path":"src/Modules/QuranReferenceGovernance/Interface/Console/QuranGovernanceVerifyConsoleCommand.php","sha256":"bb68f189bf90a4f7cb23a9b750b371c1296730f539e9ef99fa79992da4e92c75"},
+        {"path":"src/Modules/QuranReferenceGovernance/Interface/Console/QuranSourcesVerifyConsoleCommand.php","sha256":"1287a0d99301b373000282cd9146d280de98c42677feb8d1c96f1f2b65af2dde"},
+        {"path":"tests/Unit/Modules/QuranReferenceGovernance/P4DecompositionTest.php","sha256":"457ac008ddb2d44f818e732516a079993aaeabfae2df6bf6ead4149fc9820ea0"}
+      ],
+      "modified_extension_points": [
+        {"path":"database/migrations.php","change_type":"APPEND_ONLY","added_entries":["P4 migrations"],"previous_entries_unchanged":true,"previous_sha256":"47e3715e1936d086d772f3c5f96e24c6685303e941e4324a47bf485563b1c628","sha256":"9978cb1b692fcf16d53de0040d2b7e9cc8886c5da34b6ca9bd12ebcc18290c4b"},
+        {"path":"database/seeds.php","change_type":"APPEND_ONLY","added_entries":["P4 seeds"],"previous_entries_unchanged":true,"previous_sha256":"209c7bf177b4c1aa5d87aabeb1dc6e0ffce28fec2d72628ed0f430effd57d344","sha256":"86497f306ba785f03085a4800cc270a52766a589567e5ec80580748b02e7738e"},
+        {"path":"src/Bootstrap/ApplicationFactory.php","change_type":"APPEND_ONLY","added_entries":["quran.reference_governance module"],"previous_entries_unchanged":true,"previous_sha256":"dad39ed5638249e71416176dc34a464108b36dd926722f1c2205754d8742964e","sha256":"6b4824952a7fdf4331fd9c586c0bf604da2a6cf8ae50cd138422367d1a9afb01"},
+        {"path":"src/Bootstrap/Module/ConsoleFoundationModule.php","change_type":"APPEND_ONLY","added_entries":["P4 verifier commands"],"previous_entries_unchanged":true,"previous_sha256":"ff4770a563cce7d50cef50f5b3f4fb386dadde7492978f15c7627fae0c3523c6","sha256":"fd1c1b9ace09eeaedd3c2a77b71bb9e0c70cc1f3de32265f4f6d821a42d41d9d"},
+        {"path":"tools/Closeout/PostP3ExtensionLedger.php","change_type":"APPEND_ONLY","added_entries":["sequential exact-path governance"],"previous_entries_unchanged":true,"previous_sha256":"13e2635520137b3577f97a191201b18257d11b9ca90d9d43c4757cdd2e3ede76","sha256":"aea6f66711ede9b75fd0c8b39771aa041984efcd243800d86c87b65fa506eaea"},
+        {"path":"tools/Closeout/P3HistoricalFreezeVerifier.php","change_type":"APPEND_ONLY","added_entries":["ledger-authorized exact-path P4 extensions"],"previous_entries_unchanged":true,"previous_sha256":"8af5e916a607b5470a98e207d1e7679de635a22981838e6ead6e45cf8c286e11","sha256":"3440161b35e67102b0db5915bdaffbc44b60b40b5841a3d82681cf09e12a48cf"}
+      ],
+      "entry_sha256": "0ebdf7fe577cd82c46440dbbeadb3e6f801739d8389a73b4bcc187484d5211c4"
     }
   ]
 }

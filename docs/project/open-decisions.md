@@ -1,5 +1,14 @@
 # Open-Decisions Register
 
+## Resolved P4 source-governance decisions
+
+| ID | Resolution | Status |
+| --- | --- | --- |
+| OD-054 | Canonical Qur’an fields use `utf8mb4_0900_bin`; no canonical normalization follows acquisition. | RESOLVED |
+| OD-055 | Search uses separately sourced Tanzil Simple Clean content and its fixed normalization policy in B03 only. | RESOLVED |
+| OD-063 | Tanzil Uthmani Qur’an Text v1.1 is the verbatim canonical source; runtime download is prohibited. | RESOLVED |
+| OD-083 | B01 seeds the three approved Tanzil source definitions only. | RESOLVED |
+
 | Document control | Value |
 | --- | --- |
 | Project | Qur’an Memorizer DB |

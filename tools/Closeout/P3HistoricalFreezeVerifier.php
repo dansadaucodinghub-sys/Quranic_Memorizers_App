@@ -18,9 +18,21 @@ final class P3HistoricalFreezeVerifier
         'tests/Tools/Ci/FrozenBaselineVerifierTest.php',
     ];
 
+    public function __construct(private readonly PostP3ExtensionLedger $ledger = new PostP3ExtensionLedger())
+    {
+    }
+
     public function verify(string $root): VerificationReport
     {
         $report = new VerificationReport();
+        try {
+            $ledger = $this->ledger->load($root);
+            $this->ledger->verify($ledger);
+            $authorizedModifications = $this->ledger->authorizedModifications($ledger);
+        } catch (\Throwable $exception) {
+            $report->check(false, $exception->getMessage());
+            return $report;
+        }
         $path = $root . '/docs/closeout/p3/qmdb-p3-people-geography-organizations-participation-freeze.yaml';
         $yaml = file_get_contents($path);
         if (!is_string($yaml)) {
@@ -44,7 +56,12 @@ final class P3HistoricalFreezeVerifier
             $absolute = $root . '/' . $relative;
             $report->check(is_file($absolute) && !is_link($absolute), 'Historical P3 governed file is unavailable: ' . $relative);
             if (is_file($absolute) && !is_link($absolute)) {
-                $report->check(hash_file('sha256', $absolute) === $expected, 'Historical P3 product checksum mismatch: ' . $relative);
+                $current = hash_file('sha256', $absolute);
+                $extension = $authorizedModifications[$relative] ?? null;
+                $report->check(
+                    $current === $expected || ($extension !== null && $extension['previous_sha256'] === $expected && $extension['sha256'] === $current),
+                    'Historical P3 product checksum mismatch: ' . $relative,
+                );
             }
         }
         $status = $runner->run(['git', 'status', '--porcelain=v1', '--untracked-files=all'], $root);
