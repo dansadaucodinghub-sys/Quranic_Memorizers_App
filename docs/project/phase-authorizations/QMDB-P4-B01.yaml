@@ -1,0 +1,48 @@
+authorization_id: QMDB-P4-B01-AUTH-001
+phase: P4
+phase_title: Qur’an Reference and Governance
+batch: QMDB-P4-B01
+batch_title: Qur’an Source Registry, Release Governance, Provenance, and Canonical Integrity Policy
+authorizing_instruction: QMDB-P4-AUTH-DECOMPOSE-B01-EXEC
+requirement_ids:
+  - QMDB-P4-REQ-001
+  - QMDB-P4-REQ-002
+  - QMDB-P4-REQ-003
+  - QMDB-P4-REQ-004
+  - QMDB-P4-REQ-005
+  - QMDB-P4-REQ-006
+  - QMDB-P4-REQ-007
+  - QMDB-P4-REQ-008
+authorized_modules:
+  - quran.reference_governance
+authorized_migrations:
+  - 20260910060100_create_quran_reference_governance
+  - 20260910060200_extend_quran_governance_security_catalog
+authorized_seeds:
+  - 20260910060100_seed_quran_reference_sources
+  - 20260910060200_seed_quran_governance_authorization
+authorized_commands:
+  - governance:p4-decomposition:verify
+  - quran:sources:verify
+  - quran:governance:verify
+authorized_files:
+  - src/Bootstrap/Module/QuranReferenceGovernanceModule.php
+  - src/Modules/QuranReferenceGovernance/Infrastructure/Migration/CreateQuranReferenceGovernanceMigration.php
+  - src/Modules/QuranReferenceGovernance/Infrastructure/Migration/ExtendQuranGovernanceSecurityCatalogMigration.php
+  - src/Modules/QuranReferenceGovernance/Infrastructure/Seed/SeedQuranReferenceSources.php
+  - src/Modules/QuranReferenceGovernance/Infrastructure/Seed/SeedQuranGovernanceAuthorization.php
+  - src/Modules/QuranReferenceGovernance/Interface/Console/P4DecompositionVerifyConsoleCommand.php
+  - src/Modules/QuranReferenceGovernance/Interface/Console/QuranSourcesVerifyConsoleCommand.php
+  - src/Modules/QuranReferenceGovernance/Interface/Console/QuranGovernanceVerifyConsoleCommand.php
+  - tests/Unit/Modules/QuranReferenceGovernance/P4DecompositionTest.php
+explicitly_prohibited:
+  - QMDB-P4-B02
+  - QMDB-P4-B03
+  - QMDB-P4-CLOSE
+  - P5
+  - Competition
+  - canonical Qur’an text import
+  - Surah table
+  - Ayah table
+  - public Qur’an reader
+  - Qur’an search
