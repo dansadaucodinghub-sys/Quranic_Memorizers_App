@@ -346,3 +346,27 @@ P3 Freeze: QMDB-P3-FRZ-001
 P4 Status: NOT STARTED / NOT AUTHORIZED
 
 Implementation Status: READY FOR P4 AUTHORIZATION
+
+## P4 authority and B01 implementation state
+
+Approved P4 Decomposition and Source Decision: QMDB-CR-003
+
+Current Phase: P4 — Qur’an Reference and Governance
+
+Current Batch: QMDB-P4-B01 — Qur’an Source Registry, Release Governance, Provenance, and Canonical Integrity Policy
+
+P4-B01 Status: INCOMPLETE
+
+P4-B02 Status: DEFINED / NOT STARTED / NOT AUTHORIZED
+
+P4-B03 Status: DEFINED / NOT STARTED / NOT AUTHORIZED
+
+P5 Competition Status: NOT STARTED / NOT AUTHORIZED
+
+P4 Status: IN PROGRESS
+
+Batch Status: INCOMPLETE
+
+Implementation Status: RESOLUTION REQUIRED
+
+Reason: the committed B01 source-governance schema and source catalog are verified, but mandatory lifecycle services, protected governance interfaces, security integrations, required coverage, release verification, and `QMDB-P4-B01-FRZ-001` remain incomplete.
