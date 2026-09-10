@@ -9,6 +9,17 @@ use Qmdb\Modules\QuranReferenceGovernance\Interface\Console\QuranGovernanceVerif
 use Qmdb\Modules\QuranReferenceGovernance\Interface\Console\QuranSourcesVerifyConsoleCommand;
 use Qmdb\Modules\QuranReferenceGovernance\Interface\Console\QuranSourceArtifactRegisterConsoleCommand;
 use Qmdb\Modules\QuranReferenceGovernance\Domain\QuranSourceArtifactPathGuard;
+use Qmdb\Modules\QuranReferenceGovernance\Domain\QuranReleaseLifecycle;
+use Qmdb\Modules\QuranReferenceGovernance\Application\QuranReleaseLifecycleRepository;
+use Qmdb\Modules\QuranReferenceGovernance\Application\QuranReleaseLifecycleService;
+use Qmdb\Modules\QuranReferenceGovernance\Infrastructure\Persistence\MySqlQuranReleaseLifecycleRepository;
+use Qmdb\Modules\IdentityAccess\Security\Fingerprint\IdentityFingerprintGenerator;
+use Qmdb\Modules\IdentityAccess\Security\RateLimit\IdentityRateLimiter;
+use Qmdb\Modules\IdentityMultiFactor\Application\StepUpGuard;
+use Qmdb\Modules\SecurityAudit\Application\SecurityAuditEventAppender;
+use Qmdb\Modules\SecurityAuthorization\Application\AuthorizationRequirementGuard;
+use Qmdb\Shared\Database\Transaction\TransactionManager;
+use Qmdb\Shared\Time\Clock;
 use Qmdb\Shared\Database\Connection\DatabaseConnectionProvider;
 use Qmdb\Shared\DependencyInjection\ClosureServiceFactory;
 use Qmdb\Shared\DependencyInjection\DependencyResolver;
@@ -30,5 +41,9 @@ final readonly class QuranReferenceGovernanceModule implements Module
         $context->service(ServiceDefinition::factory(QuranGovernanceVerifyConsoleCommand::class, 'quran.reference_governance', [DatabaseConnectionProvider::class], new ClosureServiceFactory(fn(DependencyResolver $r) => new QuranGovernanceVerifyConsoleCommand(ServiceReference::get($r, DatabaseConnectionProvider::class)))));
         $context->service(ServiceDefinition::instance(QuranSourceArtifactPathGuard::class, 'quran.reference_governance', new QuranSourceArtifactPathGuard()));
         $context->service(ServiceDefinition::factory(QuranSourceArtifactRegisterConsoleCommand::class, 'quran.reference_governance', [DatabaseConnectionProvider::class, QuranSourceArtifactPathGuard::class], new ClosureServiceFactory(fn(DependencyResolver $r) => new QuranSourceArtifactRegisterConsoleCommand($this->projectRoot . '/resources/quran-source-artifacts', ServiceReference::get($r, DatabaseConnectionProvider::class), ServiceReference::get($r, QuranSourceArtifactPathGuard::class)))));
+        $context->service(ServiceDefinition::instance(QuranReleaseLifecycle::class, 'quran.reference_governance', new QuranReleaseLifecycle()));
+        $context->service(ServiceDefinition::factory(MySqlQuranReleaseLifecycleRepository::class, 'quran.reference_governance', [DatabaseConnectionProvider::class], new ClosureServiceFactory(fn(DependencyResolver $r) => new MySqlQuranReleaseLifecycleRepository(ServiceReference::get($r, DatabaseConnectionProvider::class)))));
+        $context->alias(QuranReleaseLifecycleRepository::class, MySqlQuranReleaseLifecycleRepository::class);
+        $context->service(ServiceDefinition::factory(QuranReleaseLifecycleService::class, 'quran.reference_governance', [QuranReleaseLifecycleRepository::class,QuranReleaseLifecycle::class,AuthorizationRequirementGuard::class,StepUpGuard::class,IdentityRateLimiter::class,IdentityFingerprintGenerator::class,SecurityAuditEventAppender::class,TransactionManager::class,Clock::class], new ClosureServiceFactory(fn(DependencyResolver $r) => new QuranReleaseLifecycleService(ServiceReference::get($r,QuranReleaseLifecycleRepository::class),ServiceReference::get($r,QuranReleaseLifecycle::class),ServiceReference::get($r,AuthorizationRequirementGuard::class),ServiceReference::get($r,StepUpGuard::class),ServiceReference::get($r,IdentityRateLimiter::class),ServiceReference::get($r,IdentityFingerprintGenerator::class),ServiceReference::get($r,SecurityAuditEventAppender::class),ServiceReference::get($r,TransactionManager::class),ServiceReference::get($r,Clock::class)))));
     }
 }
