@@ -45,6 +45,7 @@ use Qmdb\Modules\People\Interface\Http\PeopleProfilesController;
 use Qmdb\Modules\Organizations\Interface\Http\OrganizationsRegistryController;
 use Qmdb\Modules\OrganizationAffiliations\Interface\Http\OrganizationAffiliationsController;
 use Qmdb\Modules\IdentityResolution\Interface\Http\PeopleIdentityResolutionController;
+use Qmdb\Modules\QuranReferenceGovernance\Interface\Http\QuranReleaseGovernanceController;
 use Qmdb\Shared\Http\Routing\HttpMethod;
 use Qmdb\Shared\Http\Routing\Route;
 use Qmdb\Shared\Http\Routing\RouteCollection;
@@ -92,6 +93,7 @@ return static function (
     OrganizationsRegistryController $organizationsRegistry,
     OrganizationAffiliationsController $organizationAffiliations,
     PeopleIdentityResolutionController $identityResolution,
+    QuranReleaseGovernanceController $quranReleaseGovernance,
 ): RouteCollection {
     return new RouteCollection(
         new Route('system.home', [HttpMethod::GET], new RoutePattern('/'), $homeController),
@@ -199,6 +201,13 @@ return static function (
         ),
         new Route('workspace.current', [HttpMethod::GET], new RoutePattern('/workspace'), $currentWorkspace),
         new Route('platform.security.accounts.detail', [HttpMethod::GET], new RoutePattern('/platform/security/accounts/{accountId}'), $accountState),
+        new Route('platform.quran.releases.index', [HttpMethod::GET], new RoutePattern('/platform/quran/releases'), $quranReleaseGovernance),
+        new Route('platform.quran.releases.detail', [HttpMethod::GET], new RoutePattern('/platform/quran/releases/{releaseId}'), $quranReleaseGovernance),
+        new Route('platform.quran.releases.stage', [HttpMethod::GET, HttpMethod::POST], new RoutePattern('/platform/quran/releases/{releaseId}/stage'), $quranReleaseGovernance),
+        new Route('platform.quran.releases.validate', [HttpMethod::GET, HttpMethod::POST], new RoutePattern('/platform/quran/releases/{releaseId}/validate'), $quranReleaseGovernance),
+        new Route('platform.quran.releases.approve', [HttpMethod::GET, HttpMethod::POST], new RoutePattern('/platform/quran/releases/{releaseId}/approve'), $quranReleaseGovernance),
+        new Route('platform.quran.releases.activate', [HttpMethod::GET, HttpMethod::POST], new RoutePattern('/platform/quran/releases/{releaseId}/activate'), $quranReleaseGovernance),
+        new Route('platform.quran.releases.reject', [HttpMethod::GET, HttpMethod::POST], new RoutePattern('/platform/quran/releases/{releaseId}/reject'), $quranReleaseGovernance),
         new Route('platform.security.accounts.suspend', [HttpMethod::GET, HttpMethod::POST], new RoutePattern('/platform/security/accounts/{accountId}/suspend'), $accountState),
         new Route('platform.security.accounts.reactivate', [HttpMethod::GET, HttpMethod::POST], new RoutePattern('/platform/security/accounts/{accountId}/reactivate'), $accountState),
         new Route('account.security.events', [HttpMethod::GET], new RoutePattern('/account/security/events'), $securityAudit),

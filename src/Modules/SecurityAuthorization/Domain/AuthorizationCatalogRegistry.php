@@ -111,6 +111,7 @@ final readonly class AuthorizationCatalogRegistry
         AccountStateAuthorizationCatalog::extend($builder);
         OrganizationsAuthorizationCatalog::extend($builder);
         PeopleIdentityResolutionAuthorizationCatalog::extend($builder);
+        \Qmdb\Modules\QuranReferenceGovernance\Domain\QuranReferenceGovernanceAuthorizationCatalog::extend($builder);
 
         return $builder->build();
     }

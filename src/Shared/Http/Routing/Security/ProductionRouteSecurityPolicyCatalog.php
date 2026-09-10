@@ -133,6 +133,13 @@ final class ProductionRouteSecurityPolicyCatalog
         'platform.person_duplicate.dismiss' => 'platform.people_duplicates.resolve',
         'platform.person_duplicate.resolve.form' => 'platform.people_duplicates.resolve',
         'platform.person_duplicate.resolve.submit' => 'platform.people_duplicates.resolve',
+        'platform.quran.releases.index' => 'platform.quran_releases.view',
+        'platform.quran.releases.detail' => 'platform.quran_releases.view',
+        'platform.quran.releases.stage' => 'platform.quran_releases.manage',
+        'platform.quran.releases.validate' => 'platform.quran_releases.manage',
+        'platform.quran.releases.approve' => 'platform.quran_releases.approve',
+        'platform.quran.releases.activate' => 'platform.quran_releases.activate',
+        'platform.quran.releases.reject' => 'platform.quran_releases.manage',
     ];
 
     /** @var array<string, string> */
@@ -179,6 +186,9 @@ final class ProductionRouteSecurityPolicyCatalog
         'platform.person_duplicate.review' => 'PROFILE_DUPLICATE_REPORT',
         'platform.person_duplicate.dismiss' => 'PROFILE_DUPLICATE_DISMISS',
         'platform.person_duplicate.resolve.submit' => 'PROFILE_DUPLICATE_RESOLVE',
+        'platform.quran.releases.approve' => 'QURAN_RELEASE_APPROVE',
+        'platform.quran.releases.activate' => 'QURAN_RELEASE_ACTIVATE',
+        'platform.quran.releases.reject' => 'QURAN_RELEASE_REJECT',
     ];
 
     /** @var array<string, string> */
@@ -270,6 +280,11 @@ final class ProductionRouteSecurityPolicyCatalog
         'platform.person_duplicate.review' => 'people.duplicate.report',
         'platform.person_duplicate.dismiss' => 'people.duplicate.dismiss',
         'platform.person_duplicate.resolve.submit' => 'people.duplicate.resolve',
+        'platform.quran.releases.stage' => 'quran.release.stage',
+        'platform.quran.releases.validate' => 'quran.release.validate',
+        'platform.quran.releases.approve' => 'quran.release.approve',
+        'platform.quran.releases.activate' => 'quran.release.activate',
+        'platform.quran.releases.reject' => 'quran.release.reject',
     ];
 
     /** @var list<string> */
@@ -305,6 +320,8 @@ final class ProductionRouteSecurityPolicyCatalog
         'account.dependent_duplicate.consent', 'account.dependent_duplicate.decline',
         'platform.person_duplicate.review', 'platform.person_duplicate.dismiss',
         'platform.person_duplicate.resolve.submit',
+        'platform.quran.releases.stage', 'platform.quran.releases.validate', 'platform.quran.releases.approve',
+        'platform.quran.releases.activate', 'platform.quran.releases.reject',
     ];
 
     /** @var list<string> */
@@ -331,7 +348,7 @@ final class ProductionRouteSecurityPolicyCatalog
             $policies[$route] = $this->policy(RouteSecurityClassification::BASE_ROLE_REQUIRED, $route);
         }
 
-        if (count($policies) !== 183) {
+        if (count($policies) !== 190) {
             throw new LogicException('The closed production route-security catalog is incomplete.');
         }
 
@@ -350,6 +367,8 @@ final class ProductionRouteSecurityPolicyCatalog
             'platform.people_profile_claims.authorize', 'platform.people_profile_verifications.manage',
             'platform.people_duplicates.resolve' => 'PHISHING_RESISTANT',
             'platform.people_duplicates.view' => 'MULTI_FACTOR',
+            'platform.quran_releases.view', 'platform.quran_releases.manage' => 'MULTI_FACTOR',
+            'platform.quran_releases.approve', 'platform.quran_releases.activate' => 'PHISHING_RESISTANT',
             default => null,
         };
 

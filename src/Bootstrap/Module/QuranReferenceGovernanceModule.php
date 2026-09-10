@@ -20,6 +20,11 @@ use Qmdb\Modules\SecurityAudit\Application\SecurityAuditEventAppender;
 use Qmdb\Modules\SecurityAuthorization\Application\AuthorizationRequirementGuard;
 use Qmdb\Shared\Database\Transaction\TransactionManager;
 use Qmdb\Shared\Time\Clock;
+use Qmdb\Modules\QuranReferenceGovernance\Interface\Http\QuranReleaseGovernanceController;
+use Qmdb\Modules\IdentitySessions\Interface\Http\AuthenticatedRequestGuard;
+use Qmdb\Modules\IdentityAccess\Interface\Http\IdentityCsrf;
+use Qmdb\Modules\IdentityAccess\Interface\Http\IdentityAccessView;
+use Nyholm\Psr7\Factory\Psr17Factory;
 use Qmdb\Shared\Database\Connection\DatabaseConnectionProvider;
 use Qmdb\Shared\DependencyInjection\ClosureServiceFactory;
 use Qmdb\Shared\DependencyInjection\DependencyResolver;
@@ -33,7 +38,7 @@ final readonly class QuranReferenceGovernanceModule implements Module
 {
     public function __construct(private string $projectRoot) {}
     public function id(): ModuleId { return new ModuleId('quran.reference_governance'); }
-    public function dependencies(): array { return [new ModuleId('foundation.core'),new ModuleId('foundation.application'),new ModuleId('foundation.observability'),new ModuleId('foundation.database'),new ModuleId('foundation.schema'),new ModuleId('security.web'),new ModuleId('security.authorization'),new ModuleId('security.audit'),new ModuleId('identity.accounts'),new ModuleId('identity.sessions'),new ModuleId('identity.multifactor')]; }
+    public function dependencies(): array { return [new ModuleId('foundation.core'),new ModuleId('foundation.application'),new ModuleId('foundation.observability'),new ModuleId('foundation.database'),new ModuleId('foundation.schema'),new ModuleId('foundation.http'),new ModuleId('foundation.presentation'),new ModuleId('security.web'),new ModuleId('security.authorization'),new ModuleId('security.audit'),new ModuleId('identity.accounts'),new ModuleId('identity.access'),new ModuleId('identity.sessions'),new ModuleId('identity.multifactor')]; }
     public function register(ModuleRegistrationContext $context): void
     {
         $context->service(ServiceDefinition::factory(P4DecompositionVerifyConsoleCommand::class, 'quran.reference_governance', [], new ClosureServiceFactory(fn(DependencyResolver $r) => new P4DecompositionVerifyConsoleCommand($this->projectRoot))));
@@ -45,5 +50,6 @@ final readonly class QuranReferenceGovernanceModule implements Module
         $context->service(ServiceDefinition::factory(MySqlQuranReleaseLifecycleRepository::class, 'quran.reference_governance', [DatabaseConnectionProvider::class], new ClosureServiceFactory(fn(DependencyResolver $r) => new MySqlQuranReleaseLifecycleRepository(ServiceReference::get($r, DatabaseConnectionProvider::class)))));
         $context->alias(QuranReleaseLifecycleRepository::class, MySqlQuranReleaseLifecycleRepository::class);
         $context->service(ServiceDefinition::factory(QuranReleaseLifecycleService::class, 'quran.reference_governance', [QuranReleaseLifecycleRepository::class,QuranReleaseLifecycle::class,AuthorizationRequirementGuard::class,StepUpGuard::class,IdentityRateLimiter::class,IdentityFingerprintGenerator::class,SecurityAuditEventAppender::class,TransactionManager::class,Clock::class], new ClosureServiceFactory(fn(DependencyResolver $r) => new QuranReleaseLifecycleService(ServiceReference::get($r,QuranReleaseLifecycleRepository::class),ServiceReference::get($r,QuranReleaseLifecycle::class),ServiceReference::get($r,AuthorizationRequirementGuard::class),ServiceReference::get($r,StepUpGuard::class),ServiceReference::get($r,IdentityRateLimiter::class),ServiceReference::get($r,IdentityFingerprintGenerator::class),ServiceReference::get($r,SecurityAuditEventAppender::class),ServiceReference::get($r,TransactionManager::class),ServiceReference::get($r,Clock::class)))));
+        $context->service(ServiceDefinition::factory(QuranReleaseGovernanceController::class, 'quran.reference_governance', [AuthenticatedRequestGuard::class,AuthorizationRequirementGuard::class,IdentityCsrf::class,IdentityAccessView::class,Psr17Factory::class,DatabaseConnectionProvider::class,QuranReleaseLifecycleService::class], new ClosureServiceFactory(fn(DependencyResolver $r) => new QuranReleaseGovernanceController(ServiceReference::get($r,AuthenticatedRequestGuard::class),ServiceReference::get($r,AuthorizationRequirementGuard::class),ServiceReference::get($r,IdentityCsrf::class),ServiceReference::get($r,IdentityAccessView::class),ServiceReference::get($r,Psr17Factory::class),ServiceReference::get($r,DatabaseConnectionProvider::class),ServiceReference::get($r,QuranReleaseLifecycleService::class)))));
     }
 }
