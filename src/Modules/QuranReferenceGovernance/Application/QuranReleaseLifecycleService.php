@@ -46,10 +46,12 @@ final readonly class QuranReleaseLifecycleService
             new PlatformAuthorizationScope(),
         ));
         $policy = new IdentityRateLimitPolicy(60, 10, 60);
-        if (!$this->rateLimits->consume([
+        if (
+            !$this->rateLimits->consume([
             new IdentityRateLimitAttempt(IdentityRateLimitScope::QURAN_GOVERNANCE_MUTATION_ACCOUNT, $this->fingerprints->generate('quran-governance-account', (string) $command->actor->accountInternalId), $policy),
             new IdentityRateLimitAttempt(IdentityRateLimitScope::QURAN_GOVERNANCE_MUTATION_PEER, $this->fingerprints->generate('quran-governance-peer', (string) $command->actor->sessionInternalId), $policy),
-        ], $this->clock->now())->allowed) {
+            ], $this->clock->now())->allowed
+        ) {
             throw new \DomainException('Qur’an release transition is temporarily unavailable.');
         }
 
