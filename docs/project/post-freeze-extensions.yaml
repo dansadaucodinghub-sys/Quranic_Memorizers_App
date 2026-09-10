@@ -101,6 +101,22 @@
       "new_files": [{"path":"docs/implementation/reports/QMDB-P4-B01-implementation-report.md","sha256":"b06195cb2ada576c8485afc4fb29f2e90ed5a0a06f549e071c340f49ecd76cb2"}],
       "modified_extension_points": [],
       "entry_sha256": "bf6b1957b16b9105fe1f57b00724d5c20957a6e7b030972d4c2ccbfa4dd0a1eb"
+    },
+    {
+      "extension_id": "QMDB-P3-EXT-004",
+      "authorizing_change": "QMDB-CR-003",
+      "authorizing_instruction": "QMDB-P4-AUTH-DECOMPOSE-B01-EXEC",
+      "base_freeze": "QMDB-P3-FRZ-003",
+      "phase": "P4",
+      "batch": "QMDB-P4-B01",
+      "previous_entry_sha256": "bf6b1957b16b9105fe1f57b00724d5c20957a6e7b030972d4c2ccbfa4dd0a1eb",
+      "new_files": [
+        {"path":"src/Modules/QuranReferenceGovernance/Domain/QuranReleaseLifecycle.php","sha256":"9efa58426634b8e0e7c234e4d6564f8bc843c748db0c1421dd03c906c5013d16"},
+        {"path":"src/Modules/QuranReferenceGovernance/Domain/QuranSourceArtifactPathGuard.php","sha256":"0add7fa6d2992ec24229465c3c6a2d5104e9eb12e770f66a6acebd1755bdd09f"},
+        {"path":"tests/Unit/Modules/QuranReferenceGovernance/QuranReleaseGovernanceTest.php","sha256":"b35c26d42170983adb65f2ec05a0215f6153b58683f0771f3fea05ad993a5719"}
+      ],
+      "modified_extension_points": [],
+      "entry_sha256": "98d5839223f293b15bcccaf9044569b0d5a0307e671e5bacb31eef3017801569"
     }
   ]
 }
