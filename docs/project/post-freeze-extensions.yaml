@@ -135,9 +135,10 @@
         {"path":"src/Modules/IdentityAccess/Security/RateLimit/IdentityRateLimitScope.php","change_type":"APPEND_ONLY","added_entries":["Qur’an governance account and peer scopes"],"previous_entries_unchanged":true,"previous_sha256":"1f6cb9dae773da5c4d818501cbd0caaefa1f5d02b0f945b64a4c4112647bb78a","sha256":"39e606240450480abdc845e625059dd6c8d65e34e8f0272c30af2109408fee57"},
         {"path":"src/Modules/IdentityMultiFactor/Domain/StepUpAction.php","change_type":"APPEND_ONLY","added_entries":["Qur’an release approval activation and rejection actions"],"previous_entries_unchanged":true,"previous_sha256":"663555a2be792962ba974177f97cf7ceae922422ea5b24583765ca1a4aa1fa2c","sha256":"6c80d130dc69ca64bb5afebab01c0acb5452ad26fc3af706844c5168f871808b"},
         {"path":"src/Modules/SecurityAudit/Domain/SecurityEventSubjectKind.php","change_type":"APPEND_ONLY","added_entries":["Qur’an source and release audit subjects"],"previous_entries_unchanged":true,"previous_sha256":"7895371a082e81c7ec4940278cc927dcff95e4aa50fd4962ae4c93ddbe31cb69","sha256":"48f410dfcb8180f034d1c2148722a88de28b86e1175c02eac521792d44baccc0"},
-        {"path":"src/Modules/SecurityAudit/Domain/SecurityEventCode.php","change_type":"APPEND_ONLY","added_entries":["Qur’an release lifecycle audit codes"],"previous_entries_unchanged":true,"previous_sha256":"efe6c9a0131620d92b5e18a2bb1c21edacfb115bdb58c31f18ac8fb124b6a8df","sha256":"b8661af48fde1ad5dd459399b4782af5d6e3dc1405c45d4fe1fda6b0a0b00eb2"}
+        {"path":"src/Modules/SecurityAudit/Domain/SecurityEventCode.php","change_type":"APPEND_ONLY","added_entries":["Qur’an release lifecycle audit codes"],"previous_entries_unchanged":true,"previous_sha256":"efe6c9a0131620d92b5e18a2bb1c21edacfb115bdb58c31f18ac8fb124b6a8df","sha256":"b8661af48fde1ad5dd459399b4782af5d6e3dc1405c45d4fe1fda6b0a0b00eb2"},
+        {"path":"tools/Closeout/P3GovernanceRefreshFreezeVerifier.php","change_type":"APPEND_ONLY","added_entries":["authorized sequential revisions of exact P4 files"],"previous_entries_unchanged":true,"previous_sha256":"94e4a3e6e712baa3522511d139f199fd7a61d4f8e93dc8d49d269a601741d4e4","sha256":"8a86948f166dc13259768f515bd1ec9b501b63ee514bb8690340223e33181d9b"}
       ],
-      "entry_sha256":"aed16e1ed75b3fa03d212112cee66ff3620ceb2c604ecd0615d479472dee19d6"
+      "entry_sha256":"2b106fb6448a3686bf1274811ba48c03a8d7cbcdcf822dda679899146c3dd255"
     }
   ]
 }
