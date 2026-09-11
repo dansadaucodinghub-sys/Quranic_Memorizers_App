@@ -44,6 +44,8 @@ final class P2RouteSecurityHardeningTest extends TestCase
             'account.mfa.login.recovery_code', 'account.mfa.login.passkey.options',
             'account.mfa.login.passkey.verify', 'account.passkey.login.options', 'account.passkey.login.verify',
             'geography.nigeria.index', 'geography.nigeria.area', 'geography.lookup.children',
+            'quran.public.home', 'quran.public.surahs', 'quran.public.surah', 'quran.public.ayah',
+            'quran.public.partition', 'quran.public.sajdahs', 'quran.public.search',
         ], true);
         foreach ($routes as $route) {
             $name = $route['name'];

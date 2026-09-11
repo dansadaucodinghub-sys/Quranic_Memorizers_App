@@ -46,6 +46,8 @@ use Qmdb\Modules\Organizations\Interface\Http\OrganizationsRegistryController;
 use Qmdb\Modules\OrganizationAffiliations\Interface\Http\OrganizationAffiliationsController;
 use Qmdb\Modules\IdentityResolution\Interface\Http\PeopleIdentityResolutionController;
 use Qmdb\Modules\QuranReferenceGovernance\Interface\Http\QuranReleaseGovernanceController;
+use Qmdb\Modules\QuranReferenceGovernance\Interface\Http\QuranPublicReferenceController;
+use Qmdb\Modules\QuranReferenceGovernance\Interface\Http\QuranSearchCorpusIntegrityController;
 use Qmdb\Shared\Http\Routing\HttpMethod;
 use Qmdb\Shared\Http\Routing\Route;
 use Qmdb\Shared\Http\Routing\RouteCollection;
@@ -94,6 +96,8 @@ return static function (
     OrganizationAffiliationsController $organizationAffiliations,
     PeopleIdentityResolutionController $identityResolution,
     QuranReleaseGovernanceController $quranReleaseGovernance,
+    QuranPublicReferenceController $quranPublicReference,
+    QuranSearchCorpusIntegrityController $quranSearchCorpusIntegrity,
 ): RouteCollection {
     return new RouteCollection(
         new Route('system.home', [HttpMethod::GET], new RoutePattern('/'), $homeController),
@@ -200,6 +204,13 @@ return static function (
             $workspaceClear,
         ),
         new Route('workspace.current', [HttpMethod::GET], new RoutePattern('/workspace'), $currentWorkspace),
+        new Route('quran.public.home', [HttpMethod::GET], new RoutePattern('/quran'), $quranPublicReference),
+        new Route('quran.public.surahs', [HttpMethod::GET], new RoutePattern('/quran/surahs'), $quranPublicReference),
+        new Route('quran.public.surah', [HttpMethod::GET], new RoutePattern('/quran/surahs/{surahNumber}'), $quranPublicReference),
+        new Route('quran.public.ayah', [HttpMethod::GET], new RoutePattern('/quran/surahs/{surahNumber}/ayahs/{ayahNumber}'), $quranPublicReference),
+        new Route('quran.public.partition', [HttpMethod::GET], new RoutePattern('/quran/partitions/{type}/{partitionNumber}'), $quranPublicReference),
+        new Route('quran.public.sajdahs', [HttpMethod::GET], new RoutePattern('/quran/sajdahs'), $quranPublicReference),
+        new Route('quran.public.search', [HttpMethod::GET], new RoutePattern('/quran/search'), $quranPublicReference),
         new Route('platform.security.accounts.detail', [HttpMethod::GET], new RoutePattern('/platform/security/accounts/{accountId}'), $accountState),
         new Route('platform.quran.releases.index', [HttpMethod::GET], new RoutePattern('/platform/quran/releases'), $quranReleaseGovernance),
         new Route('platform.quran.releases.detail', [HttpMethod::GET], new RoutePattern('/platform/quran/releases/{releaseId}'), $quranReleaseGovernance),
@@ -208,6 +219,8 @@ return static function (
         new Route('platform.quran.releases.approve', [HttpMethod::GET, HttpMethod::POST], new RoutePattern('/platform/quran/releases/{releaseId}/approve'), $quranReleaseGovernance),
         new Route('platform.quran.releases.activate', [HttpMethod::GET, HttpMethod::POST], new RoutePattern('/platform/quran/releases/{releaseId}/activate'), $quranReleaseGovernance),
         new Route('platform.quran.releases.reject', [HttpMethod::GET, HttpMethod::POST], new RoutePattern('/platform/quran/releases/{releaseId}/reject'), $quranReleaseGovernance),
+        new Route('platform.quran.search_corpus', [HttpMethod::GET], new RoutePattern('/platform/quran/releases/{releaseId}/search-corpus'), $quranSearchCorpusIntegrity),
+        new Route('platform.quran.search_corpus.validate', [HttpMethod::GET, HttpMethod::POST], new RoutePattern('/platform/quran/releases/{releaseId}/search-corpus/validate'), $quranSearchCorpusIntegrity),
         new Route('platform.security.accounts.suspend', [HttpMethod::GET, HttpMethod::POST], new RoutePattern('/platform/security/accounts/{accountId}/suspend'), $accountState),
         new Route('platform.security.accounts.reactivate', [HttpMethod::GET, HttpMethod::POST], new RoutePattern('/platform/security/accounts/{accountId}/reactivate'), $accountState),
         new Route('account.security.events', [HttpMethod::GET], new RoutePattern('/account/security/events'), $securityAudit),

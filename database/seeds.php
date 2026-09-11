@@ -12,6 +12,7 @@ use Qmdb\Modules\OrganizationAffiliations\Infrastructure\Seed\SeedOrganizationAf
 use Qmdb\Modules\IdentityResolution\Infrastructure\Seed\SeedPeopleIdentityResolutionAuthorization;
 use Qmdb\Modules\QuranReferenceGovernance\Infrastructure\Seed\SeedQuranReferenceSources;
 use Qmdb\Modules\QuranReferenceGovernance\Infrastructure\Seed\SeedQuranGovernanceAuthorization;
+use Qmdb\Modules\QuranReferenceGovernance\Infrastructure\Seed\SeedQuranSearchCorpusAuthorization;
 use Qmdb\Shared\Schema\Seed\SeedRegistry;
 use Qmdb\Shared\Schema\Seed\SeedRegistryBuilder;
 
@@ -27,5 +28,6 @@ return static function (): SeedRegistry {
         ->register(new SeedPeopleIdentityResolutionAuthorization())
         ->register(new SeedQuranReferenceSources())
         ->register(new SeedQuranGovernanceAuthorization())
+        ->register(new SeedQuranSearchCorpusAuthorization())
         ->build();
 };

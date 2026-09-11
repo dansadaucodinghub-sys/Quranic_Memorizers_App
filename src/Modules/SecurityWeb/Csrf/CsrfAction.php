@@ -85,4 +85,5 @@ enum CsrfAction: string
     case QURAN_RELEASE_APPROVE = 'quran.release.approve';
     case QURAN_RELEASE_ACTIVATE = 'quran.release.activate';
     case QURAN_RELEASE_REJECT = 'quran.release.reject';
+    case QURAN_SEARCH_CORPUS_VALIDATE = 'quran.search_corpus.validate';
 }

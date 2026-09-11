@@ -62,6 +62,12 @@ use Qmdb\Modules\QuranReferenceGovernance\Interface\Console\QuranSourcesVerifyCo
 use Qmdb\Modules\QuranReferenceGovernance\Interface\Console\QuranSourceArtifactRegisterConsoleCommand;
 use Qmdb\Modules\QuranReferenceGovernance\Interface\Console\QuranB02ArtifactsVerifyConsoleCommand;
 use Qmdb\Modules\QuranReferenceGovernance\Interface\Console\QuranReleaseImportConsoleCommand;
+use Qmdb\Modules\QuranReferenceGovernance\Interface\Console\QuranSearchCorpusImportConsoleCommand;
+use Qmdb\Modules\QuranReferenceGovernance\Interface\Console\QuranContentVerifyConsoleCommand;
+use Qmdb\Modules\QuranReferenceGovernance\Interface\Console\QuranSearchArtifactVerifyConsoleCommand;
+use Qmdb\Modules\QuranReferenceGovernance\Interface\Console\QuranSearchCorpusVerifyConsoleCommand;
+use Qmdb\Modules\QuranReferenceGovernance\Interface\Console\QuranPublicReferenceVerifyConsoleCommand;
+use Qmdb\Modules\QuranReferenceGovernance\Interface\Console\QuranP4CloseoutVerifyConsoleCommand;
 
 final readonly class ConsoleFoundationModule implements Module
 {
@@ -242,6 +248,12 @@ final readonly class ConsoleFoundationModule implements Module
             QuranGovernanceVerifyConsoleCommand::class,
             QuranB02ArtifactsVerifyConsoleCommand::class,
             QuranReleaseImportConsoleCommand::class,
+            QuranSearchCorpusImportConsoleCommand::class,
+            QuranContentVerifyConsoleCommand::class,
+            QuranSearchArtifactVerifyConsoleCommand::class,
+            QuranSearchCorpusVerifyConsoleCommand::class,
+            QuranPublicReferenceVerifyConsoleCommand::class,
+            QuranP4CloseoutVerifyConsoleCommand::class,
         ];
         $context->service(ServiceDefinition::factory(
             ConsoleCommandMap::class,
@@ -283,6 +295,12 @@ final readonly class ConsoleFoundationModule implements Module
                 $registry->register(ServiceReference::get($resolver, QuranGovernanceVerifyConsoleCommand::class));
                 $registry->register(ServiceReference::get($resolver, QuranB02ArtifactsVerifyConsoleCommand::class));
                 $registry->register(ServiceReference::get($resolver, QuranReleaseImportConsoleCommand::class));
+                $registry->register(ServiceReference::get($resolver, QuranSearchCorpusImportConsoleCommand::class));
+                $registry->register(ServiceReference::get($resolver, QuranContentVerifyConsoleCommand::class));
+                $registry->register(ServiceReference::get($resolver, QuranSearchArtifactVerifyConsoleCommand::class));
+                $registry->register(ServiceReference::get($resolver, QuranSearchCorpusVerifyConsoleCommand::class));
+                $registry->register(ServiceReference::get($resolver, QuranPublicReferenceVerifyConsoleCommand::class));
+                $registry->register(ServiceReference::get($resolver, QuranP4CloseoutVerifyConsoleCommand::class));
 
                 return $registry->build();
             }),

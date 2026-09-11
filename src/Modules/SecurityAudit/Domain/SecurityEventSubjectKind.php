@@ -28,4 +28,5 @@ enum SecurityEventSubjectKind: string
     case PERSON_ALIAS = 'PERSON_ALIAS';
     case QURAN_SOURCE = 'QURAN_SOURCE';
     case QURAN_RELEASE = 'QURAN_RELEASE';
+    case QURAN_SEARCH_CORPUS = 'QURAN_SEARCH_CORPUS';
 }

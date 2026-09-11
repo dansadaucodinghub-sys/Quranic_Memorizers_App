@@ -1,0 +1,1 @@
+<?php declare(strict_types=1); ?><article class="shell prose-page"><h1>Surah directory</h1><?= $renderer->render('fragments.quran-surah-directory',new \Qmdb\Shared\Presentation\View\ViewData(['surahs'=>$view->list('surahs')]),$translator)->trustedHtml() ?></article>

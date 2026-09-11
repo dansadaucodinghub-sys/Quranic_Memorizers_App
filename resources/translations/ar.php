@@ -13,6 +13,7 @@ return [
     'action.refresh_status' => 'تحديث الحالة',
     'app.name' => 'قاعدة بيانات حُفّاظ القرآن',
     'app.tagline' => 'أساس موثوق لبرامج حفظ القرآن الكريم.',
+    'title.quran_reference' => 'مرجع القرآن الكريم',
     'error.async' => 'تعذر تحميل المحتوى المطلوب.',
     'error.fallback' => 'افتح الصفحة الكاملة بدلاً من ذلك',
     'error.reference' => 'مرجع الطلب: {request_id}',

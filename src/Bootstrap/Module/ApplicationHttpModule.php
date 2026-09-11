@@ -63,6 +63,8 @@ use Qmdb\Modules\OrganizationAffiliations\Interface\Http\OrganizationAffiliation
 use Qmdb\Modules\IdentityResolution\Application\PeopleIdentityResolutionReadinessCheck;
 use Qmdb\Modules\IdentityResolution\Interface\Http\PeopleIdentityResolutionController;
 use Qmdb\Modules\QuranReferenceGovernance\Interface\Http\QuranReleaseGovernanceController;
+use Qmdb\Modules\QuranReferenceGovernance\Interface\Http\QuranPublicReferenceController;
+use Qmdb\Modules\QuranReferenceGovernance\Interface\Http\QuranSearchCorpusIntegrityController;
 use Qmdb\Shared\DependencyInjection\ClosureServiceFactory;
 use Qmdb\Shared\DependencyInjection\DependencyResolver;
 use Qmdb\Shared\DependencyInjection\ServiceDefinition;
@@ -227,6 +229,8 @@ final readonly class ApplicationHttpModule implements Module
             OrganizationAffiliationsController::class,
             PeopleIdentityResolutionController::class,
             QuranReleaseGovernanceController::class,
+            QuranPublicReferenceController::class,
+            QuranSearchCorpusIntegrityController::class,
         ];
         $context->service(ServiceDefinition::factory(
             RouteCollection::class,

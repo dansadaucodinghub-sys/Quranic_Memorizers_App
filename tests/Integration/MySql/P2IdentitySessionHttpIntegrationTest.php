@@ -41,6 +41,7 @@ final class P2IdentitySessionHttpIntegrationTest extends MySqlIntegrationTestCas
         $this->originalMaximumActiveSessions = getenv('AUTH_SESSION_MAX_ACTIVE_PER_ACCOUNT');
         putenv('AUTH_SESSION_MAX_ACTIVE_PER_ACCOUNT=5');
         $this->connection = $this->provider()->connection();
+        \Qmdb\Tests\Support\MySql\QuranReferenceTestSchemaCleanup::dropDependentTables($this->connection);
         $this->connection->exec('DROP TABLE IF EXISTS account_state_operations');
         foreach (
             [

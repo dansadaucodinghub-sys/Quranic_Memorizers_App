@@ -1,0 +1,1 @@
+<?php declare(strict_types=1); ?><article class="shell prose-page"><h1>Ayah reference</h1><?= $renderer->render('fragments.quran-ayah-detail',new \Qmdb\Shared\Presentation\View\ViewData(['ayah'=>$view->array('ayah')]),$translator)->trustedHtml() ?></article>

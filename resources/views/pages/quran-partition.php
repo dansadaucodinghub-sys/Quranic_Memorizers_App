@@ -1,0 +1,1 @@
+<?php declare(strict_types=1); ?><article class="shell prose-page"><h1>Qur’an navigation</h1><?= $renderer->render('fragments.quran-partition',new \Qmdb\Shared\Presentation\View\ViewData(['type'=>$view->string('type'),'number'=>$view->integer('number'),'partitions'=>$view->list('partitions')]),$translator)->trustedHtml() ?></article>

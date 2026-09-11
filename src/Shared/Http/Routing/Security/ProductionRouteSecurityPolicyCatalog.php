@@ -26,6 +26,8 @@ final class ProductionRouteSecurityPolicyCatalog
         'account.mfa.login.recovery_code', 'account.mfa.login.passkey.options',
         'account.mfa.login.passkey.verify', 'account.passkey.login.options', 'account.passkey.login.verify',
         'geography.nigeria.index', 'geography.nigeria.area', 'geography.lookup.children',
+        'quran.public.home', 'quran.public.surahs', 'quran.public.surah', 'quran.public.ayah',
+        'quran.public.partition', 'quran.public.sajdahs', 'quran.public.search',
     ];
 
     /** @var list<string> */
@@ -140,6 +142,8 @@ final class ProductionRouteSecurityPolicyCatalog
         'platform.quran.releases.approve' => 'platform.quran_releases.approve',
         'platform.quran.releases.activate' => 'platform.quran_releases.activate',
         'platform.quran.releases.reject' => 'platform.quran_releases.manage',
+        'platform.quran.search_corpus' => 'platform.quran_search_corpus.view',
+        'platform.quran.search_corpus.validate' => 'platform.quran_search_corpus.validate',
     ];
 
     /** @var array<string, string> */
@@ -189,6 +193,7 @@ final class ProductionRouteSecurityPolicyCatalog
         'platform.quran.releases.approve' => 'QURAN_RELEASE_APPROVE',
         'platform.quran.releases.activate' => 'QURAN_RELEASE_ACTIVATE',
         'platform.quran.releases.reject' => 'QURAN_RELEASE_REJECT',
+        'platform.quran.search_corpus.validate' => 'QURAN_SEARCH_CORPUS_VALIDATE',
     ];
 
     /** @var array<string, string> */
@@ -285,6 +290,7 @@ final class ProductionRouteSecurityPolicyCatalog
         'platform.quran.releases.approve' => 'quran.release.approve',
         'platform.quran.releases.activate' => 'quran.release.activate',
         'platform.quran.releases.reject' => 'quran.release.reject',
+        'platform.quran.search_corpus.validate' => 'quran.search_corpus.validate',
     ];
 
     /** @var list<string> */
@@ -322,6 +328,7 @@ final class ProductionRouteSecurityPolicyCatalog
         'platform.person_duplicate.resolve.submit',
         'platform.quran.releases.stage', 'platform.quran.releases.validate', 'platform.quran.releases.approve',
         'platform.quran.releases.activate', 'platform.quran.releases.reject',
+        'platform.quran.search_corpus.validate',
     ];
 
     /** @var list<string> */
@@ -348,7 +355,7 @@ final class ProductionRouteSecurityPolicyCatalog
             $policies[$route] = $this->policy(RouteSecurityClassification::BASE_ROLE_REQUIRED, $route);
         }
 
-        if (count($policies) !== 190) {
+        if (count($policies) !== 199) {
             throw new LogicException('The closed production route-security catalog is incomplete.');
         }
 
@@ -369,6 +376,8 @@ final class ProductionRouteSecurityPolicyCatalog
             'platform.people_duplicates.view' => 'MULTI_FACTOR',
             'platform.quran_releases.view', 'platform.quran_releases.manage' => 'MULTI_FACTOR',
             'platform.quran_releases.approve', 'platform.quran_releases.activate' => 'PHISHING_RESISTANT',
+            'platform.quran_search_corpus.view', 'platform.quran_public_reference.verify' => 'MULTI_FACTOR',
+            'platform.quran_search_corpus.validate' => 'PHISHING_RESISTANT',
             default => null,
         };
 

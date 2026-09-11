@@ -44,7 +44,8 @@ final readonly class QuranBaselineReleaseInstaller
             $releaseId = $this->insertRelease($pdo, $artifacts, $text['canonical_text_sha256']);
             $surahIds = $this->insertSurahs($pdo, $releaseId, $artifacts['metadata'], $metadata['surahs']);
             $ayahIds = $this->insertAyahs($pdo, $releaseId, $artifacts['text'], $surahIds, $text['records']);
-            $this->insertSummary($pdo, $releaseId, $artifacts, $result);
+            $counts = $this->insertStructures($pdo, $releaseId, $artifacts['metadata'], $ayahIds, $metadata['markers'], count($text['records']));
+            $this->insertSummary($pdo, $releaseId, $artifacts, $result, $metadata['markers'], $counts);
             $this->insertEvent($pdo, $releaseId, 'CREATED', null, 'ACTIVE');
             $this->insertEvent($pdo, $releaseId, 'ACTIVATED', 'APPROVED', 'ACTIVE');
             $pdo->commit();
@@ -133,12 +134,33 @@ final readonly class QuranBaselineReleaseInstaller
         return $ids;
     }
 
-    /** @param array{text:int,metadata:int} $artifacts @param array{surahs:int,ayahs:int,canonical_text_sha256:string,dry_run:bool} $result */
-    private function insertSummary(PDO $pdo, int $releaseId, array $artifacts, array $result): void
+    /** @param array<string,int> $ayahIds @param list<array{type:string,index:int,surah_number:int,ayah_number:int,sajdah_type:?string}> $markers @return array{JUZ:int,HIZB:int,HIZB_QUARTER:int,MANZIL:int,RUKU:int,MUSHAF_PAGE:int,SAJDAH:int} */
+    private function insertStructures(PDO $pdo, int $releaseId, int $artifactId, array $ayahIds, array $markers, int $ayahCount): array
     {
-        $zero = str_repeat("\0", 32);
-        $statement = $pdo->prepare('INSERT INTO quran_release_content_summaries (public_id,release_id,canonical_text_source_artifact_id,metadata_source_artifact_id,surah_count,ayah_count,juz_count,hizb_count,hizb_quarter_count,manzil_count,ruku_count,mushaf_page_count,sajdah_count,canonical_text_sha256,structure_sha256,combined_content_sha256,canonical_serialization_version,validation_policy_version,import_tool_version,imported_at,created_at) VALUES (:public,:release,:text,:metadata,:surahs,:ayahs,0,0,0,0,0,0,0,:canonical,:structure,:combined,\'qmdb.quran.canonical-content.v1\',\'qmdb.quran.validation.v1\',\'qmdb-quran-importer/1\',UTC_TIMESTAMP(6),UTC_TIMESTAMP(6))');
-        $statement->execute([':public' => UuidV7::generate()->toBinary(), ':release' => $releaseId, ':text' => $artifacts['text'], ':metadata' => $artifacts['metadata'], ':surahs' => $result['surahs'], ':ayahs' => $result['ayahs'], ':canonical' => hex2bin($result['canonical_text_sha256']), ':structure' => $zero, ':combined' => $zero]);
+        $counts = ['JUZ'=>0,'HIZB'=>0,'HIZB_QUARTER'=>0,'MANZIL'=>0,'RUKU'=>0,'MUSHAF_PAGE'=>0,'SAJDAH'=>0];
+        $byType = [];
+        foreach ($markers as $marker) { $byType[$marker['type']][] = $marker; }
+        $partition = $pdo->prepare('INSERT INTO quran_partitions (public_id,release_id,metadata_source_artifact_id,partition_type,partition_number,parent_partition_id,start_ayah_id,end_ayah_id,start_global_ayah_ordinal,end_global_ayah_ordinal,source_index,derivation_type,created_at) VALUES (:public,:release,:artifact,:type,:number,NULL,:start,:end,:start_ordinal,:end_ordinal,:index,\'SOURCE_MARKER_RANGE\',UTC_TIMESTAMP(6))');
+        foreach (['JUZ','HIZB','HIZB_QUARTER','MANZIL','RUKU','MUSHAF_PAGE'] as $type) {
+            foreach ($byType[$type] ?? [] as $position => $marker) {
+                $startKey = $marker['surah_number'].':'.$marker['ayah_number']; $next = ($byType[$type][$position + 1] ?? null); $startOrdinal = $this->ordinal($marker['surah_number'], $marker['ayah_number'], $ayahIds); $endOrdinal = $next === null ? $ayahCount : $this->ordinal($next['surah_number'], $next['ayah_number'], $ayahIds) - 1; $endKey = $this->keyForOrdinal($endOrdinal, $ayahIds);
+                $partition->execute([':public'=>UuidV7::generate()->toBinary(),':release'=>$releaseId,':artifact'=>$artifactId,':type'=>$type,':number'=>$marker['index'],':start'=>$ayahIds[$startKey],':end'=>$ayahIds[$endKey],':start_ordinal'=>$startOrdinal,':end_ordinal'=>$endOrdinal,':index'=>$marker['index']]); $counts[$type]++;
+            }
+        }
+        $sajdah = $pdo->prepare('INSERT INTO quran_sajdah_markers (public_id,release_id,metadata_source_artifact_id,sajdah_index,ayah_id,surah_number,ayah_number,global_ayah_ordinal,source_sajdah_type,created_at) VALUES (:public,:release,:artifact,:index,:ayah,:surah,:number,:ordinal,:type,UTC_TIMESTAMP(6))');
+        foreach ($byType['SAJDAH'] ?? [] as $marker) { $key=$marker['surah_number'].':'.$marker['ayah_number']; $sajdah->execute([':public'=>UuidV7::generate()->toBinary(),':release'=>$releaseId,':artifact'=>$artifactId,':index'=>$marker['index'],':ayah'=>$ayahIds[$key],':surah'=>$marker['surah_number'],':number'=>$marker['ayah_number'],':ordinal'=>$this->ordinal($marker['surah_number'],$marker['ayah_number'],$ayahIds),':type'=>$marker['sajdah_type'] ?? 'UNKNOWN']); $counts['SAJDAH']++; }
+        return $counts;
+    }
+    /** @param array<string,int> $ayahIds */ private function ordinal(int $surah, int $ayah, array $ayahIds): int { $key=$surah.':'.$ayah; if(!isset($ayahIds[$key])) throw new \InvalidArgumentException('Metadata marker is not present in canonical text.'); return array_search($key, array_keys($ayahIds), true) + 1; }
+    /** @param array<string,int> $ayahIds */ private function keyForOrdinal(int $ordinal, array $ayahIds): string { $keys=array_keys($ayahIds); $key=$keys[$ordinal - 1] ?? null; if(!is_string($key)) throw new \InvalidArgumentException('Metadata marker range is invalid.'); return $key; }
+
+    /** @param array{text:int,metadata:int} $artifacts @param array{surahs:int,ayahs:int,canonical_text_sha256:string,dry_run:bool} $result @param list<array{type:string,index:int,surah_number:int,ayah_number:int,sajdah_type:?string}> $markers @param array<string,int> $counts */
+    private function insertSummary(PDO $pdo, int $releaseId, array $artifacts, array $result, array $markers, array $counts): void
+    {
+        $structure = hash('sha256', json_encode($markers, JSON_THROW_ON_ERROR | JSON_UNESCAPED_UNICODE));
+        $combined = hash('sha256', hex2bin($result['canonical_text_sha256']) . hex2bin($structure));
+        $statement = $pdo->prepare('INSERT INTO quran_release_content_summaries (public_id,release_id,canonical_text_source_artifact_id,metadata_source_artifact_id,surah_count,ayah_count,juz_count,hizb_count,hizb_quarter_count,manzil_count,ruku_count,mushaf_page_count,sajdah_count,canonical_text_sha256,structure_sha256,combined_content_sha256,canonical_serialization_version,validation_policy_version,import_tool_version,imported_at,created_at) VALUES (:public,:release,:text,:metadata,:surahs,:ayahs,:juz,:hizb,:hizb_quarter,:manzil,:ruku,:mushaf_page,:sajdah,:canonical,:structure,:combined,\'qmdb.quran.canonical-content.v1\',\'qmdb.quran.validation.v1\',\'qmdb-quran-importer/1\',UTC_TIMESTAMP(6),UTC_TIMESTAMP(6))');
+        $statement->execute([':public' => UuidV7::generate()->toBinary(), ':release' => $releaseId, ':text' => $artifacts['text'], ':metadata' => $artifacts['metadata'], ':surahs' => $result['surahs'], ':ayahs' => $result['ayahs'], ':canonical' => hex2bin($result['canonical_text_sha256']), ':structure' => hex2bin($structure), ':combined' => hex2bin($combined), ':juz'=>$counts['JUZ'],':hizb'=>$counts['HIZB'],':hizb_quarter'=>$counts['HIZB_QUARTER'],':manzil'=>$counts['MANZIL'],':ruku'=>$counts['RUKU'],':mushaf_page'=>$counts['MUSHAF_PAGE'],':sajdah'=>$counts['SAJDAH']]);
     }
 
     private function insertEvent(PDO $pdo, int $releaseId, string $event, ?string $from, string $to): void

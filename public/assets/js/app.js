@@ -13,6 +13,7 @@ import { TenantContextController } from './tenant-context-controller.js';
 import { startGeographyDependentSelects } from './geography-dependent-select.js';
 import { OrganizationAffiliationRosterController } from './organization-affiliation-roster-controller.js';
 import { PersonIdentityResolutionController } from './person-identity-resolution-controller.js';
+import { QuranReaderController } from './quran-reader-controller.js';
 
 function start() {
     const liveRegion = new LiveRegion(document.getElementById('qmdb-live-region'));
@@ -29,6 +30,7 @@ function start() {
     new TenantContextController().start();
     new OrganizationAffiliationRosterController().start();
     new PersonIdentityResolutionController().start();
+    new QuranReaderController({ liveRegion }).start();
     startGeographyDependentSelects();
 }
 

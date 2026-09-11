@@ -88,6 +88,11 @@ enum SecurityEventCode: string
     case QURAN_RELEASE_ACTIVATED = 'quran.release.activated';
     case QURAN_RELEASE_SUPERSEDED = 'quran.release.superseded';
     case QURAN_RELEASE_REJECTED = 'quran.release.rejected';
+    case QURAN_SEARCH_CORPUS_IMPORTED = 'quran.search_corpus.imported';
+    case QURAN_SEARCH_CORPUS_VALIDATED = 'quran.search_corpus.validated';
+    case QURAN_SEARCH_CORPUS_ACTIVATED = 'quran.search_corpus.activated';
+    case QURAN_SEARCH_CORPUS_RETIRED = 'quran.search_corpus.retired';
+    case QURAN_PUBLIC_REFERENCE_INTEGRITY_VERIFIED = 'quran.public_reference.integrity_verified';
 
     public function severity(): SecurityEventSeverity
     {

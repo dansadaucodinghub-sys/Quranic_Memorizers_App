@@ -37,20 +37,67 @@ try {
     );
     $statement->execute([':schema' => $database]);
     $tables = $statement->fetchAll(\PDO::FETCH_COLUMN);
-    $connection->exec('SET SESSION FOREIGN_KEY_CHECKS = 0');
-    try {
-        foreach ($tables as $table) {
-            if (!is_string($table) || preg_match('/\A[A-Za-z0-9_]+\z/', $table) !== 1) {
-                throw new \UnexpectedValueException('Test schema contains an unsafe table identifier.');
-            }
-            $connection->exec('DROP TABLE IF EXISTS `' . $table . '`');
+
+    /**
+     * Remove child tables before their parents.  The test reset intentionally
+     * keeps foreign-key enforcement enabled: disabling it can conceal a
+     * migration defect and leaves an interrupted reset indistinguishable from
+     * a clean schema.  Recompute the dependency graph after each drop because
+     * MySQL removes the dropped table's constraint metadata atomically.
+     *
+     * @var array<string, true> $remainingTables
+     */
+    $remainingTables = [];
+    foreach ($tables as $table) {
+        if (!is_string($table) || preg_match('/\A[A-Za-z0-9_]+\z/', $table) !== 1) {
+            throw new \UnexpectedValueException('Test schema contains an unsafe table identifier.');
         }
-    } finally {
-        $connection->exec('SET SESSION FOREIGN_KEY_CHECKS = 1');
+
+        $remainingTables[$table] = true;
     }
-    fwrite(STDOUT, sprintf("Test schema reset: PASS (%d tables removed)\n", count($tables)));
+
+    $foreignKeyStatement = $connection->prepare(
+        'SELECT TABLE_NAME, REFERENCED_TABLE_NAME
+         FROM information_schema.KEY_COLUMN_USAGE
+         WHERE TABLE_SCHEMA = :table_schema
+           AND REFERENCED_TABLE_SCHEMA = :referenced_schema
+           AND REFERENCED_TABLE_NAME IS NOT NULL',
+    );
+    $dropped = 0;
+    while ($remainingTables !== []) {
+        $foreignKeyStatement->execute([
+            ':table_schema' => $database,
+            ':referenced_schema' => $database,
+        ]);
+        /** @var list<array{TABLE_NAME: string, REFERENCED_TABLE_NAME: string}> $foreignKeys */
+        $foreignKeys = $foreignKeyStatement->fetchAll(\PDO::FETCH_ASSOC);
+        $referencedTables = [];
+        foreach ($foreignKeys as $foreignKey) {
+            $childTable = $foreignKey['TABLE_NAME'];
+            $parentTable = $foreignKey['REFERENCED_TABLE_NAME'];
+            if (
+                $childTable !== $parentTable
+                && isset($remainingTables[$childTable], $remainingTables[$parentTable])
+            ) {
+                $referencedTables[$parentTable] = true;
+            }
+        }
+
+        $dropCandidates = array_keys(array_diff_key($remainingTables, $referencedTables));
+        sort($dropCandidates, SORT_STRING);
+        if ($dropCandidates === []) {
+            throw new \RuntimeException('Test schema reset cannot safely resolve a foreign-key dependency cycle.');
+        }
+
+        foreach ($dropCandidates as $table) {
+            $connection->exec('DROP TABLE IF EXISTS `' . $table . '`');
+            unset($remainingTables[$table]);
+            $dropped++;
+        }
+    }
+    fwrite(STDOUT, sprintf("Test schema reset: PASS (%d tables removed)\n", $dropped));
     exit(0);
 } catch (\Throwable $exception) {
-    fwrite(STDERR, "Test schema reset: FAIL\n");
+    fwrite(STDERR, sprintf("Test schema reset: FAIL (%s)\n", $exception->getMessage()));
     exit(1);
 }

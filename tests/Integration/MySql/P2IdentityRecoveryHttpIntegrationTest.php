@@ -621,6 +621,8 @@ final class P2IdentityRecoveryHttpIntegrationTest extends MySqlIntegrationTestCa
 
     private function rebuildIdentityTables(): void
     {
+        \Qmdb\Tests\Support\MySql\QuranReferenceTestSchemaCleanup::dropDependentTables($this->connection);
+
         foreach (
             [
             'organization_affiliation_status_events', 'organization_affiliation_role_assignments',

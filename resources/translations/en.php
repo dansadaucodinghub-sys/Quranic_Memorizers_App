@@ -13,6 +13,7 @@ return [
     'action.refresh_status' => 'Refresh status',
     'app.name' => 'Qur’an Memorizer DB',
     'app.tagline' => 'A trustworthy foundation for Qur’an memorization programmes.',
+    'title.quran_reference' => 'Qur’an Reference',
     'error.async' => 'The requested content could not be loaded.',
     'error.fallback' => 'Open the full page instead',
     'error.reference' => 'Request reference: {request_id}',

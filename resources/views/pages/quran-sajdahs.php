@@ -1,0 +1,1 @@
+<?php declare(strict_types=1); ?><article class="shell prose-page"><h1>Sajdah locations</h1><?= $renderer->render('fragments.quran-sajdahs',new \Qmdb\Shared\Presentation\View\ViewData(['sajdahs'=>$view->list('sajdahs')]),$translator)->trustedHtml() ?></article>
