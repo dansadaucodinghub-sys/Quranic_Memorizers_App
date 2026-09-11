@@ -32,13 +32,7 @@ final readonly class QuranGovernanceVerifyConsoleCommand implements ConsoleComma
         $input->assertOnlyOptions([]);
         try {
             $connection = $this->connections->connection();
-            $valid = true;
-            $table = $connection->prepare(
-                'SELECT COUNT(*) FROM information_schema.tables '
-                . 'WHERE table_schema = DATABASE() AND table_name = :table',
-            );
-            foreach (
-                [
+            $requiredTables = [
                 'quran_reference_sources',
                 'quran_source_artifacts',
                 'quran_reference_releases',
@@ -46,10 +40,16 @@ final readonly class QuranGovernanceVerifyConsoleCommand implements ConsoleComma
                 'quran_release_manifests',
                 'quran_release_validations',
                 'quran_release_events',
-                ] as $tableName
-            ) {
+            ];
+            $table = $connection->prepare(
+                'SELECT COUNT(*) FROM information_schema.tables '
+                . 'WHERE table_schema = DATABASE() AND table_name = :table',
+            );
+            foreach ($requiredTables as $tableName) {
                 $table->execute([':table' => $tableName]);
-                $valid = $valid && (int) $table->fetchColumn() === 1;
+                if ((int) $table->fetchColumn() !== 1) {
+                    throw new \RuntimeException('Required Qur’an governance table is unavailable.');
+                }
             }
             $sources = $connection->prepare(
                 'SELECT source_code, source_reference, runtime_download_allowed, status '
@@ -63,21 +63,26 @@ final readonly class QuranGovernanceVerifyConsoleCommand implements ConsoleComma
             foreach ($expectedSources as $sourceCode => $reference) {
                 $sources->execute([':source_code' => $sourceCode]);
                 $source = $sources->fetch(PDO::FETCH_ASSOC);
-                $valid = $valid
-                    && is_array($source)
-                    && ($source['source_reference'] ?? null) === $reference
-                    && in_array($source['runtime_download_allowed'] ?? null, [0, '0'], true)
-                    && ($source['status'] ?? null) === 'APPROVED';
+                if (
+                    !is_array($source)
+                    || ($source['source_reference'] ?? null) !== $reference
+                    || !in_array($source['runtime_download_allowed'] ?? null, [0, '0'], true)
+                    || ($source['status'] ?? null) !== 'APPROVED'
+                ) {
+                    throw new \RuntimeException('Approved Qur’an source definition is invalid.');
+                }
             }
-        } catch (\Throwable) {
-            $valid = false;
-        }
-        $output->write(
-            'Qur’an governance verification: ' . ($valid ? "PASS\n" : "FAIL\n")
-            . "Canonical text tables: 0\n"
-            . 'Approved source count: ' . ($valid ? "3\n" : "0\n"),
-        );
+            $output->write(
+                "Qur’an governance verification: PASS\nGovernance tables: "
+                . count($requiredTables)
+                . "\nApproved source count: 3\n",
+            );
 
-        return $valid ? 0 : 1;
+            return 0;
+        } catch (\Throwable $exception) {
+            $output->write("Qur’an governance verification: FAIL\n" . $exception->getMessage() . "\n");
+
+            return 1;
+        }
     }
 }
