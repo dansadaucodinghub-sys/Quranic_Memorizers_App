@@ -1,0 +1,27 @@
+authorization_id: QMDB-P4-B03-AUTH-001
+phase: P4
+phase_title: Qur’an Reference and Governance
+batch: QMDB-P4-B03
+batch_title: Public Qur’an Reference, Navigation, Search, Accessibility, and Security Hardening
+authorizing_instruction: QMDB-P4-B03-IMPLEMENT-NOW
+authority_note: Later project-owner execution instructions supersede the earlier B01-only execution boundary for this batch.
+requirement_ids:
+  - QMDB-P4-REQ-017
+  - QMDB-P4-REQ-018
+  - QMDB-P4-REQ-019
+  - QMDB-P4-REQ-020
+  - QMDB-P4-REQ-021
+  - QMDB-P4-REQ-022
+  - QMDB-P4-REQ-023
+  - QMDB-P4-REQ-024
+implementation_status: IMPLEMENTED_VALIDATION_PENDING
+completion_status: NOT_COMPLETE
+completion_blockers:
+  - global PHPStan terminal pass
+  - full style-check terminal pass
+  - B03 concurrency and fault-injection evidence
+  - B03 accessibility evidence
+  - release and applicable freeze verification
+prohibited:
+  - P4 closeout
+  - P5 competition implementation

@@ -359,7 +359,7 @@ P4-B01 Status: INCOMPLETE
 
 P4-B02 Status: DEFINED / NOT STARTED / NOT AUTHORIZED
 
-P4-B03 Status: DEFINED / NOT STARTED / NOT AUTHORIZED
+P4-B03 Status: IMPLEMENTED / VALIDATION PENDING
 
 P5 Competition Status: NOT STARTED / NOT AUTHORIZED
 
@@ -367,6 +367,6 @@ P4 Status: IN PROGRESS
 
 Batch Status: INCOMPLETE
 
-Implementation Status: RESOLUTION REQUIRED
+Implementation Status: B03 VALIDATION REQUIRED
 
-Reason: the committed B01 source-governance schema and source catalog are verified, but mandatory lifecycle services, protected governance interfaces, security integrations, required coverage, release verification, and `QMDB-P4-B01-FRZ-001` remain incomplete.
+Reason: historical B01-only status text was superseded by later owner-authorized B02/B03 execution. B03 implementation is committed; completion remains pending terminal global quality, B03 coverage, release, and freeze evidence.
