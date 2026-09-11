@@ -61,6 +61,7 @@ use Qmdb\Modules\QuranReferenceGovernance\Interface\Console\QuranGovernanceVerif
 use Qmdb\Modules\QuranReferenceGovernance\Interface\Console\QuranSourcesVerifyConsoleCommand;
 use Qmdb\Modules\QuranReferenceGovernance\Interface\Console\QuranSourceArtifactRegisterConsoleCommand;
 use Qmdb\Modules\QuranReferenceGovernance\Interface\Console\QuranB02ArtifactsVerifyConsoleCommand;
+use Qmdb\Modules\QuranReferenceGovernance\Interface\Console\QuranReleaseImportConsoleCommand;
 
 final readonly class ConsoleFoundationModule implements Module
 {
@@ -240,6 +241,7 @@ final readonly class ConsoleFoundationModule implements Module
             QuranSourceArtifactRegisterConsoleCommand::class,
             QuranGovernanceVerifyConsoleCommand::class,
             QuranB02ArtifactsVerifyConsoleCommand::class,
+            QuranReleaseImportConsoleCommand::class,
         ];
         $context->service(ServiceDefinition::factory(
             ConsoleCommandMap::class,
@@ -280,6 +282,7 @@ final readonly class ConsoleFoundationModule implements Module
                 $registry->register(ServiceReference::get($resolver, QuranSourceArtifactRegisterConsoleCommand::class));
                 $registry->register(ServiceReference::get($resolver, QuranGovernanceVerifyConsoleCommand::class));
                 $registry->register(ServiceReference::get($resolver, QuranB02ArtifactsVerifyConsoleCommand::class));
+                $registry->register(ServiceReference::get($resolver, QuranReleaseImportConsoleCommand::class));
 
                 return $registry->build();
             }),

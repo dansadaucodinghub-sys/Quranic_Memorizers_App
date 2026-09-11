@@ -9,6 +9,11 @@ use Qmdb\Modules\QuranReferenceGovernance\Interface\Console\QuranGovernanceVerif
 use Qmdb\Modules\QuranReferenceGovernance\Interface\Console\QuranSourcesVerifyConsoleCommand;
 use Qmdb\Modules\QuranReferenceGovernance\Interface\Console\QuranSourceArtifactRegisterConsoleCommand;
 use Qmdb\Modules\QuranReferenceGovernance\Interface\Console\QuranB02ArtifactsVerifyConsoleCommand;
+use Qmdb\Modules\QuranReferenceGovernance\Interface\Console\QuranReleaseImportConsoleCommand;
+use Qmdb\Modules\QuranReferenceGovernance\Application\QuranBaselineReleaseInstaller;
+use Qmdb\Modules\QuranReferenceGovernance\Application\TanzilUthmaniTextParser;
+use Qmdb\Modules\QuranReferenceGovernance\Application\TanzilQuranMetadataParser;
+use Qmdb\Modules\QuranReferenceGovernance\Domain\QuranReleaseManifest;
 use Qmdb\Modules\QuranReferenceGovernance\Domain\QuranSourceArtifactPathGuard;
 use Qmdb\Modules\QuranReferenceGovernance\Domain\QuranReleaseLifecycle;
 use Qmdb\Modules\QuranReferenceGovernance\Application\QuranReleaseLifecycleRepository;
@@ -56,6 +61,11 @@ final readonly class QuranReferenceGovernanceModule implements Module
         $context->service(ServiceDefinition::factory(QuranSourcesVerifyConsoleCommand::class, 'quran.reference_governance', [DatabaseConnectionProvider::class], new ClosureServiceFactory(fn(DependencyResolver $r) => new QuranSourcesVerifyConsoleCommand(ServiceReference::get($r, DatabaseConnectionProvider::class)))));
         $context->service(ServiceDefinition::factory(QuranGovernanceVerifyConsoleCommand::class, 'quran.reference_governance', [DatabaseConnectionProvider::class], new ClosureServiceFactory(fn(DependencyResolver $r) => new QuranGovernanceVerifyConsoleCommand(ServiceReference::get($r, DatabaseConnectionProvider::class)))));
         $context->service(ServiceDefinition::factory(QuranB02ArtifactsVerifyConsoleCommand::class, 'quran.reference_governance', [], new ClosureServiceFactory(fn(DependencyResolver $r) => new QuranB02ArtifactsVerifyConsoleCommand($this->projectRoot))));
+        $context->service(ServiceDefinition::instance(TanzilUthmaniTextParser::class, 'quran.reference_governance', new TanzilUthmaniTextParser()));
+        $context->service(ServiceDefinition::instance(TanzilQuranMetadataParser::class, 'quran.reference_governance', new TanzilQuranMetadataParser()));
+        $context->service(ServiceDefinition::instance(QuranReleaseManifest::class, 'quran.reference_governance', new QuranReleaseManifest()));
+        $context->service(ServiceDefinition::factory(QuranBaselineReleaseInstaller::class, 'quran.reference_governance', [DatabaseConnectionProvider::class, TanzilUthmaniTextParser::class, TanzilQuranMetadataParser::class, QuranReleaseManifest::class], new ClosureServiceFactory(fn(DependencyResolver $r) => new QuranBaselineReleaseInstaller($this->projectRoot, ServiceReference::get($r, DatabaseConnectionProvider::class), ServiceReference::get($r, TanzilUthmaniTextParser::class), ServiceReference::get($r, TanzilQuranMetadataParser::class), ServiceReference::get($r, QuranReleaseManifest::class)))));
+        $context->service(ServiceDefinition::factory(QuranReleaseImportConsoleCommand::class, 'quran.reference_governance', [QuranBaselineReleaseInstaller::class], new ClosureServiceFactory(fn(DependencyResolver $r) => new QuranReleaseImportConsoleCommand(ServiceReference::get($r, QuranBaselineReleaseInstaller::class)))));
         $context->service(ServiceDefinition::instance(QuranSourceArtifactPathGuard::class, 'quran.reference_governance', new QuranSourceArtifactPathGuard()));
         $context->service(ServiceDefinition::factory(QuranSourceArtifactRegisterConsoleCommand::class, 'quran.reference_governance', [DatabaseConnectionProvider::class, QuranSourceArtifactPathGuard::class], new ClosureServiceFactory(fn(DependencyResolver $r) => new QuranSourceArtifactRegisterConsoleCommand($this->projectRoot . '/resources/quran-source-artifacts', ServiceReference::get($r, DatabaseConnectionProvider::class), ServiceReference::get($r, QuranSourceArtifactPathGuard::class)))));
         $context->service(ServiceDefinition::instance(QuranReleaseLifecycle::class, 'quran.reference_governance', new QuranReleaseLifecycle()));
