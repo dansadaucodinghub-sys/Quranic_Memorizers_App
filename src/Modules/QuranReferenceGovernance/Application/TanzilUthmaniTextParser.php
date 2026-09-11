@@ -9,7 +9,7 @@ final readonly class TanzilUthmaniTextParser
     /** @return array{records:list<array{surah_number:int,ayah_number:int,text:string,byte_size:int,sha256:string}>,canonical_text_sha256:string} */
     public function parse(string $path, int $maximumBytes = 16777216, int $maximumLineBytes = 65536): array
     {
-        if (!is_file($path) || filesize($path) === false || filesize($path) > $maximumBytes) {
+        if ($maximumBytes < 1 || $maximumLineBytes < 1 || !is_file($path) || filesize($path) === false || filesize($path) > $maximumBytes) {
             throw new \InvalidArgumentException('Canonical Tanzil artifact is unavailable or exceeds its limit.');
         }
         $handle = fopen($path, 'rb');
