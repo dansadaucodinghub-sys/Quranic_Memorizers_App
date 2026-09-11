@@ -11,6 +11,7 @@ use Qmdb\Modules\IdentityAccess\Interface\Http\IdentityAccessView;
 use Qmdb\Modules\IdentityAccess\Interface\Http\IdentityCsrf;
 use Qmdb\Modules\IdentitySessions\Application\AuthenticatedAccountContext;
 use Qmdb\Modules\IdentitySessions\Interface\Http\AuthenticatedRequestGuard;
+use Qmdb\Modules\QuranReferenceGovernance\Application\QuranReleaseGovernanceReadRepository;
 use Qmdb\Modules\QuranReferenceGovernance\Application\QuranReleaseLifecycleService;
 use Qmdb\Modules\QuranReferenceGovernance\Application\QuranReleaseTransitionCommand;
 use Qmdb\Modules\QuranReferenceGovernance\Domain\QuranReleaseAction;
@@ -21,12 +22,12 @@ use Qmdb\Modules\SecurityAuthorization\Application\Exception\AuthorizationDenied
 use Qmdb\Modules\SecurityAuthorization\Domain\PermissionCode;
 use Qmdb\Modules\SecurityAuthorization\Domain\PlatformAuthorizationScope;
 use Qmdb\Modules\SecurityWeb\Csrf\CsrfAction;
-use Qmdb\Shared\Database\Connection\DatabaseConnectionProvider;
 use Qmdb\Shared\Http\Contract\Controller;
 use Qmdb\Shared\Http\Routing\RouteAttributes;
 use Qmdb\Shared\Identifier\UuidV7;
 use Qmdb\Shared\Presentation\View\ViewData;
 
+/** @phpstan-type ReleaseDetail array{public_id:string,release_code:string,release_version:string,status:string,version:int,created_at:string,updated_at:string} */
 final readonly class QuranReleaseGovernanceController implements Controller
 {
     public function __construct(
@@ -35,7 +36,7 @@ final readonly class QuranReleaseGovernanceController implements Controller
         private IdentityCsrf $csrf,
         private IdentityAccessView $view,
         private Psr17Factory $responses,
-        private DatabaseConnectionProvider $connections,
+        private QuranReleaseGovernanceReadRepository $releases,
         private QuranReleaseLifecycleService $lifecycle,
     ) {
     }
@@ -61,7 +62,7 @@ final readonly class QuranReleaseGovernanceController implements Controller
             }
             $id = $this->parameter($request, 'releaseId');
             UuidV7::fromString($id);
-            $release = $this->release($id);
+            $release = $this->releases->find(UuidV7::fromString($id));
             if ($release === null) {
                 return $this->responses->createResponse(404)->withHeader('Cache-Control', 'private, no-store');
             }
@@ -81,21 +82,17 @@ final readonly class QuranReleaseGovernanceController implements Controller
     }
     private function index(ServerRequestInterface $request): ResponseInterface
     {
-        $rows = $this->connections->connection()->query(
-            'SELECT BIN_TO_UUID(public_id) public_id, release_code, release_version, status, version, created_at '
-            . 'FROM quran_reference_releases ORDER BY created_at DESC, id DESC LIMIT 50',
-        )->fetchAll(\PDO::FETCH_ASSOC);
-
         return $this->privateView(
             $this->view->render(
                 $request,
                 'pages.quran-release-index',
                 'fragments.quran-release-list',
-                new ViewData(['releases' => is_array($rows) ? $rows : []]),
+                new ViewData(['releases' => $this->releases->listRecent(50)]),
                 'Qur’an release governance',
             ),
         );
     }
+    /** @param array{public_id:string,release_code:string,release_version:string,status:string,version:int,created_at:string,updated_at:string} $release */
     private function detail(ServerRequestInterface $request, array $release): ResponseInterface
     {
         return $this->privateView($this->view->render(
@@ -106,6 +103,7 @@ final readonly class QuranReleaseGovernanceController implements Controller
             'Qur’an release governance',
         ));
     }
+    /** @param array{public_id:string,release_code:string,release_version:string,status:string,version:int,created_at:string,updated_at:string} $release */
     private function form(ServerRequestInterface $request, array $release, QuranReleaseAction $action): ResponseInterface
     {
         $csrf = $this->csrf->issue($request, $this->csrfAction($action));
@@ -123,6 +121,7 @@ final readonly class QuranReleaseGovernanceController implements Controller
             cookie: $csrf['cookie'],
         ));
     }
+    /** @param array{public_id:string,release_code:string,release_version:string,status:string,version:int,created_at:string,updated_at:string} $release */
     private function submit(
         ServerRequestInterface $request,
         AuthenticatedAccountContext $actor,
@@ -162,16 +161,6 @@ final readonly class QuranReleaseGovernanceController implements Controller
             $csrf['cookie'],
         ));
     }
-    private function release(string $id): ?array
-    {
-        $s = $this->connections->connection()->prepare(
-            'SELECT BIN_TO_UUID(public_id) public_id, release_code, release_version, status, version, '
-            . 'created_at, updated_at FROM quran_reference_releases WHERE public_id = UUID_TO_BIN(:id)',
-        );
-        $s->execute([':id' => $id]);
-        $r = $s->fetch(\PDO::FETCH_ASSOC);
-        return is_array($r) ? $r : null;
-    }
     private function parameter(ServerRequestInterface $r, string $name): string
     {
         $p = $r->getAttribute(RouteAttributes::PARAMETERS);
@@ -201,6 +190,7 @@ final readonly class QuranReleaseGovernanceController implements Controller
             QuranReleaseAction::REJECT => CsrfAction::QURAN_RELEASE_REJECT,
         };
     }
+    /** @param array<array-key, mixed> $b */
     private function field(array $b, string $n, int $m): string
     {
         $v = $b[$n] ?? null;
@@ -210,6 +200,7 @@ final readonly class QuranReleaseGovernanceController implements Controller
 
         return $v;
     }
+    /** @param array<array-key, mixed> $b */
     private function optional(array $b, string $n, int $m): ?string
     {
         $v = $b[$n] ?? null;

@@ -52,6 +52,7 @@ use Qmdb\Modules\IdentityResolution\Infrastructure\Migration\ExtendIdentityResol
 use Qmdb\Modules\QuranReferenceGovernance\Infrastructure\Migration\CreateQuranReferenceGovernanceMigration;
 use Qmdb\Modules\QuranReferenceGovernance\Infrastructure\Migration\ExtendQuranGovernanceSecurityCatalogMigration;
 use Qmdb\Modules\QuranReferenceGovernance\Infrastructure\Migration\CreateQuranReleaseOperationIdempotencyMigration;
+use Qmdb\Modules\QuranReferenceGovernance\Infrastructure\Migration\CompleteQuranReleaseManifestGovernanceMigration;
 use Qmdb\Shared\Schema\Migration\MigrationRegistry;
 use Qmdb\Shared\Schema\Migration\MigrationRegistryBuilder;
 
@@ -107,5 +108,6 @@ return static function (): MigrationRegistry {
         ->register(new CreateQuranReferenceGovernanceMigration())
         ->register(new ExtendQuranGovernanceSecurityCatalogMigration())
         ->register(new CreateQuranReleaseOperationIdempotencyMigration())
+        ->register(new CompleteQuranReleaseManifestGovernanceMigration())
         ->build();
 };

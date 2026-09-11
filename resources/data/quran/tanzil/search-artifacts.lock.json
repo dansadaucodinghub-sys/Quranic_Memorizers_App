@@ -1,0 +1,52 @@
+{
+    "artifacts": [
+        {
+            "acquired_at_utc": "2026-09-10T18:56:29Z",
+            "artifact_code": "TANZIL_UTHMANI_TEXT_1_1",
+            "byte_size": 1396087,
+            "format_profile": "UTF8_TEXT_WITH_AYAH_IDENTIFIERS",
+            "media_type": "text/plain",
+            "official_reference": "https://tanzil.net/pub/download/index.php?quranType=uthmani&outType=txt-2&agree=true&marks=true&sajdah=true&alef=true&tatweel=true",
+            "original_filename": "quran-uthmani.txt",
+            "repository_relative_path": "resources/data/quran/tanzil/uthmani-1.1/quran-uthmani.txt",
+            "role": "CANONICAL_TEXT",
+            "sha256": "6933e133dd56db778c801bf738848454e43648105a151e8d84d86a7cae39ec5f",
+            "source_code": "TANZIL_UTHMANI_1_1",
+            "source_version": "1.1"
+        },
+        {
+            "acquired_at_utc": "2026-09-10T18:56:29Z",
+            "artifact_code": "TANZIL_QURAN_METADATA_1_0",
+            "byte_size": 77234,
+            "format_profile": "XML",
+            "media_type": "application/xml",
+            "official_reference": "https://tanzil.net/res/text/metadata/quran-data.xml",
+            "original_filename": "quran-data.xml",
+            "repository_relative_path": "resources/data/quran/tanzil/metadata-1.0/quran-data.xml",
+            "role": "STRUCTURAL_METADATA",
+            "sha256": "8867c1d88191472adec9db694b3cd9f135b1a2ef580574d32cf888dcb22c5c7a",
+            "source_code": "TANZIL_QURAN_METADATA_1_0",
+            "source_version": "1.0"
+        },
+        {
+            "acquired_at_utc": "2026-09-10T18:56:29Z",
+            "artifact_code": "TANZIL_SIMPLE_CLEAN_TEXT_1_1",
+            "byte_size": 781176,
+            "format_profile": "UTF8_TEXT_WITH_AYAH_IDENTIFIERS",
+            "media_type": "text/plain",
+            "official_reference": "https://tanzil.net/pub/download/index.php?quranType=simple-clean&outType=txt-2&agree=true",
+            "original_filename": "quran-simple-clean.txt",
+            "repository_relative_path": "resources/data/quran/tanzil/simple-clean-1.1/quran-simple-clean.txt",
+            "role": "SEARCH_TEXT",
+            "sha256": "228df2a717671aeb9d2ff573002bd28d6b3f973f4bc7153554e3a81663d67610",
+            "source_code": "TANZIL_SIMPLE_CLEAN_1_1",
+            "source_version": "1.1"
+        }
+    ],
+    "lock_sha256": "b207bf3add2831001c7931d4ce4c9baec4050ca94378df5b4a8d8197d4081f22",
+    "notice": {
+        "repository_relative_path": "resources/data/quran/tanzil/NOTICE.txt",
+        "sha256": "72493509d507314f60c018fd33aa57d9064a0de42be8926745e4953f59925c62"
+    },
+    "schema": "qmdb.quran.tanzil-artifacts-lock.v1"
+}
