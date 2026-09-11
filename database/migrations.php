@@ -53,6 +53,8 @@ use Qmdb\Modules\QuranReferenceGovernance\Infrastructure\Migration\CreateQuranRe
 use Qmdb\Modules\QuranReferenceGovernance\Infrastructure\Migration\ExtendQuranGovernanceSecurityCatalogMigration;
 use Qmdb\Modules\QuranReferenceGovernance\Infrastructure\Migration\CreateQuranReleaseOperationIdempotencyMigration;
 use Qmdb\Modules\QuranReferenceGovernance\Infrastructure\Migration\CompleteQuranReleaseManifestGovernanceMigration;
+use Qmdb\Modules\QuranReferenceGovernance\Infrastructure\Migration\CreateQuranCanonicalContentMigration;
+use Qmdb\Modules\QuranReferenceGovernance\Infrastructure\Migration\EnableQuranSystemBaselineActorMigration;
 use Qmdb\Shared\Schema\Migration\MigrationRegistry;
 use Qmdb\Shared\Schema\Migration\MigrationRegistryBuilder;
 
@@ -109,5 +111,7 @@ return static function (): MigrationRegistry {
         ->register(new ExtendQuranGovernanceSecurityCatalogMigration())
         ->register(new CreateQuranReleaseOperationIdempotencyMigration())
         ->register(new CompleteQuranReleaseManifestGovernanceMigration())
+        ->register(new CreateQuranCanonicalContentMigration())
+        ->register(new EnableQuranSystemBaselineActorMigration())
         ->build();
 };

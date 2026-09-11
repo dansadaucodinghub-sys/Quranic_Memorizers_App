@@ -60,6 +60,7 @@ use Qmdb\Modules\QuranReferenceGovernance\Interface\Console\P4DecompositionVerif
 use Qmdb\Modules\QuranReferenceGovernance\Interface\Console\QuranGovernanceVerifyConsoleCommand;
 use Qmdb\Modules\QuranReferenceGovernance\Interface\Console\QuranSourcesVerifyConsoleCommand;
 use Qmdb\Modules\QuranReferenceGovernance\Interface\Console\QuranSourceArtifactRegisterConsoleCommand;
+use Qmdb\Modules\QuranReferenceGovernance\Interface\Console\QuranB02ArtifactsVerifyConsoleCommand;
 
 final readonly class ConsoleFoundationModule implements Module
 {
@@ -238,6 +239,7 @@ final readonly class ConsoleFoundationModule implements Module
             QuranSourcesVerifyConsoleCommand::class,
             QuranSourceArtifactRegisterConsoleCommand::class,
             QuranGovernanceVerifyConsoleCommand::class,
+            QuranB02ArtifactsVerifyConsoleCommand::class,
         ];
         $context->service(ServiceDefinition::factory(
             ConsoleCommandMap::class,
@@ -277,6 +279,7 @@ final readonly class ConsoleFoundationModule implements Module
                 $registry->register(ServiceReference::get($resolver, QuranSourcesVerifyConsoleCommand::class));
                 $registry->register(ServiceReference::get($resolver, QuranSourceArtifactRegisterConsoleCommand::class));
                 $registry->register(ServiceReference::get($resolver, QuranGovernanceVerifyConsoleCommand::class));
+                $registry->register(ServiceReference::get($resolver, QuranB02ArtifactsVerifyConsoleCommand::class));
 
                 return $registry->build();
             }),
