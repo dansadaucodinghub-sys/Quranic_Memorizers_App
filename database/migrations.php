@@ -58,6 +58,10 @@ use Qmdb\Modules\QuranReferenceGovernance\Infrastructure\Migration\CreateQuranCa
 use Qmdb\Modules\QuranReferenceGovernance\Infrastructure\Migration\EnableQuranSystemBaselineActorMigration;
 use Qmdb\Modules\QuranReferenceGovernance\Infrastructure\Migration\CreateQuranSearchCorpusMigration;
 use Qmdb\Modules\QuranReferenceGovernance\Infrastructure\Migration\ExtendQuranPublicSearchRateLimitMigration;
+use Qmdb\Modules\CompetitionConfiguration\Infrastructure\Migration\CreateCompetitionConfigurationMigration;
+use Qmdb\Modules\CompetitionConfiguration\Infrastructure\Migration\CreateCompetitionCategoryConfigurationMigration;
+use Qmdb\Modules\CompetitionRegistration\Infrastructure\Migration\CreateCompetitionRegistrationMigration;
+use Qmdb\Modules\CompetitionRegistration\Infrastructure\Migration\HardenCompetitionTenantRelationshipsMigration;
 use Qmdb\Shared\Schema\Migration\MigrationRegistry;
 use Qmdb\Shared\Schema\Migration\MigrationRegistryBuilder;
 
@@ -119,5 +123,9 @@ return static function (): MigrationRegistry {
         ->register(new EnableQuranSystemBaselineActorMigration())
         ->register(new CreateQuranSearchCorpusMigration())
         ->register(new ExtendQuranPublicSearchRateLimitMigration())
+        ->register(new CreateCompetitionConfigurationMigration())
+        ->register(new CreateCompetitionCategoryConfigurationMigration())
+        ->register(new CreateCompetitionRegistrationMigration())
+        ->register(new HardenCompetitionTenantRelationshipsMigration())
         ->build();
 };

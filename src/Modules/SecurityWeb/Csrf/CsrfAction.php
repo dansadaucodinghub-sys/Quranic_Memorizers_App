@@ -86,4 +86,22 @@ enum CsrfAction: string
     case QURAN_RELEASE_ACTIVATE = 'quran.release.activate';
     case QURAN_RELEASE_REJECT = 'quran.release.reject';
     case QURAN_SEARCH_CORPUS_VALIDATE = 'quran.search_corpus.validate';
+    case COMPETITION_PROGRAM_CREATE = 'competition.program.create';
+    case COMPETITION_PROGRAM_UPDATE = 'competition.program.update';
+    case COMPETITION_PROGRAM_ACTIVATE = 'competition.program.activate';
+    case COMPETITION_PROGRAM_RETIRE = 'competition.program.retire';
+    case COMPETITION_EDITION_CREATE = 'competition.edition.create';
+    case COMPETITION_EDITION_UPDATE = 'competition.edition.update';
+    case COMPETITION_EDITION_PUBLISH = 'competition.edition.publish';
+    case COMPETITION_EDITION_OPEN_REGISTRATION = 'competition.edition.open_registration';
+    case COMPETITION_EDITION_CLOSE_REGISTRATION = 'competition.edition.close_registration';
+    case COMPETITION_EDITION_REOPEN_REGISTRATION = 'competition.edition.reopen_registration';
+    case COMPETITION_EDITION_CANCEL = 'competition.edition.cancel';
+    case COMPETITION_CATEGORY_CREATE = 'competition.category.create';
+    case COMPETITION_CATEGORY_UPDATE = 'competition.category.update';
+    case COMPETITION_CATEGORY_PUBLISH = 'competition.category.publish';
+    case COMPETITION_CATEGORY_CAPACITY = 'competition.category.capacity';
+    case COMPETITION_REGISTRATION_SUBMIT = 'competition.registration.submit';
+    case COMPETITION_REGISTRATION_WITHDRAW = 'competition.registration.withdraw';
+    case COMPETITION_ROSTER_FINALIZE = 'competition.roster.finalize';
 }

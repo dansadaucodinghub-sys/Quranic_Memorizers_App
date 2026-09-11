@@ -30,6 +30,8 @@ use Qmdb\Bootstrap\Module\OrganizationsRegistryModule;
 use Qmdb\Bootstrap\Module\OrganizationsAffiliationsModule;
 use Qmdb\Bootstrap\Module\PeopleIdentityResolutionModule;
 use Qmdb\Bootstrap\Module\QuranReferenceGovernanceModule;
+use Qmdb\Bootstrap\Module\CompetitionConfigurationModule;
+use Qmdb\Bootstrap\Module\CompetitionRegistrationModule;
 use Qmdb\Bootstrap\Module\ObservabilityFoundationModule;
 use Qmdb\Bootstrap\Module\PresentationFoundationModule;
 use Qmdb\Bootstrap\Module\SchemaFoundationModule;
@@ -222,6 +224,8 @@ final readonly class ApplicationFactory
             new OrganizationsAffiliationsModule($organizationAffiliationsConfiguration),
             new PeopleIdentityResolutionModule($identityResolutionConfiguration),
             new QuranReferenceGovernanceModule($this->projectRoot),
+            new CompetitionConfigurationModule(),
+            new CompetitionRegistrationModule(),
             new ApplicationHttpModule($this->projectRoot),
             new ConsoleFoundationModule(),
         ]);

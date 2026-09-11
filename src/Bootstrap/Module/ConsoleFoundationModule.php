@@ -68,6 +68,9 @@ use Qmdb\Modules\QuranReferenceGovernance\Interface\Console\QuranSearchArtifactV
 use Qmdb\Modules\QuranReferenceGovernance\Interface\Console\QuranSearchCorpusVerifyConsoleCommand;
 use Qmdb\Modules\QuranReferenceGovernance\Interface\Console\QuranPublicReferenceVerifyConsoleCommand;
 use Qmdb\Modules\QuranReferenceGovernance\Interface\Console\QuranP4CloseoutVerifyConsoleCommand;
+use Qmdb\Modules\CompetitionConfiguration\Interface\Console\CompetitionConfigurationVerifyConsoleCommand;
+use Qmdb\Modules\CompetitionConfiguration\Interface\Console\CompetitionP5VerifyConsoleCommand;
+use Qmdb\Modules\CompetitionRegistration\Interface\Console\CompetitionRegistrationVerifyConsoleCommand;
 
 final readonly class ConsoleFoundationModule implements Module
 {
@@ -91,6 +94,8 @@ final readonly class ConsoleFoundationModule implements Module
             new ModuleId('security.privileged_access'),
             new ModuleId('security.audit'),
             new ModuleId('application.http'),
+            new ModuleId('competition.configuration'),
+            new ModuleId('competition.registration'),
             new ModuleId('reference.geography'),
             new ModuleId('people.profiles'),
             new ModuleId('organizations.registry'),
@@ -254,6 +259,9 @@ final readonly class ConsoleFoundationModule implements Module
             QuranSearchCorpusVerifyConsoleCommand::class,
             QuranPublicReferenceVerifyConsoleCommand::class,
             QuranP4CloseoutVerifyConsoleCommand::class,
+            CompetitionConfigurationVerifyConsoleCommand::class,
+            CompetitionP5VerifyConsoleCommand::class,
+            CompetitionRegistrationVerifyConsoleCommand::class,
         ];
         $context->service(ServiceDefinition::factory(
             ConsoleCommandMap::class,
@@ -301,6 +309,9 @@ final readonly class ConsoleFoundationModule implements Module
                 $registry->register(ServiceReference::get($resolver, QuranSearchCorpusVerifyConsoleCommand::class));
                 $registry->register(ServiceReference::get($resolver, QuranPublicReferenceVerifyConsoleCommand::class));
                 $registry->register(ServiceReference::get($resolver, QuranP4CloseoutVerifyConsoleCommand::class));
+                $registry->register(ServiceReference::get($resolver, CompetitionConfigurationVerifyConsoleCommand::class));
+                $registry->register(ServiceReference::get($resolver, CompetitionP5VerifyConsoleCommand::class));
+                $registry->register(ServiceReference::get($resolver, CompetitionRegistrationVerifyConsoleCommand::class));
 
                 return $registry->build();
             }),

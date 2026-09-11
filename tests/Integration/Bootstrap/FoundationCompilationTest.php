@@ -12,6 +12,8 @@ use Qmdb\Bootstrap\Module\ApplicationServicesFoundationModule;
 use Qmdb\Bootstrap\Module\ApplicationHttpModule;
 use Qmdb\Bootstrap\Module\BackgroundExecutionFoundationModule;
 use Qmdb\Bootstrap\Module\ConsoleFoundationModule;
+use Qmdb\Bootstrap\Module\CompetitionConfigurationModule;
+use Qmdb\Bootstrap\Module\CompetitionRegistrationModule;
 use Qmdb\Bootstrap\Module\CoreFoundationModule;
 use Qmdb\Bootstrap\Module\DatabaseFoundationModule;
 use Qmdb\Bootstrap\Module\GeographyReferenceModule;
@@ -29,6 +31,7 @@ use Qmdb\Bootstrap\Module\OrganizationsAffiliationsModule;
 use Qmdb\Bootstrap\Module\PeopleProfilesModule;
 use Qmdb\Bootstrap\Module\PeopleIdentityResolutionModule;
 use Qmdb\Bootstrap\Module\PresentationFoundationModule;
+use Qmdb\Bootstrap\Module\QuranReferenceGovernanceModule;
 use Qmdb\Bootstrap\Module\SchemaFoundationModule;
 use Qmdb\Bootstrap\Module\SecurityWebModule;
 use Qmdb\Bootstrap\Module\SecurityAuthorizationModule;
@@ -95,7 +98,10 @@ final class FoundationCompilationTest extends TestCase
             'people.profiles',
             'organizations.affiliations',
             'people.identity_resolution',
+            'quran.reference_governance',
             'application.http',
+            'competition.configuration',
+            'competition.registration',
             'foundation.console',
         ], $registry->orderedModuleIds());
     }
@@ -201,6 +207,9 @@ final class FoundationCompilationTest extends TestCase
             new OrganizationsRegistryModule($organizationsRegistry),
             new OrganizationsAffiliationsModule($organizationAffiliations),
             new PeopleIdentityResolutionModule($identityResolution),
+            new QuranReferenceGovernanceModule(dirname(__DIR__, 3)),
+            new CompetitionConfigurationModule(),
+            new CompetitionRegistrationModule(),
             new ApplicationHttpModule(dirname(__DIR__, 3)),
             new ConsoleFoundationModule(),
         ]);

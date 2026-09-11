@@ -14,6 +14,8 @@ use Qmdb\Modules\QuranReferenceGovernance\Infrastructure\Seed\SeedQuranReference
 use Qmdb\Modules\QuranReferenceGovernance\Infrastructure\Seed\SeedQuranGovernanceAuthorization;
 use Qmdb\Modules\QuranReferenceGovernance\Infrastructure\Seed\SeedQuranSearchCorpusAuthorization;
 use Qmdb\Modules\QuranReferenceGovernance\Infrastructure\Seed\SeedCorrectQuranMetadataSourceReference;
+use Qmdb\Modules\CompetitionConfiguration\Infrastructure\Seed\SeedCompetitionAuthorizationCatalog;
+use Qmdb\Modules\CompetitionConfiguration\Infrastructure\Seed\SeedCompetitionAuthorizationRoleMappings;
 use Qmdb\Shared\Schema\Seed\SeedRegistry;
 use Qmdb\Shared\Schema\Seed\SeedRegistryBuilder;
 
@@ -31,5 +33,7 @@ return static function (): SeedRegistry {
         ->register(new SeedQuranGovernanceAuthorization())
         ->register(new SeedQuranSearchCorpusAuthorization())
         ->register(new SeedCorrectQuranMetadataSourceReference())
+        ->register(new SeedCompetitionAuthorizationCatalog())
+        ->register(new SeedCompetitionAuthorizationRoleMappings())
         ->build();
 };
