@@ -36,6 +36,26 @@ final class DatabaseArchitectureTest extends TestCase
                 || str_contains($normalized, '/Modules/SecurityPrivilegedAccess/Infrastructure/Persistence/')
                 || str_contains($normalized, '/Modules/Tenancy/Infrastructure/Persistence/')
                 || str_contains($normalized, '/Modules/TenancyContext/Infrastructure/Persistence/')
+                || str_contains($normalized, '/Modules/CompetitionConfiguration/Infrastructure/')
+                || str_contains($normalized, '/Modules/CompetitionRegistration/Infrastructure/')
+                || str_contains($normalized, '/Modules/CompetitionJudging/Infrastructure/')
+                || str_contains($normalized, '/Modules/CompetitionScoring/Infrastructure/')
+                || str_contains($normalized, '/Modules/CompetitionResults/Infrastructure/')
+                || str_contains($normalized, '/Modules/QuranReferenceGovernance/Infrastructure/')
+                || str_contains($normalized, '/Modules/CompetitionConfiguration/Interface/Console/')
+                || str_contains($normalized, '/Modules/CompetitionRegistration/Interface/Console/')
+                || str_contains($normalized, '/Modules/CompetitionResults/Interface/Console/')
+                || in_array(basename($normalized), [
+                    'QuranBaselineReleaseInstaller.php',
+                    'QuranBaselineSearchCorpusInstaller.php',
+                    'QuranP4CloseoutReadinessCheck.php',
+                    'QuranGovernanceVerifyConsoleCommand.php',
+                    'QuranSourcesVerifyConsoleCommand.php',
+                    'QuranSourceArtifactRegisterConsoleCommand.php',
+                    'QuranContentVerifyConsoleCommand.php',
+                    'QuranSearchCorpusVerifyConsoleCommand.php',
+                    'QuranPublicReferenceVerifyConsoleCommand.php',
+                ], true)
                 || str_ends_with($normalized, '/Shared/Database/Connection/DatabaseConnectionProvider.php')
                 || str_contains($normalized, '/Shared/Schema/')
                 || str_contains($normalized, '/Shared/Background/Scheduler/Infrastructure/'),

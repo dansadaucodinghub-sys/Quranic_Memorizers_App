@@ -46,6 +46,8 @@ final class P2RouteSecurityHardeningTest extends TestCase
             'geography.nigeria.index', 'geography.nigeria.area', 'geography.lookup.children',
             'quran.public.home', 'quran.public.surahs', 'quran.public.surah', 'quran.public.ayah',
             'quran.public.partition', 'quran.public.sajdahs', 'quran.public.search',
+            'competition.public.results.edition', 'competition.public.results.category',
+            'competition.public.results.round',
         ], true);
         foreach ($routes as $route) {
             $name = $route['name'];

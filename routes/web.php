@@ -48,6 +48,8 @@ use Qmdb\Modules\IdentityResolution\Interface\Http\PeopleIdentityResolutionContr
 use Qmdb\Modules\QuranReferenceGovernance\Interface\Http\QuranReleaseGovernanceController;
 use Qmdb\Modules\QuranReferenceGovernance\Interface\Http\QuranPublicReferenceController;
 use Qmdb\Modules\QuranReferenceGovernance\Interface\Http\QuranSearchCorpusIntegrityController;
+use Qmdb\Modules\CompetitionResults\Interface\Http\CompetitionP6WorkflowController;
+use Qmdb\Modules\CompetitionResults\Interface\Http\CompetitionPublicResultsController;
 use Qmdb\Shared\Http\Routing\HttpMethod;
 use Qmdb\Shared\Http\Routing\Route;
 use Qmdb\Shared\Http\Routing\RouteCollection;
@@ -98,6 +100,8 @@ return static function (
     QuranReleaseGovernanceController $quranReleaseGovernance,
     QuranPublicReferenceController $quranPublicReference,
     QuranSearchCorpusIntegrityController $quranSearchCorpusIntegrity,
+    CompetitionP6WorkflowController $competitionP6Workflow,
+    CompetitionPublicResultsController $competitionPublicResults,
 ): RouteCollection {
     return new RouteCollection(
         new Route('system.home', [HttpMethod::GET], new RoutePattern('/'), $homeController),
@@ -579,5 +583,40 @@ return static function (
         new Route('account.affiliations.decline.submit', [HttpMethod::POST], new RoutePattern('/account/affiliations/{affiliationId}/decline'), $organizationAffiliations),
         new Route('account.affiliations.leave.form', [HttpMethod::GET], new RoutePattern('/account/affiliations/{affiliationId}/leave'), $organizationAffiliations),
         new Route('account.affiliations.leave.submit', [HttpMethod::POST], new RoutePattern('/account/affiliations/{affiliationId}/leave'), $organizationAffiliations),
+        new Route('account.competition_judging.dashboard', [HttpMethod::GET], new RoutePattern('/account/judging'), $competitionP6Workflow),
+        new Route('account.competition_judging.assignment.detail', [HttpMethod::GET], new RoutePattern('/account/judging/assignments/{assignmentId}'), $competitionP6Workflow),
+        new Route('account.competition_judging.assignment.accept', [HttpMethod::POST], new RoutePattern('/account/judging/assignments/{assignmentId}/accept'), $competitionP6Workflow),
+        new Route('account.competition_judging.assignment.decline', [HttpMethod::POST], new RoutePattern('/account/judging/assignments/{assignmentId}/decline'), $competitionP6Workflow),
+        new Route('account.competition_judging.score.form', [HttpMethod::GET], new RoutePattern('/account/judging/assignments/{assignmentId}/participants/{participantId}/score'), $competitionP6Workflow),
+        new Route('account.competition_judging.score.submit', [HttpMethod::POST], new RoutePattern('/account/judging/assignments/{assignmentId}/participants/{participantId}/score/submit'), $competitionP6Workflow),
+        new Route('account.competition_judging.score.lock.form', [HttpMethod::GET], new RoutePattern('/account/judging/assignments/{assignmentId}/participants/{participantId}/score/lock'), $competitionP6Workflow),
+        new Route('account.competition_judging.score.lock', [HttpMethod::POST], new RoutePattern('/account/judging/assignments/{assignmentId}/participants/{participantId}/score/lock'), $competitionP6Workflow),
+        new Route('account.competition_appeal.index', [HttpMethod::GET], new RoutePattern('/account/competition-appeals'), $competitionP6Workflow),
+        new Route('account.competition_appeal.detail', [HttpMethod::GET], new RoutePattern('/account/competition-appeals/{appealId}'), $competitionP6Workflow),
+        new Route('account.competition_appeal.withdraw.form', [HttpMethod::GET], new RoutePattern('/account/competition-appeals/{appealId}/withdraw'), $competitionP6Workflow),
+        new Route('account.competition_appeal.withdraw', [HttpMethod::POST], new RoutePattern('/account/competition-appeals/{appealId}/withdraw'), $competitionP6Workflow),
+        new Route('workspace.competition.round.ready.form', [HttpMethod::GET], new RoutePattern('/workspace/competitions/rounds/{roundId}/ready'), $competitionP6Workflow),
+        new Route('workspace.competition.round.ready', [HttpMethod::POST], new RoutePattern('/workspace/competitions/rounds/{roundId}/ready'), $competitionP6Workflow),
+        new Route('workspace.competition.round.open_scoring.form', [HttpMethod::GET], new RoutePattern('/workspace/competitions/rounds/{roundId}/open-scoring'), $competitionP6Workflow),
+        new Route('workspace.competition.round.open_scoring', [HttpMethod::POST], new RoutePattern('/workspace/competitions/rounds/{roundId}/open-scoring'), $competitionP6Workflow),
+        new Route('workspace.competition.round.close_scoring.form', [HttpMethod::GET], new RoutePattern('/workspace/competitions/rounds/{roundId}/close-scoring'), $competitionP6Workflow),
+        new Route('workspace.competition.round.close_scoring', [HttpMethod::POST], new RoutePattern('/workspace/competitions/rounds/{roundId}/close-scoring'), $competitionP6Workflow),
+        new Route('workspace.competition.round.cancel.form', [HttpMethod::GET], new RoutePattern('/workspace/competitions/rounds/{roundId}/cancel'), $competitionP6Workflow),
+        new Route('workspace.competition.round.cancel', [HttpMethod::POST], new RoutePattern('/workspace/competitions/rounds/{roundId}/cancel'), $competitionP6Workflow),
+        new Route('workspace.competition.assignment.revoke', [HttpMethod::POST], new RoutePattern('/workspace/competitions/assignments/{assignmentId}/revoke'), $competitionP6Workflow),
+        new Route('workspace.competition.result.verify.form', [HttpMethod::GET], new RoutePattern('/workspace/competitions/result-runs/{resultRunId}/verify'), $competitionP6Workflow),
+        new Route('workspace.competition.result.verify', [HttpMethod::POST], new RoutePattern('/workspace/competitions/result-runs/{resultRunId}/verify'), $competitionP6Workflow),
+        new Route('workspace.competition.result.publish.form', [HttpMethod::GET], new RoutePattern('/workspace/competitions/result-runs/{resultRunId}/publish'), $competitionP6Workflow),
+        new Route('workspace.competition.result.publish', [HttpMethod::POST], new RoutePattern('/workspace/competitions/result-runs/{resultRunId}/publish'), $competitionP6Workflow),
+        new Route('workspace.competition.result.void.form', [HttpMethod::GET], new RoutePattern('/workspace/competitions/result-runs/{resultRunId}/void'), $competitionP6Workflow),
+        new Route('workspace.competition.result.void', [HttpMethod::POST], new RoutePattern('/workspace/competitions/result-runs/{resultRunId}/void'), $competitionP6Workflow),
+        new Route('workspace.competition.appeal.start_review', [HttpMethod::POST], new RoutePattern('/workspace/competitions/appeals/{appealId}/start-review'), $competitionP6Workflow),
+        new Route('workspace.competition.appeal.uphold.form', [HttpMethod::GET], new RoutePattern('/workspace/competitions/appeals/{appealId}/uphold'), $competitionP6Workflow),
+        new Route('workspace.competition.appeal.uphold', [HttpMethod::POST], new RoutePattern('/workspace/competitions/appeals/{appealId}/uphold'), $competitionP6Workflow),
+        new Route('workspace.competition.appeal.dismiss.form', [HttpMethod::GET], new RoutePattern('/workspace/competitions/appeals/{appealId}/dismiss'), $competitionP6Workflow),
+        new Route('workspace.competition.appeal.dismiss', [HttpMethod::POST], new RoutePattern('/workspace/competitions/appeals/{appealId}/dismiss'), $competitionP6Workflow),
+        new Route('competition.public.results.edition', [HttpMethod::GET], new RoutePattern('/competitions/{editionSlug}/results'), $competitionPublicResults),
+        new Route('competition.public.results.category', [HttpMethod::GET], new RoutePattern('/competitions/{editionSlug}/categories/{categorySlug}/results'), $competitionPublicResults),
+        new Route('competition.public.results.round', [HttpMethod::GET], new RoutePattern('/competitions/{editionSlug}/categories/{categorySlug}/rounds/{roundCode}/results'), $competitionPublicResults),
     );
 };

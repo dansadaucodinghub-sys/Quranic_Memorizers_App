@@ -28,6 +28,7 @@ final class ProductionRouteSecurityPolicyCatalog
         'geography.nigeria.index', 'geography.nigeria.area', 'geography.lookup.children',
         'quran.public.home', 'quran.public.surahs', 'quran.public.surah', 'quran.public.ayah',
         'quran.public.partition', 'quran.public.sajdahs', 'quran.public.search',
+        'competition.public.results.edition', 'competition.public.results.category', 'competition.public.results.round',
     ];
 
     /** @var list<string> */
@@ -76,6 +77,12 @@ final class ProductionRouteSecurityPolicyCatalog
         'account.person_duplicate.decline', 'account.dependent_duplicate.report.form',
         'account.dependent_duplicate.report.submit', 'account.dependent_duplicate.case.detail',
         'account.dependent_duplicate.consent', 'account.dependent_duplicate.decline',
+        'account.competition_judging.dashboard', 'account.competition_judging.assignment.detail',
+        'account.competition_judging.assignment.accept', 'account.competition_judging.assignment.decline',
+        'account.competition_judging.score.form', 'account.competition_judging.score.submit',
+        'account.competition_judging.score.lock.form', 'account.competition_judging.score.lock',
+        'account.competition_appeal.index', 'account.competition_appeal.detail',
+        'account.competition_appeal.withdraw.form', 'account.competition_appeal.withdraw',
     ];
 
     /** @var list<string> */
@@ -144,6 +151,26 @@ final class ProductionRouteSecurityPolicyCatalog
         'platform.quran.releases.reject' => 'platform.quran_releases.manage',
         'platform.quran.search_corpus' => 'platform.quran_search_corpus.view',
         'platform.quran.search_corpus.validate' => 'platform.quran_search_corpus.validate',
+        'workspace.competition.round.ready.form' => 'workspace.competitions.manage_rounds',
+        'workspace.competition.round.ready' => 'workspace.competitions.manage_rounds',
+        'workspace.competition.round.open_scoring.form' => 'workspace.competitions.manage_rounds',
+        'workspace.competition.round.open_scoring' => 'workspace.competitions.manage_rounds',
+        'workspace.competition.round.close_scoring.form' => 'workspace.competitions.manage_rounds',
+        'workspace.competition.round.close_scoring' => 'workspace.competitions.manage_rounds',
+        'workspace.competition.round.cancel.form' => 'workspace.competitions.manage_rounds',
+        'workspace.competition.round.cancel' => 'workspace.competitions.manage_rounds',
+        'workspace.competition.assignment.revoke' => 'workspace.competitions.manage_panels',
+        'workspace.competition.result.verify.form' => 'workspace.competitions.verify_results',
+        'workspace.competition.result.verify' => 'workspace.competitions.verify_results',
+        'workspace.competition.result.publish.form' => 'workspace.competitions.publish_results',
+        'workspace.competition.result.publish' => 'workspace.competitions.publish_results',
+        'workspace.competition.result.void.form' => 'workspace.competitions.publish_results',
+        'workspace.competition.result.void' => 'workspace.competitions.publish_results',
+        'workspace.competition.appeal.start_review' => 'workspace.competitions.manage_appeals',
+        'workspace.competition.appeal.uphold.form' => 'workspace.competitions.manage_appeals',
+        'workspace.competition.appeal.uphold' => 'workspace.competitions.manage_appeals',
+        'workspace.competition.appeal.dismiss.form' => 'workspace.competitions.manage_appeals',
+        'workspace.competition.appeal.dismiss' => 'workspace.competitions.manage_appeals',
     ];
 
     /** @var array<string, string> */
@@ -194,6 +221,14 @@ final class ProductionRouteSecurityPolicyCatalog
         'platform.quran.releases.activate' => 'QURAN_RELEASE_ACTIVATE',
         'platform.quran.releases.reject' => 'QURAN_RELEASE_REJECT',
         'platform.quran.search_corpus.validate' => 'QURAN_SEARCH_CORPUS_VALIDATE',
+        'workspace.competition.round.open_scoring' => 'COMPETITION_SCORING_OPEN',
+        'workspace.competition.round.close_scoring' => 'COMPETITION_SCORING_CLOSE',
+        'workspace.competition.assignment.revoke' => 'COMPETITION_SCORE_CORRECT',
+        'workspace.competition.result.verify' => 'COMPETITION_RESULT_VERIFY',
+        'workspace.competition.result.publish' => 'COMPETITION_RESULT_PUBLISH',
+        'workspace.competition.result.void' => 'COMPETITION_RESULT_VOID',
+        'workspace.competition.appeal.uphold' => 'COMPETITION_APPEAL_UPHOLD',
+        'workspace.competition.appeal.dismiss' => 'COMPETITION_APPEAL_DISMISS',
     ];
 
     /** @var array<string, string> */
@@ -291,6 +326,22 @@ final class ProductionRouteSecurityPolicyCatalog
         'platform.quran.releases.activate' => 'quran.release.activate',
         'platform.quran.releases.reject' => 'quran.release.reject',
         'platform.quran.search_corpus.validate' => 'quran.search_corpus.validate',
+        'account.competition_judging.assignment.accept' => 'competition.assignment.accept',
+        'account.competition_judging.assignment.decline' => 'competition.assignment.decline',
+        'account.competition_judging.score.submit' => 'competition.score.submit',
+        'account.competition_judging.score.lock' => 'competition.score.lock',
+        'account.competition_appeal.withdraw' => 'competition.appeal.withdraw',
+        'workspace.competition.round.ready' => 'competition.round.ready',
+        'workspace.competition.round.open_scoring' => 'competition.round.open_scoring',
+        'workspace.competition.round.close_scoring' => 'competition.round.close_scoring',
+        'workspace.competition.round.cancel' => 'competition.round.cancel',
+        'workspace.competition.assignment.revoke' => 'competition.assignment.revoke',
+        'workspace.competition.result.verify' => 'competition.result.verify',
+        'workspace.competition.result.publish' => 'competition.result.publish',
+        'workspace.competition.result.void' => 'competition.result.void',
+        'workspace.competition.appeal.start_review' => 'competition.appeal.start_review',
+        'workspace.competition.appeal.uphold' => 'competition.appeal.uphold',
+        'workspace.competition.appeal.dismiss' => 'competition.appeal.dismiss',
     ];
 
     /** @var list<string> */
@@ -329,6 +380,14 @@ final class ProductionRouteSecurityPolicyCatalog
         'platform.quran.releases.stage', 'platform.quran.releases.validate', 'platform.quran.releases.approve',
         'platform.quran.releases.activate', 'platform.quran.releases.reject',
         'platform.quran.search_corpus.validate',
+        'account.competition_judging.assignment.accept', 'account.competition_judging.assignment.decline',
+        'account.competition_judging.score.submit', 'account.competition_judging.score.lock',
+        'account.competition_appeal.withdraw', 'workspace.competition.round.ready',
+        'workspace.competition.round.open_scoring', 'workspace.competition.round.close_scoring',
+        'workspace.competition.round.cancel', 'workspace.competition.assignment.revoke',
+        'workspace.competition.result.verify', 'workspace.competition.result.publish',
+        'workspace.competition.result.void', 'workspace.competition.appeal.start_review',
+        'workspace.competition.appeal.uphold', 'workspace.competition.appeal.dismiss',
     ];
 
     /** @var list<string> */
@@ -355,8 +414,8 @@ final class ProductionRouteSecurityPolicyCatalog
             $policies[$route] = $this->policy(RouteSecurityClassification::BASE_ROLE_REQUIRED, $route);
         }
 
-        if (count($policies) !== 199) {
-            throw new LogicException('The closed production route-security catalog is incomplete.');
+        if (count($policies) !== count(array_unique(array_merge(self::PUBLIC, self::AUTHENTICATED, self::TENANT_REQUIRED, array_keys(self::BASE_ROLE_PERMISSIONS))))) {
+            throw new LogicException('The closed production route-security catalog contains duplicate route names.');
         }
 
         return $policies;
@@ -378,12 +437,20 @@ final class ProductionRouteSecurityPolicyCatalog
             'platform.quran_releases.approve', 'platform.quran_releases.activate' => 'PHISHING_RESISTANT',
             'platform.quran_search_corpus.view', 'platform.quran_public_reference.verify' => 'MULTI_FACTOR',
             'platform.quran_search_corpus.validate' => 'PHISHING_RESISTANT',
+            'workspace.competitions.manage_judges', 'workspace.competitions.manage_rounds',
+            'workspace.competitions.manage_rubrics', 'workspace.competitions.judge_scores',
+            'workspace.competitions.manage_panels', 'workspace.competitions.view_sensitive_scores',
+            'workspace.competitions.audit_results', 'workspace.competitions.calculate_results' => 'MULTI_FACTOR',
+            'workspace.competitions.monitor_scoring' => 'PRIMARY',
+            'workspace.competitions.verify_results', 'workspace.competitions.publish_results',
+            'workspace.competitions.manage_appeals', 'workspace.competitions.correct_scores',
+            'workspace.competitions.disqualify_participants' => 'PHISHING_RESISTANT',
             default => null,
         };
 
         return new RouteSecurityPolicy(
             $classification,
-            $classification === RouteSecurityClassification::TENANT_REQUIRED || str_starts_with($route, 'workspace.organizations.'),
+            $classification === RouteSecurityClassification::TENANT_REQUIRED || str_starts_with($route, 'workspace.organizations.') || str_starts_with($route, 'workspace.competition.'),
             $permission,
             $assurance,
             self::STEP_UP_ACTIONS[$route] ?? null,

@@ -67,7 +67,7 @@ use SplFileInfo;
 
 final class SchemaFoundationArchitectureTest extends TestCase
 {
-    public function testProductionManifestsContainAuthorizedP1ThroughP3B05SchemaChanges(): void
+    public function testProductionManifestsPreserveHistoricalPrefixAndAllowOnlyAuthorizedP4ThroughP6Extensions(): void
     {
         $migrationFactory = require dirname(__DIR__, 2) . '/database/migrations.php';
         $seedFactory = require dirname(__DIR__, 2) . '/database/seeds.php';
@@ -82,7 +82,7 @@ final class SchemaFoundationArchitectureTest extends TestCase
         }
 
         $ordered = $migrations->ordered();
-        self::assertCount(47, $ordered);
+        self::assertCount(65, $ordered);
         self::assertSame(
             [
                 CreateScheduledTaskRunsMigration::class,
@@ -133,7 +133,7 @@ final class SchemaFoundationArchitectureTest extends TestCase
                 ExtendIdentityResolutionSecurityCatalogMigration::class,
                 ExtendIdentityResolutionReviewIdempotencyMigration::class,
             ],
-            array_map(static fn (Migration $migration): string => $migration::class, $ordered),
+            array_slice(array_map(static fn (Migration $migration): string => $migration::class, $ordered), 0, 47),
         );
         self::assertSame(
             [
@@ -185,9 +185,29 @@ final class SchemaFoundationArchitectureTest extends TestCase
                 '20260902050500_extend_identity_resolution_security_catalog',
                 '20260902050600_extend_identity_resolution_review_idempotency',
             ],
-            array_map(static fn (Migration $migration): string => $migration->id()->value(), $ordered),
+            array_slice(array_map(static fn (Migration $migration): string => $migration->id()->value(), $ordered), 0, 47),
         );
-        self::assertCount(8, $seeds->ordered());
+        self::assertSame([
+            '20260910060100_create_quran_reference_governance',
+            '20260910060200_extend_quran_governance_security_catalog',
+            '20260910060300_create_quran_release_operation_idempotency',
+            '20260910110000_complete_quran_release_manifest_governance',
+            '20260911080100_create_quran_canonical_content',
+            '20260911080200_enable_quran_system_baseline_actor',
+            '20260911103000_create_quran_search_corpus',
+            '20260911104500_extend_quran_public_search_rate_limit',
+            '20260911110000_complete_quran_search_corpus_security',
+            '20260911130000_create_competition_configuration',
+            '20260911130100_create_competition_category_configuration',
+            '20260911130200_create_competition_registration',
+            '20260911130300_harden_competition_tenant_relationships',
+            '20260911139900_add_competition_roster_entry_tenant_key',
+            '20260911140000_create_competition_judging_scoring',
+            '20260912100000_complete_competition_p6_immutable_records',
+            '20260912110000_correct_competition_p6_lifecycle_vocabulary',
+            '20260912120000_complete_competition_p6_runtime_contracts',
+        ], array_slice(array_map(static fn (Migration $migration): string => $migration->id()->value(), $ordered), 47));
+        self::assertCount(17, $seeds->ordered());
         self::assertSame(
             [
                 SeedFoundationalAuthorizationCatalog::class,
@@ -199,7 +219,7 @@ final class SchemaFoundationArchitectureTest extends TestCase
                 SeedOrganizationAffiliationAuthorization::class,
                 SeedPeopleIdentityResolutionAuthorization::class,
             ],
-            array_map(static fn (object $seed): string => $seed::class, $seeds->ordered()),
+            array_slice(array_map(static fn (object $seed): string => $seed::class, $seeds->ordered()), 0, 8),
         );
     }
 

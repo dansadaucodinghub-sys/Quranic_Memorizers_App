@@ -131,6 +131,26 @@ final class SourceArchitectureTest extends TestCase
                 || str_contains($path, '/Modules/SecurityPrivilegedAccess/Infrastructure/Seed/')
                 || str_contains($path, '/Modules/Tenancy/Infrastructure/Persistence/')
                 || str_contains($path, '/Modules/TenancyContext/Infrastructure/Persistence/')
+                || str_contains($path, '/Modules/CompetitionConfiguration/Infrastructure/')
+                || str_contains($path, '/Modules/CompetitionRegistration/Infrastructure/')
+                || str_contains($path, '/Modules/CompetitionJudging/Infrastructure/')
+                || str_contains($path, '/Modules/CompetitionScoring/Infrastructure/')
+                || str_contains($path, '/Modules/CompetitionResults/Infrastructure/')
+                || str_contains($path, '/Modules/QuranReferenceGovernance/Infrastructure/')
+                || str_contains($path, '/Modules/CompetitionConfiguration/Interface/Console/')
+                || str_contains($path, '/Modules/CompetitionRegistration/Interface/Console/')
+                || str_contains($path, '/Modules/CompetitionResults/Interface/Console/')
+                || in_array(basename($path), [
+                    'QuranBaselineReleaseInstaller.php',
+                    'QuranBaselineSearchCorpusInstaller.php',
+                    'QuranP4CloseoutReadinessCheck.php',
+                    'QuranGovernanceVerifyConsoleCommand.php',
+                    'QuranSourcesVerifyConsoleCommand.php',
+                    'QuranSourceArtifactRegisterConsoleCommand.php',
+                    'QuranContentVerifyConsoleCommand.php',
+                    'QuranSearchCorpusVerifyConsoleCommand.php',
+                    'QuranPublicReferenceVerifyConsoleCommand.php',
+                ], true)
                 || str_ends_with($path, '/Shared/Database/Connection/DatabaseConnectionProvider.php')
                 || str_contains($path, '/Shared/Schema/')
                 || str_contains($path, '/Shared/Background/Scheduler/Infrastructure/'),
@@ -139,12 +159,17 @@ final class SourceArchitectureTest extends TestCase
         }
     }
 
-    public function testOnlyAuthorizedP2AndP3B05DomainModulesExist(): void
+    public function testOnlyAuthorizedP2ThroughP6DomainModulesExist(): void
     {
         $modules = glob($this->projectRoot() . '/src/Modules/*', GLOB_ONLYDIR);
         self::assertIsArray($modules);
         self::assertSame(
             [
+                'CompetitionConfiguration',
+                'CompetitionJudging',
+                'CompetitionRegistration',
+                'CompetitionResults',
+                'CompetitionScoring',
                 'Geography',
                 'Identity',
                 'IdentityAccess',
@@ -157,6 +182,7 @@ final class SourceArchitectureTest extends TestCase
                 'OrganizationAffiliations',
                 'Organizations',
                 'People',
+                'QuranReferenceGovernance',
                 'SecurityAudit',
                 'SecurityAuthorization',
                 'SecurityPrivilegedAccess',
@@ -167,6 +193,9 @@ final class SourceArchitectureTest extends TestCase
             array_map('basename', $modules),
         );
         self::assertDirectoryDoesNotExist($this->projectRoot() . '/src/Modules/Authorization');
+        foreach (['CompetitionCertificates', 'CompetitionMedia', 'CompetitionLive', 'CompetitionSocial'] as $forbidden) {
+            self::assertDirectoryDoesNotExist($this->projectRoot() . '/src/Modules/' . $forbidden);
+        }
     }
 
     public function testPublicIndexIsTheOnlyPhpWebEntryPoint(): void

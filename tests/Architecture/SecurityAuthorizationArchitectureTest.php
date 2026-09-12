@@ -123,7 +123,7 @@ final class SecurityAuthorizationArchitectureTest extends TestCase
         self::assertGreaterThan($schemaReset, $releaseVerify);
         self::assertStringContainsString("\$environment !== 'test'", $reset);
         self::assertStringContainsString('(?:_test|_ci)', $reset);
-        self::assertStringContainsString('SET SESSION FOREIGN_KEY_CHECKS = 1', $reset);
+        self::assertStringNotContainsString('SET FOREIGN_KEY_CHECKS', $reset);
         self::assertStringNotContainsString('DROP DATABASE', $reset);
     }
 

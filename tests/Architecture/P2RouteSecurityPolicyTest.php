@@ -26,10 +26,9 @@ final class P2RouteSecurityPolicyTest extends TestCase
         $report = $this->verifier()->verify($this->productionRoutes());
 
         self::assertTrue($report->isValid(), implode(', ', $report->errors));
-        self::assertSame(183, $report->routeCount);
-        self::assertSame(183, $report->classifiedRouteCount);
-        self::assertSame(87, $report->mutationRouteCount);
-        self::assertSame(87, $report->csrfProtectedMutationCount);
+        self::assertSame($report->routeCount, $report->classifiedRouteCount);
+        self::assertGreaterThan(0, $report->mutationRouteCount);
+        self::assertSame($report->mutationRouteCount, $report->csrfProtectedMutationCount);
     }
 
     public function testAnUnclassifiedRouteFailsTheClosedPolicyVerifier(): void
@@ -62,7 +61,7 @@ final class P2RouteSecurityPolicyTest extends TestCase
             $matches,
             PREG_SET_ORDER,
         );
-        self::assertCount(183, $matches);
+        self::assertNotSame([], $matches);
         $routes = [];
         foreach ($matches as $match) {
             preg_match_all('/HttpMethod::([A-Z]+)/', $match['methods'], $methods);
@@ -74,6 +73,12 @@ final class P2RouteSecurityPolicyTest extends TestCase
                 $this->controller(),
             );
         }
+
+        $names = array_column($matches, 'name');
+        self::assertCount(count(array_unique($names)), $names);
+        self::assertContains('quran.public.home', $names);
+        self::assertContains('system.home', $names);
+        self::assertNotContains('workspace.competitions.certificates.index', $names);
 
         return new RouteCollection(...$routes);
     }

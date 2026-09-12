@@ -66,6 +66,7 @@ use Qmdb\Modules\CompetitionJudging\Infrastructure\Migration\CreateCompetitionJu
 use Qmdb\Modules\CompetitionJudging\Infrastructure\Migration\AddCompetitionRosterEntryTenantCandidateKeyMigration;
 use Qmdb\Modules\CompetitionResults\Infrastructure\Migration\CompleteCompetitionP6ImmutableRecordsMigration;
 use Qmdb\Modules\CompetitionResults\Infrastructure\Migration\CorrectCompetitionP6LifecycleVocabularyMigration;
+use Qmdb\Modules\CompetitionResults\Infrastructure\Migration\CompleteCompetitionP6RuntimeContractsMigration;
 use Qmdb\Shared\Schema\Migration\MigrationRegistry;
 use Qmdb\Shared\Schema\Migration\MigrationRegistryBuilder;
 
@@ -135,5 +136,6 @@ return static function (): MigrationRegistry {
         ->register(new CreateCompetitionJudgingScoringMigration())
         ->register(new CompleteCompetitionP6ImmutableRecordsMigration())
         ->register(new CorrectCompetitionP6LifecycleVocabularyMigration())
+        ->register(new CompleteCompetitionP6RuntimeContractsMigration())
         ->build();
 };
