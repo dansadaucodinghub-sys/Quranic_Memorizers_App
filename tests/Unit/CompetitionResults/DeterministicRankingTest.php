@@ -31,4 +31,16 @@ final class DeterministicRankingTest extends TestCase
 
         self::assertSame([1, 1, 3], array_column($ranked, 'rank'));
     }
+
+    public function testItSupportsDenseRanksWithoutChangingTieDeterminism(): void
+    {
+        $ranked = (new DeterministicRanking())->dense([
+            ['participantId' => 'p-a', 'totalUnits' => 900, 'tieBreak' => [1]],
+            ['participantId' => 'p-b', 'totalUnits' => 900, 'tieBreak' => [1]],
+            ['participantId' => 'p-c', 'totalUnits' => 800, 'tieBreak' => [1]],
+        ]);
+
+        self::assertSame(['p-a', 'p-b', 'p-c'], array_column($ranked, 'participantId'));
+        self::assertSame([1, 1, 2], array_column($ranked, 'rank'));
+    }
 }

@@ -93,6 +93,15 @@ enum SecurityEventCode: string
     case QURAN_SEARCH_CORPUS_ACTIVATED = 'quran.search_corpus.activated';
     case QURAN_SEARCH_CORPUS_RETIRED = 'quran.search_corpus.retired';
     case QURAN_PUBLIC_REFERENCE_INTEGRITY_VERIFIED = 'quran.public_reference.integrity_verified';
+    case COMPETITION_SCORE_SHEET_LOCKED = 'competition.score_sheet.locked';
+    case COMPETITION_SCORE_SHEET_SUPERSEDED = 'competition.score_sheet.superseded';
+    case COMPETITION_RESULT_CALCULATED = 'competition.result.calculated';
+    case COMPETITION_RESULT_VERIFIED = 'competition.result.verified';
+    case COMPETITION_RESULT_PUBLISHED = 'competition.result.published';
+    case COMPETITION_RESULT_SUPERSEDED = 'competition.result.superseded';
+    case COMPETITION_PARTICIPANT_DISQUALIFIED = 'competition.participant.disqualified';
+    case COMPETITION_APPEAL_SUBMITTED = 'competition.appeal.submitted';
+    case COMPETITION_APPEAL_DECIDED = 'competition.appeal.decided';
 
     public function severity(): SecurityEventSeverity
     {

@@ -10,4 +10,5 @@ enum ResultRunStatus: string
     case VERIFIED = 'VERIFIED';
     case PUBLISHED = 'PUBLISHED';
     case SUPERSEDED = 'SUPERSEDED';
+    case VOIDED = 'VOIDED';
 }

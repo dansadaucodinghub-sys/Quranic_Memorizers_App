@@ -18,6 +18,7 @@ use Qmdb\Modules\CompetitionConfiguration\Infrastructure\Seed\SeedCompetitionAut
 use Qmdb\Modules\CompetitionConfiguration\Infrastructure\Seed\SeedCompetitionAuthorizationRoleMappings;
 use Qmdb\Modules\CompetitionJudging\Infrastructure\Seed\SeedCompetitionP6AuthorizationCatalog;
 use Qmdb\Modules\CompetitionJudging\Infrastructure\Seed\SeedCompetitionP6AuthorizationRoleMappings;
+use Qmdb\Modules\CompetitionJudging\Infrastructure\Seed\CorrectCompetitionP6AuthorizationCatalog;
 use Qmdb\Shared\Schema\Seed\SeedRegistry;
 use Qmdb\Shared\Schema\Seed\SeedRegistryBuilder;
 
@@ -39,5 +40,6 @@ return static function (): SeedRegistry {
         ->register(new SeedCompetitionAuthorizationRoleMappings())
         ->register(new SeedCompetitionP6AuthorizationCatalog())
         ->register(new SeedCompetitionP6AuthorizationRoleMappings())
+        ->register(new CorrectCompetitionP6AuthorizationCatalog())
         ->build();
 };

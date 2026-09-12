@@ -13,6 +13,24 @@ final readonly class DeterministicRanking
      */
     public function standard(array $candidates): array
     {
+        return $this->rank($candidates, false);
+    }
+
+    /**
+     * @param list<Candidate> $candidates
+     * @return list<array{participantId:string,totalUnits:int,rank:int}>
+     */
+    public function dense(array $candidates): array
+    {
+        return $this->rank($candidates, true);
+    }
+
+    /**
+     * @param list<Candidate> $candidates
+     * @return list<array{participantId:string,totalUnits:int,rank:int}>
+     */
+    private function rank(array $candidates, bool $dense): array
+    {
         usort($candidates, static function (array $left, array $right): int {
             $total = $right['totalUnits'] <=> $left['totalUnits'];
             if ($total !== 0) {
@@ -34,7 +52,7 @@ final readonly class DeterministicRanking
         foreach ($candidates as $position => $candidate) {
             $key = $candidate['totalUnits'] . ':' . implode(':', $candidate['tieBreak']);
             if ($key !== $previousKey) {
-                $rank = $position + 1;
+                $rank = $dense ? $rank + 1 : $position + 1;
                 $previousKey = $key;
             }
             $ranked[] = [

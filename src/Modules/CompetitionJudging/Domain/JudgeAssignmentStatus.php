@@ -6,7 +6,7 @@ namespace Qmdb\Modules\CompetitionJudging\Domain;
 
 enum JudgeAssignmentStatus: string
 {
-    case INVITED = 'INVITED';
+    case ASSIGNED = 'ASSIGNED';
     case ACCEPTED = 'ACCEPTED';
     case DECLINED = 'DECLINED';
     case REVOKED = 'REVOKED';
