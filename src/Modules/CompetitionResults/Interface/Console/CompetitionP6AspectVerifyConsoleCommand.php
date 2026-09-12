@@ -9,11 +9,12 @@ use Qmdb\Shared\Console\Command\ConsoleCommandName;
 use Qmdb\Shared\Console\Input\ConsoleInput;
 use Qmdb\Shared\Console\Output\ConsoleOutput;
 use Qmdb\Shared\Database\Connection\DatabaseConnectionProvider;
+use Qmdb\Shared\Background\Scheduler\ScheduledTaskMap;
 
 /** Provides narrow operational verifier names while preserving one schema truth source. */
 final readonly class CompetitionP6AspectVerifyConsoleCommand implements ConsoleCommand
 {
-    public function __construct(private string $command, private string $summary, private DatabaseConnectionProvider $connections)
+    public function __construct(private string $command, private string $summary, private DatabaseConnectionProvider $connections, private ScheduledTaskMap $scheduledTasks)
     {
     }
     public function name(): ConsoleCommandName
@@ -26,6 +27,6 @@ final readonly class CompetitionP6AspectVerifyConsoleCommand implements ConsoleC
     }
     public function execute(ConsoleInput $input, ConsoleOutput $output): int
     {
-        return (new CompetitionP6VerifyConsoleCommand($this->connections))->execute($input, $output);
+        return (new CompetitionP6VerifyConsoleCommand($this->connections, $this->scheduledTasks))->execute($input, $output);
     }
 }

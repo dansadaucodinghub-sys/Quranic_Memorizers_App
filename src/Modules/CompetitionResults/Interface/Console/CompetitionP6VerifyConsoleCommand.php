@@ -11,11 +11,12 @@ use Qmdb\Shared\Console\Command\ConsoleCommandName;
 use Qmdb\Shared\Console\Input\ConsoleInput;
 use Qmdb\Shared\Console\Output\ConsoleOutput;
 use Qmdb\Shared\Database\Connection\DatabaseConnectionProvider;
+use Qmdb\Shared\Background\Scheduler\ScheduledTaskMap;
 
 /** Read-only P6 verifier: checks schema, lifecycle correction, security catalog, and P7 boundary. */
 final readonly class CompetitionP6VerifyConsoleCommand implements ConsoleCommand
 {
-    public function __construct(private DatabaseConnectionProvider $connections)
+    public function __construct(private DatabaseConnectionProvider $connections, private ScheduledTaskMap $scheduledTasks)
     {
     }
     public function name(): ConsoleCommandName
@@ -52,6 +53,12 @@ final readonly class CompetitionP6VerifyConsoleCommand implements ConsoleCommand
             foreach (['ck_p6_round_lifecycle','ck_p6_participant_lifecycle','ck_p6_judge_lifecycle','ck_p6_assignment_lifecycle','ck_p6_conflict_lifecycle','ck_p6_run_lifecycle'] as $constraint) {
                 $this->requireCount($pdo, 'SELECT COUNT(*) FROM information_schema.table_constraints WHERE constraint_schema=DATABASE() AND constraint_name=:constraint AND constraint_type=\'CHECK\'', 1, "P6 lifecycle check is missing: {$constraint}", [':constraint' => $constraint]);
             }
+            $taskIds = array_map(static fn ($task): string => $task->id()->value(), $this->scheduledTasks->tasks());
+            foreach (['competition.rounds.process','competition.score_sheets.remind','competition.appeal_windows.process','competition.score_sheets.reconcile','competition.results.reconcile'] as $taskId) {
+                if (!in_array($taskId, $taskIds, true)) {
+                    throw new \RuntimeException('Required P6 scheduler task is missing: ' . $taskId);
+                }
+            }
             foreach (['trg_p6_result_rows_no_update','trg_p6_result_rows_no_delete','trg_p6_round_events_no_update','trg_p6_round_events_no_delete','trg_p6_assignment_events_no_update','trg_p6_assignment_events_no_delete','trg_p6_score_events_no_update','trg_p6_score_events_no_delete','trg_p6_result_events_no_update','trg_p6_result_events_no_delete','trg_p6_appeal_events_no_update','trg_p6_appeal_events_no_delete'] as $trigger) {
                 $this->requireCount($pdo, 'SELECT COUNT(*) FROM information_schema.triggers WHERE trigger_schema=DATABASE() AND trigger_name=:trigger', 1, "P6 immutability trigger is missing: {$trigger}", [':trigger' => $trigger]);
             }
@@ -59,7 +66,7 @@ final readonly class CompetitionP6VerifyConsoleCommand implements ConsoleCommand
             if ($forbidden === false || (int) $forbidden->fetchColumn() !== 0) {
                 throw new \RuntimeException('A prohibited P7 persistence artifact exists.');
             }
-            $output->write("Competition P6 verification: PASS\nRequired tables: " . count($required) . "\nLifecycle checks: 6\nP6 permissions: 14\nP6 specialist roles: 5\nP7 artifacts: 0\n");
+            $output->write("Competition P6 verification: PASS\nRequired tables: " . count($required) . "\nLifecycle checks: 6\nP6 permissions: 14\nP6 specialist roles: 5\nP6 scheduler tasks: 5\nP7 artifacts: 0\n");
             return 0;
         } catch (\Throwable $error) {
             $output->write("Competition P6 verification: FAIL\n{$error->getMessage()}\n");

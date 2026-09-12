@@ -73,7 +73,10 @@ use Qmdb\Modules\CompetitionConfiguration\Interface\Console\CompetitionP5VerifyC
 use Qmdb\Modules\CompetitionRegistration\Interface\Console\CompetitionRegistrationVerifyConsoleCommand;
 use Qmdb\Modules\CompetitionResults\Interface\Console\CompetitionP6VerifyConsoleCommand;
 use Qmdb\Modules\CompetitionResults\Interface\Console\CompetitionP6AspectVerifyConsoleCommand;
+use Qmdb\Modules\CompetitionResults\Interface\Console\CompetitionP6MaintenanceConsoleCommand;
+use Qmdb\Modules\CompetitionResults\Infrastructure\Persistence\CompetitionP6MaintenanceService;
 use Qmdb\Shared\Database\Connection\DatabaseConnectionProvider;
+use Qmdb\Shared\Background\Scheduler\ScheduledTaskMap;
 
 final readonly class ConsoleFoundationModule implements Module
 {
@@ -267,7 +270,9 @@ final readonly class ConsoleFoundationModule implements Module
             CompetitionP5VerifyConsoleCommand::class,
             CompetitionRegistrationVerifyConsoleCommand::class,
             CompetitionP6VerifyConsoleCommand::class,
+            CompetitionP6MaintenanceService::class,
             DatabaseConnectionProvider::class,
+            ScheduledTaskMap::class,
         ];
         $context->service(ServiceDefinition::factory(
             ConsoleCommandMap::class,
@@ -319,6 +324,18 @@ final readonly class ConsoleFoundationModule implements Module
                 $registry->register(ServiceReference::get($resolver, CompetitionP5VerifyConsoleCommand::class));
                 $registry->register(ServiceReference::get($resolver, CompetitionRegistrationVerifyConsoleCommand::class));
                 $registry->register(ServiceReference::get($resolver, CompetitionP6VerifyConsoleCommand::class));
+                $maintenance = ServiceReference::get($resolver, CompetitionP6MaintenanceService::class);
+                foreach (
+                    [
+                    ['competition:rounds:process', 'rounds'],
+                    ['competition:score-sheets:remind', 'reminders'],
+                    ['competition:appeal-windows:process', 'appeal-windows'],
+                    ['competition:score-sheets:reconcile', 'score-reconciliation'],
+                    ['competition:results:reconcile', 'result-reconciliation'],
+                    ] as [$name, $operation]
+                ) {
+                    $registry->register(new CompetitionP6MaintenanceConsoleCommand($name, $operation, $maintenance));
+                }
                 foreach (
                     [
                     ['competition:judging:verify', 'Verify P6 judging and panel integrity.'],
@@ -331,6 +348,7 @@ final readonly class ConsoleFoundationModule implements Module
                         $name,
                         $description,
                         ServiceReference::get($resolver, DatabaseConnectionProvider::class),
+                        ServiceReference::get($resolver, ScheduledTaskMap::class),
                     ));
                 }
 
