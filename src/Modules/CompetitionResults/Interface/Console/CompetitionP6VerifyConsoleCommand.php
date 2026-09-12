@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace Qmdb\Modules\CompetitionResults\Interface\Console;
 
 use PDO;
+use Qmdb\Modules\CompetitionResults\Infrastructure\Persistence\MySqlCompositeForeignKeyVerifier;
 use Qmdb\Shared\Console\Command\ConsoleCommand;
 use Qmdb\Shared\Console\Command\ConsoleCommandName;
 use Qmdb\Shared\Console\Input\ConsoleInput;
@@ -29,8 +30,9 @@ final readonly class CompetitionP6VerifyConsoleCommand implements ConsoleCommand
                 $statement->execute([':table' => $table]);
                 if ((int) $statement->fetchColumn() !== 1) { throw new \RuntimeException("Required P6 table is missing: {$table}"); }
             }
+            (new MySqlCompositeForeignKeyVerifier())->verify($pdo);
             $this->requireCount($pdo, "SELECT COUNT(*) FROM qmdb_schema_migrations WHERE status='APPLIED' AND migration_id IN ('20260911140000_create_competition_judging_scoring','20260912100000_complete_competition_p6_immutable_records','20260912110000_correct_competition_p6_lifecycle_vocabulary','20260912120000_complete_competition_p6_runtime_contracts','20260912133000_add_competition_p6_result_input_uniqueness')", 5, 'P6 migrations are incomplete.');
-            $this->requireCount($pdo, "SELECT COUNT(*) FROM information_schema.statistics WHERE table_schema=DATABASE() AND table_name='competition_result_runs' AND index_name='uq_p6_result_input'", 3, 'P6 immutable result-input unique key is missing.');
+            $this->requireCount($pdo, "SELECT COUNT(*) FROM information_schema.statistics WHERE table_schema=DATABASE() AND table_name='competition_result_runs' AND index_name='uq_p6_run_input'", 3, 'P6 immutable result-input unique key is missing.');
             $this->requireCount($pdo, "SELECT COUNT(*) FROM qmdb_schema_seeds WHERE status='APPLIED' AND seed_id='20260912111000_correct_competition_p6_authorization_catalog'", 1, 'P6 authorization correction seed is not applied.');
             $this->requireCount($pdo, "SELECT COUNT(*) FROM authorization_permissions WHERE owning_module='competition.results' AND status='ACTIVE'", 14, 'P6 permission catalog is incomplete.');
             $this->requireCount($pdo, "SELECT COUNT(*) FROM authorization_roles WHERE code IN ('workspace.competition_judge','workspace.competition_head_judge','workspace.competition_result_manager','workspace.competition_appeal_reviewer','workspace.competition_result_auditor') AND status='ACTIVE'", 5, 'P6 specialist roles are incomplete.');

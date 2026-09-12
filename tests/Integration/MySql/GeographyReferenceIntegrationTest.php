@@ -11,6 +11,7 @@ use Qmdb\Modules\Geography\Infrastructure\Migration\CreateGeographyCountryAndDat
 use Qmdb\Modules\Geography\Infrastructure\Persistence\MySqlAdministrativeAreaRepository;
 use Qmdb\Modules\Geography\Infrastructure\Seed\SeedNigeriaAdministrativeGeography;
 use Qmdb\Tests\Support\MySql\MySqlIntegrationTestCase;
+use Qmdb\Tests\Support\MySql\QuranReferenceTestSchemaCleanup;
 
 final class GeographyReferenceIntegrationTest extends MySqlIntegrationTestCase
 {
@@ -100,7 +101,7 @@ final class GeographyReferenceIntegrationTest extends MySqlIntegrationTestCase
 
     private function dropGeographyTables(): void
     {
-        $this->connection->exec('SET FOREIGN_KEY_CHECKS = 0');
+        QuranReferenceTestSchemaCleanup::dropDependentTables($this->connection);
         foreach (
             [
             'organization_affiliation_status_events', 'organization_affiliation_role_assignments',
@@ -109,6 +110,9 @@ final class GeographyReferenceIntegrationTest extends MySqlIntegrationTestCase
             'organization_unit_names', 'organization_units', 'organization_jurisdictions',
             'organization_classification_assignments', 'organization_names', 'organizations',
             'organization_classifications',
+            'people_person_aliases', 'people_duplicate_case_events', 'people_duplicate_consent_requirements',
+            'people_duplicate_cases', 'people_profile_verification_assertions', 'people_profile_claim_events',
+            'people_profile_claims', 'people_profile_claim_pairings',
             'people_profile_operation_results', 'people_guardianships', 'people_memorizer_progress',
             'people_role_profiles', 'people_person_geographies', 'people_account_links', 'people_person_names',
             'people_persons',
@@ -119,6 +123,5 @@ final class GeographyReferenceIntegrationTest extends MySqlIntegrationTestCase
         foreach (['geography_administrative_areas', 'geography_dataset_versions', 'geography_countries'] as $table) {
             $this->connection->exec('DROP TABLE IF EXISTS ' . $table);
         }
-        $this->connection->exec('SET FOREIGN_KEY_CHECKS = 1');
     }
 }

@@ -16,6 +16,27 @@ final class QuranReferenceTestSchemaCleanup
     {
         foreach (
             [
+                // P5/P6 tables must be removed before their Qur'an and
+                // geography parents. This is an ordered teardown; it never
+                // disables foreign-key checks.
+                'competition_p6_operations', 'competition_notification_intents',
+                'competition_appeal_events', 'competition_appeal_windows', 'competition_appeals',
+                'competition_public_result_consents', 'competition_disqualifications',
+                'competition_result_events', 'competition_score_sheet_events', 'competition_score_penalties',
+                'competition_result_rows', 'competition_result_runs', 'competition_score_entries',
+                'competition_score_sheets', 'competition_tie_break_rules', 'competition_penalty_rules',
+                'competition_scoring_criteria', 'competition_scoring_rubrics', 'competition_judge_conflicts',
+                'competition_judge_assignment_events', 'competition_judge_assignments',
+                'competition_judge_panels', 'competition_judges', 'competition_round_events',
+                'competition_round_participants', 'competition_rounds',
+                'competition_registration_events', 'competition_registration_reviews',
+                'competition_registration_consents', 'competition_registration_eligibility_evidence',
+                'competition_roster_entries', 'competition_rosters', 'competition_registrations',
+                'competition_edition_events', 'competition_edition_configuration_snapshots',
+                'competition_category_capacity_states', 'competition_registration_windows',
+                'competition_eligibility_rules', 'competition_category_quran_segments',
+                'competition_categories', 'competition_venues', 'competition_edition_organizers',
+                'competition_editions', 'competition_program_organizers', 'competition_programs',
                 'quran_search_corpus_validation_operations',
                 'quran_search_corpus_events',
                 'quran_search_corpus_validations',

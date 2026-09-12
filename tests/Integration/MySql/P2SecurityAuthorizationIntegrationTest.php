@@ -79,12 +79,12 @@ final class P2SecurityAuthorizationIntegrationTest extends MySqlIntegrationTestC
         ));
         self::assertCount(1, $forwardOnlyCorrections);
         self::assertFalse($forwardOnlyCorrections[0]->reversible());
-        self::assertCount(11, $seeds->ordered());
+        self::assertCount(17, $seeds->ordered());
         self::assertSame(64, strlen($seedChecksum->hexadecimal($seeds->ordered()[0])));
 
-        self::assertSame(53, $this->fixture->tableCount('authorization_permissions'));
-        self::assertSame(12, $this->fixture->tableCount('authorization_roles'));
-        self::assertSame(142, $this->fixture->tableCount('authorization_role_permissions'));
+        self::assertSame(45, $this->fixture->tableCount('authorization_permissions'));
+        self::assertSame(11, $this->fixture->tableCount('authorization_roles'));
+        self::assertSame(122, $this->fixture->tableCount('authorization_role_permissions'));
         self::assertSame(0, $this->fixture->tableCount('platform_role_assignments'));
         self::assertSame(0, $this->fixture->tableCount('workspace_role_assignments'));
         self::assertSame([

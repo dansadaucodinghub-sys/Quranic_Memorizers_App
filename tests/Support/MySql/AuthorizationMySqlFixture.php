@@ -39,6 +39,9 @@ final readonly class AuthorizationMySqlFixture
             throw new \RuntimeException('Migration fixture registry is invalid.');
         }
         foreach ($registry->ordered() as $migration) {
+            if ($migration->id()->value() > '20260902050600_extend_identity_resolution_review_idempotency') {
+                continue;
+            }
             foreach ($migration->up() as $step) {
                 $this->connection->prepare($step->sql())->execute($step->parameters());
             }
@@ -52,6 +55,9 @@ final readonly class AuthorizationMySqlFixture
             throw new \RuntimeException('Seed fixture registry is invalid.');
         }
         foreach ($seeds->ordered() as $seed) {
+            if ($seed->id()->value() > '20260902050100_seed_people_identity_resolution_authorization') {
+                continue;
+            }
             foreach ($seed->steps() as $step) {
                 $this->connection->prepare($step->sql())->execute($step->parameters());
             }
@@ -60,18 +66,9 @@ final readonly class AuthorizationMySqlFixture
 
     public function dropBusinessTables(): void
     {
+        QuranReferenceTestSchemaCleanup::dropDependentTables($this->connection);
         foreach (
             [
-            // P4 global reference data depends on the same identity and audit
-            // tables rebuilt below. Drop every dependent table first so this
-            // fixture remains a valid serial full-schema reset without disabling FKs.
-            'quran_search_corpus_validation_operations', 'quran_search_corpus_events',
-            'quran_search_corpus_validations', 'quran_ayah_search_texts', 'quran_search_corpora',
-            'quran_release_operations', 'quran_release_events',
-            'quran_release_validations', 'quran_release_content_summaries',
-            'quran_sajdah_markers', 'quran_partitions', 'quran_ayahs', 'quran_surahs',
-            'quran_release_manifests', 'quran_release_artifacts', 'quran_source_artifacts',
-            'quran_reference_releases', 'quran_reference_sources',
             'people_person_aliases', 'people_duplicate_case_events', 'people_duplicate_consent_requirements',
             'people_duplicate_cases', 'people_profile_verification_assertions', 'people_profile_claim_events',
             'people_profile_claims', 'people_profile_claim_pairings',
