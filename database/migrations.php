@@ -62,6 +62,8 @@ use Qmdb\Modules\CompetitionConfiguration\Infrastructure\Migration\CreateCompeti
 use Qmdb\Modules\CompetitionConfiguration\Infrastructure\Migration\CreateCompetitionCategoryConfigurationMigration;
 use Qmdb\Modules\CompetitionRegistration\Infrastructure\Migration\CreateCompetitionRegistrationMigration;
 use Qmdb\Modules\CompetitionRegistration\Infrastructure\Migration\HardenCompetitionTenantRelationshipsMigration;
+use Qmdb\Modules\CompetitionJudging\Infrastructure\Migration\CreateCompetitionJudgingScoringMigration;
+use Qmdb\Modules\CompetitionJudging\Infrastructure\Migration\AddCompetitionRosterEntryTenantCandidateKeyMigration;
 use Qmdb\Shared\Schema\Migration\MigrationRegistry;
 use Qmdb\Shared\Schema\Migration\MigrationRegistryBuilder;
 
@@ -127,5 +129,7 @@ return static function (): MigrationRegistry {
         ->register(new CreateCompetitionCategoryConfigurationMigration())
         ->register(new CreateCompetitionRegistrationMigration())
         ->register(new HardenCompetitionTenantRelationshipsMigration())
+        ->register(new AddCompetitionRosterEntryTenantCandidateKeyMigration())
+        ->register(new CreateCompetitionJudgingScoringMigration())
         ->build();
 };

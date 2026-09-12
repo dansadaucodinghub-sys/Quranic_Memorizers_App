@@ -12,7 +12,7 @@ use Qmdb\Shared\Console\Input\ConsoleInput;
 use Qmdb\Shared\Console\Output\ConsoleOutput;
 use Qmdb\Shared\Database\Connection\DatabaseConnectionProvider;
 
-/** A read-only P5 boundary verifier. It does not create, promote, or reconcile anything. */
+/** A read-only P5 foundation verifier that remains valid after the authorized P6 extension. */
 final readonly class CompetitionP5VerifyConsoleCommand implements ConsoleCommand
 {
     public function __construct(private DatabaseConnectionProvider $connections)
@@ -26,7 +26,7 @@ final readonly class CompetitionP5VerifyConsoleCommand implements ConsoleCommand
 
     public function description(): string
     {
-        return 'Verify P5 database foundations and enforce the no-judging/no-scoring boundary.';
+        return 'Verify P5 database foundations and enforce the deferred P7 boundary.';
     }
 
     public function execute(ConsoleInput $input, ConsoleOutput $output): int
@@ -38,11 +38,11 @@ final readonly class CompetitionP5VerifyConsoleCommand implements ConsoleCommand
             if ($activeRelease !== 1) {
                 throw new \RuntimeException('Exactly one active Qur’an release is required for P5 configuration.');
             }
-            $forbidden = $this->count($pdo, "SELECT COUNT(*) FROM information_schema.tables WHERE table_schema=DATABASE() AND table_name LIKE 'competition_%' AND (table_name LIKE '%judge%' OR table_name LIKE '%score%' OR table_name LIKE '%result%' OR table_name LIKE '%ranking%' OR table_name LIKE '%certificate%' OR table_name LIKE '%media%' OR table_name LIKE '%social%')");
+            $forbidden = $this->count($pdo, "SELECT COUNT(*) FROM information_schema.tables WHERE table_schema=DATABASE() AND table_name REGEXP '(^certificate|^media|^audio|^video|^social|payment|livestream|live_score)'");
             if ($forbidden !== 0) {
-                throw new \RuntimeException('A P6-prohibited persistence artifact exists.');
+                throw new \RuntimeException('A deferred P7 persistence artifact exists.');
             }
-            $output->write("Competition P5 verification: PASS\nActive Qur’an releases: 1\nP6 persistence artifacts: 0\n");
+            $output->write("Competition P5 verification: PASS\nActive Qur’an releases: 1\nDeferred P7 persistence artifacts: 0\n");
             return 0;
         } catch (\Throwable $error) {
             $output->write("Competition P5 verification: FAIL\n{$error->getMessage()}\n");

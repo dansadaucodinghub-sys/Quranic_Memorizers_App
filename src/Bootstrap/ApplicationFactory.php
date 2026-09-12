@@ -32,6 +32,9 @@ use Qmdb\Bootstrap\Module\PeopleIdentityResolutionModule;
 use Qmdb\Bootstrap\Module\QuranReferenceGovernanceModule;
 use Qmdb\Bootstrap\Module\CompetitionConfigurationModule;
 use Qmdb\Bootstrap\Module\CompetitionRegistrationModule;
+use Qmdb\Bootstrap\Module\CompetitionJudgingModule;
+use Qmdb\Bootstrap\Module\CompetitionScoringModule;
+use Qmdb\Bootstrap\Module\CompetitionResultsModule;
 use Qmdb\Bootstrap\Module\ObservabilityFoundationModule;
 use Qmdb\Bootstrap\Module\PresentationFoundationModule;
 use Qmdb\Bootstrap\Module\SchemaFoundationModule;
@@ -226,6 +229,9 @@ final readonly class ApplicationFactory
             new QuranReferenceGovernanceModule($this->projectRoot),
             new CompetitionConfigurationModule(),
             new CompetitionRegistrationModule(),
+            new CompetitionJudgingModule(),
+            new CompetitionScoringModule(),
+            new CompetitionResultsModule(),
             new ApplicationHttpModule($this->projectRoot),
             new ConsoleFoundationModule(),
         ]);

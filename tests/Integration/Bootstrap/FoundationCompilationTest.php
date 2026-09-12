@@ -14,6 +14,9 @@ use Qmdb\Bootstrap\Module\BackgroundExecutionFoundationModule;
 use Qmdb\Bootstrap\Module\ConsoleFoundationModule;
 use Qmdb\Bootstrap\Module\CompetitionConfigurationModule;
 use Qmdb\Bootstrap\Module\CompetitionRegistrationModule;
+use Qmdb\Bootstrap\Module\CompetitionJudgingModule;
+use Qmdb\Bootstrap\Module\CompetitionScoringModule;
+use Qmdb\Bootstrap\Module\CompetitionResultsModule;
 use Qmdb\Bootstrap\Module\CoreFoundationModule;
 use Qmdb\Bootstrap\Module\DatabaseFoundationModule;
 use Qmdb\Bootstrap\Module\GeographyReferenceModule;
@@ -102,6 +105,9 @@ final class FoundationCompilationTest extends TestCase
             'application.http',
             'competition.configuration',
             'competition.registration',
+            'competition.judging',
+            'competition.scoring',
+            'competition.results',
             'foundation.console',
         ], $registry->orderedModuleIds());
     }
@@ -210,6 +216,9 @@ final class FoundationCompilationTest extends TestCase
             new QuranReferenceGovernanceModule(dirname(__DIR__, 3)),
             new CompetitionConfigurationModule(),
             new CompetitionRegistrationModule(),
+            new CompetitionJudgingModule(),
+            new CompetitionScoringModule(),
+            new CompetitionResultsModule(),
             new ApplicationHttpModule(dirname(__DIR__, 3)),
             new ConsoleFoundationModule(),
         ]);

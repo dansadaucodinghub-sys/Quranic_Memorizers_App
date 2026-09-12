@@ -71,6 +71,9 @@ use Qmdb\Modules\QuranReferenceGovernance\Interface\Console\QuranP4CloseoutVerif
 use Qmdb\Modules\CompetitionConfiguration\Interface\Console\CompetitionConfigurationVerifyConsoleCommand;
 use Qmdb\Modules\CompetitionConfiguration\Interface\Console\CompetitionP5VerifyConsoleCommand;
 use Qmdb\Modules\CompetitionRegistration\Interface\Console\CompetitionRegistrationVerifyConsoleCommand;
+use Qmdb\Modules\CompetitionResults\Interface\Console\CompetitionP6VerifyConsoleCommand;
+use Qmdb\Modules\CompetitionResults\Interface\Console\CompetitionP6AspectVerifyConsoleCommand;
+use Qmdb\Shared\Database\Connection\DatabaseConnectionProvider;
 
 final readonly class ConsoleFoundationModule implements Module
 {
@@ -96,6 +99,7 @@ final readonly class ConsoleFoundationModule implements Module
             new ModuleId('application.http'),
             new ModuleId('competition.configuration'),
             new ModuleId('competition.registration'),
+            new ModuleId('competition.results'),
             new ModuleId('reference.geography'),
             new ModuleId('people.profiles'),
             new ModuleId('organizations.registry'),
@@ -262,6 +266,8 @@ final readonly class ConsoleFoundationModule implements Module
             CompetitionConfigurationVerifyConsoleCommand::class,
             CompetitionP5VerifyConsoleCommand::class,
             CompetitionRegistrationVerifyConsoleCommand::class,
+            CompetitionP6VerifyConsoleCommand::class,
+            DatabaseConnectionProvider::class,
         ];
         $context->service(ServiceDefinition::factory(
             ConsoleCommandMap::class,
@@ -312,6 +318,19 @@ final readonly class ConsoleFoundationModule implements Module
                 $registry->register(ServiceReference::get($resolver, CompetitionConfigurationVerifyConsoleCommand::class));
                 $registry->register(ServiceReference::get($resolver, CompetitionP5VerifyConsoleCommand::class));
                 $registry->register(ServiceReference::get($resolver, CompetitionRegistrationVerifyConsoleCommand::class));
+                $registry->register(ServiceReference::get($resolver, CompetitionP6VerifyConsoleCommand::class));
+                foreach ([
+                    ['competition:judging:verify', 'Verify P6 judging and panel integrity.'],
+                    ['competition:scoring:verify', 'Verify P6 fixed-point scoring integrity.'],
+                    ['competition:results:verify', 'Verify P6 result and ranking integrity.'],
+                    ['competition:appeals:verify', 'Verify P6 controlled appeal integrity.'],
+                ] as [$name, $description]) {
+                    $registry->register(new CompetitionP6AspectVerifyConsoleCommand(
+                        $name,
+                        $description,
+                        ServiceReference::get($resolver, DatabaseConnectionProvider::class),
+                    ));
+                }
 
                 return $registry->build();
             }),
