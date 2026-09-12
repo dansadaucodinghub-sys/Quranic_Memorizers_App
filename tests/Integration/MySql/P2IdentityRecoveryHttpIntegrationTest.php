@@ -286,6 +286,15 @@ final class P2IdentityRecoveryHttpIntegrationTest extends MySqlIntegrationTestCa
         );
         $this->markCurrentScheduleSlotSucceeded('organizations.affiliations.maintain', 900);
         $this->markCurrentScheduleSlotSucceeded('people.profile_claims.maintain', 900);
+        foreach ([
+            ['competition.rounds.process', 60],
+            ['competition.score_sheets.remind', 300],
+            ['competition.appeal_windows.process', 60],
+            ['competition.score_sheets.reconcile', 900],
+            ['competition.results.reconcile', 900],
+        ] as [$taskId, $intervalSeconds]) {
+            $this->markCurrentScheduleSlotSucceeded($taskId, $intervalSeconds);
+        }
         $schedule = ApplicationFactory::fromCurrentProcess()->createConsoleApplication()->run(['schedule:run']);
         self::assertSame(
             ExitCode::SUCCESS,
