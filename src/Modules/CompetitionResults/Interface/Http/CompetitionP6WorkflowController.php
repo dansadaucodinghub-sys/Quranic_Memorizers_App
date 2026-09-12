@@ -8,6 +8,8 @@ use Nyholm\Psr7\Factory\Psr17Factory;
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
 use Qmdb\Modules\CompetitionResults\Application\CompetitionP6WorkflowService;
+use Qmdb\Modules\CompetitionResults\Application\CompetitionResultCalculationService;
+use Qmdb\Modules\CompetitionScoring\Application\CompetitionScoreSheetService;
 use Qmdb\Modules\IdentityAccess\Interface\Http\IdentityCsrf;
 use Qmdb\Modules\IdentitySessions\Interface\Http\AuthenticatedRequestGuard;
 use Qmdb\Modules\SecurityWeb\Csrf\CsrfAction;
@@ -28,6 +30,8 @@ final readonly class CompetitionP6WorkflowController implements Controller
         private TenantContextRequiredGuard $tenant,
         private IdentityCsrf $csrf,
         private CompetitionP6WorkflowService $workflow,
+        private CompetitionResultCalculationService $resultCalculation,
+        private CompetitionScoreSheetService $scoreSheets,
         private Psr17Factory $responses,
     ) {
     }
@@ -50,17 +54,50 @@ final readonly class CompetitionP6WorkflowController implements Controller
         $csrfAction = $this->csrfAction($route);
         $csrf = $this->csrf->issue($request, $csrfAction);
         if (strtoupper($request->getMethod()) === 'GET') {
-            return $this->form($route, $request->getUri()->getPath(), $csrf['token'], $csrf['cookie']->setCookieHeader);
+            return $this->form($route, $request, $actor, $tenant, $csrf['token'], $csrf['cookie']->setCookieHeader);
         }
         $body = $request->getParsedBody();
         if (!is_array($body) || !is_string($body['csrf_token'] ?? null) || !$this->csrf->validates($request, $csrfAction, $csrf['cookie'], $body['csrf_token'])) {
             return $this->response(403, 'Request verification failed.', $csrf['cookie']->setCookieHeader);
         }
         try {
+            if ($route === 'workspace.competition.result.calculate') {
+                $body = $request->getParsedBody();
+                if (!is_array($body)) {
+                    throw new \InvalidArgumentException('Competition request is invalid.');
+                }
+                $parameters = $request->getAttribute(RouteAttributes::PARAMETERS);
+                if (!is_array($parameters) || !is_string($parameters['roundId'] ?? null)) {
+                    throw new \InvalidArgumentException('Competition round is invalid.');
+                }
+                $this->resultCalculation->calculate($actor, $tenant, UuidV7::fromString($parameters['roundId']), $this->integer($body, 'expected_version'), ($body['ranking'] ?? '') === 'dense');
+
+                return $this->responses->createResponse(303)->withHeader('Location', $this->safePath($request))->withHeader('Cache-Control', 'private, no-store')->withAddedHeader('Set-Cookie', $csrf['cookie']->setCookieHeader);
+            }
+            if ($route === 'account.competition_judging.score.submit') {
+                $body = $request->getParsedBody();
+                $parameters = $request->getAttribute(RouteAttributes::PARAMETERS);
+                if (!is_array($body) || !is_array($parameters) || !is_string($parameters['assignmentId'] ?? null) || !is_string($parameters['participantId'] ?? null)) {
+                    throw new \InvalidArgumentException('Competition score request is invalid.');
+                }
+                $scores = $this->scoreValues($body);
+                $expected = isset($body['expected_version']) ? $this->integer($body, 'expected_version') : null;
+                $draft = $this->scoreSheets->saveDraft($actor, $tenant, UuidV7::fromString($parameters['assignmentId']), UuidV7::fromString($parameters['participantId']), $expected, $scores);
+                $submission = UuidV7::fromString($this->field($body, 'submission_id', 36));
+                $this->workflow->transition($actor, $tenant, $submission, 'COMPETITION_SCORE_SUBMIT', UuidV7::fromString($draft['public_id']), $draft['version']);
+
+                return $this->responses->createResponse(303)->withHeader('Location', $this->safePath($request))->withHeader('Cache-Control', 'private, no-store')->withAddedHeader('Set-Cookie', $csrf['cookie']->setCookieHeader);
+            }
             $operation = $this->operation($route);
             $publicId = $this->aggregateId($request, $body, $operation);
             $expectedVersion = $this->integer($body, 'expected_version');
             $submission = UuidV7::fromString($this->field($body, 'submission_id', 36));
+            if ($operation === 'COMPETITION_SCORE_LOCK') {
+                $prepared = $this->scoreSheets->prepareForLock($actor, $tenant, UuidV7::fromString($publicId));
+                if ($prepared['version'] !== $expectedVersion) {
+                    throw new \DomainException('Score sheet changed before locking.');
+                }
+            }
             $this->workflow->transition($actor, $tenant, $submission, $operation, UuidV7::fromString($publicId), $expectedVersion);
         } catch (\DomainException $exception) {
             return $this->response(str_contains($exception->getMessage(), 'temporarily') ? 429 : 409, 'Competition action could not be completed.', $csrf['cookie']->setCookieHeader);
@@ -71,10 +108,31 @@ final readonly class CompetitionP6WorkflowController implements Controller
         return $this->responses->createResponse(303)->withHeader('Location', $this->safePath($request))->withHeader('Cache-Control', 'private, no-store')->withAddedHeader('Set-Cookie', $csrf['cookie']->setCookieHeader);
     }
 
-    private function form(string $route, string $path, string $token, ?string $cookie): ResponseInterface
+    private function form(string $route, ServerRequestInterface $request, \Qmdb\Modules\IdentitySessions\Application\AuthenticatedAccountContext $actor, \Qmdb\Modules\TenancyContext\Domain\AccountWorkspaceTenantContext $tenant, string $token, ?string $cookie): ResponseInterface
     {
         $operation = $this->operationForDisplay($route);
-        $html = '<main class="shell identity-page" data-qmdb-p6-workflow><h1>Competition workflow</h1><p>Use the controlled form below. JavaScript is optional for this action.</p><form method="post" action="' . $this->escape($path) . '"><input type="hidden" name="csrf_token" value="' . $this->escape($token) . '"><input type="hidden" name="submission_id" value="' . UuidV7::generate()->toString() . '"><label>Expected version <input name="expected_version" type="number" min="1" required></label><label>Record public ID <input name="aggregate_id" inputmode="text" autocomplete="off" required></label><button type="submit">' . $this->escape($operation) . '</button></form></main>';
+        $path = $request->getUri()->getPath();
+        $scoreFields = '';
+        if ($route === 'account.competition_judging.score.form') {
+            $parameters = $request->getAttribute(RouteAttributes::PARAMETERS);
+            if (!is_array($parameters) || !is_string($parameters['assignmentId'] ?? null)) {
+                return $this->response(404, 'Competition score form is unavailable.', $cookie);
+            }
+            try {
+                $criteria = $this->scoreSheets->formCriteria($actor, $tenant, UuidV7::fromString($parameters['assignmentId']));
+            } catch (\DomainException|\InvalidArgumentException) {
+                return $this->response(403, 'Competition score form is unavailable.', $cookie);
+            }
+            $scoreFields = '<fieldset><legend>Criterion scores</legend>';
+            foreach ($criteria as $criterion) {
+                $scoreFields .= '<label>' . $this->escape($criterion['code']) . ' <input name="scores[' . $this->escape($criterion['code']) . ']" type="number" min="' . $criterion['minimum_units'] . '" max="' . $criterion['maximum_units'] . '" step="' . $criterion['step_units'] . '" required aria-describedby="criterion-' . $this->escape($criterion['code']) . '"><span id="criterion-' . $this->escape($criterion['code']) . '">Range ' . $criterion['minimum_units'] . ' to ' . $criterion['maximum_units'] . '.</span></label>';
+            }
+            $scoreFields .= '</fieldset>';
+            $path = rtrim($path, '/') . '/submit';
+        }
+        $version = '<label>Expected version <input name="expected_version" type="number" min="1"' . ($route === 'account.competition_judging.score.form' ? '' : ' required') . '></label>';
+        $identifier = $route === 'account.competition_judging.score.form' ? '' : '<label>Record public ID <input name="aggregate_id" inputmode="text" autocomplete="off" required></label>';
+        $html = '<main class="shell identity-page" data-qmdb-p6-workflow><h1>Competition workflow</h1><p>Use the controlled form below. JavaScript is optional for this action.</p><form method="post" action="' . $this->escape($path) . '"><input type="hidden" name="csrf_token" value="' . $this->escape($token) . '"><input type="hidden" name="submission_id" value="' . UuidV7::generate()->toString() . '">' . $version . $identifier . $scoreFields . '<button type="submit">' . $this->escape($operation) . '</button></form></main>';
 
         return $this->response(200, $html, $cookie, true);
     }
@@ -148,6 +206,7 @@ final readonly class CompetitionP6WorkflowController implements Controller
             'workspace.competition.result.verify' => CsrfAction::COMPETITION_RESULT_VERIFY,
             'workspace.competition.result.publish' => CsrfAction::COMPETITION_RESULT_PUBLISH,
             'workspace.competition.result.void' => CsrfAction::COMPETITION_RESULT_VOID,
+            'workspace.competition.result.calculate' => CsrfAction::COMPETITION_RESULT_CALCULATE,
             'workspace.competition.appeal.start_review' => CsrfAction::COMPETITION_APPEAL_START_REVIEW,
             'workspace.competition.appeal.uphold' => CsrfAction::COMPETITION_APPEAL_UPHOLD,
             'workspace.competition.appeal.dismiss' => CsrfAction::COMPETITION_APPEAL_DISMISS,
@@ -176,6 +235,24 @@ final readonly class CompetitionP6WorkflowController implements Controller
         }
 
         return (int) $value;
+    }
+
+    /** @param array<array-key,mixed> $body @return array<string,int> */
+    private function scoreValues(array $body): array
+    {
+        $values = $body['scores'] ?? null;
+        if (!is_array($values) || $values === []) {
+            throw new \InvalidArgumentException('Criterion scores are required.');
+        }
+        $scores = [];
+        foreach ($values as $criterion => $value) {
+            if (!is_string($criterion) || preg_match('/\A[a-z][a-z0-9_]{0,63}\z/', $criterion) !== 1 || !is_string($value) || preg_match('/\A-?[0-9]{1,10}\z/', $value) !== 1) {
+                throw new \InvalidArgumentException('Criterion score is invalid.');
+            }
+            $scores[$criterion] = (int) $value;
+        }
+
+        return $scores;
     }
 
     private function response(int $status, string $content, ?string $cookie = null, bool $html = false): ResponseInterface

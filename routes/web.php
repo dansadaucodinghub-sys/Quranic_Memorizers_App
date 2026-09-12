@@ -606,6 +606,8 @@ return static function (
         new Route('workspace.competition.assignment.revoke', [HttpMethod::POST], new RoutePattern('/workspace/competitions/assignments/{assignmentId}/revoke'), $competitionP6Workflow),
         new Route('workspace.competition.result.verify.form', [HttpMethod::GET], new RoutePattern('/workspace/competitions/result-runs/{resultRunId}/verify'), $competitionP6Workflow),
         new Route('workspace.competition.result.verify', [HttpMethod::POST], new RoutePattern('/workspace/competitions/result-runs/{resultRunId}/verify'), $competitionP6Workflow),
+        new Route('workspace.competition.result.calculate.form', [HttpMethod::GET], new RoutePattern('/workspace/competitions/rounds/{roundId}/calculate-results'), $competitionP6Workflow),
+        new Route('workspace.competition.result.calculate', [HttpMethod::POST], new RoutePattern('/workspace/competitions/rounds/{roundId}/calculate-results'), $competitionP6Workflow),
         new Route('workspace.competition.result.publish.form', [HttpMethod::GET], new RoutePattern('/workspace/competitions/result-runs/{resultRunId}/publish'), $competitionP6Workflow),
         new Route('workspace.competition.result.publish', [HttpMethod::POST], new RoutePattern('/workspace/competitions/result-runs/{resultRunId}/publish'), $competitionP6Workflow),
         new Route('workspace.competition.result.void.form', [HttpMethod::GET], new RoutePattern('/workspace/competitions/result-runs/{resultRunId}/void'), $competitionP6Workflow),

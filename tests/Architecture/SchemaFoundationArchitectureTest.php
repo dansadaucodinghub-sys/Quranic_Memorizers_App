@@ -82,7 +82,7 @@ final class SchemaFoundationArchitectureTest extends TestCase
         }
 
         $ordered = $migrations->ordered();
-        self::assertCount(65, $ordered);
+        self::assertCount(66, $ordered);
         self::assertSame(
             [
                 CreateScheduledTaskRunsMigration::class,
@@ -206,6 +206,7 @@ final class SchemaFoundationArchitectureTest extends TestCase
             '20260912100000_complete_competition_p6_immutable_records',
             '20260912110000_correct_competition_p6_lifecycle_vocabulary',
             '20260912120000_complete_competition_p6_runtime_contracts',
+            '20260912133000_add_competition_p6_result_input_uniqueness',
         ], array_slice(array_map(static fn (Migration $migration): string => $migration->id()->value(), $ordered), 47));
         self::assertCount(17, $seeds->ordered());
         self::assertSame(
