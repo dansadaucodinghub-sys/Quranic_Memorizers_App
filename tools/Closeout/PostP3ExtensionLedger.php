@@ -22,10 +22,12 @@ final class PostP3ExtensionLedger
             throw new \RuntimeException('Post-P3 extension ledger is unreadable.');
         }
         $ledger = json_decode($contents, true, 512, JSON_THROW_ON_ERROR);
-        if (!is_array($ledger)
+        if (
+            !is_array($ledger)
             || ($ledger['ledger_id'] ?? null) !== self::ID
             || ($ledger['base_freeze'] ?? null) !== 'QMDB-P3-FRZ-003'
-            || !is_array($ledger['entries'] ?? null)) {
+            || !is_array($ledger['entries'] ?? null)
+        ) {
             throw new \RuntimeException('Post-P3 extension ledger has an invalid identity.');
         }
 
@@ -39,8 +41,8 @@ final class PostP3ExtensionLedger
         $previous = $this->genesisHash();
         $ids = [];
         foreach ($ledger['entries'] as $entry) {
-            if (!is_array($entry)
-                || !is_string($entry['extension_id'] ?? null)
+            if (
+                !is_string($entry['extension_id'] ?? null)
                 || !preg_match('/^QMDB-P3-EXT-[0-9]{3}$/', $entry['extension_id'])
                 || isset($ids[$entry['extension_id']])
                 || !in_array($entry['authorizing_change'] ?? null, ['QMDB-CR-002', 'QMDB-CR-003'], true)
@@ -49,11 +51,13 @@ final class PostP3ExtensionLedger
                 || ($entry['batch'] ?? null) !== 'QMDB-P4-B01'
                 || ($entry['previous_entry_sha256'] ?? null) !== $previous
                 || !is_array($entry['new_files'] ?? null)
-                || !is_array($entry['modified_extension_points'] ?? null)) {
+                || !is_array($entry['modified_extension_points'] ?? null)
+            ) {
                 throw new \RuntimeException('Post-P3 extension ledger entry is invalid.');
             }
             $expected = $this->entryHash($entry);
-            if (!hash_equals($expected, (string) ($entry['entry_sha256'] ?? ''))) {
+            $entryHash = $entry['entry_sha256'] ?? null;
+            if (!is_string($entryHash) || !hash_equals($expected, $entryHash)) {
                 throw new \RuntimeException('Post-P3 extension ledger hash chain is invalid.');
             }
             $ids[$entry['extension_id']] = true;
@@ -73,12 +77,19 @@ final class PostP3ExtensionLedger
         return hash('sha256', json_encode($entry, JSON_UNESCAPED_SLASHES | JSON_UNESCAPED_UNICODE | JSON_THROW_ON_ERROR));
     }
 
-    /** @return array<string,string> */
+    /**
+     * @param array{ledger_id:string,base_freeze:string,entries:list<array<string,mixed>>} $ledger
+     * @return array<string,string>
+     */
     public function authorizedNewFiles(array $ledger): array
     {
         $files = [];
         foreach ($ledger['entries'] as $entry) {
-            foreach ($entry['new_files'] as $file) {
+            $newFiles = $entry['new_files'] ?? null;
+            if (!is_array($newFiles)) {
+                throw new \RuntimeException('Post-P3 extension file inventory is invalid.');
+            }
+            foreach ($newFiles as $file) {
                 if (!is_array($file) || !is_string($file['path'] ?? null) || !is_string($file['sha256'] ?? null)) {
                     throw new \RuntimeException('Post-P3 extension file entry is invalid.');
                 }
@@ -91,19 +102,28 @@ final class PostP3ExtensionLedger
         return $files;
     }
 
-    /** @return array<string,array{previous_sha256:string,sha256:string}> */
+    /**
+     * @param array{ledger_id:string,base_freeze:string,entries:list<array<string,mixed>>} $ledger
+     * @return array<string,array{previous_sha256:string,sha256:string}>
+     */
     public function authorizedModifications(array $ledger): array
     {
         $paths = [];
         foreach ($ledger['entries'] as $entry) {
-            foreach ($entry['modified_extension_points'] as $point) {
-                if (!is_array($point)
+            $modifiedPoints = $entry['modified_extension_points'] ?? null;
+            if (!is_array($modifiedPoints)) {
+                throw new \RuntimeException('Post-P3 extension-point inventory is invalid.');
+            }
+            foreach ($modifiedPoints as $point) {
+                if (
+                    !is_array($point)
                     || ($point['change_type'] ?? null) !== 'APPEND_ONLY'
                     || ($point['previous_entries_unchanged'] ?? null) !== true
                     || !is_string($point['path'] ?? null)
                     || !is_string($point['previous_sha256'] ?? null)
                     || !is_string($point['sha256'] ?? null)
-                || !is_array($point['added_entries'] ?? null)) {
+                    || !is_array($point['added_entries'] ?? null)
+                ) {
                     throw new \RuntimeException('Post-P3 extension-point authorization is invalid.');
                 }
                 if (isset($paths[$point['path']]) && $paths[$point['path']]['sha256'] !== $point['previous_sha256']) {

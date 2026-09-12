@@ -72,7 +72,7 @@ final readonly class CompetitionP6WorkflowController implements Controller
                 }
                 $this->resultCalculation->calculate($actor, $tenant, UuidV7::fromString($parameters['roundId']), $this->integer($body, 'expected_version'), ($body['ranking'] ?? '') === 'dense');
 
-                return $this->responses->createResponse(303)->withHeader('Location', $this->safePath($request))->withHeader('Cache-Control', 'private, no-store')->withAddedHeader('Set-Cookie', $csrf['cookie']->setCookieHeader);
+                return $this->withCookie($this->responses->createResponse(303)->withHeader('Location', $this->safePath($request))->withHeader('Cache-Control', 'private, no-store'), $csrf['cookie']->setCookieHeader);
             }
             if ($route === 'account.competition_judging.score.submit') {
                 $body = $request->getParsedBody();
@@ -86,7 +86,7 @@ final readonly class CompetitionP6WorkflowController implements Controller
                 $submission = UuidV7::fromString($this->field($body, 'submission_id', 36));
                 $this->workflow->transition($actor, $tenant, $submission, 'COMPETITION_SCORE_SUBMIT', UuidV7::fromString($draft['public_id']), $draft['version']);
 
-                return $this->responses->createResponse(303)->withHeader('Location', $this->safePath($request))->withHeader('Cache-Control', 'private, no-store')->withAddedHeader('Set-Cookie', $csrf['cookie']->setCookieHeader);
+                return $this->withCookie($this->responses->createResponse(303)->withHeader('Location', $this->safePath($request))->withHeader('Cache-Control', 'private, no-store'), $csrf['cookie']->setCookieHeader);
             }
             $operation = $this->operation($route);
             $publicId = $this->aggregateId($request, $body, $operation);
@@ -105,7 +105,7 @@ final readonly class CompetitionP6WorkflowController implements Controller
             return $this->response(422, 'Competition request is invalid.', $csrf['cookie']->setCookieHeader);
         }
 
-        return $this->responses->createResponse(303)->withHeader('Location', $this->safePath($request))->withHeader('Cache-Control', 'private, no-store')->withAddedHeader('Set-Cookie', $csrf['cookie']->setCookieHeader);
+        return $this->withCookie($this->responses->createResponse(303)->withHeader('Location', $this->safePath($request))->withHeader('Cache-Control', 'private, no-store'), $csrf['cookie']->setCookieHeader);
     }
 
     private function form(string $route, ServerRequestInterface $request, \Qmdb\Modules\IdentitySessions\Application\AuthenticatedAccountContext $actor, \Qmdb\Modules\TenancyContext\Domain\AccountWorkspaceTenantContext $tenant, string $token, ?string $cookie): ResponseInterface
@@ -120,7 +120,7 @@ final readonly class CompetitionP6WorkflowController implements Controller
             }
             try {
                 $criteria = $this->scoreSheets->formCriteria($actor, $tenant, UuidV7::fromString($parameters['assignmentId']));
-            } catch (\DomainException|\InvalidArgumentException) {
+            } catch (\DomainException | \InvalidArgumentException) {
                 return $this->response(403, 'Competition score form is unavailable.', $cookie);
             }
             $scoreFields = '<fieldset><legend>Criterion scores</legend>';
@@ -237,7 +237,10 @@ final readonly class CompetitionP6WorkflowController implements Controller
         return (int) $value;
     }
 
-    /** @param array<array-key,mixed> $body @return array<string,int> */
+    /**
+     * @param array<array-key, mixed> $body
+     * @return array<string, int>
+     */
     private function scoreValues(array $body): array
     {
         $values = $body['scores'] ?? null;
@@ -267,6 +270,11 @@ final readonly class CompetitionP6WorkflowController implements Controller
         $response->getBody()->write($content);
 
         return $response;
+    }
+
+    private function withCookie(ResponseInterface $response, ?string $cookie): ResponseInterface
+    {
+        return $cookie === null ? $response : $response->withAddedHeader('Set-Cookie', $cookie);
     }
 
     private function safePath(ServerRequestInterface $request): string

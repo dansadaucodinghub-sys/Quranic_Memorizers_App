@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace Qmdb\Modules\QuranReferenceGovernance\Interface\Console;
 
 use PDO;
+use PDOStatement;
 use Qmdb\Modules\QuranReferenceGovernance\Domain\QuranSourceArtifactPathGuard;
 use Qmdb\Shared\Console\Command\ConsoleCommand;
 use Qmdb\Shared\Console\Command\ConsoleCommandName;
@@ -12,6 +13,7 @@ use Qmdb\Shared\Console\Input\ConsoleInput;
 use Qmdb\Shared\Console\Output\ConsoleOutput;
 use Qmdb\Shared\Database\Connection\DatabaseConnectionProvider;
 use Qmdb\Shared\Identifier\UuidV7;
+use Qmdb\Shared\Schema\State\PdoResultReader;
 
 /**
  * Registers a local, operator-reviewed source artifact. It never downloads,
@@ -52,19 +54,27 @@ final readonly class QuranSourceArtifactRegisterConsoleCommand implements Consol
             }
             $connection = $this->connections->connection();
             $source = $connection->prepare('SELECT id FROM quran_reference_sources WHERE source_code = :source_code AND status = \'APPROVED\'');
+            if (!$source instanceof PDOStatement) {
+                throw new \RuntimeException('Approved source lookup could not be prepared.');
+            }
             $source->execute([':source_code' => $sourceCode]);
             $sourceId = $source->fetchColumn();
             if (!is_int($sourceId) && !is_string($sourceId)) {
                 throw new \DomainException('Approved source is unavailable.');
             }
+            if (is_string($sourceId) && preg_match('/\A[1-9][0-9]*\z/', $sourceId) !== 1) {
+                throw new \DomainException('Approved source identifier is invalid.');
+            }
+            $sourceId = (int) $sourceId;
             $existing = $connection->prepare('SELECT public_id, artifact_code FROM quran_source_artifacts WHERE source_id = :source_id AND sha256 = :sha256');
-            $existing->execute([':source_id' => (int) $sourceId, ':sha256' => $checksum]);
+            $existing->execute([':source_id' => $sourceId, ':sha256' => $checksum]);
             $row = $existing->fetch(PDO::FETCH_ASSOC);
             if (is_array($row)) {
-                if (!hash_equals($artifactCode, (string) $row['artifact_code'])) {
+                $existingCode = PdoResultReader::string(self::row($row), 'artifact_code');
+                if (!hash_equals($artifactCode, $existingCode)) {
                     throw new \DomainException('Artifact bytes are already registered under another artifact code.');
                 }
-                $output->write("Qur’an source artifact registration: PASS (idempotent)\nArtifact: " . UuidV7::fromBinary((string) $row['public_id'])->toString() . "\n");
+                $output->write("Qur’an source artifact registration: PASS (idempotent)\nArtifact: " . UuidV7::fromBinary(PdoResultReader::string(self::row($row), 'public_id'))->toString() . "\n");
 
                 return 0;
             }
@@ -72,7 +82,7 @@ final readonly class QuranSourceArtifactRegisterConsoleCommand implements Consol
             $insert = $connection->prepare('INSERT INTO quran_source_artifacts (public_id, source_id, artifact_code, artifact_role, repository_relative_path, original_filename, media_type, byte_size, sha256, acquisition_profile, acquired_at, status, version, created_at, updated_at, rejected_at) VALUES (:public_id, :source_id, :artifact_code, :artifact_role, :repository_relative_path, :original_filename, :media_type, :byte_size, :sha256, :acquisition_profile, UTC_TIMESTAMP(6), \'REGISTERED\', 1, UTC_TIMESTAMP(6), UTC_TIMESTAMP(6), NULL)');
             $publicId = UuidV7::generate();
             $insert->execute([
-                ':public_id' => $publicId->toBinary(), ':source_id' => (int) $sourceId, ':artifact_code' => $artifactCode,
+                ':public_id' => $publicId->toBinary(), ':source_id' => $sourceId, ':artifact_code' => $artifactCode,
                 ':artifact_role' => $artifactRole, ':repository_relative_path' => $relativePath, ':original_filename' => basename($path),
                 ':media_type' => $mediaType, ':byte_size' => filesize($path), ':sha256' => $checksum, ':acquisition_profile' => $profile,
             ]);
@@ -113,5 +123,21 @@ final readonly class QuranSourceArtifactRegisterConsoleCommand implements Consol
         }
 
         return $value;
+    }
+
+    /**
+     * @param array<array-key, mixed> $value
+     * @return array<string, mixed>
+     */
+    private static function row(array $value): array
+    {
+        $row = [];
+        foreach ($value as $key => $item) {
+            if (!is_string($key)) {
+                throw new \RuntimeException('Artifact database row has an invalid column name.');
+            }
+            $row[$key] = $item;
+        }
+        return $row;
     }
 }

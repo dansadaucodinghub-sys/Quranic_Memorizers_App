@@ -11,10 +11,21 @@ use Qmdb\Shared\Schema\Migration\SqlMigrationStep;
 
 final readonly class CreateQuranReleaseOperationIdempotencyMigration implements Migration
 {
-    public function id(): MigrationId { return new MigrationId('20260910060300_create_quran_release_operation_idempotency'); }
-    public function description(): string { return 'Create replay-safe, audit-linked Qur’an release transition operations.'; }
-    public function dependencies(): array { return [(new ExtendQuranGovernanceSecurityCatalogMigration())->id()]; }
-    public function up(): array { return [new SqlMigrationStep(new MigrationStepId('001_create_operations'), 'Create one immutable idempotency record per Qur’an release transition.', <<<'SQL'
+    public function id(): MigrationId
+    {
+        return new MigrationId('20260910060300_create_quran_release_operation_idempotency');
+    }
+    public function description(): string
+    {
+        return 'Create replay-safe, audit-linked Qur’an release transition operations.';
+    }
+    public function dependencies(): array
+    {
+        return [(new ExtendQuranGovernanceSecurityCatalogMigration())->id()];
+    }
+    public function up(): array
+    {
+        return [new SqlMigrationStep(new MigrationStepId('001_create_operations'), 'Create one immutable idempotency record per Qur’an release transition.', <<<'SQL'
 CREATE TABLE quran_release_operations (
  id BIGINT UNSIGNED NOT NULL AUTO_INCREMENT,
  public_id BINARY(16) NOT NULL,
@@ -42,7 +53,14 @@ CREATE TABLE quran_release_operations (
  CONSTRAINT ck_quran_release_operations_type CHECK (operation_type IN ('STAGE','VALIDATE','APPROVE','ACTIVATE','REJECT')),
  CONSTRAINT ck_quran_release_operations_version CHECK (version_before >= 1 AND version_after = version_before + 1)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci
-SQL)]; }
-    public function down(): array { return []; }
-    public function reversible(): bool { return false; }
+SQL)];
+    }
+    public function down(): array
+    {
+        return [];
+    }
+    public function reversible(): bool
+    {
+        return false;
+    }
 }

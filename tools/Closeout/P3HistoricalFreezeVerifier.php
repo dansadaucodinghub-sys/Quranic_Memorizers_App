@@ -41,7 +41,12 @@ final class P3HistoricalFreezeVerifier
         }
         $report->check(str_contains($yaml, 'freeze_id: QMDB-P3-FRZ-001'), 'Historical P3 freeze identifier is missing.');
         preg_match('/^  source_revision: "([a-f0-9]{40})"$/m', $yaml, $revision);
-        $report->check(isset($revision[1]), 'Historical P3 freeze source revision is invalid.');
+        $revisionValue = $revision[1] ?? null;
+        if (!is_string($revisionValue)) {
+            $report->check(false, 'Historical P3 freeze source revision is invalid.');
+            return $report;
+        }
+        $report->check(true, 'Historical P3 freeze source revision is valid.');
         preg_match_all('/^    - path: "([^"]+)"\R\s+category: [A-Z0-9_]+\R\s+sha256: ([a-f0-9]{64})$/m', $yaml, $files, PREG_SET_ORDER);
         $report->check(count($files) > 1_000, 'Historical P3 freeze inventory is incomplete.');
         $runner = new ProcessRunner();
@@ -49,7 +54,7 @@ final class P3HistoricalFreezeVerifier
             $relative = $file[1];
             $expected = $file[2];
             if (in_array($relative, self::GOVERNANCE_MUTABLE_PATHS, true)) {
-                $historic = $runner->run(['git', 'show', $revision[1] . ':' . $relative], $root);
+                $historic = $runner->run(['git', 'show', $revisionValue . ':' . $relative], $root);
                 $report->check($historic->exitCode === 0 && hash('sha256', $historic->stdout) === $expected, 'Historical governance file does not match P3-FRZ-001: ' . $relative);
                 continue;
             }

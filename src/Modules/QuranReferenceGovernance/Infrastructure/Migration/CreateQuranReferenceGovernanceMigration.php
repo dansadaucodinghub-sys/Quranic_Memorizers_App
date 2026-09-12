@@ -12,9 +12,18 @@ use Qmdb\Shared\Schema\Migration\SqlMigrationStep;
 
 final readonly class CreateQuranReferenceGovernanceMigration implements Migration
 {
-    public function id(): MigrationId { return new MigrationId('20260910060100_create_quran_reference_governance'); }
-    public function description(): string { return 'Create global Qur’an source, release, manifest, and append-only governance records.'; }
-    public function dependencies(): array { return [(new ExtendIdentityResolutionReviewIdempotencyMigration())->id()]; }
+    public function id(): MigrationId
+    {
+        return new MigrationId('20260910060100_create_quran_reference_governance');
+    }
+    public function description(): string
+    {
+        return 'Create global Qur’an source, release, manifest, and append-only governance records.';
+    }
+    public function dependencies(): array
+    {
+        return [(new ExtendIdentityResolutionReviewIdempotencyMigration())->id()];
+    }
     public function up(): array
     {
         return [
@@ -61,6 +70,12 @@ SQL),
             new SqlMigrationStep(new MigrationStepId('010_events_no_delete'), 'Protect lifecycle events from deletion.', "CREATE TRIGGER trg_quran_release_events_no_delete BEFORE DELETE ON quran_release_events FOR EACH ROW SIGNAL SQLSTATE '45000' SET MESSAGE_TEXT = 'Quran release events are append-only'"),
         ];
     }
-    public function down(): array { return []; }
-    public function reversible(): bool { return false; }
+    public function down(): array
+    {
+        return [];
+    }
+    public function reversible(): bool
+    {
+        return false;
+    }
 }

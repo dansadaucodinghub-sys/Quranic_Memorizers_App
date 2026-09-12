@@ -11,9 +11,18 @@ use Qmdb\Shared\Schema\Seed\SqlSeedStep;
 
 final readonly class SeedCompetitionP6AuthorizationRoleMappings implements Seed
 {
-    public function id(): SeedId { return new SeedId('20260911141100_seed_competition_p6_authorization_role_mappings'); }
-    public function description(): string { return 'Seed exact P6 least-privilege role mappings without account assignments.'; }
-    public function dependencies(): array { return [new SeedId('20260911141000_seed_competition_p6_authorization_catalog')]; }
+    public function id(): SeedId
+    {
+        return new SeedId('20260911141100_seed_competition_p6_authorization_role_mappings');
+    }
+    public function description(): string
+    {
+        return 'Seed exact P6 least-privilege role mappings without account assignments.';
+    }
+    public function dependencies(): array
+    {
+        return [new SeedId('20260911141000_seed_competition_p6_authorization_catalog')];
+    }
     public function steps(): array
     {
         $roles = [

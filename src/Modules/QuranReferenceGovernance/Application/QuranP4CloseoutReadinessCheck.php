@@ -222,7 +222,8 @@ final readonly class QuranP4CloseoutReadinessCheck
 
     private function verifySources(PDO $pdo): int
     {
-        $sources = $this->query($pdo,
+        $sources = $this->query(
+            $pdo,
             "SELECT source_code, source_version, content_role, runtime_download_allowed, status\n"
             . 'FROM quran_reference_sources ORDER BY source_code',
         )->fetchAll(PDO::FETCH_ASSOC);
@@ -256,7 +257,8 @@ final readonly class QuranP4CloseoutReadinessCheck
     /** @return array{0:int,1:int} */
     private function verifyActiveContent(PDO $pdo): array
     {
-        $release = $this->query($pdo,
+        $release = $this->query(
+            $pdo,
             "SELECT r.id, s.ayah_count FROM quran_reference_releases r\n"
             . "INNER JOIN quran_release_content_summaries s ON s.release_id = r.id\n"
             . "WHERE r.status = 'ACTIVE'",

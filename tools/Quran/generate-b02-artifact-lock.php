@@ -19,7 +19,11 @@ fwrite(STDOUT, "B02 artifact lock generated\n");
 /** @return array<string, int|string> */
 function artifact(string $root, string $path, string $artifactCode, string $sourceCode, string $sourceVersion, string $role, string $profile, string $mediaType, string $reference, string $acquiredAt): array
 {
-    return ['acquired_at_utc' => $acquiredAt, 'artifact_code' => $artifactCode, 'artifact_role' => $role, 'byte_size' => filesize($path), 'format_profile' => $profile, 'media_type' => $mediaType, 'official_reference' => $reference, 'original_filename' => basename($path), 'repository_relative_path' => relative($root, $path), 'sha256' => checksum($path), 'source_code' => $sourceCode, 'source_version' => $sourceVersion];
+    $size = filesize($path);
+    if (!is_int($size)) {
+        throw new RuntimeException('Approved Tanzil artifact size is unavailable.');
+    }
+    return ['acquired_at_utc' => $acquiredAt, 'artifact_code' => $artifactCode, 'artifact_role' => $role, 'byte_size' => $size, 'format_profile' => $profile, 'media_type' => $mediaType, 'official_reference' => $reference, 'original_filename' => basename($path), 'repository_relative_path' => relative($root, $path), 'sha256' => checksum($path), 'source_code' => $sourceCode, 'source_version' => $sourceVersion];
 }
 
 function checksum(string $path): string
@@ -36,6 +40,7 @@ function relative(string $root, string $path): string
     return str_replace('\\', '/', substr($path, strlen($root) + 1));
 }
 
+/** @param array<array-key, mixed> $value */
 function canonical(array $value): string
 {
     sortKeys($value);
@@ -43,6 +48,7 @@ function canonical(array $value): string
     return json_encode($value, JSON_THROW_ON_ERROR | JSON_UNESCAPED_SLASHES | JSON_UNESCAPED_UNICODE);
 }
 
+/** @param array<array-key, mixed> $value */
 function sortKeys(array &$value): void
 {
     foreach ($value as &$entry) {

@@ -14,11 +14,14 @@ interface QuranReleaseLifecycleRepository
 
     public function activeReleaseExists(): bool;
 
+    /** @param array{id:int,public_id:string,status:string,version:int,release_code:string,release_version:string} $release */
     public function transition(array $release, string $status, int $actorAccountId, DateTimeImmutable $now): bool;
 
+    /** @param array{id:int,public_id:string,status:string,version:int,release_code:string,release_version:string} $release */
     public function appendEvent(array $release, string $eventType, string $toStatus, int $actorAccountId, ?string $reasonCode, string $correlationId, DateTimeImmutable $now): void;
 
     public function findCompleted(UuidV7 $submissionId, string $fingerprint): ?QuranReleaseTransitionResult;
 
+    /** @param array{id:int,public_id:string,status:string,version:int,release_code:string,release_version:string} $release */
     public function record(UuidV7 $submissionId, string $fingerprint, array $release, QuranReleaseTransitionCommand $command, ?int $stepUpGrantId, string $auditEventPublicId, DateTimeImmutable $now): void;
 }

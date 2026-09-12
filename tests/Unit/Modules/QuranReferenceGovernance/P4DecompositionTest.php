@@ -18,7 +18,9 @@ final class P4DecompositionTest extends TestCase
         self::assertStringContainsString('QMDB-P4-B02', $decomposition);
         self::assertStringContainsString('QMDB-P4-B03', $decomposition);
         self::assertStringNotContainsString('QMDB-P4-REQ-009', $authorization);
-        foreach (range(1, 8) as $number) self::assertStringContainsString(sprintf('QMDB-P4-REQ-%03d', $number), $authorization);
+        foreach (range(1, 8) as $number) {
+            self::assertStringContainsString(sprintf('QMDB-P4-REQ-%03d', $number), $authorization);
+        }
         self::assertStringContainsString('DEFINED / NOT AUTHORIZED', $decomposition);
     }
 }

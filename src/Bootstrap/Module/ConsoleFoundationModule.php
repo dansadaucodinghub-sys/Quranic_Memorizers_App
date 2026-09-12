@@ -319,12 +319,14 @@ final readonly class ConsoleFoundationModule implements Module
                 $registry->register(ServiceReference::get($resolver, CompetitionP5VerifyConsoleCommand::class));
                 $registry->register(ServiceReference::get($resolver, CompetitionRegistrationVerifyConsoleCommand::class));
                 $registry->register(ServiceReference::get($resolver, CompetitionP6VerifyConsoleCommand::class));
-                foreach ([
+                foreach (
+                    [
                     ['competition:judging:verify', 'Verify P6 judging and panel integrity.'],
                     ['competition:scoring:verify', 'Verify P6 fixed-point scoring integrity.'],
                     ['competition:results:verify', 'Verify P6 result and ranking integrity.'],
                     ['competition:appeals:verify', 'Verify P6 controlled appeal integrity.'],
-                ] as [$name, $description]) {
+                    ] as [$name, $description]
+                ) {
                     $registry->register(new CompetitionP6AspectVerifyConsoleCommand(
                         $name,
                         $description,

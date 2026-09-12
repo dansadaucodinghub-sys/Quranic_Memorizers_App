@@ -428,7 +428,28 @@ final class ProductionRouteSecurityPolicyCatalog
     private function policy(RouteSecurityClassification $classification, string $route): RouteSecurityPolicy
     {
         $permission = self::BASE_ROLE_PERMISSIONS[$route] ?? null;
-        $assurance = match ($permission) {
+        $assurance = $this->assuranceForPermission($permission);
+
+        return new RouteSecurityPolicy(
+            $classification,
+            $classification === RouteSecurityClassification::TENANT_REQUIRED || str_starts_with($route, 'workspace.organizations.') || str_starts_with($route, 'workspace.competition.'),
+            $permission,
+            $assurance,
+            self::STEP_UP_ACTIONS[$route] ?? null,
+            self::CSRF_ACTIONS[$route] ?? null,
+            in_array($route, self::IDEMPOTENT, true),
+            $classification !== RouteSecurityClassification::PUBLIC
+                || str_contains($route, 'verification')
+                || str_contains($route, '.password_recovery.')
+                || str_contains($route, '.mfa.')
+                || str_contains($route, '.passkey.'),
+            in_array($route, self::JSON_MUTATIONS, true) ? 'application/json' : null,
+        );
+    }
+
+    private function assuranceForPermission(?string $permission): ?string
+    {
+        return match ($permission) {
             'platform.accounts.view', 'platform.security_events.view',
             'workspace.organizations.manage', 'workspace.organization_units.manage',
             'workspace.organization_affiliations.manage', 'workspace.organization_affiliation_assignments.manage' => 'MULTI_FACTOR',
@@ -451,21 +472,5 @@ final class ProductionRouteSecurityPolicyCatalog
             'workspace.competitions.disqualify_participants' => 'PHISHING_RESISTANT',
             default => null,
         };
-
-        return new RouteSecurityPolicy(
-            $classification,
-            $classification === RouteSecurityClassification::TENANT_REQUIRED || str_starts_with($route, 'workspace.organizations.') || str_starts_with($route, 'workspace.competition.'),
-            $permission,
-            $assurance,
-            self::STEP_UP_ACTIONS[$route] ?? null,
-            self::CSRF_ACTIONS[$route] ?? null,
-            in_array($route, self::IDEMPOTENT, true),
-            $classification !== RouteSecurityClassification::PUBLIC
-                || str_contains($route, 'verification')
-                || str_contains($route, '.password_recovery.')
-                || str_contains($route, '.mfa.')
-                || str_contains($route, '.passkey.'),
-            in_array($route, self::JSON_MUTATIONS, true) ? 'application/json' : null,
-        );
     }
 }

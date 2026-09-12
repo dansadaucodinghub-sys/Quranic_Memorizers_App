@@ -8,7 +8,7 @@ use XMLReader;
 
 final readonly class TanzilQuranMetadataParser
 {
-    /** @return array{surahs:list<array<string, int|string>>,markers:list<array{type:string,index:int,surah_number:int,ayah_number:int,sajdah_type:?string}>} */
+    /** @return array{surahs:list<array{surah_number:int,ayah_count:int,arabic_name:string,transliterated_name:string,english_name:string,revelation_type:string,revelation_order:int,ruku_count:int}>,markers:list<array{type:string,index:int,surah_number:int,ayah_number:int,sajdah_type:?string}>} */
     public function parse(string $path, int $maximumBytes = 4194304, int $maximumElements = 100000): array
     {
         if (!is_file($path) || filesize($path) === false || filesize($path) > $maximumBytes) {
@@ -57,7 +57,7 @@ final readonly class TanzilQuranMetadataParser
         return ['surahs' => $surahs, 'markers' => $markers];
     }
 
-    /** @return array<string, int|string> */
+    /** @return array{surah_number:int,ayah_count:int,arabic_name:string,transliterated_name:string,english_name:string,revelation_type:string,revelation_order:int,ruku_count:int} */
     private function surah(XMLReader $xml): array
     {
         return ['surah_number' => $this->positive($xml, 'index'), 'ayah_count' => $this->positive($xml, 'ayas'), 'arabic_name' => $this->required($xml, 'name'), 'transliterated_name' => $this->required($xml, 'tname'), 'english_name' => $this->required($xml, 'ename'), 'revelation_type' => $this->required($xml, 'type'), 'revelation_order' => $this->positive($xml, 'order'), 'ruku_count' => $this->positive($xml, 'rukus')];

@@ -13,9 +13,18 @@ use Qmdb\Shared\Schema\Migration\SqlMigrationStep;
 /** Forward-only completion of P6 append-only and privacy records. */
 final readonly class CompleteCompetitionP6ImmutableRecordsMigration implements Migration
 {
-    public function id(): MigrationId { return new MigrationId('20260912100000_complete_competition_p6_immutable_records'); }
-    public function description(): string { return 'Add P6 penalty, decision, consent, appeal-window, and append-only event records.'; }
-    public function dependencies(): array { return [(new CreateCompetitionJudgingScoringMigration())->id()]; }
+    public function id(): MigrationId
+    {
+        return new MigrationId('20260912100000_complete_competition_p6_immutable_records');
+    }
+    public function description(): string
+    {
+        return 'Add P6 penalty, decision, consent, appeal-window, and append-only event records.';
+    }
+    public function dependencies(): array
+    {
+        return [(new CreateCompetitionJudgingScoringMigration())->id()];
+    }
     public function up(): array
     {
         return [
@@ -33,6 +42,12 @@ final readonly class CompleteCompetitionP6ImmutableRecordsMigration implements M
             new SqlMigrationStep(new MigrationStepId('010_appeal_events_immutable'), 'Prevent appeal event deletion.', "CREATE TRIGGER trg_p6_appeal_events_no_delete BEFORE DELETE ON competition_appeal_events FOR EACH ROW SIGNAL SQLSTATE '45000' SET MESSAGE_TEXT = 'Appeal events are append-only'")
         ];
     }
-    public function down(): array { return []; }
-    public function reversible(): bool { return false; }
+    public function down(): array
+    {
+        return [];
+    }
+    public function reversible(): bool
+    {
+        return false;
+    }
 }

@@ -13,9 +13,18 @@ use Qmdb\Shared\Schema\Migration\SqlMigrationStep;
 /** P6 uses immutable records and integer units; no floating-point authority. */
 final readonly class CreateCompetitionJudgingScoringMigration implements Migration
 {
-    public function id(): MigrationId { return new MigrationId('20260911140000_create_competition_judging_scoring'); }
-    public function description(): string { return 'Create workspace-safe P6 judging, scoring, results, and appeals records.'; }
-    public function dependencies(): array { return [(new HardenCompetitionTenantRelationshipsMigration())->id()]; }
+    public function id(): MigrationId
+    {
+        return new MigrationId('20260911140000_create_competition_judging_scoring');
+    }
+    public function description(): string
+    {
+        return 'Create workspace-safe P6 judging, scoring, results, and appeals records.';
+    }
+    public function dependencies(): array
+    {
+        return [(new HardenCompetitionTenantRelationshipsMigration())->id()];
+    }
 
     public function up(): array
     {
@@ -40,6 +49,12 @@ final readonly class CreateCompetitionJudgingScoringMigration implements Migrati
             new SqlMigrationStep(new MigrationStepId('017_immutability'), 'Protect P6 result snapshots from deletion.', "CREATE TRIGGER trg_p6_result_rows_no_delete BEFORE DELETE ON competition_result_rows FOR EACH ROW SIGNAL SQLSTATE '45000' SET MESSAGE_TEXT = 'Result rows are immutable'")
         ];
     }
-    public function down(): array { return []; }
-    public function reversible(): bool { return false; }
+    public function down(): array
+    {
+        return [];
+    }
+    public function reversible(): bool
+    {
+        return false;
+    }
 }

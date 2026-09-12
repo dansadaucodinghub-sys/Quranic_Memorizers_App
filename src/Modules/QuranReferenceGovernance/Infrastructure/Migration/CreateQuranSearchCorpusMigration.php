@@ -11,9 +11,18 @@ use Qmdb\Shared\Schema\Migration\SqlMigrationStep;
 
 final readonly class CreateQuranSearchCorpusMigration implements Migration
 {
-    public function id(): MigrationId { return new MigrationId('20260911103000_create_quran_search_corpus'); }
-    public function description(): string { return 'Create immutable Simple Clean Qur’an search corpus overlay.'; }
-    public function dependencies(): array { return [(new EnableQuranSystemBaselineActorMigration())->id()]; }
+    public function id(): MigrationId
+    {
+        return new MigrationId('20260911103000_create_quran_search_corpus');
+    }
+    public function description(): string
+    {
+        return 'Create immutable Simple Clean Qur’an search corpus overlay.';
+    }
+    public function dependencies(): array
+    {
+        return [(new EnableQuranSystemBaselineActorMigration())->id()];
+    }
     public function up(): array
     {
         return [
@@ -39,6 +48,12 @@ SQL),
             new SqlMigrationStep(new MigrationStepId('010_events_no_delete'), 'Prevent corpus event deletion.', "CREATE TRIGGER trg_quran_search_events_no_delete BEFORE DELETE ON quran_search_corpus_events FOR EACH ROW SIGNAL SQLSTATE '45000' SET MESSAGE_TEXT = 'Quran search event is immutable'"),
         ];
     }
-    public function down(): array { return []; }
-    public function reversible(): bool { return false; }
+    public function down(): array
+    {
+        return [];
+    }
+    public function reversible(): bool
+    {
+        return false;
+    }
 }

@@ -24,8 +24,14 @@ use Qmdb\Shared\Time\Clock;
 
 final readonly class CompetitionScoringModule implements Module
 {
-    public function id(): ModuleId { return new ModuleId('competition.scoring'); }
-    public function dependencies(): array { return [new ModuleId('competition.judging'), new ModuleId('foundation.database'), new ModuleId('security.authorization'), new ModuleId('security.audit'), new ModuleId('tenancy.context')]; }
+    public function id(): ModuleId
+    {
+        return new ModuleId('competition.scoring');
+    }
+    public function dependencies(): array
+    {
+        return [new ModuleId('competition.judging'), new ModuleId('foundation.database'), new ModuleId('security.authorization'), new ModuleId('security.audit'), new ModuleId('tenancy.context')];
+    }
     public function register(ModuleRegistrationContext $context): void
     {
         $context->service(ServiceDefinition::factory(MySqlCompetitionScoreSheetRepository::class, 'competition.scoring', [DatabaseConnectionProvider::class], new ClosureServiceFactory(static fn (DependencyResolver $resolver): MySqlCompetitionScoreSheetRepository => new MySqlCompetitionScoreSheetRepository(ServiceReference::get($resolver, DatabaseConnectionProvider::class)))));

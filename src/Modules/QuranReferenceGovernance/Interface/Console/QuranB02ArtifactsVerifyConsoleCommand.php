@@ -57,13 +57,22 @@ final readonly class QuranB02ArtifactsVerifyConsoleCommand implements ConsoleCom
                 if (!is_file($file) || hash_file('sha256', $file) !== $artifact['sha256']) {
                     throw new \InvalidArgumentException('B02 source artifact checksum differs.');
                 }
-                $codes[] = $artifact['source_code'] ?? null;
+                $sourceCode = $artifact['source_code'] ?? null;
+                if (!is_string($sourceCode)) {
+                    throw new \InvalidArgumentException('B02 artifact source code is invalid.');
+                }
+                $codes[] = $sourceCode;
             }
             if ($codes !== ['TANZIL_UTHMANI_1_1', 'TANZIL_QURAN_METADATA_1_0']) {
                 throw new \InvalidArgumentException('B02 lock source scope is invalid.');
             }
-            $notice = $this->projectRoot . '/' . ($lock['notice_path'] ?? '');
-            if (!is_file($notice) || hash_file('sha256', $notice) !== ($lock['notice_sha256'] ?? null)) {
+            $noticePath = $lock['notice_path'] ?? null;
+            $noticeHash = $lock['notice_sha256'] ?? null;
+            if (!is_string($noticePath) || !is_string($noticeHash)) {
+                throw new \InvalidArgumentException('Tanzil notice lock is invalid.');
+            }
+            $notice = $this->projectRoot . '/' . $noticePath;
+            if (!is_file($notice) || hash_file('sha256', $notice) !== $noticeHash) {
                 throw new \InvalidArgumentException('Tanzil notice checksum differs.');
             }
             $output->write("Qur’an B02 artifacts verification: PASS\nArtifact count: 2\n");
@@ -76,6 +85,7 @@ final readonly class QuranB02ArtifactsVerifyConsoleCommand implements ConsoleCom
         }
     }
 
+    /** @param array<array-key, mixed> $value */
     private function canonical(array $value): string
     {
         $this->sortKeys($value);
@@ -83,6 +93,7 @@ final readonly class QuranB02ArtifactsVerifyConsoleCommand implements ConsoleCom
         return json_encode($value, JSON_THROW_ON_ERROR | JSON_UNESCAPED_SLASHES | JSON_UNESCAPED_UNICODE);
     }
 
+    /** @param array<array-key, mixed> $value */
     private function sortKeys(array &$value): void
     {
         foreach ($value as &$entry) {

@@ -82,10 +82,14 @@ function artifact(
     string $officialReference,
     string $acquiredAt,
 ): array {
+    $size = filesize($path);
+    if (!is_int($size)) {
+        throw new RuntimeException('Approved Tanzil artifact size is unavailable.');
+    }
     return [
         'acquired_at_utc' => $acquiredAt,
         'artifact_code' => $artifactCode,
-        'byte_size' => filesize($path),
+        'byte_size' => $size,
         'format_profile' => $formatProfile,
         'media_type' => $mediaType,
         'official_reference' => $officialReference,
@@ -98,6 +102,7 @@ function artifact(
     ];
 }
 
+/** @param array<array-key, mixed> $value */
 function encode(array $value): string
 {
     return json_encode(
@@ -138,7 +143,15 @@ function existingAcquisitionTime(string $lockPath): ?string
         return null;
     }
 
-    $value = $lock['artifacts'][0]['acquired_at_utc'] ?? null;
+    if (!is_array($lock)) {
+        return null;
+    }
+
+    $artifacts = $lock['artifacts'] ?? null;
+    if (!is_array($artifacts) || !isset($artifacts[0]) || !is_array($artifacts[0])) {
+        return null;
+    }
+    $value = $artifacts[0]['acquired_at_utc'] ?? null;
 
     return is_string($value) && preg_match('/^\d{4}-\d{2}-\d{2}T\d{2}:\d{2}:\d{2}Z$/', $value) === 1
         ? $value

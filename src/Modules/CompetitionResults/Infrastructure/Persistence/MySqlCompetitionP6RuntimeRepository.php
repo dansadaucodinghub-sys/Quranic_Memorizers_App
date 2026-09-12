@@ -7,9 +7,11 @@ namespace Qmdb\Modules\CompetitionResults\Infrastructure\Persistence;
 use DateTimeImmutable;
 use DateTimeZone;
 use PDO;
+use PDOStatement;
 use Qmdb\Modules\CompetitionResults\Application\CompetitionP6RuntimeRepository;
 use Qmdb\Shared\Database\Connection\DatabaseConnectionProvider;
 use Qmdb\Shared\Identifier\UuidV7;
+use Qmdb\Shared\Schema\State\PdoResultReader;
 
 final readonly class MySqlCompetitionP6RuntimeRepository implements CompetitionP6RuntimeRepository
 {
@@ -28,20 +30,29 @@ final readonly class MySqlCompetitionP6RuntimeRepository implements CompetitionP
             default => throw new \InvalidArgumentException('P6 aggregate kind is invalid.'),
         };
         $statement = $this->connections->connection()->prepare($query);
+        if (!$statement instanceof PDOStatement) {
+            throw new \RuntimeException('Competition aggregate lock statement could not be prepared.');
+        }
         $statement->bindValue(':workspace_id', $workspaceId, PDO::PARAM_INT);
         $statement->bindValue(':public_id', $publicId->toBinary(), PDO::PARAM_LOB);
         $statement->execute();
-        $row = $statement->fetch(PDO::FETCH_ASSOC);
-        if (!is_array($row)) {
+        $row = self::row($statement->fetch(PDO::FETCH_ASSOC));
+        if ($row === null) {
             return null;
         }
 
-        $result = ['id' => (int) $row['id'], 'public_id' => UuidV7::fromBinary((string) $row['public_id'])->toString(), 'workspace_id' => (int) $row['workspace_id'], 'status' => (string) $row['status'], 'version' => (int) $row['version']];
+        $result = [
+            'id' => PdoResultReader::integer($row, 'id'),
+            'public_id' => UuidV7::fromBinary(PdoResultReader::string($row, 'public_id'))->toString(),
+            'workspace_id' => PdoResultReader::integer($row, 'workspace_id'),
+            'status' => PdoResultReader::string($row, 'status'),
+            'version' => PdoResultReader::integer($row, 'version'),
+        ];
         if (isset($row['round_id'])) {
-            $result['round_id'] = (int) $row['round_id'];
+            $result['round_id'] = PdoResultReader::integer($row, 'round_id');
         }
         if (isset($row['judge_account_id'])) {
-            $result['judge_account_id'] = (int) $row['judge_account_id'];
+            $result['judge_account_id'] = PdoResultReader::integer($row, 'judge_account_id');
         }
 
         return $result;
@@ -50,16 +61,19 @@ final readonly class MySqlCompetitionP6RuntimeRepository implements CompetitionP
     public function completed(UuidV7 $submissionId, string $fingerprint): ?array
     {
         $statement = $this->connections->connection()->prepare('SELECT request_fingerprint, result_status, version_after FROM competition_p6_operations WHERE submission_id = :submission_id FOR UPDATE');
+        if (!$statement instanceof PDOStatement) {
+            throw new \RuntimeException('Competition operation lookup statement could not be prepared.');
+        }
         $statement->execute([':submission_id' => $submissionId->toBinary()]);
-        $row = $statement->fetch(PDO::FETCH_ASSOC);
-        if (!is_array($row)) {
+        $row = self::row($statement->fetch(PDO::FETCH_ASSOC));
+        if ($row === null) {
             return null;
         }
-        if (!hash_equals((string) $row['request_fingerprint'], $fingerprint)) {
+        if (!hash_equals(PdoResultReader::string($row, 'request_fingerprint'), $fingerprint)) {
             throw new \DomainException('Competition submission conflicts with a prior request.');
         }
 
-        return ['status' => (string) $row['result_status'], 'version' => (int) $row['version_after']];
+        return ['status' => PdoResultReader::string($row, 'result_status'), 'version' => PdoResultReader::integer($row, 'version_after')];
     }
 
     public function transition(string $aggregateKind, array $aggregate, string $targetStatus, int $actorAccountId, DateTimeImmutable $now): bool
@@ -69,8 +83,15 @@ final readonly class MySqlCompetitionP6RuntimeRepository implements CompetitionP
             $fields = ['status = :status'];
             $parameters = [':status' => $targetStatus, ':id' => $aggregate['id'], ':workspace_id' => $aggregate['workspace_id'], ':previous' => $aggregate['status']];
             if ($targetStatus === 'PUBLISHED') {
+                $roundId = $aggregate['round_id'] ?? null;
+                if (!is_int($roundId)) {
+                    throw new \RuntimeException('Result run has no governed round.');
+                }
                 $supersede = $this->connections->connection()->prepare('UPDATE competition_result_runs SET status = \'SUPERSEDED\' WHERE workspace_id = :workspace_id AND round_id = :round_id AND status = \'PUBLISHED\' AND id <> :id');
-                $supersede->execute([':workspace_id' => $aggregate['workspace_id'], ':round_id' => $aggregate['round_id'], ':id' => $aggregate['id']]);
+                if (!$supersede instanceof PDOStatement) {
+                    throw new \RuntimeException('Result supersession statement could not be prepared.');
+                }
+                $supersede->execute([':workspace_id' => $aggregate['workspace_id'], ':round_id' => $roundId, ':id' => $aggregate['id']]);
                 $fields[] = 'published_by_account_id = :actor';
                 $fields[] = 'published_at = :now';
                 $parameters[':actor'] = $actorAccountId;
@@ -101,6 +122,10 @@ final readonly class MySqlCompetitionP6RuntimeRepository implements CompetitionP
         return $statement->rowCount() === 1;
     }
 
+    /**
+     * @param array{id:int,public_id:string,workspace_id:int,status:string,version:int,round_id?:int,judge_account_id?:int} $aggregate
+     * @param array<string, scalar|null> $safeMetadata
+     */
     public function appendEvent(string $aggregateKind, array $aggregate, string $operationCode, int $actorAccountId, array $safeMetadata, DateTimeImmutable $now): void
     {
         [$table, $foreignKey] = match ($aggregateKind) {
@@ -121,9 +146,13 @@ final readonly class MySqlCompetitionP6RuntimeRepository implements CompetitionP
         $statement->execute([':public_id' => UuidV7::generate()->toBinary(), ':submission_id' => $submissionId->toBinary(), ':workspace_id' => $aggregate['workspace_id'], ':operation_code' => $operationCode, ':fingerprint' => $fingerprint, ':aggregate_kind' => self::kindForOperation($operationCode), ':aggregate_public_id' => UuidV7::fromString($aggregate['public_id'])->toBinary(), ':result_status' => $status, ':version_after' => $versionAfter, ':occurred_at' => self::time($now)]);
     }
 
+    /**
+     * @param array{id:int,public_id:string,workspace_id:int,status:string,version:int,round_id?:int,judge_account_id?:int} $aggregate
+     * @param array<string, scalar|null> $safePayload
+     */
     public function notificationIntent(array $aggregate, ?int $accountId, string $intentType, array $safePayload, DateTimeImmutable $now): void
     {
-        $key = hash('sha256', $aggregate['workspace_id'] . "\0" . $aggregate['public_id'] . "\0" . $intentType . "\0" . ($accountId ?? 0), true);
+        $key = hash('sha256', (string) $aggregate['workspace_id'] . "\0" . $aggregate['public_id'] . "\0" . $intentType . "\0" . (string) ($accountId ?? 0), true);
         $statement = $this->connections->connection()->prepare('INSERT INTO competition_notification_intents (public_id, workspace_id, account_id, intent_type, aggregate_kind, aggregate_public_id, deduplication_key, safe_payload, status, available_at, created_at) VALUES (:public_id,:workspace_id,:account_id,:intent_type,:aggregate_kind,:aggregate_public_id,:deduplication_key,:safe_payload,\'PENDING\',:now,:now) ON DUPLICATE KEY UPDATE id = id');
         $statement->execute([':public_id' => UuidV7::generate()->toBinary(), ':workspace_id' => $aggregate['workspace_id'], ':account_id' => $accountId, ':intent_type' => $intentType, ':aggregate_kind' => self::kindForOperation($intentType), ':aggregate_public_id' => UuidV7::fromString($aggregate['public_id'])->toBinary(), ':deduplication_key' => $key, ':safe_payload' => self::json($safePayload), ':now' => self::time($now)]);
     }
@@ -152,11 +181,21 @@ final readonly class MySqlCompetitionP6RuntimeRepository implements CompetitionP
         $statement->execute();
         $rows = $statement->fetchAll(PDO::FETCH_ASSOC);
         $result = [];
-        foreach ($rows as $row) {
-            if (!is_array($row)) {
+        foreach ($rows as $rawRow) {
+            $row = self::row($rawRow);
+            if ($row === null) {
                 continue;
             }
-            $result[] = ['edition_slug' => (string) $row['edition_slug'], 'category_slug' => (string) $row['category_slug'], 'round_code' => (string) $row['round_code'], 'public_id' => UuidV7::fromBinary((string) $row['public_id'])->toString(), 'rank_position' => (int) $row['rank_position'], 'total_units' => (int) $row['total_units'], 'public_label' => (string) $row['public_label'], 'published_at' => (string) $row['published_at']];
+            $result[] = [
+                'edition_slug' => PdoResultReader::string($row, 'edition_slug'),
+                'category_slug' => PdoResultReader::string($row, 'category_slug'),
+                'round_code' => PdoResultReader::string($row, 'round_code'),
+                'public_id' => UuidV7::fromBinary(PdoResultReader::string($row, 'public_id'))->toString(),
+                'rank_position' => PdoResultReader::integer($row, 'rank_position'),
+                'total_units' => PdoResultReader::integer($row, 'total_units'),
+                'public_label' => PdoResultReader::string($row, 'public_label'),
+                'published_at' => PdoResultReader::string($row, 'published_at'),
+            ];
         }
 
         return $result;
@@ -182,5 +221,22 @@ final readonly class MySqlCompetitionP6RuntimeRepository implements CompetitionP
     private static function time(DateTimeImmutable $value): string
     {
         return $value->setTimezone(new DateTimeZone('UTC'))->format('Y-m-d H:i:s.u');
+    }
+
+    /** @return array<string, mixed>|null */
+    private static function row(mixed $value): ?array
+    {
+        if (!is_array($value)) {
+            return null;
+        }
+        $row = [];
+        foreach ($value as $key => $item) {
+            if (!is_string($key)) {
+                throw new \RuntimeException('Competition database row has an invalid column name.');
+            }
+            $row[$key] = $item;
+        }
+
+        return $row;
     }
 }

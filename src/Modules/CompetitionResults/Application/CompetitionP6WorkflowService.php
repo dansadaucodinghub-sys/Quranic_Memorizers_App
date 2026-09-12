@@ -82,7 +82,10 @@ final readonly class CompetitionP6WorkflowService
         );
     }
 
-    /** @param array{code:string,kind:string,target:string,permission:string,step_up:?StepUpAction,rate:IdentityRateLimitScope,audit:?SecurityEventCode,subject:SecurityEventSubjectKind,notify:bool} $rule @return array{status:string,version:int,replayed:bool} */
+    /**
+     * @param array{code:string,kind:string,target:string,permission:string,step_up:?StepUpAction,rate:IdentityRateLimitScope,audit:?SecurityEventCode,subject:SecurityEventSubjectKind,notify:bool} $rule
+     * @return array{status:string,version:int,replayed:bool}
+     */
     private function inTransaction(AuthenticatedAccountContext $actor, AccountWorkspaceTenantContext $tenant, UuidV7 $submissionId, array $rule, UuidV7 $aggregatePublicId, int $expectedVersion, ?string $correlationId): array
     {
         $fingerprint = $this->fingerprints->generate('competition-p6-operation', implode("\0", [$tenant->workspaceInternalId, $actor->accountInternalId, $rule['code'], $aggregatePublicId->toString(), $expectedVersion]));
@@ -105,13 +108,16 @@ final readonly class CompetitionP6WorkflowService
         if (!$this->repository->transition($rule['kind'], $aggregate, $rule['target'], $actor->accountInternalId, $now)) {
             throw new \DomainException('Competition record is stale.');
         }
+        /** @var array<string, scalar|null> $metadata */
         $metadata = ['operation' => $rule['code'], 'previous_status' => $aggregate['status'], 'new_status' => $rule['target'], 'version_before' => $aggregate['version'], 'version_after' => $aggregate['version'] + 1];
         $this->repository->appendEvent($rule['kind'], $aggregate, $rule['code'], $actor->accountInternalId, $metadata, $now);
         if ($rule['audit'] !== null) {
             $this->audit->workspace($rule['audit'], $tenant->workspacePublicId(), $rule['subject'], $aggregate['public_id'], $actor->accountId->toString(), $now, $metadata, null, $correlationId);
         }
         if ($rule['notify']) {
-            $this->repository->notificationIntent($aggregate, $rule['kind'] === 'ASSIGNMENT' ? ($aggregate['judge_account_id'] ?? null) : null, $rule['code'], ['aggregate_public_id' => $aggregate['public_id'], 'new_status' => $rule['target']], $now);
+            /** @var array<string, scalar|null> $payload */
+            $payload = ['aggregate_public_id' => $aggregate['public_id'], 'new_status' => $rule['target']];
+            $this->repository->notificationIntent($aggregate, $rule['kind'] === 'ASSIGNMENT' ? ($aggregate['judge_account_id'] ?? null) : null, $rule['code'], $payload, $now);
         }
         $this->repository->record($submissionId, $fingerprint->toBinary(), $rule['code'], $aggregate, $rule['target'], $aggregate['version'] + 1, $now);
 

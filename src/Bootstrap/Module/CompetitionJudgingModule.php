@@ -10,7 +10,15 @@ use Qmdb\Shared\Module\ModuleRegistrationContext;
 
 final readonly class CompetitionJudgingModule implements Module
 {
-    public function id(): ModuleId { return new ModuleId('competition.judging'); }
-    public function dependencies(): array { return [new ModuleId('competition.registration'), new ModuleId('foundation.database'), new ModuleId('security.authorization'), new ModuleId('security.audit'), new ModuleId('security.web'), new ModuleId('tenancy.context')]; }
-    public function register(ModuleRegistrationContext $context): void {}
+    public function id(): ModuleId
+    {
+        return new ModuleId('competition.judging');
+    }
+    public function dependencies(): array
+    {
+        return [new ModuleId('competition.registration'), new ModuleId('foundation.database'), new ModuleId('security.authorization'), new ModuleId('security.audit'), new ModuleId('security.web'), new ModuleId('tenancy.context')];
+    }
+    public function register(ModuleRegistrationContext $context): void
+    {
+    }
 }

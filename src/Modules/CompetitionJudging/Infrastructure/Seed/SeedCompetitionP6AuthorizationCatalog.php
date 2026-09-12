@@ -11,9 +11,18 @@ use Qmdb\Shared\Schema\Seed\SqlSeedStep;
 
 final readonly class SeedCompetitionP6AuthorizationCatalog implements Seed
 {
-    public function id(): SeedId { return new SeedId('20260911141000_seed_competition_p6_authorization_catalog'); }
-    public function description(): string { return 'Seed exact P6 judging, scoring, result, and appeal workspace permissions.'; }
-    public function dependencies(): array { return [new SeedId('20260911131100_seed_competition_authorization_role_mappings')]; }
+    public function id(): SeedId
+    {
+        return new SeedId('20260911141000_seed_competition_p6_authorization_catalog');
+    }
+    public function description(): string
+    {
+        return 'Seed exact P6 judging, scoring, result, and appeal workspace permissions.';
+    }
+    public function dependencies(): array
+    {
+        return [new SeedId('20260911131100_seed_competition_authorization_role_mappings')];
+    }
     public function steps(): array
     {
         $rows = [

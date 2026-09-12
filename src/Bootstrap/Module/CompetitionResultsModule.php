@@ -42,8 +42,14 @@ use Nyholm\Psr7\Factory\Psr17Factory;
 
 final readonly class CompetitionResultsModule implements Module
 {
-    public function id(): ModuleId { return new ModuleId('competition.results'); }
-    public function dependencies(): array { return [new ModuleId('competition.scoring'), new ModuleId('foundation.database'), new ModuleId('security.authorization'), new ModuleId('security.audit'), new ModuleId('security.web'), new ModuleId('tenancy.context')]; }
+    public function id(): ModuleId
+    {
+        return new ModuleId('competition.results');
+    }
+    public function dependencies(): array
+    {
+        return [new ModuleId('competition.scoring'), new ModuleId('foundation.database'), new ModuleId('security.authorization'), new ModuleId('security.audit'), new ModuleId('security.web'), new ModuleId('tenancy.context')];
+    }
     public function register(ModuleRegistrationContext $context): void
     {
         $context->service(ServiceDefinition::factory(MySqlCompetitionP6RuntimeRepository::class, 'competition.results', [DatabaseConnectionProvider::class], new ClosureServiceFactory(static fn (DependencyResolver $resolver): MySqlCompetitionP6RuntimeRepository => new MySqlCompetitionP6RuntimeRepository(ServiceReference::get($resolver, DatabaseConnectionProvider::class)))));
