@@ -75,6 +75,8 @@ use Qmdb\Modules\CompetitionResults\Interface\Console\CompetitionP6VerifyConsole
 use Qmdb\Modules\CompetitionResults\Interface\Console\CompetitionP6AspectVerifyConsoleCommand;
 use Qmdb\Modules\CompetitionResults\Interface\Console\CompetitionP6MaintenanceConsoleCommand;
 use Qmdb\Modules\CompetitionLive\Interface\Console\CompetitionP7VerifyConsoleCommand;
+use Qmdb\Modules\CompetitionLive\Interface\Console\CompetitionP7LiveMaintenanceConsoleCommand;
+use Qmdb\Modules\CompetitionLive\Infrastructure\Persistence\CompetitionP7LiveMaintenanceService;
 use Qmdb\Modules\CompetitionResults\Infrastructure\Persistence\CompetitionP6MaintenanceService;
 use Qmdb\Shared\Database\Connection\DatabaseConnectionProvider;
 use Qmdb\Shared\Background\Scheduler\ScheduledTaskMap;
@@ -282,6 +284,7 @@ final readonly class ConsoleFoundationModule implements Module
             CompetitionP6VerifyConsoleCommand::class,
             CompetitionP7VerifyConsoleCommand::class,
             CompetitionP6MaintenanceService::class,
+            CompetitionP7LiveMaintenanceService::class,
             DatabaseConnectionProvider::class,
             ScheduledTaskMap::class,
         ];
@@ -336,6 +339,14 @@ final readonly class ConsoleFoundationModule implements Module
                 $registry->register(ServiceReference::get($resolver, CompetitionRegistrationVerifyConsoleCommand::class));
                 $registry->register(ServiceReference::get($resolver, CompetitionP6VerifyConsoleCommand::class));
                 $registry->register(ServiceReference::get($resolver, CompetitionP7VerifyConsoleCommand::class));
+                $p7LiveMaintenance = ServiceReference::get($resolver, CompetitionP7LiveMaintenanceService::class);
+                foreach ([
+                    ['competition:live:project', 'live-project'],
+                    ['competition:live:reconcile', 'live-reconcile'],
+                    ['competition:live:outbox-retry', 'live-outbox-retry'],
+                ] as [$name, $operation]) {
+                    $registry->register(new CompetitionP7LiveMaintenanceConsoleCommand($name, $operation, $p7LiveMaintenance));
+                }
                 $maintenance = ServiceReference::get($resolver, CompetitionP6MaintenanceService::class);
                 foreach (
                     [

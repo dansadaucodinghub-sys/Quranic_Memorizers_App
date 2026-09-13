@@ -110,6 +110,7 @@ final readonly class MySqlCompetitionLiveRuntimeRepository implements Competitio
     public function appendEvent(array $session, string $eventType, string $visibility, array $payload, ?int $actorAccountId, UuidV7 $correlationId, DateTimeImmutable $now): int
     {
         $sequence = $session['head_sequence'] + 1;
+        $eventPublicId = UuidV7::generate();
         $payloadJson = CanonicalJson::encode($payload);
         $payloadHash = hash('sha256', $payloadJson, true);
         $prior = $session['head_sequence'] === 0 ? null : $this->previousEventHash($session['id'], $session['workspace_id'], $session['head_sequence']);
@@ -118,7 +119,8 @@ final readonly class MySqlCompetitionLiveRuntimeRepository implements Competitio
         if (!$statement instanceof PDOStatement) {
             throw new \RuntimeException('Live-event append statement could not be prepared.');
         }
-        $statement->execute([':public_id' => UuidV7::generate()->toBinary(), ':workspace_id' => $session['workspace_id'], ':session_id' => $session['id'], ':sequence_number' => $sequence, ':event_type' => $eventType, ':visibility' => $visibility, ':payload' => $payloadJson, ':payload_sha256' => $payloadHash, ':previous_sha256' => $prior, ':event_sha256' => $eventHash, ':actor_type' => $actorAccountId === null ? 'SYSTEM' : 'ACCOUNT', ':actor_account_id' => $actorAccountId, ':idempotency' => hash('sha256', $correlationId->toBinary() . "\0" . $eventType, true), ':correlation_id' => $correlationId->toBinary(), ':occurred_at' => self::time($now), ':created_at' => self::time($now)]);
+        $statement->execute([':public_id' => $eventPublicId->toBinary(), ':workspace_id' => $session['workspace_id'], ':session_id' => $session['id'], ':sequence_number' => $sequence, ':event_type' => $eventType, ':visibility' => $visibility, ':payload' => $payloadJson, ':payload_sha256' => $payloadHash, ':previous_sha256' => $prior, ':event_sha256' => $eventHash, ':actor_type' => $actorAccountId === null ? 'SYSTEM' : 'ACCOUNT', ':actor_account_id' => $actorAccountId, ':idempotency' => hash('sha256', $correlationId->toBinary() . "\0" . $eventType, true), ':correlation_id' => $correlationId->toBinary(), ':occurred_at' => self::time($now), ':created_at' => self::time($now)]);
+        $this->enqueueProjection($session, $eventPublicId, $sequence, $now);
         $advance = $this->connections->connection()->prepare('UPDATE competition_live_sessions SET head_sequence=:sequence WHERE id=:id AND workspace_id=:workspace_id AND head_sequence=:previous_sequence');
         if (!$advance instanceof PDOStatement) {
             throw new \RuntimeException('Live-event sequence update could not be prepared.');
@@ -129,6 +131,17 @@ final readonly class MySqlCompetitionLiveRuntimeRepository implements Competitio
         }
 
         return $sequence;
+    }
+
+    /** @param array{id:int,public_id:string,workspace_id:int,status:string,head_sequence:int,version:int} $session */
+    private function enqueueProjection(array $session, UuidV7 $eventPublicId, int $sequence, DateTimeImmutable $now): void
+    {
+        $payload = CanonicalJson::encode(['event_public_id' => $eventPublicId->toString(), 'sequence' => $sequence]);
+        $statement = $this->connections->connection()->prepare("INSERT INTO competition_p7_outbox_messages (public_id,workspace_id,live_session_id,live_event_public_id,message_type,payload_canonical_json,payload_sha256,status,attempts,available_at,lease_owner,lease_expires_at,delivered_at,dead_lettered_at,last_error_code,created_at,updated_at) VALUES (:public_id,:workspace_id,:session_id,:event_public_id,'LIVE_EVENT_PROJECT',:payload,:payload_sha256,'PENDING',0,:now,NULL,NULL,NULL,NULL,NULL,:now,:now)");
+        if (!$statement instanceof PDOStatement) {
+            throw new \RuntimeException('P7 projection outbox statement could not be prepared.');
+        }
+        $statement->execute([':public_id' => UuidV7::generate()->toBinary(), ':workspace_id' => $session['workspace_id'], ':session_id' => $session['id'], ':event_public_id' => $eventPublicId->toBinary(), ':payload' => $payload, ':payload_sha256' => hash('sha256', $payload, true), ':now' => self::time($now)]);
     }
 
     public function record(UuidV7 $submissionId, string $requestFingerprint, string $operation, array $session, string $status, int $versionAfter, int $sequence, DateTimeImmutable $now): void

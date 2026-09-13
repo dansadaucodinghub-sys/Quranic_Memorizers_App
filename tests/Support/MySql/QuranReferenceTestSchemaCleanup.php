@@ -19,6 +19,7 @@ final class QuranReferenceTestSchemaCleanup
                 // P5/P6 tables must be removed before their Qur'an and
                 // geography parents. This is an ordered teardown; it never
                 // disables foreign-key checks.
+                'competition_p7_outbox_messages',
                 'competition_appeal_correction_authorizations', 'competition_appeal_decisions',
                 'competition_appeal_reviewer_conflicts', 'competition_appeal_review_assignments',
                 'competition_result_publication_holds', 'competition_result_publication_events',
