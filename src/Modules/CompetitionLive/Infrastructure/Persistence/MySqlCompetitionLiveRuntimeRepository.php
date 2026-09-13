@@ -41,6 +41,30 @@ final readonly class MySqlCompetitionLiveRuntimeRepository implements Competitio
         ];
     }
 
+    public function lockParticipant(int $workspaceId, UuidV7 $participantPublicId): ?array
+    {
+        $statement = $this->connections->connection()->prepare('SELECT id, public_id, workspace_id, live_session_id, current_state, call_sequence, state_version, version FROM competition_live_participant_states WHERE workspace_id=:workspace_id AND public_id=:public_id FOR UPDATE');
+        if (!$statement instanceof PDOStatement) {
+            throw new \RuntimeException('Live-participant lock statement could not be prepared.');
+        }
+        $statement->execute([':workspace_id' => $workspaceId, ':public_id' => $participantPublicId->toBinary()]);
+        $row = self::row($statement->fetch(PDO::FETCH_ASSOC));
+        if ($row === null) {
+            return null;
+        }
+
+        return [
+            'id' => PdoResultReader::integer($row, 'id'),
+            'public_id' => UuidV7::fromBinary(PdoResultReader::string($row, 'public_id'))->toString(),
+            'workspace_id' => PdoResultReader::integer($row, 'workspace_id'),
+            'live_session_id' => PdoResultReader::integer($row, 'live_session_id'),
+            'current_state' => PdoResultReader::string($row, 'current_state'),
+            'call_sequence' => PdoResultReader::integer($row, 'call_sequence'),
+            'state_version' => PdoResultReader::integer($row, 'state_version'),
+            'version' => PdoResultReader::integer($row, 'version'),
+        ];
+    }
+
     public function completed(UuidV7 $submissionId, string $requestFingerprint): ?array
     {
         $statement = $this->connections->connection()->prepare('SELECT request_fingerprint,result_status,version_after,sequence_after FROM competition_live_operations WHERE submission_id=:submission_id FOR UPDATE');
@@ -67,6 +91,18 @@ final readonly class MySqlCompetitionLiveRuntimeRepository implements Competitio
             throw new \RuntimeException('Live-session transition statement could not be prepared.');
         }
         $statement->execute([':status' => $targetStatus, ':now' => $time, ':id' => $session['id'], ':workspace_id' => $session['workspace_id'], ':version' => $session['version'], ':previous' => $session['status']]);
+
+        return $statement->rowCount() === 1;
+    }
+
+    public function transitionParticipant(array $participant, string $targetState, DateTimeImmutable $now): bool
+    {
+        $time = self::time($now);
+        $statement = $this->connections->connection()->prepare("UPDATE competition_live_participant_states SET current_state=:state, state_version=state_version+1, version=version+1, updated_at=:now, checked_in_at=CASE WHEN :state='CHECKED_IN' THEN :now ELSE checked_in_at END, called_at=CASE WHEN :state='CALLED' THEN :now ELSE called_at END, performance_started_at=CASE WHEN :state='PERFORMING' AND performance_started_at IS NULL THEN :now ELSE performance_started_at END, interrupted_at=CASE WHEN :state='INTERRUPTED' THEN :now ELSE interrupted_at END, completed_at=CASE WHEN :state='COMPLETED' THEN :now ELSE completed_at END, absent_at=CASE WHEN :state='ABSENT' THEN :now ELSE absent_at END, withdrawn_at=CASE WHEN :state='WITHDRAWN' THEN :now ELSE withdrawn_at END, disqualified_at=CASE WHEN :state='DISQUALIFIED' THEN :now ELSE disqualified_at END, cancelled_at=CASE WHEN :state='CANCELLED' THEN :now ELSE cancelled_at END WHERE id=:id AND workspace_id=:workspace_id AND version=:version AND current_state=:previous");
+        if (!$statement instanceof PDOStatement) {
+            throw new \RuntimeException('Live-participant transition statement could not be prepared.');
+        }
+        $statement->execute([':state' => $targetState, ':now' => $time, ':id' => $participant['id'], ':workspace_id' => $participant['workspace_id'], ':version' => $participant['version'], ':previous' => $participant['current_state']]);
 
         return $statement->rowCount() === 1;
     }
@@ -102,6 +138,15 @@ final readonly class MySqlCompetitionLiveRuntimeRepository implements Competitio
             throw new \RuntimeException('Live-operation receipt statement could not be prepared.');
         }
         $statement->execute([':public_id' => UuidV7::generate()->toBinary(), ':submission_id' => $submissionId->toBinary(), ':workspace_id' => $session['workspace_id'], ':operation' => $operation, ':fingerprint' => $requestFingerprint, ':aggregate_public_id' => UuidV7::fromString($session['public_id'])->toBinary(), ':status' => $status, ':version_after' => $versionAfter, ':sequence_after' => $sequence, ':occurred_at' => self::time($now)]);
+    }
+
+    public function recordParticipant(UuidV7 $submissionId, string $requestFingerprint, string $operation, array $participant, string $state, int $versionAfter, int $sequence, DateTimeImmutable $now): void
+    {
+        $statement = $this->connections->connection()->prepare('INSERT INTO competition_live_operations (public_id,submission_id,workspace_id,operation_code,request_fingerprint,aggregate_kind,aggregate_public_id,result_status,version_after,sequence_after,occurred_at) VALUES (:public_id,:submission_id,:workspace_id,:operation,:fingerprint,\'LIVE_PARTICIPANT\',:aggregate_public_id,:status,:version_after,:sequence_after,:occurred_at)');
+        if (!$statement instanceof PDOStatement) {
+            throw new \RuntimeException('Live-participant operation receipt statement could not be prepared.');
+        }
+        $statement->execute([':public_id' => UuidV7::generate()->toBinary(), ':submission_id' => $submissionId->toBinary(), ':workspace_id' => $participant['workspace_id'], ':operation' => $operation, ':fingerprint' => $requestFingerprint, ':aggregate_public_id' => UuidV7::fromString($participant['public_id'])->toBinary(), ':status' => $state, ':version_after' => $versionAfter, ':sequence_after' => $sequence, ':occurred_at' => self::time($now)]);
     }
 
     private function previousEventHash(int $sessionId, int $workspaceId, int $sequence): string

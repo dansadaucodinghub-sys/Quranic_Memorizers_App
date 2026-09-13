@@ -51,6 +51,8 @@ use Qmdb\Modules\QuranReferenceGovernance\Interface\Http\QuranSearchCorpusIntegr
 use Qmdb\Modules\CompetitionResults\Interface\Http\CompetitionP6WorkflowController;
 use Qmdb\Modules\CompetitionResults\Interface\Http\CompetitionPublicResultsController;
 use Qmdb\Modules\CompetitionLive\Interface\Http\CompetitionPublicLiveController;
+use Qmdb\Modules\CompetitionLive\Interface\Http\CompetitionLiveSessionWorkflowController;
+use Qmdb\Modules\CompetitionLive\Interface\Http\CompetitionLiveParticipantWorkflowController;
 use Qmdb\Shared\Http\Routing\HttpMethod;
 use Qmdb\Shared\Http\Routing\Route;
 use Qmdb\Shared\Http\Routing\RouteCollection;
@@ -104,6 +106,8 @@ return static function (
     CompetitionP6WorkflowController $competitionP6Workflow,
     CompetitionPublicResultsController $competitionPublicResults,
     CompetitionPublicLiveController $competitionPublicLive,
+    CompetitionLiveSessionWorkflowController $competitionLiveSessionWorkflow,
+    CompetitionLiveParticipantWorkflowController $competitionLiveParticipantWorkflow,
 ): RouteCollection {
     return new RouteCollection(
         new Route('system.home', [HttpMethod::GET], new RoutePattern('/'), $homeController),
@@ -622,6 +626,40 @@ return static function (
         new Route('workspace.competition.appeal.uphold', [HttpMethod::POST], new RoutePattern('/workspace/competitions/appeals/{appealId}/uphold'), $competitionP6Workflow),
         new Route('workspace.competition.appeal.dismiss.form', [HttpMethod::GET], new RoutePattern('/workspace/competitions/appeals/{appealId}/dismiss'), $competitionP6Workflow),
         new Route('workspace.competition.appeal.dismiss', [HttpMethod::POST], new RoutePattern('/workspace/competitions/appeals/{appealId}/dismiss'), $competitionP6Workflow),
+        new Route('workspace.competition.live_session.open.form', [HttpMethod::GET], new RoutePattern('/workspace/competitions/live-sessions/{sessionId}/open'), $competitionLiveSessionWorkflow),
+        new Route('workspace.competition.live_session.open', [HttpMethod::POST], new RoutePattern('/workspace/competitions/live-sessions/{sessionId}/open'), $competitionLiveSessionWorkflow),
+        new Route('workspace.competition.live_session.pause.form', [HttpMethod::GET], new RoutePattern('/workspace/competitions/live-sessions/{sessionId}/pause'), $competitionLiveSessionWorkflow),
+        new Route('workspace.competition.live_session.pause', [HttpMethod::POST], new RoutePattern('/workspace/competitions/live-sessions/{sessionId}/pause'), $competitionLiveSessionWorkflow),
+        new Route('workspace.competition.live_session.resume.form', [HttpMethod::GET], new RoutePattern('/workspace/competitions/live-sessions/{sessionId}/resume'), $competitionLiveSessionWorkflow),
+        new Route('workspace.competition.live_session.resume', [HttpMethod::POST], new RoutePattern('/workspace/competitions/live-sessions/{sessionId}/resume'), $competitionLiveSessionWorkflow),
+        new Route('workspace.competition.live_session.start_recovery.form', [HttpMethod::GET], new RoutePattern('/workspace/competitions/live-sessions/{sessionId}/start-recovery'), $competitionLiveSessionWorkflow),
+        new Route('workspace.competition.live_session.start_recovery', [HttpMethod::POST], new RoutePattern('/workspace/competitions/live-sessions/{sessionId}/start-recovery'), $competitionLiveSessionWorkflow),
+        new Route('workspace.competition.live_session.complete_recovery.form', [HttpMethod::GET], new RoutePattern('/workspace/competitions/live-sessions/{sessionId}/complete-recovery'), $competitionLiveSessionWorkflow),
+        new Route('workspace.competition.live_session.complete_recovery', [HttpMethod::POST], new RoutePattern('/workspace/competitions/live-sessions/{sessionId}/complete-recovery'), $competitionLiveSessionWorkflow),
+        new Route('workspace.competition.live_session.close.form', [HttpMethod::GET], new RoutePattern('/workspace/competitions/live-sessions/{sessionId}/close'), $competitionLiveSessionWorkflow),
+        new Route('workspace.competition.live_session.close', [HttpMethod::POST], new RoutePattern('/workspace/competitions/live-sessions/{sessionId}/close'), $competitionLiveSessionWorkflow),
+        new Route('workspace.competition.live_session.cancel.form', [HttpMethod::GET], new RoutePattern('/workspace/competitions/live-sessions/{sessionId}/cancel'), $competitionLiveSessionWorkflow),
+        new Route('workspace.competition.live_session.cancel', [HttpMethod::POST], new RoutePattern('/workspace/competitions/live-sessions/{sessionId}/cancel'), $competitionLiveSessionWorkflow),
+        new Route('workspace.competition.live_participant.check_in.form', [HttpMethod::GET], new RoutePattern('/workspace/competitions/live-sessions/{sessionId}/participants/{participantId}/check-in'), $competitionLiveParticipantWorkflow),
+        new Route('workspace.competition.live_participant.check_in', [HttpMethod::POST], new RoutePattern('/workspace/competitions/live-sessions/{sessionId}/participants/{participantId}/check-in'), $competitionLiveParticipantWorkflow),
+        new Route('workspace.competition.live_participant.call.form', [HttpMethod::GET], new RoutePattern('/workspace/competitions/live-sessions/{sessionId}/participants/{participantId}/call'), $competitionLiveParticipantWorkflow),
+        new Route('workspace.competition.live_participant.call', [HttpMethod::POST], new RoutePattern('/workspace/competitions/live-sessions/{sessionId}/participants/{participantId}/call'), $competitionLiveParticipantWorkflow),
+        new Route('workspace.competition.live_participant.ready.form', [HttpMethod::GET], new RoutePattern('/workspace/competitions/live-sessions/{sessionId}/participants/{participantId}/ready'), $competitionLiveParticipantWorkflow),
+        new Route('workspace.competition.live_participant.ready', [HttpMethod::POST], new RoutePattern('/workspace/competitions/live-sessions/{sessionId}/participants/{participantId}/ready'), $competitionLiveParticipantWorkflow),
+        new Route('workspace.competition.live_participant.start.form', [HttpMethod::GET], new RoutePattern('/workspace/competitions/live-sessions/{sessionId}/participants/{participantId}/start'), $competitionLiveParticipantWorkflow),
+        new Route('workspace.competition.live_participant.start', [HttpMethod::POST], new RoutePattern('/workspace/competitions/live-sessions/{sessionId}/participants/{participantId}/start'), $competitionLiveParticipantWorkflow),
+        new Route('workspace.competition.live_participant.interrupt.form', [HttpMethod::GET], new RoutePattern('/workspace/competitions/live-sessions/{sessionId}/participants/{participantId}/interrupt'), $competitionLiveParticipantWorkflow),
+        new Route('workspace.competition.live_participant.interrupt', [HttpMethod::POST], new RoutePattern('/workspace/competitions/live-sessions/{sessionId}/participants/{participantId}/interrupt'), $competitionLiveParticipantWorkflow),
+        new Route('workspace.competition.live_participant.resume.form', [HttpMethod::GET], new RoutePattern('/workspace/competitions/live-sessions/{sessionId}/participants/{participantId}/resume'), $competitionLiveParticipantWorkflow),
+        new Route('workspace.competition.live_participant.resume', [HttpMethod::POST], new RoutePattern('/workspace/competitions/live-sessions/{sessionId}/participants/{participantId}/resume'), $competitionLiveParticipantWorkflow),
+        new Route('workspace.competition.live_participant.complete.form', [HttpMethod::GET], new RoutePattern('/workspace/competitions/live-sessions/{sessionId}/participants/{participantId}/complete'), $competitionLiveParticipantWorkflow),
+        new Route('workspace.competition.live_participant.complete', [HttpMethod::POST], new RoutePattern('/workspace/competitions/live-sessions/{sessionId}/participants/{participantId}/complete'), $competitionLiveParticipantWorkflow),
+        new Route('workspace.competition.live_participant.absent.form', [HttpMethod::GET], new RoutePattern('/workspace/competitions/live-sessions/{sessionId}/participants/{participantId}/absent'), $competitionLiveParticipantWorkflow),
+        new Route('workspace.competition.live_participant.absent', [HttpMethod::POST], new RoutePattern('/workspace/competitions/live-sessions/{sessionId}/participants/{participantId}/absent'), $competitionLiveParticipantWorkflow),
+        new Route('workspace.competition.live_participant.withdraw.form', [HttpMethod::GET], new RoutePattern('/workspace/competitions/live-sessions/{sessionId}/participants/{participantId}/withdraw'), $competitionLiveParticipantWorkflow),
+        new Route('workspace.competition.live_participant.withdraw', [HttpMethod::POST], new RoutePattern('/workspace/competitions/live-sessions/{sessionId}/participants/{participantId}/withdraw'), $competitionLiveParticipantWorkflow),
+        new Route('workspace.competition.live_participant.disqualify.form', [HttpMethod::GET], new RoutePattern('/workspace/competitions/live-sessions/{sessionId}/participants/{participantId}/disqualify'), $competitionLiveParticipantWorkflow),
+        new Route('workspace.competition.live_participant.disqualify', [HttpMethod::POST], new RoutePattern('/workspace/competitions/live-sessions/{sessionId}/participants/{participantId}/disqualify'), $competitionLiveParticipantWorkflow),
         new Route('competition.public.results.edition', [HttpMethod::GET], new RoutePattern('/competitions/{editionSlug}/results'), $competitionPublicResults),
         new Route('competition.public.results.category', [HttpMethod::GET], new RoutePattern('/competitions/{editionSlug}/categories/{categorySlug}/results'), $competitionPublicResults),
         new Route('competition.public.results.round', [HttpMethod::GET], new RoutePattern('/competitions/{editionSlug}/categories/{categorySlug}/rounds/{roundCode}/results'), $competitionPublicResults),

@@ -68,6 +68,8 @@ use Qmdb\Modules\QuranReferenceGovernance\Interface\Http\QuranSearchCorpusIntegr
 use Qmdb\Modules\CompetitionResults\Interface\Http\CompetitionP6WorkflowController;
 use Qmdb\Modules\CompetitionResults\Interface\Http\CompetitionPublicResultsController;
 use Qmdb\Modules\CompetitionLive\Interface\Http\CompetitionPublicLiveController;
+use Qmdb\Modules\CompetitionLive\Interface\Http\CompetitionLiveSessionWorkflowController;
+use Qmdb\Modules\CompetitionLive\Interface\Http\CompetitionLiveParticipantWorkflowController;
 use Qmdb\Shared\DependencyInjection\ClosureServiceFactory;
 use Qmdb\Shared\DependencyInjection\DependencyResolver;
 use Qmdb\Shared\DependencyInjection\ServiceDefinition;
@@ -239,6 +241,8 @@ final readonly class ApplicationHttpModule implements Module
             CompetitionP6WorkflowController::class,
             CompetitionPublicResultsController::class,
             CompetitionPublicLiveController::class,
+            CompetitionLiveSessionWorkflowController::class,
+            CompetitionLiveParticipantWorkflowController::class,
         ];
         $context->service(ServiceDefinition::factory(
             RouteCollection::class,

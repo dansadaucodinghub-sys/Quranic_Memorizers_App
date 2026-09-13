@@ -40,7 +40,7 @@ final readonly class CompetitionPublicLiveController implements Controller
             return $this->json($snapshot, $etag);
         }
         if (str_ends_with($path, '/stream')) {
-            return $this->sse($snapshot);
+            return $this->sse($parameters['editionSlug'], $request, $snapshot);
         }
         $payload = json_encode($snapshot['payload'], JSON_THROW_ON_ERROR | JSON_UNESCAPED_UNICODE | JSON_UNESCAPED_SLASHES);
         $html = '<main class="shell public-reference" data-qmdb-live="poll"><h1>Live competition</h1><p id="live-status" aria-live="polite">Live updates are available.</p><pre id="live-snapshot" dir="auto">' . htmlspecialchars($payload, ENT_QUOTES | ENT_SUBSTITUTE, 'UTF-8') . '</pre><p><a href="' . htmlspecialchars($path . '/snapshot', ENT_QUOTES | ENT_SUBSTITUTE, 'UTF-8') . '">Refresh live snapshot</a></p></main>';
@@ -60,11 +60,49 @@ final readonly class CompetitionPublicLiveController implements Controller
     }
 
     /** @param array{sequence:int,payload:array<string,mixed>,checksum:string} $snapshot */
-    private function sse(array $snapshot): ResponseInterface
+    private function sse(string $editionSlug, ServerRequestInterface $request, array $snapshot): ResponseInterface
     {
+        $lastEventId = $this->lastEventId($request);
+        if ($lastEventId === null) {
+            return $this->responses->createResponse(400)->withHeader('Cache-Control', 'no-store')->withHeader('Content-Type', 'text/plain; charset=utf-8');
+        }
+        try {
+            $history = $this->snapshots->snapshotsAfter($editionSlug, $lastEventId, 25);
+        } catch (\Throwable) {
+            return $this->responses->createResponse(404)->withHeader('Cache-Control', 'no-store');
+        }
         $response = $this->responses->createResponse(200)->withHeader('Content-Type', 'text/event-stream; charset=utf-8')->withHeader('Cache-Control', 'no-store')->withHeader('X-Accel-Buffering', 'no');
-        $response->getBody()->write("retry: 5000\nid: {$snapshot['sequence']}\nevent: snapshot\ndata: " . json_encode($snapshot, JSON_THROW_ON_ERROR | JSON_UNESCAPED_UNICODE | JSON_UNESCAPED_SLASHES) . "\n\n: bounded stream complete\n\n");
+        $body = "retry: 5000\n: heartbeat\n\n";
+        if ($lastEventId > $snapshot['sequence']) {
+            $body .= $this->sseEvent('reset', $snapshot);
+        } elseif ($history === []) {
+            $body .= ": heartbeat; no newer public snapshot\n\n";
+        } else {
+            foreach ($history as $event) {
+                $body .= $this->sseEvent('snapshot', $event);
+            }
+        }
+        $response->getBody()->write($body . ': bounded stream complete; reconnect with Last-Event-ID' . "\n\n");
 
         return $response;
+    }
+
+    private function lastEventId(ServerRequestInterface $request): ?int
+    {
+        $value = trim($request->getHeaderLine('Last-Event-ID'));
+        if ($value === '') {
+            return 0;
+        }
+        if (preg_match('/\A(?:0|[1-9][0-9]{0,18})\z/', $value) !== 1) {
+            return null;
+        }
+
+        return (int) $value;
+    }
+
+    /** @param array{sequence:int,payload:array<string,mixed>,checksum:string} $snapshot */
+    private function sseEvent(string $event, array $snapshot): string
+    {
+        return 'id: ' . $snapshot['sequence'] . "\nevent: {$event}\ndata: " . json_encode($snapshot, JSON_THROW_ON_ERROR | JSON_UNESCAPED_UNICODE | JSON_UNESCAPED_SLASHES) . "\n\n";
     }
 }

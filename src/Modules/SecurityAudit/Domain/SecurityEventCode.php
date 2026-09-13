@@ -102,6 +102,22 @@ enum SecurityEventCode: string
     case COMPETITION_PARTICIPANT_DISQUALIFIED = 'competition.participant.disqualified';
     case COMPETITION_APPEAL_SUBMITTED = 'competition.appeal.submitted';
     case COMPETITION_APPEAL_DECIDED = 'competition.appeal.decided';
+    case COMPETITION_LIVE_SESSION_OPENED = 'competition.live_session.opened';
+    case COMPETITION_LIVE_SESSION_PAUSED = 'competition.live_session.paused';
+    case COMPETITION_LIVE_SESSION_RESUMED = 'competition.live_session.resumed';
+    case COMPETITION_LIVE_SESSION_RECOVERY_STARTED = 'competition.live_session.recovery_started';
+    case COMPETITION_LIVE_SESSION_RECOVERED = 'competition.live_session.recovered';
+    case COMPETITION_LIVE_SESSION_CLOSED = 'competition.live_session.closed';
+    case COMPETITION_LIVE_SESSION_CANCELLED = 'competition.live_session.cancelled';
+    case COMPETITION_LIVE_PARTICIPANT_CHECKED_IN = 'competition.live_participant.checked_in';
+    case COMPETITION_LIVE_PARTICIPANT_CALLED = 'competition.live_participant.called';
+    case COMPETITION_LIVE_PARTICIPANT_READY = 'competition.live_participant.ready';
+    case COMPETITION_LIVE_PARTICIPANT_PERFORMANCE_STARTED = 'competition.live_participant.performance_started';
+    case COMPETITION_LIVE_PARTICIPANT_PERFORMANCE_INTERRUPTED = 'competition.live_participant.performance_interrupted';
+    case COMPETITION_LIVE_PARTICIPANT_PERFORMANCE_RESUMED = 'competition.live_participant.performance_resumed';
+    case COMPETITION_LIVE_PARTICIPANT_PERFORMANCE_COMPLETED = 'competition.live_participant.performance_completed';
+    case COMPETITION_LIVE_PARTICIPANT_ABSENT = 'competition.live_participant.absent';
+    case COMPETITION_LIVE_PARTICIPANT_WITHDRAWN = 'competition.live_participant.withdrawn';
 
     public function severity(): SecurityEventSeverity
     {

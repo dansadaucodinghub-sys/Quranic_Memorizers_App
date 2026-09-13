@@ -147,4 +147,21 @@ enum CsrfAction: string
     case COMPETITION_APPEAL_UPHOLD = 'competition.appeal.uphold';
     case COMPETITION_APPEAL_DISMISS = 'competition.appeal.dismiss';
     case COMPETITION_APPEAL_CORRECTION = 'competition.appeal.correction';
+    case COMPETITION_LIVE_SESSION_OPEN = 'competition.live_session.open';
+    case COMPETITION_LIVE_SESSION_PAUSE = 'competition.live_session.pause';
+    case COMPETITION_LIVE_SESSION_RESUME = 'competition.live_session.resume';
+    case COMPETITION_LIVE_SESSION_START_RECOVERY = 'competition.live_session.start_recovery';
+    case COMPETITION_LIVE_SESSION_COMPLETE_RECOVERY = 'competition.live_session.complete_recovery';
+    case COMPETITION_LIVE_SESSION_CLOSE = 'competition.live_session.close';
+    case COMPETITION_LIVE_SESSION_CANCEL = 'competition.live_session.cancel';
+    case COMPETITION_LIVE_PARTICIPANT_CHECK_IN = 'competition.live_participant.check_in';
+    case COMPETITION_LIVE_PARTICIPANT_CALL = 'competition.live_participant.call';
+    case COMPETITION_LIVE_PARTICIPANT_READY = 'competition.live_participant.ready';
+    case COMPETITION_LIVE_PARTICIPANT_START = 'competition.live_participant.start';
+    case COMPETITION_LIVE_PARTICIPANT_INTERRUPT = 'competition.live_participant.interrupt';
+    case COMPETITION_LIVE_PARTICIPANT_RESUME = 'competition.live_participant.resume';
+    case COMPETITION_LIVE_PARTICIPANT_COMPLETE = 'competition.live_participant.complete';
+    case COMPETITION_LIVE_PARTICIPANT_ABSENT = 'competition.live_participant.absent';
+    case COMPETITION_LIVE_PARTICIPANT_WITHDRAW = 'competition.live_participant.withdraw';
+    case COMPETITION_LIVE_PARTICIPANT_DISQUALIFY = 'competition.live_participant.disqualify';
 }

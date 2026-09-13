@@ -73,6 +73,8 @@ enum StepUpAction: string
     case COMPETITION_PARTICIPANT_DISQUALIFY = 'COMPETITION_PARTICIPANT_DISQUALIFY';
     case COMPETITION_APPEAL_UPHOLD = 'COMPETITION_APPEAL_UPHOLD';
     case COMPETITION_APPEAL_DISMISS = 'COMPETITION_APPEAL_DISMISS';
+    case COMPETITION_LIVE_SESSION_CLOSE = 'COMPETITION_LIVE_SESSION_CLOSE';
+    case COMPETITION_LIVE_SESSION_CANCEL = 'COMPETITION_LIVE_SESSION_CANCEL';
 
     public function requirement(): AuthenticationAssuranceLevel
     {
@@ -99,7 +101,8 @@ enum StepUpAction: string
             self::COMPETITION_SCORING_CLOSE, self::COMPETITION_SCORE_CORRECT,
             self::COMPETITION_RESULT_VERIFY, self::COMPETITION_RESULT_PUBLISH,
             self::COMPETITION_RESULT_VOID, self::COMPETITION_PARTICIPANT_DISQUALIFY,
-            self::COMPETITION_APPEAL_UPHOLD, self::COMPETITION_APPEAL_DISMISS => AuthenticationAssuranceLevel::PHISHING_RESISTANT,
+            self::COMPETITION_APPEAL_UPHOLD, self::COMPETITION_APPEAL_DISMISS,
+            self::COMPETITION_LIVE_SESSION_CLOSE, self::COMPETITION_LIVE_SESSION_CANCEL => AuthenticationAssuranceLevel::PHISHING_RESISTANT,
             self::ACCOUNT_SUSPEND, self::ACCOUNT_REACTIVATE => AuthenticationAssuranceLevel::PHISHING_RESISTANT,
             default => AuthenticationAssuranceLevel::MULTI_FACTOR,
         };
@@ -160,7 +163,8 @@ enum StepUpAction: string
             self::COMPETITION_SCORING_CLOSE, self::COMPETITION_SCORE_CORRECT,
             self::COMPETITION_RESULT_VERIFY, self::COMPETITION_RESULT_PUBLISH,
             self::COMPETITION_RESULT_VOID, self::COMPETITION_PARTICIPANT_DISQUALIFY,
-            self::COMPETITION_APPEAL_UPHOLD, self::COMPETITION_APPEAL_DISMISS => '/workspace/competitions',
+            self::COMPETITION_APPEAL_UPHOLD, self::COMPETITION_APPEAL_DISMISS,
+            self::COMPETITION_LIVE_SESSION_CLOSE, self::COMPETITION_LIVE_SESSION_CANCEL => '/workspace/competitions',
             default => '/account/security/authentication',
         };
     }
