@@ -74,6 +74,7 @@ use Qmdb\Modules\CompetitionRegistration\Interface\Console\CompetitionRegistrati
 use Qmdb\Modules\CompetitionResults\Interface\Console\CompetitionP6VerifyConsoleCommand;
 use Qmdb\Modules\CompetitionResults\Interface\Console\CompetitionP6AspectVerifyConsoleCommand;
 use Qmdb\Modules\CompetitionResults\Interface\Console\CompetitionP6MaintenanceConsoleCommand;
+use Qmdb\Modules\CompetitionLive\Interface\Console\CompetitionP7VerifyConsoleCommand;
 use Qmdb\Modules\CompetitionResults\Infrastructure\Persistence\CompetitionP6MaintenanceService;
 use Qmdb\Shared\Database\Connection\DatabaseConnectionProvider;
 use Qmdb\Shared\Background\Scheduler\ScheduledTaskMap;
@@ -103,6 +104,9 @@ final readonly class ConsoleFoundationModule implements Module
             new ModuleId('competition.configuration'),
             new ModuleId('competition.registration'),
             new ModuleId('competition.results'),
+            new ModuleId('competition.live_operations'),
+            new ModuleId('competition.result_publication'),
+            new ModuleId('competition.appeal_adjudication'),
             new ModuleId('reference.geography'),
             new ModuleId('people.profiles'),
             new ModuleId('organizations.registry'),
@@ -202,6 +206,12 @@ final readonly class ConsoleFoundationModule implements Module
         ));
         $this->registerCommandMap($context);
         $context->service(ServiceDefinition::factory(
+            CompetitionP7VerifyConsoleCommand::class,
+            self::ID,
+            [DatabaseConnectionProvider::class],
+            new ClosureServiceFactory(static fn (DependencyResolver $resolver): CompetitionP7VerifyConsoleCommand => new CompetitionP7VerifyConsoleCommand(ServiceReference::get($resolver, DatabaseConnectionProvider::class))),
+        ));
+        $context->service(ServiceDefinition::factory(
             ConsoleCommandDispatcher::class,
             self::ID,
             [ConsoleCommandMap::class],
@@ -270,6 +280,7 @@ final readonly class ConsoleFoundationModule implements Module
             CompetitionP5VerifyConsoleCommand::class,
             CompetitionRegistrationVerifyConsoleCommand::class,
             CompetitionP6VerifyConsoleCommand::class,
+            CompetitionP7VerifyConsoleCommand::class,
             CompetitionP6MaintenanceService::class,
             DatabaseConnectionProvider::class,
             ScheduledTaskMap::class,
@@ -324,6 +335,7 @@ final readonly class ConsoleFoundationModule implements Module
                 $registry->register(ServiceReference::get($resolver, CompetitionP5VerifyConsoleCommand::class));
                 $registry->register(ServiceReference::get($resolver, CompetitionRegistrationVerifyConsoleCommand::class));
                 $registry->register(ServiceReference::get($resolver, CompetitionP6VerifyConsoleCommand::class));
+                $registry->register(ServiceReference::get($resolver, CompetitionP7VerifyConsoleCommand::class));
                 $maintenance = ServiceReference::get($resolver, CompetitionP6MaintenanceService::class);
                 foreach (
                     [

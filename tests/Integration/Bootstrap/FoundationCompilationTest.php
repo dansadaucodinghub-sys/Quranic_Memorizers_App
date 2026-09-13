@@ -17,6 +17,9 @@ use Qmdb\Bootstrap\Module\CompetitionRegistrationModule;
 use Qmdb\Bootstrap\Module\CompetitionJudgingModule;
 use Qmdb\Bootstrap\Module\CompetitionScoringModule;
 use Qmdb\Bootstrap\Module\CompetitionResultsModule;
+use Qmdb\Bootstrap\Module\CompetitionLiveModule;
+use Qmdb\Bootstrap\Module\CompetitionPublicationModule;
+use Qmdb\Bootstrap\Module\CompetitionAppealAdjudicationModule;
 use Qmdb\Bootstrap\Module\CoreFoundationModule;
 use Qmdb\Bootstrap\Module\DatabaseFoundationModule;
 use Qmdb\Bootstrap\Module\GeographyReferenceModule;
@@ -103,11 +106,14 @@ final class FoundationCompilationTest extends TestCase
             'competition.judging',
             'competition.scoring',
             'competition.results',
+            'competition.live_operations',
             'identity.recovery',
             'security.privileged_access',
             'identity.account_state',
             'people.identity_resolution',
             'application.http',
+            'competition.result_publication',
+            'competition.appeal_adjudication',
             'foundation.console',
         ], $registry->orderedModuleIds());
     }
@@ -219,6 +225,9 @@ final class FoundationCompilationTest extends TestCase
             new CompetitionJudgingModule(),
             new CompetitionScoringModule(),
             new CompetitionResultsModule(),
+            new CompetitionLiveModule(),
+            new CompetitionPublicationModule(),
+            new CompetitionAppealAdjudicationModule(),
             new ApplicationHttpModule(dirname(__DIR__, 3)),
             new ConsoleFoundationModule(),
         ]);

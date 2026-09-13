@@ -29,6 +29,7 @@ final class ProductionRouteSecurityPolicyCatalog
         'quran.public.home', 'quran.public.surahs', 'quran.public.surah', 'quran.public.ayah',
         'quran.public.partition', 'quran.public.sajdahs', 'quran.public.search',
         'competition.public.results.edition', 'competition.public.results.category', 'competition.public.results.round',
+        'competition.public.live', 'competition.public.live.snapshot', 'competition.public.live.stream',
     ];
 
     /** @var list<string> */

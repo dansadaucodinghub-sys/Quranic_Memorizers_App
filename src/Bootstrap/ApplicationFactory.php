@@ -35,6 +35,9 @@ use Qmdb\Bootstrap\Module\CompetitionRegistrationModule;
 use Qmdb\Bootstrap\Module\CompetitionJudgingModule;
 use Qmdb\Bootstrap\Module\CompetitionScoringModule;
 use Qmdb\Bootstrap\Module\CompetitionResultsModule;
+use Qmdb\Bootstrap\Module\CompetitionLiveModule;
+use Qmdb\Bootstrap\Module\CompetitionPublicationModule;
+use Qmdb\Bootstrap\Module\CompetitionAppealAdjudicationModule;
 use Qmdb\Bootstrap\Module\ObservabilityFoundationModule;
 use Qmdb\Bootstrap\Module\PresentationFoundationModule;
 use Qmdb\Bootstrap\Module\SchemaFoundationModule;
@@ -232,6 +235,9 @@ final readonly class ApplicationFactory
             new CompetitionJudgingModule(),
             new CompetitionScoringModule(),
             new CompetitionResultsModule(),
+            new CompetitionLiveModule(),
+            new CompetitionPublicationModule(),
+            new CompetitionAppealAdjudicationModule(),
             new ApplicationHttpModule($this->projectRoot),
             new ConsoleFoundationModule(),
         ]);

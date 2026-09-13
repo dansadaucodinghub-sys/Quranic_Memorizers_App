@@ -68,6 +68,11 @@ use Qmdb\Modules\CompetitionResults\Infrastructure\Migration\CompleteCompetition
 use Qmdb\Modules\CompetitionResults\Infrastructure\Migration\CorrectCompetitionP6LifecycleVocabularyMigration;
 use Qmdb\Modules\CompetitionResults\Infrastructure\Migration\CompleteCompetitionP6RuntimeContractsMigration;
 use Qmdb\Modules\CompetitionResults\Infrastructure\Migration\AddCompetitionP6ResultInputUniquenessMigration;
+use Qmdb\Modules\CompetitionLive\Infrastructure\Migration\CreateCompetitionLiveOperationsMigration;
+use Qmdb\Modules\CompetitionLive\Infrastructure\Migration\CreateCompetitionLiveProjectionsMigration;
+use Qmdb\Modules\CompetitionLive\Infrastructure\Migration\AddCompetitionLiveOperationSequenceMigration;
+use Qmdb\Modules\CompetitionPublication\Infrastructure\Migration\CreateCompetitionResultPublicationMigration;
+use Qmdb\Modules\CompetitionAppealAdjudication\Infrastructure\Migration\CreateCompetitionAppealAdjudicationMigration;
 use Qmdb\Shared\Schema\Migration\MigrationRegistry;
 use Qmdb\Shared\Schema\Migration\MigrationRegistryBuilder;
 
@@ -139,5 +144,10 @@ return static function (): MigrationRegistry {
         ->register(new CorrectCompetitionP6LifecycleVocabularyMigration())
         ->register(new CompleteCompetitionP6RuntimeContractsMigration())
         ->register(new AddCompetitionP6ResultInputUniquenessMigration())
+        ->register(new CreateCompetitionLiveOperationsMigration())
+        ->register(new CreateCompetitionLiveProjectionsMigration())
+        ->register(new AddCompetitionLiveOperationSequenceMigration())
+        ->register(new CreateCompetitionResultPublicationMigration())
+        ->register(new CreateCompetitionAppealAdjudicationMigration())
         ->build();
 };

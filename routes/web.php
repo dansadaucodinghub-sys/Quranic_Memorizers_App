@@ -50,6 +50,7 @@ use Qmdb\Modules\QuranReferenceGovernance\Interface\Http\QuranPublicReferenceCon
 use Qmdb\Modules\QuranReferenceGovernance\Interface\Http\QuranSearchCorpusIntegrityController;
 use Qmdb\Modules\CompetitionResults\Interface\Http\CompetitionP6WorkflowController;
 use Qmdb\Modules\CompetitionResults\Interface\Http\CompetitionPublicResultsController;
+use Qmdb\Modules\CompetitionLive\Interface\Http\CompetitionPublicLiveController;
 use Qmdb\Shared\Http\Routing\HttpMethod;
 use Qmdb\Shared\Http\Routing\Route;
 use Qmdb\Shared\Http\Routing\RouteCollection;
@@ -102,6 +103,7 @@ return static function (
     QuranSearchCorpusIntegrityController $quranSearchCorpusIntegrity,
     CompetitionP6WorkflowController $competitionP6Workflow,
     CompetitionPublicResultsController $competitionPublicResults,
+    CompetitionPublicLiveController $competitionPublicLive,
 ): RouteCollection {
     return new RouteCollection(
         new Route('system.home', [HttpMethod::GET], new RoutePattern('/'), $homeController),
@@ -209,6 +211,9 @@ return static function (
         ),
         new Route('workspace.current', [HttpMethod::GET], new RoutePattern('/workspace'), $currentWorkspace),
         new Route('quran.public.home', [HttpMethod::GET], new RoutePattern('/quran'), $quranPublicReference),
+        new Route('competition.public.live', [HttpMethod::GET], new RoutePattern('/competitions/{editionSlug}/live'), $competitionPublicLive),
+        new Route('competition.public.live.snapshot', [HttpMethod::GET], new RoutePattern('/competitions/{editionSlug}/live/snapshot'), $competitionPublicLive),
+        new Route('competition.public.live.stream', [HttpMethod::GET], new RoutePattern('/competitions/{editionSlug}/live/stream'), $competitionPublicLive),
         new Route('quran.public.surahs', [HttpMethod::GET], new RoutePattern('/quran/surahs'), $quranPublicReference),
         new Route('quran.public.surah', [HttpMethod::GET], new RoutePattern('/quran/surahs/{surahNumber}'), $quranPublicReference),
         new Route('quran.public.ayah', [HttpMethod::GET], new RoutePattern('/quran/surahs/{surahNumber}/ayahs/{ayahNumber}'), $quranPublicReference),

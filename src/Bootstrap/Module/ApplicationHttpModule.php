@@ -67,6 +67,7 @@ use Qmdb\Modules\QuranReferenceGovernance\Interface\Http\QuranPublicReferenceCon
 use Qmdb\Modules\QuranReferenceGovernance\Interface\Http\QuranSearchCorpusIntegrityController;
 use Qmdb\Modules\CompetitionResults\Interface\Http\CompetitionP6WorkflowController;
 use Qmdb\Modules\CompetitionResults\Interface\Http\CompetitionPublicResultsController;
+use Qmdb\Modules\CompetitionLive\Interface\Http\CompetitionPublicLiveController;
 use Qmdb\Shared\DependencyInjection\ClosureServiceFactory;
 use Qmdb\Shared\DependencyInjection\DependencyResolver;
 use Qmdb\Shared\DependencyInjection\ServiceDefinition;
@@ -136,6 +137,7 @@ final readonly class ApplicationHttpModule implements Module
             new ModuleId('people.identity_resolution'),
             new ModuleId('quran.reference_governance'),
             new ModuleId('competition.results'),
+            new ModuleId('competition.live_operations'),
         ];
     }
 
@@ -236,6 +238,7 @@ final readonly class ApplicationHttpModule implements Module
             QuranSearchCorpusIntegrityController::class,
             CompetitionP6WorkflowController::class,
             CompetitionPublicResultsController::class,
+            CompetitionPublicLiveController::class,
         ];
         $context->service(ServiceDefinition::factory(
             RouteCollection::class,

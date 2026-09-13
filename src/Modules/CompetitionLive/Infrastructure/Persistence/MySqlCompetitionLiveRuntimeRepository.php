@@ -1,0 +1,143 @@
+<?php
+
+declare(strict_types=1);
+
+namespace Qmdb\Modules\CompetitionLive\Infrastructure\Persistence;
+
+use DateTimeImmutable;
+use DateTimeZone;
+use PDO;
+use PDOStatement;
+use Qmdb\Modules\CompetitionLive\Application\CompetitionLiveRuntimeRepository;
+use Qmdb\Shared\Database\Connection\DatabaseConnectionProvider;
+use Qmdb\Shared\Identifier\UuidV7;
+use Qmdb\Shared\Schema\State\PdoResultReader;
+
+final readonly class MySqlCompetitionLiveRuntimeRepository implements CompetitionLiveRuntimeRepository
+{
+    public function __construct(private DatabaseConnectionProvider $connections)
+    {
+    }
+
+    public function lockSession(int $workspaceId, UuidV7 $sessionPublicId): ?array
+    {
+        $statement = $this->connections->connection()->prepare('SELECT id, public_id, workspace_id, status, head_sequence, version FROM competition_live_sessions WHERE workspace_id=:workspace_id AND public_id=:public_id FOR UPDATE');
+        if (!$statement instanceof PDOStatement) {
+            throw new \RuntimeException('Live-session lock statement could not be prepared.');
+        }
+        $statement->execute([':workspace_id' => $workspaceId, ':public_id' => $sessionPublicId->toBinary()]);
+        $row = self::row($statement->fetch(PDO::FETCH_ASSOC));
+        if ($row === null) {
+            return null;
+        }
+
+        return [
+            'id' => PdoResultReader::integer($row, 'id'),
+            'public_id' => UuidV7::fromBinary(PdoResultReader::string($row, 'public_id'))->toString(),
+            'workspace_id' => PdoResultReader::integer($row, 'workspace_id'),
+            'status' => PdoResultReader::string($row, 'status'),
+            'head_sequence' => PdoResultReader::integer($row, 'head_sequence'),
+            'version' => PdoResultReader::integer($row, 'version'),
+        ];
+    }
+
+    public function completed(UuidV7 $submissionId, string $requestFingerprint): ?array
+    {
+        $statement = $this->connections->connection()->prepare('SELECT request_fingerprint,result_status,version_after,sequence_after FROM competition_live_operations WHERE submission_id=:submission_id FOR UPDATE');
+        if (!$statement instanceof PDOStatement) {
+            throw new \RuntimeException('Live-operation lookup statement could not be prepared.');
+        }
+        $statement->execute([':submission_id' => $submissionId->toBinary()]);
+        $row = self::row($statement->fetch(PDO::FETCH_ASSOC));
+        if ($row === null) {
+            return null;
+        }
+        if (!hash_equals(PdoResultReader::string($row, 'request_fingerprint'), $requestFingerprint)) {
+            throw new \DomainException('Live-operation submission conflicts with a prior request.');
+        }
+
+        return ['status' => PdoResultReader::string($row, 'result_status'), 'version' => PdoResultReader::integer($row, 'version_after'), 'sequence' => PdoResultReader::integer($row, 'sequence_after')];
+    }
+
+    public function transitionSession(array $session, string $targetStatus, DateTimeImmutable $now): bool
+    {
+        $time = self::time($now);
+        $statement = $this->connections->connection()->prepare("UPDATE competition_live_sessions SET status=:status, version=version+1, updated_at=:now, opened_at=CASE WHEN :status='OPEN' AND opened_at IS NULL THEN :now ELSE opened_at END, paused_at=CASE WHEN :status='PAUSED' THEN :now ELSE paused_at END, recovery_started_at=CASE WHEN :status='RECOVERING' THEN :now ELSE recovery_started_at END, recovered_at=CASE WHEN :status='OPEN' AND status='RECOVERING' THEN :now ELSE recovered_at END, closed_at=CASE WHEN :status='CLOSED' THEN :now ELSE closed_at END, cancelled_at=CASE WHEN :status='CANCELLED' THEN :now ELSE cancelled_at END WHERE id=:id AND workspace_id=:workspace_id AND version=:version AND status=:previous");
+        if (!$statement instanceof PDOStatement) {
+            throw new \RuntimeException('Live-session transition statement could not be prepared.');
+        }
+        $statement->execute([':status' => $targetStatus, ':now' => $time, ':id' => $session['id'], ':workspace_id' => $session['workspace_id'], ':version' => $session['version'], ':previous' => $session['status']]);
+
+        return $statement->rowCount() === 1;
+    }
+
+    public function appendEvent(array $session, string $eventType, string $visibility, array $payload, ?int $actorAccountId, UuidV7 $correlationId, DateTimeImmutable $now): int
+    {
+        $sequence = $session['head_sequence'] + 1;
+        $payloadJson = CanonicalJson::encode($payload);
+        $payloadHash = hash('sha256', $payloadJson, true);
+        $prior = $session['head_sequence'] === 0 ? null : $this->previousEventHash($session['id'], $session['workspace_id'], $session['head_sequence']);
+        $eventHash = hash('sha256', implode("\0", [UuidV7::fromString($session['public_id'])->toBinary(), (string) $sequence, $eventType, $visibility, $payloadHash, $prior ?? '', self::time($now), $correlationId->toBinary(), '1']), true);
+        $statement = $this->connections->connection()->prepare('INSERT INTO competition_live_events (public_id,workspace_id,live_session_id,sequence_number,event_type,visibility,payload_schema_version,payload_canonical_json,payload_sha256,previous_event_sha256,event_sha256,actor_type,actor_account_id,idempotency_fingerprint,correlation_id,occurred_at,created_at) VALUES (:public_id,:workspace_id,:session_id,:sequence_number,:event_type,:visibility,1,:payload,:payload_sha256,:previous_sha256,:event_sha256,:actor_type,:actor_account_id,:idempotency,:correlation_id,:occurred_at,:created_at)');
+        if (!$statement instanceof PDOStatement) {
+            throw new \RuntimeException('Live-event append statement could not be prepared.');
+        }
+        $statement->execute([':public_id' => UuidV7::generate()->toBinary(), ':workspace_id' => $session['workspace_id'], ':session_id' => $session['id'], ':sequence_number' => $sequence, ':event_type' => $eventType, ':visibility' => $visibility, ':payload' => $payloadJson, ':payload_sha256' => $payloadHash, ':previous_sha256' => $prior, ':event_sha256' => $eventHash, ':actor_type' => $actorAccountId === null ? 'SYSTEM' : 'ACCOUNT', ':actor_account_id' => $actorAccountId, ':idempotency' => hash('sha256', $correlationId->toBinary() . "\0" . $eventType, true), ':correlation_id' => $correlationId->toBinary(), ':occurred_at' => self::time($now), ':created_at' => self::time($now)]);
+        $advance = $this->connections->connection()->prepare('UPDATE competition_live_sessions SET head_sequence=:sequence WHERE id=:id AND workspace_id=:workspace_id AND head_sequence=:previous_sequence');
+        if (!$advance instanceof PDOStatement) {
+            throw new \RuntimeException('Live-event sequence update could not be prepared.');
+        }
+        $advance->execute([':sequence' => $sequence, ':id' => $session['id'], ':workspace_id' => $session['workspace_id'], ':previous_sequence' => $session['head_sequence']]);
+        if ($advance->rowCount() !== 1) {
+            throw new \DomainException('Live event sequence is stale.');
+        }
+
+        return $sequence;
+    }
+
+    public function record(UuidV7 $submissionId, string $requestFingerprint, string $operation, array $session, string $status, int $versionAfter, int $sequence, DateTimeImmutable $now): void
+    {
+        $statement = $this->connections->connection()->prepare('INSERT INTO competition_live_operations (public_id,submission_id,workspace_id,operation_code,request_fingerprint,aggregate_kind,aggregate_public_id,result_status,version_after,sequence_after,occurred_at) VALUES (:public_id,:submission_id,:workspace_id,:operation,:fingerprint,\'LIVE_SESSION\',:aggregate_public_id,:status,:version_after,:sequence_after,:occurred_at)');
+        if (!$statement instanceof PDOStatement) {
+            throw new \RuntimeException('Live-operation receipt statement could not be prepared.');
+        }
+        $statement->execute([':public_id' => UuidV7::generate()->toBinary(), ':submission_id' => $submissionId->toBinary(), ':workspace_id' => $session['workspace_id'], ':operation' => $operation, ':fingerprint' => $requestFingerprint, ':aggregate_public_id' => UuidV7::fromString($session['public_id'])->toBinary(), ':status' => $status, ':version_after' => $versionAfter, ':sequence_after' => $sequence, ':occurred_at' => self::time($now)]);
+    }
+
+    private function previousEventHash(int $sessionId, int $workspaceId, int $sequence): string
+    {
+        $statement = $this->connections->connection()->prepare('SELECT event_sha256 FROM competition_live_events WHERE workspace_id=:workspace_id AND live_session_id=:session_id AND sequence_number=:sequence FOR UPDATE');
+        if (!$statement instanceof PDOStatement) {
+            throw new \RuntimeException('Live-event hash lookup could not be prepared.');
+        }
+        $statement->execute([':workspace_id' => $workspaceId, ':session_id' => $sessionId, ':sequence' => $sequence]);
+        $hash = $statement->fetchColumn();
+        if (!is_string($hash) || strlen($hash) !== 32) {
+            throw new \DomainException('Live-event chain is incomplete.');
+        }
+
+        return $hash;
+    }
+
+    private static function time(DateTimeImmutable $value): string
+    {
+        return $value->setTimezone(new DateTimeZone('UTC'))->format('Y-m-d H:i:s.u');
+    }
+
+    /** @return array<string,mixed>|null */
+    private static function row(mixed $value): ?array
+    {
+        if (!is_array($value)) {
+            return null;
+        }
+        $row = [];
+        foreach ($value as $key => $item) {
+            if (!is_string($key)) {
+                throw new \RuntimeException('Live repository returned an invalid row.');
+            }
+            $row[$key] = $item;
+        }
+
+        return $row;
+    }
+}

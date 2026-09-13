@@ -136,6 +136,7 @@ final class SourceArchitectureTest extends TestCase
                 || str_contains($path, '/Modules/CompetitionJudging/Infrastructure/')
                 || str_contains($path, '/Modules/CompetitionScoring/Infrastructure/')
                 || str_contains($path, '/Modules/CompetitionResults/Infrastructure/')
+                || str_contains($path, '/Modules/CompetitionLive/Infrastructure/')
                 || str_contains($path, '/Modules/QuranReferenceGovernance/Infrastructure/')
                 || str_contains($path, '/Modules/CompetitionConfiguration/Interface/Console/')
                 || str_contains($path, '/Modules/CompetitionRegistration/Interface/Console/')
@@ -159,14 +160,17 @@ final class SourceArchitectureTest extends TestCase
         }
     }
 
-    public function testOnlyAuthorizedP2ThroughP6DomainModulesExist(): void
+    public function testOnlyAuthorizedP2ThroughP7DomainModulesExist(): void
     {
         $modules = glob($this->projectRoot() . '/src/Modules/*', GLOB_ONLYDIR);
         self::assertIsArray($modules);
         self::assertSame(
             [
+                'CompetitionAppealAdjudication',
                 'CompetitionConfiguration',
                 'CompetitionJudging',
+                'CompetitionLive',
+                'CompetitionPublication',
                 'CompetitionRegistration',
                 'CompetitionResults',
                 'CompetitionScoring',
@@ -193,7 +197,7 @@ final class SourceArchitectureTest extends TestCase
             array_map('basename', $modules),
         );
         self::assertDirectoryDoesNotExist($this->projectRoot() . '/src/Modules/Authorization');
-        foreach (['CompetitionCertificates', 'CompetitionMedia', 'CompetitionLive', 'CompetitionSocial'] as $forbidden) {
+        foreach (['CompetitionCertificates', 'CompetitionMedia', 'CompetitionSocial'] as $forbidden) {
             self::assertDirectoryDoesNotExist($this->projectRoot() . '/src/Modules/' . $forbidden);
         }
     }
