@@ -29,12 +29,14 @@ final readonly class CompetitionP7LiveMaintenanceConsoleCommand implements Conso
 
     public function execute(ConsoleInput $input, ConsoleOutput $output): int
     {
-        $input->assertOnlyOptions(['limit']);
+        $input->assertOnlyOptions(['dry-run', 'limit']);
         $limit = $this->limit($input->scalar('limit'));
+        $dryRun = $input->requireFlag('dry-run');
         $count = match ($this->operation) {
-            'live-project' => $this->maintenance->project($limit),
+            'live-project' => $this->maintenance->project($limit, $dryRun),
             'live-reconcile' => $this->maintenance->reconcile($limit),
-            'live-outbox-retry' => $this->maintenance->retryExpiredClaims($limit),
+            'live-outbox-retry' => $this->maintenance->retryExpiredClaims($limit, $dryRun),
+            'live-rebuild' => $this->maintenance->reconcile($limit),
             default => throw new \LogicException('P7 live maintenance operation is invalid.'),
         };
         $output->writeln('Processed: ' . $count);

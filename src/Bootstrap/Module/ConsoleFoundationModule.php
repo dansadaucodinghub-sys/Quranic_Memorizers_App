@@ -75,11 +75,17 @@ use Qmdb\Modules\CompetitionResults\Interface\Console\CompetitionP6VerifyConsole
 use Qmdb\Modules\CompetitionResults\Interface\Console\CompetitionP6AspectVerifyConsoleCommand;
 use Qmdb\Modules\CompetitionResults\Interface\Console\CompetitionP6MaintenanceConsoleCommand;
 use Qmdb\Modules\CompetitionLive\Interface\Console\CompetitionP7VerifyConsoleCommand;
+use Qmdb\Modules\CompetitionLive\Interface\Console\CompetitionP7ProductionReadinessConsoleCommand;
 use Qmdb\Modules\CompetitionLive\Interface\Console\CompetitionP7LiveMaintenanceConsoleCommand;
+use Qmdb\Modules\CompetitionPublication\Interface\Console\CompetitionResultPublicationProjectionConsoleCommand;
+use Qmdb\Modules\CompetitionAppealAdjudication\Interface\Console\CompetitionAppealMaintenanceConsoleCommand;
 use Qmdb\Modules\CompetitionLive\Infrastructure\Persistence\CompetitionP7LiveMaintenanceService;
+use Qmdb\Modules\CompetitionPublication\Infrastructure\Persistence\CompetitionResultPublicationProjectionService;
+use Qmdb\Modules\CompetitionAppealAdjudication\Infrastructure\Persistence\CompetitionAppealMaintenanceService;
 use Qmdb\Modules\CompetitionResults\Infrastructure\Persistence\CompetitionP6MaintenanceService;
 use Qmdb\Shared\Database\Connection\DatabaseConnectionProvider;
 use Qmdb\Shared\Background\Scheduler\ScheduledTaskMap;
+use Qmdb\Shared\Configuration\ApplicationConfiguration;
 
 final readonly class ConsoleFoundationModule implements Module
 {
@@ -214,6 +220,16 @@ final readonly class ConsoleFoundationModule implements Module
             new ClosureServiceFactory(static fn (DependencyResolver $resolver): CompetitionP7VerifyConsoleCommand => new CompetitionP7VerifyConsoleCommand(ServiceReference::get($resolver, DatabaseConnectionProvider::class))),
         ));
         $context->service(ServiceDefinition::factory(
+            CompetitionP7ProductionReadinessConsoleCommand::class,
+            self::ID,
+            [ApplicationConfiguration::class, DatabaseConnectionProvider::class, ScheduledTaskMap::class],
+            new ClosureServiceFactory(static fn (DependencyResolver $resolver): CompetitionP7ProductionReadinessConsoleCommand => new CompetitionP7ProductionReadinessConsoleCommand(
+                ServiceReference::get($resolver, ApplicationConfiguration::class),
+                ServiceReference::get($resolver, DatabaseConnectionProvider::class),
+                ServiceReference::get($resolver, ScheduledTaskMap::class),
+            )),
+        ));
+        $context->service(ServiceDefinition::factory(
             ConsoleCommandDispatcher::class,
             self::ID,
             [ConsoleCommandMap::class],
@@ -283,8 +299,11 @@ final readonly class ConsoleFoundationModule implements Module
             CompetitionRegistrationVerifyConsoleCommand::class,
             CompetitionP6VerifyConsoleCommand::class,
             CompetitionP7VerifyConsoleCommand::class,
+            CompetitionP7ProductionReadinessConsoleCommand::class,
             CompetitionP6MaintenanceService::class,
             CompetitionP7LiveMaintenanceService::class,
+            CompetitionResultPublicationProjectionService::class,
+            CompetitionAppealMaintenanceService::class,
             DatabaseConnectionProvider::class,
             ScheduledTaskMap::class,
         ];
@@ -339,13 +358,30 @@ final readonly class ConsoleFoundationModule implements Module
                 $registry->register(ServiceReference::get($resolver, CompetitionRegistrationVerifyConsoleCommand::class));
                 $registry->register(ServiceReference::get($resolver, CompetitionP6VerifyConsoleCommand::class));
                 $registry->register(ServiceReference::get($resolver, CompetitionP7VerifyConsoleCommand::class));
+                $registry->register(ServiceReference::get($resolver, CompetitionP7ProductionReadinessConsoleCommand::class));
                 $p7LiveMaintenance = ServiceReference::get($resolver, CompetitionP7LiveMaintenanceService::class);
                 foreach ([
                     ['competition:live:project', 'live-project'],
+                    ['competition:live:rebuild', 'live-rebuild'],
                     ['competition:live:reconcile', 'live-reconcile'],
                     ['competition:live:outbox-retry', 'live-outbox-retry'],
                 ] as [$name, $operation]) {
                     $registry->register(new CompetitionP7LiveMaintenanceConsoleCommand($name, $operation, $p7LiveMaintenance));
+                }
+                $publicationProjections = ServiceReference::get($resolver, CompetitionResultPublicationProjectionService::class);
+                foreach ([
+                    ['competition:result-publications:process', 'process'],
+                    ['competition:result-publications:verify', 'verify'],
+                    ['competition:result-publications:rebuild', 'rebuild'],
+                    ['competition:result-publications:reconcile', 'reconcile'],
+                ] as [$name, $operation]) {
+                    $registry->register(new CompetitionResultPublicationProjectionConsoleCommand($name, $operation, $publicationProjections));
+                }
+                $appealMaintenance = ServiceReference::get($resolver, CompetitionAppealMaintenanceService::class);
+                foreach ([
+                    ['competition:appeals:process', 'process'],
+                ] as [$name, $operation]) {
+                    $registry->register(new CompetitionAppealMaintenanceConsoleCommand($name, $operation, $appealMaintenance));
                 }
                 $maintenance = ServiceReference::get($resolver, CompetitionP6MaintenanceService::class);
                 foreach (

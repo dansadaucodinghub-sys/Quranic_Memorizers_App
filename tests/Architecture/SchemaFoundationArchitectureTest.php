@@ -25,10 +25,12 @@ use Qmdb\Modules\Organizations\Infrastructure\Migration\CreateOrganizationClassi
 use Qmdb\Modules\Organizations\Infrastructure\Migration\CreateOrganizationsRegistryMigration;
 use Qmdb\Modules\Organizations\Infrastructure\Migration\CreateOrganizationUnitsMigration;
 use Qmdb\Modules\Organizations\Infrastructure\Seed\SeedOrganizationCatalogAndAuthorization;
-use Qmdb\Modules\OrganizationAffiliations\Infrastructure\Migration\CreateOrganizationAffiliationCatalogAndSecurityMigration;
 use Qmdb\Modules\OrganizationAffiliations\Infrastructure\Migration\CreateOrganizationAffiliationsMigration;
 use Qmdb\Modules\OrganizationAffiliations\Infrastructure\Migration\CreateOrganizationAffiliationAssignmentsMigration;
-use Qmdb\Modules\OrganizationAffiliations\Infrastructure\Migration\ExtendOrganizationAffiliationExpiryNotificationMigration;
+use Qmdb\Modules\OrganizationAffiliations\Infrastructure\Migration\{
+    CreateOrganizationAffiliationCatalogAndSecurityMigration,
+    ExtendOrganizationAffiliationExpiryNotificationMigration,
+};
 use Qmdb\Modules\OrganizationAffiliations\Infrastructure\Seed\SeedOrganizationAffiliationAuthorization;
 use Qmdb\Modules\OrganizationAffiliations\Infrastructure\Seed\SeedOrganizationAffiliationRoleDefinitions;
 use Qmdb\Modules\IdentityAccess\Infrastructure\Migration\CreateIdentityRateLimitFoundationMigration;
@@ -59,6 +61,7 @@ use Qmdb\Modules\SecurityPrivilegedAccess\Infrastructure\Migration\CreatePrivile
 use Qmdb\Modules\SecurityPrivilegedAccess\Infrastructure\Migration\CreatePrivilegedAccessRequestFoundationMigration;
 use Qmdb\Modules\SecurityPrivilegedAccess\Infrastructure\Migration\ExtendPrivilegedAccessSecurityCatalogMigration;
 use Qmdb\Modules\SecurityPrivilegedAccess\Infrastructure\Seed\SeedPrivilegedAccessCatalog;
+use Qmdb\Modules\CompetitionLive\Infrastructure\Seed\SeedCompetitionP7AuthorizationCatalog;
 use Qmdb\Shared\Background\Scheduler\Migration\CreateScheduledTaskRunsMigration;
 use Qmdb\Shared\Schema\Migration\Migration;
 use Qmdb\Shared\Schema\Migration\MigrationRegistry;
@@ -67,7 +70,7 @@ use SplFileInfo;
 
 final class SchemaFoundationArchitectureTest extends TestCase
 {
-    public function testProductionManifestsPreserveHistoricalPrefixAndAllowOnlyAuthorizedP4ThroughP6Extensions(): void
+    public function testProductionManifestsPreserveHistoricalPrefixAndAllowOnlyAuthorizedP4ThroughP7Extensions(): void
     {
         $migrationFactory = require dirname(__DIR__, 2) . '/database/migrations.php';
         $seedFactory = require dirname(__DIR__, 2) . '/database/seeds.php';
@@ -82,7 +85,7 @@ final class SchemaFoundationArchitectureTest extends TestCase
         }
 
         $ordered = $migrations->ordered();
-        self::assertCount(66, $ordered);
+        self::assertCount(74, $ordered);
         self::assertSame(
             [
                 CreateScheduledTaskRunsMigration::class,
@@ -185,7 +188,11 @@ final class SchemaFoundationArchitectureTest extends TestCase
                 '20260902050500_extend_identity_resolution_security_catalog',
                 '20260902050600_extend_identity_resolution_review_idempotency',
             ],
-            array_slice(array_map(static fn (Migration $migration): string => $migration->id()->value(), $ordered), 0, 47),
+            array_slice(
+                array_map(static fn (Migration $migration): string => $migration->id()->value(), $ordered),
+                0,
+                47,
+            ),
         );
         self::assertSame([
             '20260910060100_create_quran_reference_governance',
@@ -207,8 +214,16 @@ final class SchemaFoundationArchitectureTest extends TestCase
             '20260912110000_correct_competition_p6_lifecycle_vocabulary',
             '20260912120000_complete_competition_p6_runtime_contracts',
             '20260912133000_add_competition_p6_result_input_uniqueness',
+            '20260912140000_create_competition_live_operations',
+            '20260912141000_create_competition_live_projections',
+            '20260912142000_add_competition_live_operation_sequence',
+            '20260912143000_create_competition_result_publication',
+            '20260912144000_create_competition_appeal_adjudication',
+            '20260913100000_create_competition_p7_outbox',
+            '20260913110000_create_competition_p7_operation_receipts',
+            '20260913120000_create_competition_result_publication_projections',
         ], array_slice(array_map(static fn (Migration $migration): string => $migration->id()->value(), $ordered), 47));
-        self::assertCount(17, $seeds->ordered());
+        self::assertCount(18, $seeds->ordered());
         self::assertSame(
             [
                 SeedFoundationalAuthorizationCatalog::class,
@@ -221,6 +236,10 @@ final class SchemaFoundationArchitectureTest extends TestCase
                 SeedPeopleIdentityResolutionAuthorization::class,
             ],
             array_slice(array_map(static fn (object $seed): string => $seed::class, $seeds->ordered()), 0, 8),
+        );
+        self::assertSame(
+            SeedCompetitionP7AuthorizationCatalog::class,
+            $seeds->ordered()[17]::class,
         );
     }
 
@@ -241,7 +260,9 @@ final class SchemaFoundationArchitectureTest extends TestCase
 
     public function testSchemaRetryLedgerAlwaysPersistsTheChecksumOfTheSourceItRuns(): void
     {
-        $source = (string) file_get_contents(dirname(__DIR__, 2) . '/src/Shared/Schema/State/MySqlSchemaStateRepository.php');
+        $source = (string) file_get_contents(
+            dirname(__DIR__, 2) . '/src/Shared/Schema/State/MySqlSchemaStateRepository.php',
+        );
 
         self::assertSame(2, substr_count($source, 'checksum = VALUES(checksum)'));
         self::assertSame(2, substr_count($source, 'description = VALUES(description)'));

@@ -85,10 +85,54 @@ final readonly class MySqlCompetitionResultPublicationRepository implements Comp
         $time = self::time($now);
         $public = in_array($target, ['PROVISIONAL_PUBLISHED', 'FINALIZED'], true) ? 'PUBLIC' : 'PRIVATE';
         $current = in_array($target, ['PROVISIONAL_PUBLISHED', 'FINALIZED'], true) ? 1 : null;
-        $statement = $this->statement("UPDATE competition_result_publications SET status=:status,public_visibility=:visibility,current_public_marker=:current_marker,version=version+1,updated_at=:updated_at,published_by_account_id=CASE WHEN :published_status='PROVISIONAL_PUBLISHED' THEN :actor_published ELSE published_by_account_id END,finalized_by_account_id=CASE WHEN :finalized_status='FINALIZED' THEN :actor_finalized ELSE finalized_by_account_id END,withdrawn_by_account_id=CASE WHEN :withdrawn_status='WITHDRAWN' THEN :actor_withdrawn ELSE withdrawn_by_account_id END,provisional_published_at=CASE WHEN :provisional_status='PROVISIONAL_PUBLISHED' THEN :provisional_at ELSE provisional_published_at END,held_at=CASE WHEN :held_status='HELD' THEN :held_at ELSE held_at END,released_at=CASE WHEN :released_status='PROVISIONAL_PUBLISHED' AND status='HELD' THEN :released_at ELSE released_at END,finalized_at=CASE WHEN :finalized_time_status='FINALIZED' THEN :finalized_at ELSE finalized_at END,withdrawn_at=CASE WHEN :withdrawn_time_status='WITHDRAWN' THEN :withdrawn_at ELSE withdrawn_at END,superseded_at=CASE WHEN :superseded_status='SUPERSEDED' THEN :superseded_at ELSE superseded_at END,archived_at=CASE WHEN :archived_status='ARCHIVED' THEN :archived_at ELSE archived_at END WHERE id=:id AND workspace_id=:workspace_id AND status=:previous AND version=:version");
-        $statement->execute([':status' => $target, ':visibility' => $public, ':current_marker' => $current, ':updated_at' => $time, ':published_status' => $target, ':actor_published' => $actorAccountId, ':finalized_status' => $target, ':actor_finalized' => $actorAccountId, ':withdrawn_status' => $target, ':actor_withdrawn' => $actorAccountId, ':provisional_status' => $target, ':provisional_at' => $time, ':held_status' => $target, ':held_at' => $time, ':released_status' => $target, ':released_at' => $time, ':finalized_time_status' => $target, ':finalized_at' => $time, ':withdrawn_time_status' => $target, ':withdrawn_at' => $time, ':superseded_status' => $target, ':superseded_at' => $time, ':archived_status' => $target, ':archived_at' => $time, ':id' => $publication['id'], ':workspace_id' => $publication['workspace_id'], ':previous' => $publication['status'], ':version' => $publication['version']]);
+        $projection = $public === 'PUBLIC' ? $this->ensurePublicProjection($publication, $actorAccountId, $now) : null;
+        $statement = $this->statement("UPDATE competition_result_publications SET status=:status,public_visibility=:visibility,current_public_marker=:current_marker,projection_sha256=COALESCE(:projection_sha256,projection_sha256),public_from=CASE WHEN :public_status='PUBLIC' AND public_from IS NULL THEN :public_from ELSE public_from END,version=version+1,updated_at=:updated_at,published_by_account_id=CASE WHEN :published_status='PROVISIONAL_PUBLISHED' THEN :actor_published ELSE published_by_account_id END,finalized_by_account_id=CASE WHEN :finalized_status='FINALIZED' THEN :actor_finalized ELSE finalized_by_account_id END,withdrawn_by_account_id=CASE WHEN :withdrawn_status='WITHDRAWN' THEN :actor_withdrawn ELSE withdrawn_by_account_id END,provisional_published_at=CASE WHEN :provisional_status='PROVISIONAL_PUBLISHED' THEN :provisional_at ELSE provisional_published_at END,held_at=CASE WHEN :held_status='HELD' THEN :held_at ELSE held_at END,released_at=CASE WHEN :released_status='PROVISIONAL_PUBLISHED' AND status='HELD' THEN :released_at ELSE released_at END,finalized_at=CASE WHEN :finalized_time_status='FINALIZED' THEN :finalized_at ELSE finalized_at END,withdrawn_at=CASE WHEN :withdrawn_time_status='WITHDRAWN' THEN :withdrawn_at ELSE withdrawn_at END,superseded_at=CASE WHEN :superseded_status='SUPERSEDED' THEN :superseded_at ELSE superseded_at END,archived_at=CASE WHEN :archived_status='ARCHIVED' THEN :archived_at ELSE archived_at END WHERE id=:id AND workspace_id=:workspace_id AND status=:previous AND version=:version");
+        $statement->execute([':status' => $target, ':visibility' => $public, ':current_marker' => $current, ':projection_sha256' => $projection, ':public_status' => $public, ':public_from' => $time, ':updated_at' => $time, ':published_status' => $target, ':actor_published' => $actorAccountId, ':finalized_status' => $target, ':actor_finalized' => $actorAccountId, ':withdrawn_status' => $target, ':actor_withdrawn' => $actorAccountId, ':provisional_status' => $target, ':provisional_at' => $time, ':held_status' => $target, ':held_at' => $time, ':released_status' => $target, ':released_at' => $time, ':finalized_time_status' => $target, ':finalized_at' => $time, ':withdrawn_time_status' => $target, ':withdrawn_at' => $time, ':superseded_status' => $target, ':superseded_at' => $time, ':archived_status' => $target, ':archived_at' => $time, ':id' => $publication['id'], ':workspace_id' => $publication['workspace_id'], ':previous' => $publication['status'], ':version' => $publication['version']]);
 
-        return $statement->rowCount() === 1;
+        if ($statement->rowCount() !== 1) {
+            return false;
+        }
+        if ($public === 'PUBLIC') {
+            $this->enqueuePublicProjection($publication, $now);
+        }
+
+        return true;
+    }
+
+    /** @param array{id:int,public_id:string,workspace_id:int,round_id:int,result_run_id:int,status:string,version:int} $publication */
+    private function ensurePublicProjection(array $publication, int $actorAccountId, DateTimeImmutable $now): string
+    {
+        $statement = $this->statement('SELECT result_run.public_id AS result_run_public_id,result_run.result_checksum_sha256,result_run.input_checksum_sha256,row_record.public_id,row_record.rank_position,row_record.total_units,row_record.public_label FROM competition_result_runs result_run INNER JOIN competition_result_rows row_record ON row_record.workspace_id=result_run.workspace_id AND row_record.result_run_id=result_run.id WHERE result_run.workspace_id=:workspace_id AND result_run.id=:result_run_id ORDER BY row_record.rank_position ASC,row_record.id ASC');
+        $statement->execute([':workspace_id' => $publication['workspace_id'], ':result_run_id' => $publication['result_run_id']]);
+        $source = null;
+        $rows = [];
+        while (($row = self::row($statement->fetch(PDO::FETCH_ASSOC))) !== null) {
+            $source ??= ['public_id' => UuidV7::fromBinary(PdoResultReader::string($row, 'result_run_public_id'))->toString(), 'result_checksum' => self::hash($row, 'result_checksum_sha256'), 'input_checksum' => self::hash($row, 'input_checksum_sha256')];
+            $rows[] = ['result_row_public_id' => UuidV7::fromBinary(PdoResultReader::string($row, 'public_id'))->toString(), 'rank_position' => PdoResultReader::integer($row, 'rank_position'), 'total_units' => PdoResultReader::integer($row, 'total_units'), 'public_label' => PdoResultReader::string($row, 'public_label')];
+        }
+        if ($source === null || $rows === []) {
+            throw new \DomainException('Result publication cannot project an empty result run.');
+        }
+        $canonical = CanonicalJson::encode(['publication_public_id' => $publication['public_id'], 'result_run_public_id' => $source['public_id'], 'rows' => $rows]);
+        $hash = hash('sha256', $canonical, true);
+        $package = $this->statement("INSERT INTO competition_result_packages (public_id,workspace_id,publication_id,package_type,schema_version,canonical_json,package_sha256,source_result_run_sha256,source_score_set_sha256,appeal_lineage_sha256,created_by_account_id,created_at) VALUES (:public_id,:workspace_id,:publication_id,'PUBLIC_SAFE',1,:canonical_json,:package_sha256,:result_sha256,:input_sha256,:appeal_sha256,:created_by,:created_at) ON DUPLICATE KEY UPDATE id=id");
+        $package->execute([':public_id' => UuidV7::generate()->toBinary(), ':workspace_id' => $publication['workspace_id'], ':publication_id' => $publication['id'], ':canonical_json' => $canonical, ':package_sha256' => $hash, ':result_sha256' => $source['result_checksum'], ':input_sha256' => $source['input_checksum'], ':appeal_sha256' => hash('sha256', '', true), ':created_by' => $actorAccountId, ':created_at' => self::time($now)]);
+
+        return $hash;
+    }
+
+    /** @param array{id:int,public_id:string,workspace_id:int,round_id:int,result_run_id:int,status:string,version:int} $publication */
+    private function enqueuePublicProjection(array $publication, DateTimeImmutable $now): void
+    {
+        $payload = CanonicalJson::encode(['publication_public_id' => $publication['public_id']]);
+        $statement = $this->statement("INSERT INTO competition_p7_outbox_messages (public_id,workspace_id,live_session_id,live_event_public_id,message_type,payload_canonical_json,payload_sha256,status,attempts,available_at,lease_owner,lease_expires_at,delivered_at,dead_lettered_at,last_error_code,created_at,updated_at) VALUES (:public_id,:workspace_id,NULL,NULL,'RESULT_PUBLICATION_PROJECT',:payload,:payload_sha256,'PENDING',0,:now,NULL,NULL,NULL,NULL,NULL,:now,:now)");
+        $statement->execute([
+            ':public_id' => UuidV7::generate()->toBinary(),
+            ':workspace_id' => $publication['workspace_id'],
+            ':payload' => $payload,
+            ':payload_sha256' => hash('sha256', $payload, true),
+            ':now' => self::time($now),
+        ]);
     }
 
     public function appendEvent(array $publication, string $eventType, ?int $actorAccountId, DateTimeImmutable $now): void

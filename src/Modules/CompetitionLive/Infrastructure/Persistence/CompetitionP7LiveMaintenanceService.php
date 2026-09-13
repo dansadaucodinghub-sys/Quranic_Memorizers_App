@@ -22,9 +22,12 @@ final readonly class CompetitionP7LiveMaintenanceService
     {
     }
 
-    public function project(int $limit = 50): int
+    public function project(int $limit = 50, bool $dryRun = false): int
     {
         $this->assertLimit($limit);
+        if ($dryRun) {
+            return $this->countDue('LIVE_EVENT_PROJECT', $limit);
+        }
         $worker = 'p7-projector-' . UuidV7::generate()->toString();
         $processed = 0;
         for ($index = 0; $index < $limit; ++$index) {
@@ -43,9 +46,18 @@ final readonly class CompetitionP7LiveMaintenanceService
         return $processed;
     }
 
-    public function retryExpiredClaims(int $limit = 100): int
+    public function retryExpiredClaims(int $limit = 100, bool $dryRun = false): int
     {
         $this->assertLimit($limit);
+        if ($dryRun) {
+            $statement = $this->connections->connection()->prepare("SELECT COUNT(*) FROM (SELECT id FROM competition_p7_outbox_messages WHERE message_type='LIVE_EVENT_PROJECT' AND status='CLAIMED' AND lease_expires_at<=:expired_at ORDER BY lease_expires_at,id LIMIT {$limit}) AS expired_claims");
+            if (!$statement instanceof PDOStatement) {
+                throw new \RuntimeException('P7 outbox retry dry-run statement could not be prepared.');
+            }
+            $statement->execute([':expired_at' => $this->time($this->clock->now())]);
+
+            return (int) $statement->fetchColumn();
+        }
         $statement = $this->connections->connection()->prepare("UPDATE competition_p7_outbox_messages SET status='PENDING', lease_owner=NULL, lease_expires_at=NULL, available_at=:available_at, updated_at=:updated_at, last_error_code='LEASE_EXPIRED' WHERE status='CLAIMED' AND lease_expires_at<=:expired_at ORDER BY lease_expires_at,id LIMIT {$limit}");
         if (!$statement instanceof PDOStatement) {
             throw new \RuntimeException('P7 outbox retry statement could not be prepared.');
@@ -84,7 +96,7 @@ final readonly class CompetitionP7LiveMaintenanceService
         $pdo->beginTransaction();
         try {
             $now = $this->time($this->clock->now());
-            $statement = $pdo->prepare("SELECT id,workspace_id,live_session_id,live_event_public_id FROM competition_p7_outbox_messages WHERE status='PENDING' AND available_at<=:now ORDER BY available_at,id LIMIT 1 FOR UPDATE SKIP LOCKED");
+            $statement = $pdo->prepare("SELECT id,workspace_id,live_session_id,live_event_public_id FROM competition_p7_outbox_messages WHERE message_type='LIVE_EVENT_PROJECT' AND status='PENDING' AND available_at<=:now ORDER BY available_at,id LIMIT 1 FOR UPDATE SKIP LOCKED");
             if (!$statement instanceof PDOStatement) {
                 throw new \RuntimeException('P7 outbox claim statement could not be prepared.');
             }
@@ -170,7 +182,9 @@ final readonly class CompetitionP7LiveMaintenanceService
         return ['sequence' => $this->integer($row, 'sequence_number')];
     }
 
-    /** @return array{status:string,public_visibility:string} */
+    /** @param array{id:int,workspace_id:int,live_session_id:int,live_event_public_id:string} $message
+     * @return array{status:string,public_visibility:string}
+     */
     private function session(PDO $pdo, array $message): array
     {
         $statement = $pdo->prepare('SELECT status,public_visibility FROM competition_live_sessions WHERE id=:id AND workspace_id=:workspace_id FOR UPDATE');
@@ -253,6 +267,17 @@ final readonly class CompetitionP7LiveMaintenanceService
             throw new \RuntimeException('P7 outbox retry update could not be prepared.');
         }
         $statement->execute([':available_now' => $now, ':dead_lettered_at' => $now, ':error' => substr($error::class, 0, 64), ':updated_at' => $now, ':id' => $id, ':worker' => $worker]);
+    }
+
+    private function countDue(string $messageType, int $limit): int
+    {
+        $statement = $this->connections->connection()->prepare("SELECT COUNT(*) FROM (SELECT id FROM competition_p7_outbox_messages WHERE message_type=:message_type AND status='PENDING' AND available_at<=:now ORDER BY available_at,id LIMIT {$limit}) AS due_messages");
+        if (!$statement instanceof PDOStatement) {
+            throw new \RuntimeException('P7 outbox dry-run statement could not be prepared.');
+        }
+        $statement->execute([':message_type' => $messageType, ':now' => $this->time($this->clock->now())]);
+
+        return (int) $statement->fetchColumn();
     }
 
     private function verifySessionChain(int $sessionId, int $workspaceId, int $headSequence): void

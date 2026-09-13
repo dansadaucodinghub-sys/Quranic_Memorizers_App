@@ -54,6 +54,7 @@ use Qmdb\Modules\CompetitionLive\Interface\Http\CompetitionPublicLiveController;
 use Qmdb\Modules\CompetitionLive\Interface\Http\CompetitionLiveSessionWorkflowController;
 use Qmdb\Modules\CompetitionLive\Interface\Http\CompetitionLiveParticipantWorkflowController;
 use Qmdb\Modules\CompetitionPublication\Interface\Http\CompetitionResultPublicationWorkflowController;
+use Qmdb\Modules\CompetitionAppealAdjudication\Interface\Http\CompetitionAppealAdjudicationController;
 use Qmdb\Shared\Http\Routing\HttpMethod;
 use Qmdb\Shared\Http\Routing\Route;
 use Qmdb\Shared\Http\Routing\RouteCollection;
@@ -110,6 +111,7 @@ return static function (
     CompetitionLiveSessionWorkflowController $competitionLiveSessionWorkflow,
     CompetitionLiveParticipantWorkflowController $competitionLiveParticipantWorkflow,
     CompetitionResultPublicationWorkflowController $competitionResultPublicationWorkflow,
+    CompetitionAppealAdjudicationController $competitionAppealAdjudication,
 ): RouteCollection {
     return new RouteCollection(
         new Route('system.home', [HttpMethod::GET], new RoutePattern('/'), $homeController),
@@ -678,6 +680,12 @@ return static function (
         new Route('workspace.competition.result_publication.supersede', [HttpMethod::POST], new RoutePattern('/workspace/competitions/result-publications/{publicationId}/supersede'), $competitionResultPublicationWorkflow),
         new Route('workspace.competition.result_publication.archive.form', [HttpMethod::GET], new RoutePattern('/workspace/competitions/result-publications/{publicationId}/archive'), $competitionResultPublicationWorkflow),
         new Route('workspace.competition.result_publication.archive', [HttpMethod::POST], new RoutePattern('/workspace/competitions/result-publications/{publicationId}/archive'), $competitionResultPublicationWorkflow),
+        new Route('workspace.competition.appeal_adjudication.assign.form', [HttpMethod::GET], new RoutePattern('/workspace/competitions/appeals/{appealId}/review/assign'), $competitionAppealAdjudication),
+        new Route('workspace.competition.appeal_adjudication.assign', [HttpMethod::POST], new RoutePattern('/workspace/competitions/appeals/{appealId}/review/assign'), $competitionAppealAdjudication),
+        new Route('workspace.competition.appeal_adjudication.accept.form', [HttpMethod::GET], new RoutePattern('/workspace/competitions/appeal-review-assignments/{assignmentId}/accept'), $competitionAppealAdjudication),
+        new Route('workspace.competition.appeal_adjudication.accept', [HttpMethod::POST], new RoutePattern('/workspace/competitions/appeal-review-assignments/{assignmentId}/accept'), $competitionAppealAdjudication),
+        new Route('workspace.competition.appeal_adjudication.decide.form', [HttpMethod::GET], new RoutePattern('/workspace/competitions/appeals/{appealId}/adjudication'), $competitionAppealAdjudication),
+        new Route('workspace.competition.appeal_adjudication.decide', [HttpMethod::POST], new RoutePattern('/workspace/competitions/appeals/{appealId}/adjudication'), $competitionAppealAdjudication),
         new Route('competition.public.results.edition', [HttpMethod::GET], new RoutePattern('/competitions/{editionSlug}/results'), $competitionPublicResults),
         new Route('competition.public.results.category', [HttpMethod::GET], new RoutePattern('/competitions/{editionSlug}/categories/{categorySlug}/results'), $competitionPublicResults),
         new Route('competition.public.results.round', [HttpMethod::GET], new RoutePattern('/competitions/{editionSlug}/categories/{categorySlug}/rounds/{roundCode}/results'), $competitionPublicResults),

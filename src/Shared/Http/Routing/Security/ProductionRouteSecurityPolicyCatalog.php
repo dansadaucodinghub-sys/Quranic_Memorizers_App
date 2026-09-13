@@ -210,6 +210,12 @@ final class ProductionRouteSecurityPolicyCatalog
         'workspace.competition.result_publication.supersede' => 'workspace.competitions.finalize_publications',
         'workspace.competition.result_publication.archive.form' => 'workspace.competitions.hold_publications',
         'workspace.competition.result_publication.archive' => 'workspace.competitions.hold_publications',
+        'workspace.competition.appeal_adjudication.assign.form' => 'workspace.competitions.adjudicate_appeals',
+        'workspace.competition.appeal_adjudication.assign' => 'workspace.competitions.adjudicate_appeals',
+        'workspace.competition.appeal_adjudication.accept.form' => 'workspace.competitions.adjudicate_appeals',
+        'workspace.competition.appeal_adjudication.accept' => 'workspace.competitions.adjudicate_appeals',
+        'workspace.competition.appeal_adjudication.decide.form' => 'workspace.competitions.adjudicate_appeals',
+        'workspace.competition.appeal_adjudication.decide' => 'workspace.competitions.adjudicate_appeals',
         'workspace.competition.live_participant.start.form' => 'workspace.competitions.operate_live',
         'workspace.competition.live_participant.start' => 'workspace.competitions.operate_live',
         'workspace.competition.live_participant.interrupt.form' => 'workspace.competitions.operate_live',
@@ -424,6 +430,9 @@ final class ProductionRouteSecurityPolicyCatalog
         'workspace.competition.result_publication.withdraw' => 'competition.result_publication.withdraw',
         'workspace.competition.result_publication.supersede' => 'competition.result_publication.supersede',
         'workspace.competition.result_publication.archive' => 'competition.result_publication.archive',
+        'workspace.competition.appeal_adjudication.assign' => 'competition.appeal_adjudication.assign',
+        'workspace.competition.appeal_adjudication.accept' => 'competition.appeal_adjudication.accept',
+        'workspace.competition.appeal_adjudication.decide' => 'competition.appeal_adjudication.decide',
     ];
 
     /** @var list<string> */
@@ -484,6 +493,8 @@ final class ProductionRouteSecurityPolicyCatalog
         'workspace.competition.result_publication.hold', 'workspace.competition.result_publication.release_hold',
         'workspace.competition.result_publication.finalize', 'workspace.competition.result_publication.withdraw',
         'workspace.competition.result_publication.supersede', 'workspace.competition.result_publication.archive',
+        'workspace.competition.appeal_adjudication.assign', 'workspace.competition.appeal_adjudication.accept',
+        'workspace.competition.appeal_adjudication.decide',
     ];
 
     /** @var list<string> */
@@ -564,7 +575,8 @@ final class ProductionRouteSecurityPolicyCatalog
             'workspace.competitions.verify_results', 'workspace.competitions.publish_results',
             'workspace.competitions.manage_appeals', 'workspace.competitions.correct_scores',
             'workspace.competitions.disqualify_participants', 'workspace.competitions.publish_provisional_results',
-            'workspace.competitions.hold_publications', 'workspace.competitions.finalize_publications' => 'PHISHING_RESISTANT',
+            'workspace.competitions.hold_publications', 'workspace.competitions.finalize_publications',
+            'workspace.competitions.adjudicate_appeals' => 'PHISHING_RESISTANT',
             default => null,
         };
     }

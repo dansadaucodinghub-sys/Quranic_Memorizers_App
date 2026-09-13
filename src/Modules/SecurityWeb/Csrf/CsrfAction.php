@@ -172,4 +172,7 @@ enum CsrfAction: string
     case COMPETITION_RESULT_PUBLICATION_WITHDRAW = 'competition.result_publication.withdraw';
     case COMPETITION_RESULT_PUBLICATION_SUPERSEDE = 'competition.result_publication.supersede';
     case COMPETITION_RESULT_PUBLICATION_ARCHIVE = 'competition.result_publication.archive';
+    case COMPETITION_APPEAL_ADJUDICATION_ASSIGN = 'competition.appeal_adjudication.assign';
+    case COMPETITION_APPEAL_ADJUDICATION_ACCEPT = 'competition.appeal_adjudication.accept';
+    case COMPETITION_APPEAL_ADJUDICATION_DECIDE = 'competition.appeal_adjudication.decide';
 }

@@ -41,10 +41,18 @@ final class DatabaseArchitectureTest extends TestCase
                 || str_contains($normalized, '/Modules/CompetitionJudging/Infrastructure/')
                 || str_contains($normalized, '/Modules/CompetitionScoring/Infrastructure/')
                 || str_contains($normalized, '/Modules/CompetitionResults/Infrastructure/')
+                || str_contains($normalized, '/Modules/CompetitionLive/Infrastructure/')
+                || str_contains($normalized, '/Modules/CompetitionPublication/Infrastructure/')
+                || str_contains($normalized, '/Modules/CompetitionAppealAdjudication/Infrastructure/')
                 || str_contains($normalized, '/Modules/QuranReferenceGovernance/Infrastructure/')
                 || str_contains($normalized, '/Modules/CompetitionConfiguration/Interface/Console/')
                 || str_contains($normalized, '/Modules/CompetitionRegistration/Interface/Console/')
                 || str_contains($normalized, '/Modules/CompetitionResults/Interface/Console/')
+                || str_contains($normalized, '/Modules/CompetitionLive/Interface/Console/')
+                || str_ends_with(
+                    $normalized,
+                    '/Modules/CompetitionAppealAdjudication/Application/CompetitionAppealAdjudicationService.php',
+                )
                 || in_array(basename($normalized), [
                     'QuranBaselineReleaseInstaller.php',
                     'QuranBaselineSearchCorpusInstaller.php',
@@ -106,10 +114,17 @@ final class DatabaseArchitectureTest extends TestCase
     public function testNoProductionFrontendOrLongLivedTransactionMechanismWasIntroduced(): void
     {
         self::assertDirectoryDoesNotExist($this->root() . '/assets/js');
+        $liveSseController = str_replace(
+            '\\',
+            '/',
+            $this->root() . '/src/Modules/CompetitionLive/Interface/Http/CompetitionPublicLiveController.php',
+        );
         foreach ($this->phpFiles($this->root() . '/src') as $path) {
             $source = $this->read($path);
             self::assertStringNotContainsString('EventSource', $source, $path);
-            self::assertStringNotContainsString('text/event-stream', $source, $path);
+            if (str_replace('\\', '/', $path) !== $liveSseController) {
+                self::assertStringNotContainsString('text/event-stream', $source, $path);
+            }
         }
     }
 

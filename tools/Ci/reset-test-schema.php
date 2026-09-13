@@ -63,7 +63,17 @@ try {
            AND REFERENCED_TABLE_SCHEMA = :referenced_schema
            AND REFERENCED_TABLE_NAME IS NOT NULL',
     );
+    $foreignKeyConstraintStatement = $connection->prepare(
+        'SELECT TABLE_NAME, CONSTRAINT_NAME
+         FROM information_schema.KEY_COLUMN_USAGE
+         WHERE TABLE_SCHEMA = :table_schema
+           AND REFERENCED_TABLE_SCHEMA = :referenced_schema
+           AND REFERENCED_TABLE_NAME IS NOT NULL
+         GROUP BY TABLE_NAME, CONSTRAINT_NAME
+         ORDER BY TABLE_NAME, CONSTRAINT_NAME',
+    );
     $dropped = 0;
+    $releasedConstraints = 0;
     while ($remainingTables !== []) {
         $foreignKeyStatement->execute([
             ':table_schema' => $database,
@@ -86,7 +96,40 @@ try {
         $dropCandidates = array_keys(array_diff_key($remainingTables, $referencedTables));
         sort($dropCandidates, SORT_STRING);
         if ($dropCandidates === []) {
-            throw new \RuntimeException('Test schema reset cannot safely resolve a foreign-key dependency cycle.');
+            /*
+             * The production schema intentionally has a small number of
+             * nullable, forward-only reference cycles (for example a result
+             * publication and its immutable package). MySQL cannot drop either
+             * table while both constraints remain. Break only the constraints
+             * inside the already validated test schema, then continue the
+             * normal child-before-parent drop ordering. This keeps FK checks
+             * enabled throughout and never touches a production schema.
+             */
+            $foreignKeyConstraintStatement->execute([
+                ':table_schema' => $database,
+                ':referenced_schema' => $database,
+            ]);
+            $constraints = $foreignKeyConstraintStatement->fetchAll(\PDO::FETCH_ASSOC);
+            $released = false;
+            foreach ($constraints as $constraint) {
+                $table = $constraint['TABLE_NAME'] ?? null;
+                $name = $constraint['CONSTRAINT_NAME'] ?? null;
+                if (
+                    !is_string($table) || !is_string($name)
+                    || !isset($remainingTables[$table])
+                    || preg_match('/\A[A-Za-z0-9_]+\z/', $table) !== 1
+                    || preg_match('/\A[A-Za-z0-9_]+\z/', $name) !== 1
+                ) {
+                    continue;
+                }
+                $connection->exec('ALTER TABLE `' . $table . '` DROP FOREIGN KEY `' . $name . '`');
+                ++$releasedConstraints;
+                $released = true;
+            }
+            if (!$released) {
+                throw new \RuntimeException('Test schema reset cannot resolve its remaining foreign-key cycle.');
+            }
+            continue;
         }
 
         foreach ($dropCandidates as $table) {
@@ -95,7 +138,7 @@ try {
             $dropped++;
         }
     }
-    fwrite(STDOUT, sprintf("Test schema reset: PASS (%d tables removed)\n", $dropped));
+    fwrite(STDOUT, sprintf("Test schema reset: PASS (%d tables removed, %d cycle constraints released)\n", $dropped, $releasedConstraints));
     exit(0);
 } catch (\Throwable $exception) {
     fwrite(STDERR, sprintf("Test schema reset: FAIL (%s)\n", $exception->getMessage()));

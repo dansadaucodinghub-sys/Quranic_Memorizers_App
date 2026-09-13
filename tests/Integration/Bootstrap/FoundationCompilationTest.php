@@ -107,13 +107,13 @@ final class FoundationCompilationTest extends TestCase
             'competition.scoring',
             'competition.results',
             'competition.live_operations',
+            'competition.result_publication',
+            'competition.appeal_adjudication',
             'identity.recovery',
             'security.privileged_access',
             'identity.account_state',
             'people.identity_resolution',
             'application.http',
-            'competition.result_publication',
-            'competition.appeal_adjudication',
             'foundation.console',
         ], $registry->orderedModuleIds());
     }

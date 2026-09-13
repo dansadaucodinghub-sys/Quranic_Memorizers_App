@@ -137,10 +137,17 @@ final class SourceArchitectureTest extends TestCase
                 || str_contains($path, '/Modules/CompetitionScoring/Infrastructure/')
                 || str_contains($path, '/Modules/CompetitionResults/Infrastructure/')
                 || str_contains($path, '/Modules/CompetitionLive/Infrastructure/')
+                || str_contains($path, '/Modules/CompetitionPublication/Infrastructure/')
+                || str_contains($path, '/Modules/CompetitionAppealAdjudication/Infrastructure/')
                 || str_contains($path, '/Modules/QuranReferenceGovernance/Infrastructure/')
                 || str_contains($path, '/Modules/CompetitionConfiguration/Interface/Console/')
                 || str_contains($path, '/Modules/CompetitionRegistration/Interface/Console/')
                 || str_contains($path, '/Modules/CompetitionResults/Interface/Console/')
+                || str_contains($path, '/Modules/CompetitionLive/Interface/Console/')
+                || str_ends_with(
+                    $path,
+                    '/Modules/CompetitionAppealAdjudication/Application/CompetitionAppealAdjudicationService.php',
+                )
                 || in_array(basename($path), [
                     'QuranBaselineReleaseInstaller.php',
                     'QuranBaselineSearchCorpusInstaller.php',
