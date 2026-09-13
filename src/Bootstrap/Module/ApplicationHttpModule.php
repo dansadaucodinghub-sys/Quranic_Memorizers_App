@@ -70,6 +70,7 @@ use Qmdb\Modules\CompetitionResults\Interface\Http\CompetitionPublicResultsContr
 use Qmdb\Modules\CompetitionLive\Interface\Http\CompetitionPublicLiveController;
 use Qmdb\Modules\CompetitionLive\Interface\Http\CompetitionLiveSessionWorkflowController;
 use Qmdb\Modules\CompetitionLive\Interface\Http\CompetitionLiveParticipantWorkflowController;
+use Qmdb\Modules\CompetitionPublication\Interface\Http\CompetitionResultPublicationWorkflowController;
 use Qmdb\Shared\DependencyInjection\ClosureServiceFactory;
 use Qmdb\Shared\DependencyInjection\DependencyResolver;
 use Qmdb\Shared\DependencyInjection\ServiceDefinition;
@@ -140,6 +141,7 @@ final readonly class ApplicationHttpModule implements Module
             new ModuleId('quran.reference_governance'),
             new ModuleId('competition.results'),
             new ModuleId('competition.live_operations'),
+            new ModuleId('competition.result_publication'),
         ];
     }
 
@@ -243,6 +245,7 @@ final readonly class ApplicationHttpModule implements Module
             CompetitionPublicLiveController::class,
             CompetitionLiveSessionWorkflowController::class,
             CompetitionLiveParticipantWorkflowController::class,
+            CompetitionResultPublicationWorkflowController::class,
         ];
         $context->service(ServiceDefinition::factory(
             RouteCollection::class,

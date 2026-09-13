@@ -164,4 +164,12 @@ enum CsrfAction: string
     case COMPETITION_LIVE_PARTICIPANT_ABSENT = 'competition.live_participant.absent';
     case COMPETITION_LIVE_PARTICIPANT_WITHDRAW = 'competition.live_participant.withdraw';
     case COMPETITION_LIVE_PARTICIPANT_DISQUALIFY = 'competition.live_participant.disqualify';
+    case COMPETITION_RESULT_PUBLICATION_PREPARE = 'competition.result_publication.prepare';
+    case COMPETITION_RESULT_PUBLICATION_PUBLISH_PROVISIONAL = 'competition.result_publication.publish_provisional';
+    case COMPETITION_RESULT_PUBLICATION_HOLD = 'competition.result_publication.hold';
+    case COMPETITION_RESULT_PUBLICATION_RELEASE_HOLD = 'competition.result_publication.release_hold';
+    case COMPETITION_RESULT_PUBLICATION_FINALIZE = 'competition.result_publication.finalize';
+    case COMPETITION_RESULT_PUBLICATION_WITHDRAW = 'competition.result_publication.withdraw';
+    case COMPETITION_RESULT_PUBLICATION_SUPERSEDE = 'competition.result_publication.supersede';
+    case COMPETITION_RESULT_PUBLICATION_ARCHIVE = 'competition.result_publication.archive';
 }

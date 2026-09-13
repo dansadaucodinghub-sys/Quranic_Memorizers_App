@@ -74,6 +74,7 @@ use Qmdb\Modules\CompetitionLive\Infrastructure\Migration\AddCompetitionLiveOper
 use Qmdb\Modules\CompetitionPublication\Infrastructure\Migration\CreateCompetitionResultPublicationMigration;
 use Qmdb\Modules\CompetitionAppealAdjudication\Infrastructure\Migration\CreateCompetitionAppealAdjudicationMigration;
 use Qmdb\Modules\CompetitionLive\Infrastructure\Migration\CreateCompetitionP7OutboxMigration;
+use Qmdb\Modules\CompetitionPublication\Infrastructure\Migration\CreateCompetitionP7OperationReceiptsMigration;
 use Qmdb\Shared\Schema\Migration\MigrationRegistry;
 use Qmdb\Shared\Schema\Migration\MigrationRegistryBuilder;
 
@@ -151,5 +152,6 @@ return static function (): MigrationRegistry {
         ->register(new CreateCompetitionResultPublicationMigration())
         ->register(new CreateCompetitionAppealAdjudicationMigration())
         ->register(new CreateCompetitionP7OutboxMigration())
+        ->register(new CreateCompetitionP7OperationReceiptsMigration())
         ->build();
 };

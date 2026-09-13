@@ -118,6 +118,11 @@ enum SecurityEventCode: string
     case COMPETITION_LIVE_PARTICIPANT_PERFORMANCE_COMPLETED = 'competition.live_participant.performance_completed';
     case COMPETITION_LIVE_PARTICIPANT_ABSENT = 'competition.live_participant.absent';
     case COMPETITION_LIVE_PARTICIPANT_WITHDRAWN = 'competition.live_participant.withdrawn';
+    case COMPETITION_RESULT_PUBLICATION_PREPARED = 'competition.result_publication.prepared';
+    case COMPETITION_RESULT_PUBLICATION_PROVISIONALLY_PUBLISHED = 'competition.result_publication.provisionally_published';
+    case COMPETITION_RESULT_PUBLICATION_HELD = 'competition.result_publication.held';
+    case COMPETITION_RESULT_PUBLICATION_FINALIZED = 'competition.result_publication.finalized';
+    case COMPETITION_RESULT_PUBLICATION_WITHDRAWN = 'competition.result_publication.withdrawn';
 
     public function severity(): SecurityEventSeverity
     {

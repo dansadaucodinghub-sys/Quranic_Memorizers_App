@@ -53,6 +53,7 @@ use Qmdb\Modules\CompetitionResults\Interface\Http\CompetitionPublicResultsContr
 use Qmdb\Modules\CompetitionLive\Interface\Http\CompetitionPublicLiveController;
 use Qmdb\Modules\CompetitionLive\Interface\Http\CompetitionLiveSessionWorkflowController;
 use Qmdb\Modules\CompetitionLive\Interface\Http\CompetitionLiveParticipantWorkflowController;
+use Qmdb\Modules\CompetitionPublication\Interface\Http\CompetitionResultPublicationWorkflowController;
 use Qmdb\Shared\Http\Routing\HttpMethod;
 use Qmdb\Shared\Http\Routing\Route;
 use Qmdb\Shared\Http\Routing\RouteCollection;
@@ -108,6 +109,7 @@ return static function (
     CompetitionPublicLiveController $competitionPublicLive,
     CompetitionLiveSessionWorkflowController $competitionLiveSessionWorkflow,
     CompetitionLiveParticipantWorkflowController $competitionLiveParticipantWorkflow,
+    CompetitionResultPublicationWorkflowController $competitionResultPublicationWorkflow,
 ): RouteCollection {
     return new RouteCollection(
         new Route('system.home', [HttpMethod::GET], new RoutePattern('/'), $homeController),
@@ -660,6 +662,22 @@ return static function (
         new Route('workspace.competition.live_participant.withdraw', [HttpMethod::POST], new RoutePattern('/workspace/competitions/live-sessions/{sessionId}/participants/{participantId}/withdraw'), $competitionLiveParticipantWorkflow),
         new Route('workspace.competition.live_participant.disqualify.form', [HttpMethod::GET], new RoutePattern('/workspace/competitions/live-sessions/{sessionId}/participants/{participantId}/disqualify'), $competitionLiveParticipantWorkflow),
         new Route('workspace.competition.live_participant.disqualify', [HttpMethod::POST], new RoutePattern('/workspace/competitions/live-sessions/{sessionId}/participants/{participantId}/disqualify'), $competitionLiveParticipantWorkflow),
+        new Route('workspace.competition.result_publication.prepare.form', [HttpMethod::GET], new RoutePattern('/workspace/competitions/result-runs/{resultRunId}/publications/prepare'), $competitionResultPublicationWorkflow),
+        new Route('workspace.competition.result_publication.prepare', [HttpMethod::POST], new RoutePattern('/workspace/competitions/result-runs/{resultRunId}/publications/prepare'), $competitionResultPublicationWorkflow),
+        new Route('workspace.competition.result_publication.publish_provisional.form', [HttpMethod::GET], new RoutePattern('/workspace/competitions/result-publications/{publicationId}/publish-provisional'), $competitionResultPublicationWorkflow),
+        new Route('workspace.competition.result_publication.publish_provisional', [HttpMethod::POST], new RoutePattern('/workspace/competitions/result-publications/{publicationId}/publish-provisional'), $competitionResultPublicationWorkflow),
+        new Route('workspace.competition.result_publication.hold.form', [HttpMethod::GET], new RoutePattern('/workspace/competitions/result-publications/{publicationId}/hold'), $competitionResultPublicationWorkflow),
+        new Route('workspace.competition.result_publication.hold', [HttpMethod::POST], new RoutePattern('/workspace/competitions/result-publications/{publicationId}/hold'), $competitionResultPublicationWorkflow),
+        new Route('workspace.competition.result_publication.release_hold.form', [HttpMethod::GET], new RoutePattern('/workspace/competitions/result-publications/{publicationId}/release-hold'), $competitionResultPublicationWorkflow),
+        new Route('workspace.competition.result_publication.release_hold', [HttpMethod::POST], new RoutePattern('/workspace/competitions/result-publications/{publicationId}/release-hold'), $competitionResultPublicationWorkflow),
+        new Route('workspace.competition.result_publication.finalize.form', [HttpMethod::GET], new RoutePattern('/workspace/competitions/result-publications/{publicationId}/finalize'), $competitionResultPublicationWorkflow),
+        new Route('workspace.competition.result_publication.finalize', [HttpMethod::POST], new RoutePattern('/workspace/competitions/result-publications/{publicationId}/finalize'), $competitionResultPublicationWorkflow),
+        new Route('workspace.competition.result_publication.withdraw.form', [HttpMethod::GET], new RoutePattern('/workspace/competitions/result-publications/{publicationId}/withdraw'), $competitionResultPublicationWorkflow),
+        new Route('workspace.competition.result_publication.withdraw', [HttpMethod::POST], new RoutePattern('/workspace/competitions/result-publications/{publicationId}/withdraw'), $competitionResultPublicationWorkflow),
+        new Route('workspace.competition.result_publication.supersede.form', [HttpMethod::GET], new RoutePattern('/workspace/competitions/result-publications/{publicationId}/supersede'), $competitionResultPublicationWorkflow),
+        new Route('workspace.competition.result_publication.supersede', [HttpMethod::POST], new RoutePattern('/workspace/competitions/result-publications/{publicationId}/supersede'), $competitionResultPublicationWorkflow),
+        new Route('workspace.competition.result_publication.archive.form', [HttpMethod::GET], new RoutePattern('/workspace/competitions/result-publications/{publicationId}/archive'), $competitionResultPublicationWorkflow),
+        new Route('workspace.competition.result_publication.archive', [HttpMethod::POST], new RoutePattern('/workspace/competitions/result-publications/{publicationId}/archive'), $competitionResultPublicationWorkflow),
         new Route('competition.public.results.edition', [HttpMethod::GET], new RoutePattern('/competitions/{editionSlug}/results'), $competitionPublicResults),
         new Route('competition.public.results.category', [HttpMethod::GET], new RoutePattern('/competitions/{editionSlug}/categories/{categorySlug}/results'), $competitionPublicResults),
         new Route('competition.public.results.round', [HttpMethod::GET], new RoutePattern('/competitions/{editionSlug}/categories/{categorySlug}/rounds/{roundCode}/results'), $competitionPublicResults),

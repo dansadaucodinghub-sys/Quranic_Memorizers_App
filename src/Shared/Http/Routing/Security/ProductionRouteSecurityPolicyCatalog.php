@@ -194,6 +194,22 @@ final class ProductionRouteSecurityPolicyCatalog
         'workspace.competition.live_participant.call' => 'workspace.competitions.operate_live',
         'workspace.competition.live_participant.ready.form' => 'workspace.competitions.operate_live',
         'workspace.competition.live_participant.ready' => 'workspace.competitions.operate_live',
+        'workspace.competition.result_publication.prepare.form' => 'workspace.competitions.prepare_publications',
+        'workspace.competition.result_publication.prepare' => 'workspace.competitions.prepare_publications',
+        'workspace.competition.result_publication.publish_provisional.form' => 'workspace.competitions.publish_provisional_results',
+        'workspace.competition.result_publication.publish_provisional' => 'workspace.competitions.publish_provisional_results',
+        'workspace.competition.result_publication.hold.form' => 'workspace.competitions.hold_publications',
+        'workspace.competition.result_publication.hold' => 'workspace.competitions.hold_publications',
+        'workspace.competition.result_publication.release_hold.form' => 'workspace.competitions.hold_publications',
+        'workspace.competition.result_publication.release_hold' => 'workspace.competitions.hold_publications',
+        'workspace.competition.result_publication.finalize.form' => 'workspace.competitions.finalize_publications',
+        'workspace.competition.result_publication.finalize' => 'workspace.competitions.finalize_publications',
+        'workspace.competition.result_publication.withdraw.form' => 'workspace.competitions.hold_publications',
+        'workspace.competition.result_publication.withdraw' => 'workspace.competitions.hold_publications',
+        'workspace.competition.result_publication.supersede.form' => 'workspace.competitions.finalize_publications',
+        'workspace.competition.result_publication.supersede' => 'workspace.competitions.finalize_publications',
+        'workspace.competition.result_publication.archive.form' => 'workspace.competitions.hold_publications',
+        'workspace.competition.result_publication.archive' => 'workspace.competitions.hold_publications',
         'workspace.competition.live_participant.start.form' => 'workspace.competitions.operate_live',
         'workspace.competition.live_participant.start' => 'workspace.competitions.operate_live',
         'workspace.competition.live_participant.interrupt.form' => 'workspace.competitions.operate_live',
@@ -400,6 +416,14 @@ final class ProductionRouteSecurityPolicyCatalog
         'workspace.competition.live_participant.absent' => 'competition.live_participant.absent',
         'workspace.competition.live_participant.withdraw' => 'competition.live_participant.withdraw',
         'workspace.competition.live_participant.disqualify' => 'competition.live_participant.disqualify',
+        'workspace.competition.result_publication.prepare' => 'competition.result_publication.prepare',
+        'workspace.competition.result_publication.publish_provisional' => 'competition.result_publication.publish_provisional',
+        'workspace.competition.result_publication.hold' => 'competition.result_publication.hold',
+        'workspace.competition.result_publication.release_hold' => 'competition.result_publication.release_hold',
+        'workspace.competition.result_publication.finalize' => 'competition.result_publication.finalize',
+        'workspace.competition.result_publication.withdraw' => 'competition.result_publication.withdraw',
+        'workspace.competition.result_publication.supersede' => 'competition.result_publication.supersede',
+        'workspace.competition.result_publication.archive' => 'competition.result_publication.archive',
     ];
 
     /** @var list<string> */
@@ -456,6 +480,10 @@ final class ProductionRouteSecurityPolicyCatalog
         'workspace.competition.live_participant.interrupt', 'workspace.competition.live_participant.resume',
         'workspace.competition.live_participant.complete', 'workspace.competition.live_participant.absent',
         'workspace.competition.live_participant.withdraw', 'workspace.competition.live_participant.disqualify',
+        'workspace.competition.result_publication.prepare', 'workspace.competition.result_publication.publish_provisional',
+        'workspace.competition.result_publication.hold', 'workspace.competition.result_publication.release_hold',
+        'workspace.competition.result_publication.finalize', 'workspace.competition.result_publication.withdraw',
+        'workspace.competition.result_publication.supersede', 'workspace.competition.result_publication.archive',
     ];
 
     /** @var list<string> */
@@ -532,9 +560,11 @@ final class ProductionRouteSecurityPolicyCatalog
             'workspace.competitions.audit_results', 'workspace.competitions.calculate_results' => 'MULTI_FACTOR',
             'workspace.competitions.monitor_scoring' => 'PRIMARY',
             'workspace.competitions.operate_live' => 'MULTI_FACTOR',
+            'workspace.competitions.prepare_publications' => 'MULTI_FACTOR',
             'workspace.competitions.verify_results', 'workspace.competitions.publish_results',
             'workspace.competitions.manage_appeals', 'workspace.competitions.correct_scores',
-            'workspace.competitions.disqualify_participants' => 'PHISHING_RESISTANT',
+            'workspace.competitions.disqualify_participants', 'workspace.competitions.publish_provisional_results',
+            'workspace.competitions.hold_publications', 'workspace.competitions.finalize_publications' => 'PHISHING_RESISTANT',
             default => null,
         };
     }
