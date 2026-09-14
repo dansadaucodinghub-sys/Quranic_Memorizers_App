@@ -286,6 +286,7 @@ final class P2IdentityRecoveryHttpIntegrationTest extends MySqlIntegrationTestCa
         );
         $this->markCurrentScheduleSlotSucceeded('organizations.affiliations.maintain', 900);
         $this->markCurrentScheduleSlotSucceeded('people.profile_claims.maintain', 900);
+        $this->markCurrentScheduleSlotSucceeded('security.audit.checkpoint', 900);
         foreach (
             [
             ['competition.rounds.process', 60],
