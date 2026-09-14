@@ -48,6 +48,7 @@ final class P2RouteSecurityHardeningTest extends TestCase
             'quran.public.partition', 'quran.public.sajdahs', 'quran.public.search',
             'competition.public.results.edition', 'competition.public.results.category',
             'competition.public.results.round',
+            'competition.public.live', 'competition.public.live.snapshot', 'competition.public.live.stream',
         ], true);
         foreach ($routes as $route) {
             $name = $route['name'];

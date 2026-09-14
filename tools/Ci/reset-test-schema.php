@@ -80,12 +80,12 @@ try {
             ':referenced_schema' => $database,
         ]);
         /** @var list<array{TABLE_NAME: string, REFERENCED_TABLE_NAME: string}> $foreignKeys */
-        $foreignKeys = $foreignKeyStatement->fetchAll(\PDO::FETCH_ASSOC);
-        $referencedTables = [];
-        foreach ($foreignKeys as $foreignKey) {
-            $childTable = $foreignKey['TABLE_NAME'];
-            $parentTable = $foreignKey['REFERENCED_TABLE_NAME'];
-            if (
+    $foreignKeys = $foreignKeyStatement->fetchAll(\PDO::FETCH_ASSOC);
+    $referencedTables = [];
+    foreach ($foreignKeys as $foreignKey) {
+        $childTable = $foreignKey['TABLE_NAME'];
+        $parentTable = $foreignKey['REFERENCED_TABLE_NAME'];
+        if (
                 $childTable !== $parentTable
                 && isset($remainingTables[$childTable], $remainingTables[$parentTable])
             ) {
@@ -109,14 +109,14 @@ try {
                 ':table_schema' => $database,
                 ':referenced_schema' => $database,
             ]);
+            /** @var list<array{TABLE_NAME: string, CONSTRAINT_NAME: string}> $constraints */
             $constraints = $foreignKeyConstraintStatement->fetchAll(\PDO::FETCH_ASSOC);
             $released = false;
             foreach ($constraints as $constraint) {
-                $table = $constraint['TABLE_NAME'] ?? null;
-                $name = $constraint['CONSTRAINT_NAME'] ?? null;
+                $table = $constraint['TABLE_NAME'];
+                $name = $constraint['CONSTRAINT_NAME'];
                 if (
-                    !is_string($table) || !is_string($name)
-                    || !isset($remainingTables[$table])
+                    !isset($remainingTables[$table])
                     || preg_match('/\A[A-Za-z0-9_]+\z/', $table) !== 1
                     || preg_match('/\A[A-Za-z0-9_]+\z/', $name) !== 1
                 ) {

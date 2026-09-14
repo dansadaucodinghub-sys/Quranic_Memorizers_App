@@ -14,6 +14,17 @@ final class QuranReferenceTestSchemaCleanup
 {
     public static function dropDependentTables(PDO $connection): void
     {
+        // P7 deliberately creates a mutually-referencing publication and
+        // package pair. Test isolation must dismantle that one directed link
+        // before dropping either table; foreign-key enforcement remains on.
+        $linkExists = $connection->prepare(
+            "SELECT COUNT(*) FROM information_schema.table_constraints WHERE constraint_schema=DATABASE() AND table_name='competition_result_publications' AND constraint_name='fk_p7_publication_package' AND constraint_type='FOREIGN KEY'",
+        );
+        $linkExists->execute();
+        if ((int) $linkExists->fetchColumn() === 1) {
+            $connection->exec('ALTER TABLE competition_result_publications DROP FOREIGN KEY fk_p7_publication_package');
+        }
+
         foreach (
             [
                 // P5/P6 tables must be removed before their Qur'an and
@@ -22,6 +33,8 @@ final class QuranReferenceTestSchemaCleanup
                 'competition_p7_operations', 'competition_p7_outbox_messages',
                 'competition_appeal_correction_authorizations', 'competition_appeal_decisions',
                 'competition_appeal_reviewer_conflicts', 'competition_appeal_review_assignments',
+                'competition_result_publication_projection_heads',
+                'competition_result_publication_projections',
                 'competition_result_publication_holds', 'competition_result_publication_events',
                 'competition_result_packages', 'competition_result_publications',
                 'competition_live_delivery_offsets', 'competition_live_projection_snapshots',

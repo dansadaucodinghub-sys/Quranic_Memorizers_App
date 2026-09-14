@@ -79,11 +79,13 @@ final readonly class CompetitionLiveModule implements Module
         $context->service(ServiceDefinition::factory(CompetitionPublicLiveController::class, 'competition.live_operations', [CompetitionLivePublicReadRepository::class, Psr17Factory::class], new ClosureServiceFactory(static fn (DependencyResolver $resolver): CompetitionPublicLiveController => new CompetitionPublicLiveController(ServiceReference::get($resolver, CompetitionLivePublicReadRepository::class), ServiceReference::get($resolver, Psr17Factory::class)))));
         $context->service(ServiceDefinition::factory(CompetitionLiveSessionWorkflowController::class, 'competition.live_operations', [AuthenticatedRequestGuard::class, \Qmdb\Modules\TenancyContext\Application\TenantContextRequiredGuard::class, IdentityCsrf::class, CompetitionLiveSessionWorkflowService::class, Psr17Factory::class], new ClosureServiceFactory(static fn (DependencyResolver $resolver): CompetitionLiveSessionWorkflowController => new CompetitionLiveSessionWorkflowController(ServiceReference::get($resolver, AuthenticatedRequestGuard::class), ServiceReference::get($resolver, \Qmdb\Modules\TenancyContext\Application\TenantContextRequiredGuard::class), ServiceReference::get($resolver, IdentityCsrf::class), ServiceReference::get($resolver, CompetitionLiveSessionWorkflowService::class), ServiceReference::get($resolver, Psr17Factory::class)))));
         $context->service(ServiceDefinition::factory(CompetitionLiveParticipantWorkflowController::class, 'competition.live_operations', [AuthenticatedRequestGuard::class, \Qmdb\Modules\TenancyContext\Application\TenantContextRequiredGuard::class, IdentityCsrf::class, CompetitionLiveParticipantWorkflowService::class, Psr17Factory::class], new ClosureServiceFactory(static fn (DependencyResolver $resolver): CompetitionLiveParticipantWorkflowController => new CompetitionLiveParticipantWorkflowController(ServiceReference::get($resolver, AuthenticatedRequestGuard::class), ServiceReference::get($resolver, \Qmdb\Modules\TenancyContext\Application\TenantContextRequiredGuard::class), ServiceReference::get($resolver, IdentityCsrf::class), ServiceReference::get($resolver, CompetitionLiveParticipantWorkflowService::class), ServiceReference::get($resolver, Psr17Factory::class)))));
-        foreach ([
+        foreach (
+            [
             ['competition.live.project', 'Project bounded P7 live-event outbox messages.', 30],
             ['competition.live.reconcile', 'Reconcile bounded P7 live-event hash chains.', 900],
             ['competition.live.outbox.retry', 'Release expired P7 live-projection outbox leases.', 60],
-        ] as [$id, $description, $interval]) {
+            ] as [$id, $description, $interval]
+        ) {
             $context->scheduledTask(new ScheduledTaskRegistration(new ScheduledTaskId($id), $description, new FixedIntervalSchedule($interval), CompetitionP7LiveScheduledTask::class, 120, 'competition.live_operations'));
         }
     }

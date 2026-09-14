@@ -57,7 +57,11 @@ final readonly class CompetitionLiveParticipantWorkflowController implements Con
             $submission = is_string($body['submission_id'] ?? null) ? UuidV7::fromString($body['submission_id']) : throw new \InvalidArgumentException('Submission identifier is invalid.');
             $this->workflow->operate($actor, $tenant, $submission, $operation, $sessionId, $participantId, $this->integer($body, 'expected_version'));
 
-            return $this->responses->createResponse(303)->withHeader('Location', '/workspace/competitions')->withHeader('Cache-Control', 'private, no-store')->withHeader('Set-Cookie', $csrf['cookie']->setCookieHeader);
+            $response = $this->responses->createResponse(303)->withHeader('Location', '/workspace/competitions')->withHeader('Cache-Control', 'private, no-store');
+
+            return $csrf['cookie']->setCookieHeader === null
+                ? $response
+                : $response->withHeader('Set-Cookie', $csrf['cookie']->setCookieHeader);
         } catch (\DomainException $error) {
             return $this->response(409, $error->getMessage(), $csrf['cookie']->setCookieHeader);
         } catch (\Throwable) {
@@ -88,10 +92,13 @@ final readonly class CompetitionLiveParticipantWorkflowController implements Con
         return $rules[$suffix];
     }
 
-    private function form(string $label, string $path, string $token, string $cookie): ResponseInterface
+    private function form(string $label, string $path, string $token, ?string $cookie): ResponseInterface
     {
         $html = '<main><h1>' . htmlspecialchars($label, ENT_QUOTES | ENT_SUBSTITUTE, 'UTF-8') . '</h1><p id="live-participant-operation-description">This operation is recorded and may require step-up authentication.</p><form method="post" action="' . htmlspecialchars($path, ENT_QUOTES | ENT_SUBSTITUTE, 'UTF-8') . '" aria-describedby="live-participant-operation-description"><input type="hidden" name="csrf_token" value="' . htmlspecialchars($token, ENT_QUOTES | ENT_SUBSTITUTE, 'UTF-8') . '"><input type="hidden" name="submission_id" value="' . UuidV7::generate()->toString() . '"><label>Expected version <input name="expected_version" type="number" min="1" required></label><button type="submit">Confirm</button></form></main>';
-        $response = $this->responses->createResponse(200)->withHeader('Content-Type', 'text/html; charset=utf-8')->withHeader('Cache-Control', 'private, no-store')->withHeader('Set-Cookie', $cookie);
+        $response = $this->responses->createResponse(200)->withHeader('Content-Type', 'text/html; charset=utf-8')->withHeader('Cache-Control', 'private, no-store');
+        if ($cookie !== null) {
+            $response = $response->withHeader('Set-Cookie', $cookie);
+        }
         $response->getBody()->write($html);
 
         return $response;

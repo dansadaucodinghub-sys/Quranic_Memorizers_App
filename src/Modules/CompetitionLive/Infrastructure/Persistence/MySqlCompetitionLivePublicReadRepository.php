@@ -58,7 +58,14 @@ final readonly class MySqlCompetitionLivePublicReadRepository implements Competi
             if (!is_array($row)) {
                 throw new \RuntimeException('Public live history row is invalid.');
             }
-            $snapshot = $this->snapshot($row);
+            $typedRow = [];
+            foreach ($row as $key => $value) {
+                if (!is_string($key)) {
+                    throw new \RuntimeException('Public live history row has an invalid column key.');
+                }
+                $typedRow[$key] = $value;
+            }
+            $snapshot = $this->snapshot($typedRow);
             if ($snapshot['sequence'] <= $afterSequence) {
                 throw new \RuntimeException('Public live history cursor is non-monotonic.');
             }

@@ -110,7 +110,7 @@ final readonly class MySqlCompetitionResultPublicationRepository implements Comp
             $source ??= ['public_id' => UuidV7::fromBinary(PdoResultReader::string($row, 'result_run_public_id'))->toString(), 'result_checksum' => self::hash($row, 'result_checksum_sha256'), 'input_checksum' => self::hash($row, 'input_checksum_sha256')];
             $rows[] = ['result_row_public_id' => UuidV7::fromBinary(PdoResultReader::string($row, 'public_id'))->toString(), 'rank_position' => PdoResultReader::integer($row, 'rank_position'), 'total_units' => PdoResultReader::integer($row, 'total_units'), 'public_label' => PdoResultReader::string($row, 'public_label')];
         }
-        if ($source === null || $rows === []) {
+        if ($source === null) {
             throw new \DomainException('Result publication cannot project an empty result run.');
         }
         $canonical = CanonicalJson::encode(['publication_public_id' => $publication['public_id'], 'result_run_public_id' => $source['public_id'], 'rows' => $rows]);
