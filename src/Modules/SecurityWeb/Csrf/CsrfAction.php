@@ -175,4 +175,25 @@ enum CsrfAction: string
     case COMPETITION_APPEAL_ADJUDICATION_ASSIGN = 'competition.appeal_adjudication.assign';
     case COMPETITION_APPEAL_ADJUDICATION_ACCEPT = 'competition.appeal_adjudication.accept';
     case COMPETITION_APPEAL_ADJUDICATION_DECIDE = 'competition.appeal_adjudication.decide';
+    case CERTIFICATE_TEMPLATE_CREATE = 'certificate.template.create';
+    case CERTIFICATE_TEMPLATE_UPDATE = 'certificate.template.update';
+    case CERTIFICATE_TEMPLATE_ACTIVATE = 'certificate.template.activate';
+    case CERTIFICATE_TEMPLATE_RETIRE = 'certificate.template.retire';
+    case CERTIFICATE_PREPARE = 'certificate.prepare';
+    case CERTIFICATE_ISSUE = 'certificate.issue';
+    case CERTIFICATE_REVOKE = 'certificate.revoke';
+    case CERTIFICATE_SUPERSEDE = 'certificate.supersede';
+    case CERTIFICATE_ARCHIVE = 'certificate.archive';
+    case CERTIFICATE_SIGNING_KEY_REGISTER = 'certificate.signing_key.register';
+    case CERTIFICATE_SIGNING_KEY_ACTIVATE = 'certificate.signing_key.activate';
+    case CERTIFICATE_SIGNING_KEY_RETIRE = 'certificate.signing_key.retire';
+    case CERTIFICATE_SIGNING_KEY_REVOKE = 'certificate.signing_key.revoke';
+    case RECORD_PASSPORT_SHARE_GRANT = 'record_passport.share.grant';
+    case RECORD_PASSPORT_SHARE_REVOKE = 'record_passport.share.revoke';
+    case TRUSTED_ARCHIVE_HOLD_PLACE = 'trusted_archive.hold.place';
+    case TRUSTED_ARCHIVE_HOLD_RELEASE = 'trusted_archive.hold.release';
+    case LEGACY_RECORD_IMPORT_CREATE = 'legacy_record_import.create';
+    case LEGACY_RECORD_IMPORT_VALIDATE = 'legacy_record_import.validate';
+    case LEGACY_RECORD_IMPORT_APPROVE = 'legacy_record_import.approve';
+    case LEGACY_RECORD_IMPORT_PROCESS = 'legacy_record_import.process';
 }

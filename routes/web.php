@@ -55,6 +55,8 @@ use Qmdb\Modules\CompetitionLive\Interface\Http\CompetitionLiveSessionWorkflowCo
 use Qmdb\Modules\CompetitionLive\Interface\Http\CompetitionLiveParticipantWorkflowController;
 use Qmdb\Modules\CompetitionPublication\Interface\Http\CompetitionResultPublicationWorkflowController;
 use Qmdb\Modules\CompetitionAppealAdjudication\Interface\Http\CompetitionAppealAdjudicationController;
+use Qmdb\Modules\CertificateVerification\Interface\Http\PublicCertificateVerificationController;
+use Qmdb\Modules\CertificateIssuance\Interface\Http\CertificateGovernanceController;
 use Qmdb\Shared\Http\Routing\HttpMethod;
 use Qmdb\Shared\Http\Routing\Route;
 use Qmdb\Shared\Http\Routing\RouteCollection;
@@ -112,9 +114,20 @@ return static function (
     CompetitionLiveParticipantWorkflowController $competitionLiveParticipantWorkflow,
     CompetitionResultPublicationWorkflowController $competitionResultPublicationWorkflow,
     CompetitionAppealAdjudicationController $competitionAppealAdjudication,
+    PublicCertificateVerificationController $publicCertificateVerification,
+    CertificateGovernanceController $certificateGovernance,
 ): RouteCollection {
     return new RouteCollection(
         new Route('system.home', [HttpMethod::GET], new RoutePattern('/'), $homeController),
+        new Route('certificate.public.verify', [HttpMethod::GET], new RoutePattern('/verify/certificates/{verificationCode}'), $publicCertificateVerification),
+        new Route('certificate.public.manifest', [HttpMethod::GET], new RoutePattern('/verify/certificates/{verificationCode}/manifest'), $publicCertificateVerification),
+        new Route('certificate.public.pdf', [HttpMethod::GET], new RoutePattern('/verify/certificates/{verificationCode}/pdf'), $publicCertificateVerification),
+        new Route('workspace.certificates.issue.form', [HttpMethod::GET], new RoutePattern('/workspace/certificates/issue'), $certificateGovernance),
+        new Route('workspace.certificates.issue', [HttpMethod::POST], new RoutePattern('/workspace/certificates/issue'), $certificateGovernance),
+        new Route('workspace.certificates.revoke.form', [HttpMethod::GET], new RoutePattern('/workspace/certificates/{certificateId}/revoke'), $certificateGovernance),
+        new Route('workspace.certificates.revoke', [HttpMethod::POST], new RoutePattern('/workspace/certificates/{certificateId}/revoke'), $certificateGovernance),
+        new Route('workspace.certificates.archive.form', [HttpMethod::GET], new RoutePattern('/workspace/certificates/{certificateId}/archive'), $certificateGovernance),
+        new Route('workspace.certificates.archive', [HttpMethod::POST], new RoutePattern('/workspace/certificates/{certificateId}/archive'), $certificateGovernance),
         new Route('system.about.page', [HttpMethod::GET], new RoutePattern('/system/about'), $aboutPageController),
         new Route('system.status.page', [HttpMethod::GET], new RoutePattern('/system/status'), $statusPageController),
         new Route(

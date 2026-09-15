@@ -30,6 +30,7 @@ final class ProductionRouteSecurityPolicyCatalog
         'quran.public.partition', 'quran.public.sajdahs', 'quran.public.search',
         'competition.public.results.edition', 'competition.public.results.category', 'competition.public.results.round',
         'competition.public.live', 'competition.public.live.snapshot', 'competition.public.live.stream',
+        'certificate.public.verify', 'certificate.public.manifest', 'certificate.public.pdf',
     ];
 
     /** @var list<string> */
@@ -129,6 +130,12 @@ final class ProductionRouteSecurityPolicyCatalog
         'workspace.organizations.affiliations.resume.submit' => 'workspace.organization_affiliations.manage',
         'workspace.organizations.affiliations.end.form' => 'workspace.organization_affiliations.manage',
         'workspace.organizations.affiliations.end.submit' => 'workspace.organization_affiliations.manage',
+        'workspace.certificates.issue.form' => 'workspace.certificates.issue',
+        'workspace.certificates.issue' => 'workspace.certificates.issue',
+        'workspace.certificates.revoke.form' => 'workspace.certificates.revoke',
+        'workspace.certificates.revoke' => 'workspace.certificates.revoke',
+        'workspace.certificates.archive.form' => 'workspace.certificates.archive',
+        'workspace.certificates.archive' => 'workspace.certificates.archive',
         'platform.profile_claim.index' => 'platform.people_profile_claims.authorize',
         'platform.profile_claim.authorization.form' => 'platform.people_profile_claims.authorize',
         'platform.profile_claim.authorization.submit' => 'platform.people_profile_claims.authorize',
@@ -291,6 +298,9 @@ final class ProductionRouteSecurityPolicyCatalog
         'workspace.competition.live_session.close' => 'COMPETITION_LIVE_SESSION_CLOSE',
         'workspace.competition.live_session.cancel' => 'COMPETITION_LIVE_SESSION_CANCEL',
         'workspace.competition.live_participant.disqualify' => 'COMPETITION_PARTICIPANT_DISQUALIFY',
+        'workspace.certificates.issue' => 'CERTIFICATE_ISSUE',
+        'workspace.certificates.revoke' => 'CERTIFICATE_REVOKE',
+        'workspace.certificates.archive' => 'CERTIFICATE_ARCHIVE',
     ];
 
     /** @var array<string, string> */
@@ -433,6 +443,9 @@ final class ProductionRouteSecurityPolicyCatalog
         'workspace.competition.appeal_adjudication.assign' => 'competition.appeal_adjudication.assign',
         'workspace.competition.appeal_adjudication.accept' => 'competition.appeal_adjudication.accept',
         'workspace.competition.appeal_adjudication.decide' => 'competition.appeal_adjudication.decide',
+        'workspace.certificates.issue' => 'certificate.issue',
+        'workspace.certificates.revoke' => 'certificate.revoke',
+        'workspace.certificates.archive' => 'certificate.archive',
     ];
 
     /** @var list<string> */
@@ -456,6 +469,7 @@ final class ProductionRouteSecurityPolicyCatalog
         'workspace.organizations.affiliations.suspend.submit',
         'workspace.organizations.affiliations.resume.submit',
         'workspace.organizations.affiliations.end.submit',
+        'workspace.certificates.issue', 'workspace.certificates.revoke', 'workspace.certificates.archive',
         'account.affiliations.accept.submit', 'account.affiliations.decline.submit',
         'account.affiliations.leave.submit',
         'account.profile_claim_pairing.create', 'account.profile_claim_pairing.revoke',
@@ -535,7 +549,7 @@ final class ProductionRouteSecurityPolicyCatalog
 
         return new RouteSecurityPolicy(
             $classification,
-            $classification === RouteSecurityClassification::TENANT_REQUIRED || str_starts_with($route, 'workspace.organizations.') || str_starts_with($route, 'workspace.competition.'),
+            $classification === RouteSecurityClassification::TENANT_REQUIRED || str_starts_with($route, 'workspace.organizations.') || str_starts_with($route, 'workspace.competition.') || str_starts_with($route, 'workspace.certificates.'),
             $permission,
             $assurance,
             self::STEP_UP_ACTIONS[$route] ?? null,
@@ -577,6 +591,8 @@ final class ProductionRouteSecurityPolicyCatalog
             'workspace.competitions.disqualify_participants', 'workspace.competitions.publish_provisional_results',
             'workspace.competitions.hold_publications', 'workspace.competitions.finalize_publications',
             'workspace.competitions.adjudicate_appeals' => 'PHISHING_RESISTANT',
+            'workspace.certificates.view', 'workspace.certificates.manage_templates', 'workspace.certificates.prepare',
+            'workspace.certificates.issue', 'workspace.certificates.revoke', 'workspace.certificates.archive' => 'PHISHING_RESISTANT',
             default => null,
         };
     }

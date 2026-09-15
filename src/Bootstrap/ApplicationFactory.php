@@ -38,6 +38,10 @@ use Qmdb\Bootstrap\Module\CompetitionResultsModule;
 use Qmdb\Bootstrap\Module\CompetitionLiveModule;
 use Qmdb\Bootstrap\Module\CompetitionPublicationModule;
 use Qmdb\Bootstrap\Module\CompetitionAppealAdjudicationModule;
+use Qmdb\Bootstrap\Module\CertificateIssuanceModule;
+use Qmdb\Bootstrap\Module\RecordPassportModule;
+use Qmdb\Bootstrap\Module\TrustedArchiveModule;
+use Qmdb\Bootstrap\Module\CertificateVerificationModule;
 use Qmdb\Bootstrap\Module\ObservabilityFoundationModule;
 use Qmdb\Bootstrap\Module\PresentationFoundationModule;
 use Qmdb\Bootstrap\Module\SchemaFoundationModule;
@@ -238,6 +242,10 @@ final readonly class ApplicationFactory
             new CompetitionLiveModule(),
             new CompetitionPublicationModule(),
             new CompetitionAppealAdjudicationModule(),
+            new CertificateIssuanceModule(),
+            new CertificateVerificationModule(),
+            new RecordPassportModule(),
+            new TrustedArchiveModule(),
             new ApplicationHttpModule($this->projectRoot),
             new ConsoleFoundationModule(),
         ]);

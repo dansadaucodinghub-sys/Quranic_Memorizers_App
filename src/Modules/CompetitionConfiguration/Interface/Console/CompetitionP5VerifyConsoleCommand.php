@@ -38,9 +38,9 @@ final readonly class CompetitionP5VerifyConsoleCommand implements ConsoleCommand
             if ($activeRelease !== 1) {
                 throw new \RuntimeException('Exactly one active Qur’an release is required for P5 configuration.');
             }
-            $forbidden = $this->count($pdo, "SELECT COUNT(*) FROM information_schema.tables WHERE table_schema=DATABASE() AND table_name REGEXP '(^certificate|^media|^audio|^video|^social|payment|livestream|live_score)'");
+            $forbidden = $this->count($pdo, "SELECT COUNT(*) FROM information_schema.tables WHERE table_schema=DATABASE() AND table_name REGEXP '(^media|^audio|^video|^social|payment|livestream|live_score)'");
             if ($forbidden !== 0) {
-                throw new \RuntimeException('A deferred P7 persistence artifact exists.');
+                throw new \RuntimeException('A prohibited post-P8 persistence artifact exists.');
             }
             $output->write("Competition P5 verification: PASS\nActive Qur’an releases: 1\nDeferred P7 persistence artifacts: 0\n");
             return 0;

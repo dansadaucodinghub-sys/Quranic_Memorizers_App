@@ -76,6 +76,12 @@ use Qmdb\Modules\CompetitionAppealAdjudication\Infrastructure\Migration\CreateCo
 use Qmdb\Modules\CompetitionLive\Infrastructure\Migration\CreateCompetitionP7OutboxMigration;
 use Qmdb\Modules\CompetitionPublication\Infrastructure\Migration\CreateCompetitionP7OperationReceiptsMigration;
 use Qmdb\Modules\CompetitionPublication\Infrastructure\Migration\CreateCompetitionResultPublicationProjectionMigration;
+use Qmdb\Modules\CertificateIssuance\Infrastructure\Migration\CreateCertificateGovernanceMigration;
+use Qmdb\Modules\CertificateIssuance\Infrastructure\Migration\CreateCertificateIssuanceMigration;
+use Qmdb\Modules\CertificateIssuance\Infrastructure\Migration\CreateCertificateOperationIdempotencyMigration;
+use Qmdb\Modules\RecordPassport\Infrastructure\Migration\CreateRecordPassportMigration;
+use Qmdb\Modules\TrustedArchive\Infrastructure\Migration\CreateTrustedArchiveMigration;
+use Qmdb\Modules\TrustedArchive\Infrastructure\Migration\CreateLegacyRecordImportMigration;
 use Qmdb\Shared\Schema\Migration\MigrationRegistry;
 use Qmdb\Shared\Schema\Migration\MigrationRegistryBuilder;
 
@@ -155,5 +161,11 @@ return static function (): MigrationRegistry {
         ->register(new CreateCompetitionP7OutboxMigration())
         ->register(new CreateCompetitionP7OperationReceiptsMigration())
         ->register(new CreateCompetitionResultPublicationProjectionMigration())
+        ->register(new CreateCertificateGovernanceMigration())
+        ->register(new CreateCertificateIssuanceMigration())
+        ->register(new CreateCertificateOperationIdempotencyMigration())
+        ->register(new CreateRecordPassportMigration())
+        ->register(new CreateTrustedArchiveMigration())
+        ->register(new CreateLegacyRecordImportMigration())
         ->build();
 };

@@ -84,6 +84,7 @@ use Qmdb\Modules\CompetitionAppealAdjudication\Interface\Console\CompetitionAppe
 use Qmdb\Modules\CompetitionLive\Infrastructure\Persistence\CompetitionP7LiveMaintenanceService;
 use Qmdb\Modules\CompetitionPublication\Infrastructure\Persistence\CompetitionResultPublicationProjectionService;
 use Qmdb\Modules\CompetitionAppealAdjudication\Infrastructure\Persistence\CompetitionAppealMaintenanceService;
+use Qmdb\Modules\CertificateIssuance\Interface\Console\CompetitionP8VerifyConsoleCommand;
 use Qmdb\Modules\CompetitionResults\Infrastructure\Persistence\CompetitionP6MaintenanceService;
 use Qmdb\Shared\Database\Connection\DatabaseConnectionProvider;
 use Qmdb\Shared\Background\Scheduler\ScheduledTaskMap;
@@ -117,6 +118,9 @@ final readonly class ConsoleFoundationModule implements Module
             new ModuleId('competition.live_operations'),
             new ModuleId('competition.result_publication'),
             new ModuleId('competition.appeal_adjudication'),
+            new ModuleId('certificate.issuance'),
+            new ModuleId('record.passport'),
+            new ModuleId('trusted.archive'),
             new ModuleId('reference.geography'),
             new ModuleId('people.profiles'),
             new ModuleId('organizations.registry'),
@@ -322,6 +326,7 @@ final readonly class ConsoleFoundationModule implements Module
             CompetitionP7VerifyConsoleCommand::class,
             CompetitionP7CloseoutVerifyConsoleCommand::class,
             CompetitionP7ProductionReadinessConsoleCommand::class,
+            CompetitionP8VerifyConsoleCommand::class,
             CompetitionP6MaintenanceService::class,
             CompetitionP7LiveMaintenanceService::class,
             CompetitionResultPublicationProjectionService::class,
@@ -382,6 +387,7 @@ final readonly class ConsoleFoundationModule implements Module
                 $registry->register(ServiceReference::get($resolver, CompetitionP7VerifyConsoleCommand::class));
                 $registry->register(ServiceReference::get($resolver, CompetitionP7CloseoutVerifyConsoleCommand::class));
                 $registry->register(ServiceReference::get($resolver, CompetitionP7ProductionReadinessConsoleCommand::class));
+                $registry->register(ServiceReference::get($resolver, CompetitionP8VerifyConsoleCommand::class));
                 $p7LiveMaintenance = ServiceReference::get($resolver, CompetitionP7LiveMaintenanceService::class);
                 foreach (
                     [

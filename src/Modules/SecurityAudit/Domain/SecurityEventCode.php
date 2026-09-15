@@ -123,6 +123,18 @@ enum SecurityEventCode: string
     case COMPETITION_RESULT_PUBLICATION_HELD = 'competition.result_publication.held';
     case COMPETITION_RESULT_PUBLICATION_FINALIZED = 'competition.result_publication.finalized';
     case COMPETITION_RESULT_PUBLICATION_WITHDRAWN = 'competition.result_publication.withdrawn';
+    case CERTIFICATE_TEMPLATE_ACTIVATED = 'certificate.template.activated';
+    case CERTIFICATE_SIGNING_KEY_ACTIVATED = 'certificate.signing_key.activated';
+    case CERTIFICATE_SIGNING_KEY_REVOKED = 'certificate.signing_key.revoked';
+    case CERTIFICATE_PREPARED = 'certificate.prepared';
+    case CERTIFICATE_ISSUED = 'certificate.issued';
+    case CERTIFICATE_REVOKED = 'certificate.revoked';
+    case CERTIFICATE_SUPERSEDED = 'certificate.superseded';
+    case RECORD_PASSPORT_SHARED = 'record_passport.shared';
+    case RECORD_PASSPORT_SHARE_REVOKED = 'record_passport.share_revoked';
+    case TRUSTED_ARCHIVE_SEALED = 'trusted_archive.sealed';
+    case TRUSTED_ARCHIVE_HOLD_PLACED = 'trusted_archive.hold_placed';
+    case LEGACY_RECORD_IMPORT_APPROVED = 'legacy_record_import.approved';
 
     public function severity(): SecurityEventSeverity
     {
