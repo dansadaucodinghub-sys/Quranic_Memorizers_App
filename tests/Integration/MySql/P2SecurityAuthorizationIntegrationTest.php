@@ -79,7 +79,9 @@ final class P2SecurityAuthorizationIntegrationTest extends MySqlIntegrationTestC
         ));
         self::assertCount(1, $forwardOnlyCorrections);
         self::assertFalse($forwardOnlyCorrections[0]->reversible());
-        self::assertCount(18, $seeds->ordered());
+        // The P8 certificate authorization catalog is a governed additive
+        // seed; this integration fixture validates the current registry.
+        self::assertCount(19, $seeds->ordered());
         self::assertSame(64, strlen($seedChecksum->hexadecimal($seeds->ordered()[0])));
 
         self::assertSame(45, $this->fixture->tableCount('authorization_permissions'));

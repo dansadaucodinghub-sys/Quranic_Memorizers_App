@@ -300,6 +300,11 @@ final class P2IdentityRecoveryHttpIntegrationTest extends MySqlIntegrationTestCa
             ['competition.result_publications.process', 30],
             ['competition.result_publications.reconcile', 900],
             ['competition.appeals.process', 900],
+            // This fixture deliberately creates only identity tables. Keep
+            // unrelated P8 maintenance work out of this scheduler assertion.
+            ['record_passports.project', 60],
+            ['trusted_archive.seal_pending', 60],
+            ['trusted_archive.reconcile', 900],
             ] as [$taskId, $intervalSeconds]
         ) {
             $this->markCurrentScheduleSlotSucceeded($taskId, $intervalSeconds);
@@ -680,18 +685,24 @@ final class P2IdentityRecoveryHttpIntegrationTest extends MySqlIntegrationTestCa
             'INSERT INTO qmdb_scheduled_task_runs '
             . '(task_id, scheduled_for, execution_id, status, attempt, claimed_at, lease_expires_at, '
             . 'started_at, completed_at, duration_ms, version, created_at, updated_at) VALUES '
-            . '(:task_id, FROM_UNIXTIME(FLOOR(UNIX_TIMESTAMP(UTC_TIMESTAMP()) / :interval_first) * :interval_second), '
+            . '(:task_id, FROM_UNIXTIME(FLOOR((UNIX_TIMESTAMP(UTC_TIMESTAMP()) + :offset_seconds) / :interval_first) * :interval_second), '
             . ':execution_id, :status, 1, UTC_TIMESTAMP(6), UTC_TIMESTAMP(6), UTC_TIMESTAMP(6), '
             . 'UTC_TIMESTAMP(6), 0, 3, UTC_TIMESTAMP(6), UTC_TIMESTAMP(6))',
         );
-        $statement->execute([
-            ':task_id' => $taskId,
-            ':interval_first' => $intervalSeconds,
-            ':interval_second' => $intervalSeconds,
-            ':execution_id' => substr(hash('sha256', $taskId), 0, 32),
-            ':status' => 'SUCCEEDED',
-        ]);
-        self::assertSame(1, $statement->rowCount());
+        // The scheduler evaluates the slot at execution time. Reserve a small
+        // bounded horizon so a 30/60-second boundary cannot make a module that
+        // this identity-only fixture deliberately omits become due mid-test.
+        for ($window = 0; $window < 4; ++$window) {
+            $statement->execute([
+                ':task_id' => $taskId,
+                ':offset_seconds' => $window * $intervalSeconds,
+                ':interval_first' => $intervalSeconds,
+                ':interval_second' => $intervalSeconds,
+                ':execution_id' => substr(hash('sha256', $taskId . '|' . $window), 0, 32),
+                ':status' => 'SUCCEEDED',
+            ]);
+            self::assertSame(1, $statement->rowCount());
+        }
     }
 
     /** @return list<string> */
