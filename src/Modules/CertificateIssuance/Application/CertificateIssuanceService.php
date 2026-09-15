@@ -52,6 +52,7 @@ final readonly class CertificateIssuanceService
         private IdentityRateLimiter $rateLimits,
         private IdentityFingerprintGenerator $fingerprints,
         private ApplicationConfiguration $configuration,
+        private CertificateProductionIssuanceGate $productionGate,
         private SecurityAuditEventAppender $audit,
         private TransactionManager $transactions,
         private Clock $clock,
@@ -61,6 +62,7 @@ final readonly class CertificateIssuanceService
     public function prepare(AuthenticatedAccountContext $actor, AccountWorkspaceTenantContext $tenant, UuidV7 $submission, UuidV7 $publicationId, UuidV7 $rowId, UuidV7 $templateId, string $type): array
     {
         if (!in_array($type, ['WINNER', 'PLACEMENT', 'PARTICIPATION', 'RECOGNITION', 'OTHER_APPROVED'], true)) throw new \InvalidArgumentException('Certificate type is invalid.');
+        $this->productionGate->assertPreparationPermitted();
         $this->allow($actor, $tenant, 'workspace.certificates.prepare'); $this->rate($actor);
         return $this->transactions->transactional(function () use ($actor,$tenant,$submission,$publicationId,$rowId,$templateId,$type): array {
             $fingerprint = $this->fingerprint($tenant,$actor,'CERTIFICATE_PREPARE',$publicationId->toString() . "\0" . $rowId->toString() . "\0" . $templateId->toString() . "\0" . $type,1);
@@ -80,6 +82,7 @@ final readonly class CertificateIssuanceService
     /** @return array{certificate_id:string,status:string,version:int,replayed:bool} */
     public function issue(AuthenticatedAccountContext $actor, AccountWorkspaceTenantContext $tenant, UuidV7 $submission, UuidV7 $certificateId, int $expectedVersion, string $verificationCode, string $verificationUrl): array
     {
+        $this->productionGate->assertIssuancePermitted();
         $this->allow($actor,$tenant,'workspace.certificates.issue'); $this->rate($actor);
         $scheme = parse_url($verificationUrl, PHP_URL_SCHEME);
         if (preg_match('/\A[A-Za-z0-9_-]{43}\z/',$verificationCode)!==1 || filter_var($verificationUrl,FILTER_VALIDATE_URL)===false || !in_array($scheme, ['http', 'https'], true) || ($this->configuration->environment() === ApplicationEnvironment::PRODUCTION && $scheme !== 'https')) throw new \InvalidArgumentException('Certificate issuance verification input is invalid.');

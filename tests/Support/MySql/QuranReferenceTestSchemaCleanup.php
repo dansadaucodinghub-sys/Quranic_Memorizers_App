@@ -27,9 +27,23 @@ final class QuranReferenceTestSchemaCleanup
 
         foreach (
             [
+                // Downstream P8 tables must be removed before the P7 result
+                // publication tables they reference. This remains an ordered
+                // teardown; foreign-key checks are never disabled.
+                'record_passport_share_entries', 'record_passport_shares',
+                'record_passport_consents', 'record_passport_events',
+                'record_passport_entries', 'record_passports',
+                'legacy_record_import_events', 'legacy_records',
+                'legacy_record_import_rows', 'legacy_record_import_batches',
+                'trusted_archive_holds', 'trusted_archive_events',
+                'trusted_archive_artifacts', 'trusted_archive_records',
+                'trusted_archive_streams',
+                'certificate_operations', 'certificate_issuance_jobs',
+                'certificate_events', 'certificate_artifacts', 'certificates',
+                'certificate_number_sequences', 'certificate_signing_keys',
+                'certificate_templates',
                 // P5/P6 tables must be removed before their Qur'an and
-                // geography parents. This is an ordered teardown; it never
-                // disables foreign-key checks.
+                // geography parents.
                 'competition_p7_operations', 'competition_p7_outbox_messages',
                 'competition_appeal_correction_authorizations', 'competition_appeal_decisions',
                 'competition_appeal_reviewer_conflicts', 'competition_appeal_review_assignments',
