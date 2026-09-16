@@ -14,6 +14,6 @@
     "quality": "npm run check:syntax && npm test && npm run audit"
   },
   "devDependencies": {
-    "jsdom": "^29.1.1"
+    "jsdom": "^30.0.1"
   }
 }
