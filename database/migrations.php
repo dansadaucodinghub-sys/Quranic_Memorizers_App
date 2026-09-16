@@ -82,6 +82,7 @@ use Qmdb\Modules\CertificateIssuance\Infrastructure\Migration\CreateCertificateO
 use Qmdb\Modules\RecordPassport\Infrastructure\Migration\CreateRecordPassportMigration;
 use Qmdb\Modules\TrustedArchive\Infrastructure\Migration\CreateTrustedArchiveMigration;
 use Qmdb\Modules\TrustedArchive\Infrastructure\Migration\CreateLegacyRecordImportMigration;
+use Qmdb\Modules\MediaCatalog\Infrastructure\Migration\CreateMediaFoundationMigration;
 use Qmdb\Shared\Schema\Migration\MigrationRegistry;
 use Qmdb\Shared\Schema\Migration\MigrationRegistryBuilder;
 
@@ -167,5 +168,6 @@ return static function (): MigrationRegistry {
         ->register(new CreateRecordPassportMigration())
         ->register(new CreateTrustedArchiveMigration())
         ->register(new CreateLegacyRecordImportMigration())
+        ->register(new CreateMediaFoundationMigration())
         ->build();
 };

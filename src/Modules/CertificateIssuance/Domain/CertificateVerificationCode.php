@@ -13,7 +13,12 @@ final readonly class CertificateVerificationCode
 
     public static function generate(): self
     {
-        return new self(rtrim(strtr(base64_encode(random_bytes(32)), '+/', '-_'), '='));
+        $value = rtrim(strtr(base64_encode(random_bytes(CertificatePublicIdentifierPolicy::VERIFICATION_CODE_RANDOM_BYTES)), '+/', '-_'), '=');
+        if (!CertificatePublicIdentifierPolicy::isVerificationCode($value)) {
+            throw new \RuntimeException('Generated certificate verification code is invalid.');
+        }
+
+        return new self($value);
     }
 
     public function value(): string { return $this->value; }

@@ -64,7 +64,9 @@ final readonly class CompetitionP8VerifyConsoleCommand implements ConsoleCommand
             $this->requireCount($pdo, "SELECT COUNT(*) FROM certificate_signing_keys WHERE algorithm <> 'ED25519'", 0, 'Unsupported certificate signing-key algorithm exists.');
             $this->requireCount($pdo, "SELECT COUNT(*) FROM certificates c INNER JOIN competition_result_publications p ON p.workspace_id=c.workspace_id AND p.id=c.result_publication_id WHERE c.status IN ('PREPARED','ISSUED') AND p.status<>'FINALIZED'", 0, 'A current certificate does not originate from a FINALIZED publication.');
             $this->requireCount($pdo, "SELECT COUNT(*) FROM certificates WHERE status='ISSUED' AND (manifest_sha256 IS NULL OR detached_signature IS NULL OR pdf_sha256 IS NULL OR signature_algorithm<>'ED25519')", 0, 'An issued certificate lacks immutable signing evidence.');
-            $output->write('Competition P8 verification: PASS' . "\nRequired tables: " . count(self::TABLES) . "\nApplied P8 migrations: " . count(self::MIGRATIONS) . "\nP8 permissions: 18\nPrivate key columns: 0\n");
+            $this->requireCount($pdo, "SELECT COUNT(*) FROM certificates WHERE certificate_number NOT REGEXP '^QMDB-[2-9][0-9]{3}-[A-Z0-9][A-Z0-9_-]{0,63}-[0-9]{6}$'", 0, 'A certificate does not satisfy the governed serial contract.');
+            $this->requireCount($pdo, 'SELECT COUNT(*) FROM certificates WHERE OCTET_LENGTH(verification_code_hash)<>32 OR OCTET_LENGTH(verification_code_fingerprint)<>16', 0, 'A certificate does not satisfy the governed verification-code storage contract.');
+            $output->write('Competition P8 verification: PASS' . "\nRequired tables: " . count(self::TABLES) . "\nApplied P8 migrations: " . count(self::MIGRATIONS) . "\nP8 permissions: 18\nPrivate key columns: 0\nSerial contract: QMDB-YYYY-WORKSPACE-######\nVerification-code contract: 256-bit Base64URL, SHA-256 only\n");
 
             return 0;
         } catch (\Throwable $error) {

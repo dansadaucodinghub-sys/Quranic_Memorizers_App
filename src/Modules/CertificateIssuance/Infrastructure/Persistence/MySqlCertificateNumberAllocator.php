@@ -7,6 +7,7 @@ namespace Qmdb\Modules\CertificateIssuance\Infrastructure\Persistence;
 use PDO;
 use PDOStatement;
 use Qmdb\Modules\CertificateIssuance\Application\CertificateNumberAllocator;
+use Qmdb\Modules\CertificateIssuance\Domain\CertificatePublicIdentifierPolicy;
 use Qmdb\Shared\Database\Connection\DatabaseConnectionProvider;
 use Qmdb\Shared\Identifier\UuidV7;
 
@@ -53,7 +54,7 @@ final readonly class MySqlCertificateNumberAllocator implements CertificateNumbe
             }
         }
 
-        return sprintf('QMDB-%d-%s-%06d', $year, strtoupper($workspaceCode), $number);
+        return CertificatePublicIdentifierPolicy::serial($year, $workspaceCode, $number);
     }
 
     private function statement(PDO $pdo, string $sql): PDOStatement

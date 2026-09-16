@@ -39,6 +39,11 @@ use Qmdb\Bootstrap\Module\CompetitionLiveModule;
 use Qmdb\Bootstrap\Module\CompetitionPublicationModule;
 use Qmdb\Bootstrap\Module\CompetitionAppealAdjudicationModule;
 use Qmdb\Bootstrap\Module\CertificateIssuanceModule;
+use Qmdb\Bootstrap\Module\MediaCatalogModule;
+use Qmdb\Bootstrap\Module\MediaDeliveryModule;
+use Qmdb\Bootstrap\Module\MediaIngestionModule;
+use Qmdb\Bootstrap\Module\MediaModerationModule;
+use Qmdb\Bootstrap\Module\MediaProcessingModule;
 use Qmdb\Bootstrap\Module\RecordPassportModule;
 use Qmdb\Bootstrap\Module\TrustedArchiveModule;
 use Qmdb\Bootstrap\Module\CertificateVerificationModule;
@@ -246,6 +251,11 @@ final readonly class ApplicationFactory
             new CertificateVerificationModule(),
             new RecordPassportModule(),
             new TrustedArchiveModule(),
+            new MediaCatalogModule(),
+            new MediaIngestionModule(),
+            new MediaProcessingModule(),
+            new MediaModerationModule(),
+            new MediaDeliveryModule(),
             new ApplicationHttpModule($this->projectRoot),
             new ConsoleFoundationModule(),
         ]);

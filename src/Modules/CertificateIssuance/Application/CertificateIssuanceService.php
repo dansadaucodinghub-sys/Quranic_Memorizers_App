@@ -6,6 +6,7 @@ namespace Qmdb\Modules\CertificateIssuance\Application;
 
 use Qmdb\Modules\CertificateIssuance\Domain\CertificateLifecycle;
 use Qmdb\Modules\CertificateIssuance\Domain\CertificateManifestCanonicalizer;
+use Qmdb\Modules\CertificateIssuance\Domain\CertificatePublicIdentifierPolicy;
 use Qmdb\Modules\CertificateIssuance\Domain\CertificateSigningKey;
 use Qmdb\Modules\CertificateIssuance\Domain\CertificateVerificationCode;
 use Qmdb\Modules\IdentityAccess\Security\Fingerprint\IdentityFingerprintGenerator;
@@ -85,7 +86,7 @@ final readonly class CertificateIssuanceService
         $this->productionGate->assertIssuancePermitted();
         $this->allow($actor,$tenant,'workspace.certificates.issue'); $this->rate($actor);
         $scheme = parse_url($verificationUrl, PHP_URL_SCHEME);
-        if (preg_match('/\A[A-Za-z0-9_-]{43}\z/',$verificationCode)!==1 || filter_var($verificationUrl,FILTER_VALIDATE_URL)===false || !in_array($scheme, ['http', 'https'], true) || ($this->configuration->environment() === ApplicationEnvironment::PRODUCTION && $scheme !== 'https')) throw new \InvalidArgumentException('Certificate issuance verification input is invalid.');
+        if (!CertificatePublicIdentifierPolicy::isVerificationCode($verificationCode) || filter_var($verificationUrl,FILTER_VALIDATE_URL)===false || !in_array($scheme, ['http', 'https'], true) || ($this->configuration->environment() === ApplicationEnvironment::PRODUCTION && $scheme !== 'https')) throw new \InvalidArgumentException('Certificate issuance verification input is invalid.');
         return $this->transactions->transactional(function () use ($actor,$tenant,$submission,$certificateId,$expectedVersion,$verificationCode,$verificationUrl): array {
             $fingerprint=$this->fingerprint($tenant,$actor,'CERTIFICATE_ISSUE',$certificateId->toString(),$expectedVersion); $completed=$this->repository->completed($submission,$fingerprint); if($completed!==null)return ['certificate_id'=>$completed['certificate_id'],'status'=>$completed['status'],'version'=>$completed['version'],'replayed'=>true];
             $certificate=$this->repository->lockCertificate($tenant->workspaceInternalId,$certificateId); if($certificate===null || $certificate['version']!==$expectedVersion || !hash_equals($certificate['verification_code_hash'],hash('sha256',$verificationCode,true))) throw new \DomainException('Certificate issuance is stale or unavailable.');

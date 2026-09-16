@@ -6,6 +6,7 @@ namespace Qmdb\Tests\Unit\CertificateIssuance;
 
 use PHPUnit\Framework\TestCase;
 use Qmdb\Modules\CertificateIssuance\Domain\CertificateManifestCanonicalizer;
+use Qmdb\Modules\CertificateIssuance\Domain\CertificatePublicIdentifierPolicy;
 use Qmdb\Modules\CertificateIssuance\Domain\CertificateSigningKey;
 use Qmdb\Modules\CertificateIssuance\Domain\CertificateTemplateConfigurationValidator;
 use Qmdb\Modules\CertificateIssuance\Domain\CertificateVerificationCode;
@@ -43,6 +44,24 @@ final class CertificateCryptographicBoundaryTest extends TestCase
         self::assertNotSame($first->value(), $second->value());
         self::assertSame(32, strlen($first->hash()));
         self::assertSame(16, strlen($first->fingerprint()));
+        self::assertTrue(CertificatePublicIdentifierPolicy::isVerificationCode($first->value()));
+        self::assertFalse(CertificatePublicIdentifierPolicy::isVerificationCode('too-short'));
+    }
+
+    public function testPublicIdentifierPolicyDefinesSerialAndVerificationContracts(): void
+    {
+        self::assertSame('QMDB-2026-ABUJA-000042', CertificatePublicIdentifierPolicy::serial(2026, 'abuja', 42));
+        self::assertTrue(CertificatePublicIdentifierPolicy::isSerial('QMDB-2026-ABUJA-000042'));
+        self::assertFalse(CertificatePublicIdentifierPolicy::isSerial('QMDB-2026-ABUJA-42'));
+        self::assertSame(32, CertificatePublicIdentifierPolicy::VERIFICATION_CODE_RANDOM_BYTES);
+        self::assertSame(43, CertificatePublicIdentifierPolicy::VERIFICATION_CODE_LENGTH);
+    }
+
+    public function testSigningKeyMetadataRejectsMalformedReferences(): void
+    {
+        $keypair = sodium_crypto_sign_keypair();
+        $this->expectException(\InvalidArgumentException::class);
+        new CertificateSigningKey('P8-TEST-KEY', 'ENVIRONMENT_SECRET', 'has whitespace', sodium_crypto_sign_publickey($keypair), 'ACTIVE');
     }
 
     public function testTemplateConfigurationRejectsExecutableAndRemoteContent(): void
