@@ -196,4 +196,5 @@ enum CsrfAction: string
     case LEGACY_RECORD_IMPORT_VALIDATE = 'legacy_record_import.validate';
     case LEGACY_RECORD_IMPORT_APPROVE = 'legacy_record_import.approve';
     case LEGACY_RECORD_IMPORT_PROCESS = 'legacy_record_import.process';
+    case MEDIA_UPLOAD = 'media.upload';
 }

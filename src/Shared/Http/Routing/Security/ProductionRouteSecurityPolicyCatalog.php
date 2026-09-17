@@ -136,6 +136,9 @@ final class ProductionRouteSecurityPolicyCatalog
         'workspace.certificates.revoke' => 'workspace.certificates.revoke',
         'workspace.certificates.archive.form' => 'workspace.certificates.archive',
         'workspace.certificates.archive' => 'workspace.certificates.archive',
+        'workspace.media.upload.form' => 'media.assets.upload',
+        'workspace.media.upload' => 'media.assets.upload',
+        'workspace.media.content' => 'workspace.media.view',
         'platform.profile_claim.index' => 'platform.people_profile_claims.authorize',
         'platform.profile_claim.authorization.form' => 'platform.people_profile_claims.authorize',
         'platform.profile_claim.authorization.submit' => 'platform.people_profile_claims.authorize',
@@ -301,6 +304,7 @@ final class ProductionRouteSecurityPolicyCatalog
         'workspace.certificates.issue' => 'CERTIFICATE_ISSUE',
         'workspace.certificates.revoke' => 'CERTIFICATE_REVOKE',
         'workspace.certificates.archive' => 'CERTIFICATE_ARCHIVE',
+        'workspace.media.upload' => 'media.upload',
     ];
 
     /** @var array<string, string> */

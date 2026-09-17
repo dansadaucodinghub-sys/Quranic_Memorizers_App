@@ -74,6 +74,8 @@ use Qmdb\Modules\CompetitionPublication\Interface\Http\CompetitionResultPublicat
 use Qmdb\Modules\CompetitionAppealAdjudication\Interface\Http\CompetitionAppealAdjudicationController;
 use Qmdb\Modules\CertificateVerification\Interface\Http\PublicCertificateVerificationController;
 use Qmdb\Modules\CertificateIssuance\Interface\Http\CertificateGovernanceController;
+use Qmdb\Modules\MediaIngestion\Interface\Http\MediaUploadController;
+use Qmdb\Modules\MediaDelivery\Interface\Http\PrivateMediaDeliveryController;
 use Qmdb\Shared\DependencyInjection\ClosureServiceFactory;
 use Qmdb\Shared\DependencyInjection\DependencyResolver;
 use Qmdb\Shared\DependencyInjection\ServiceDefinition;
@@ -254,6 +256,8 @@ final readonly class ApplicationHttpModule implements Module
             CompetitionAppealAdjudicationController::class,
             PublicCertificateVerificationController::class,
             CertificateGovernanceController::class,
+            MediaUploadController::class,
+            PrivateMediaDeliveryController::class,
         ];
         $context->service(ServiceDefinition::factory(
             RouteCollection::class,
