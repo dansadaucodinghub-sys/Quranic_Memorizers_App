@@ -72,6 +72,10 @@ final class TrivyFilesystemScanner
             'node_modules',
             '--skip-dirs',
             'build',
+            // Do not recursively scan the scanner's own generated advisory database.
+            // This is one exact cache file, not a source or general cache exclusion.
+            '--skip-files',
+            'var/cache/trivy/db/trivy.db',
             $target,
         ], $sourceRoot);
         $findings = $this->highCriticalFindings($report);

@@ -49,6 +49,12 @@ final class TrivyFilesystemScannerTest extends TestCase
         self::assertSame('pass', $result['status']);
         self::assertContains('--cache-dir', $command);
         self::assertContains('--skip-db-update', $command);
+        $skipIndex = array_search('--skip-files', $command, true);
+        self::assertIsInt($skipIndex);
+        self::assertSame('var/cache/trivy/db/trivy.db', $command[$skipIndex + 1] ?? null);
+        self::assertNotContains('src', $command);
+        self::assertNotContains('tests', $command);
+        self::assertNotContains('var/cache', $command);
         self::assertSame($this->root . '/target with spaces', $this->lastArgument($command));
     }
 

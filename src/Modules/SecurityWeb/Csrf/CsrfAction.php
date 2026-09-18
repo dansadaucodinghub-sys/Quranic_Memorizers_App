@@ -197,4 +197,12 @@ enum CsrfAction: string
     case LEGACY_RECORD_IMPORT_APPROVE = 'legacy_record_import.approve';
     case LEGACY_RECORD_IMPORT_PROCESS = 'legacy_record_import.process';
     case MEDIA_UPLOAD = 'media.upload';
+    case MEDIA_APPROVE = 'media.approve';
+    case MEDIA_REJECT = 'media.reject';
+    case MEDIA_WITHDRAW_CONSENT = 'media.withdraw_consent';
+    case MEDIA_GRANT_CONSENT = 'media.consent_review';
+    case MEDIA_HOLD = 'media.hold';
+    case MEDIA_RELEASE_HOLD = 'media.release_hold';
+    case MEDIA_REMOVE = 'media.remove';
+    case MEDIA_ARCHIVE = 'media.archive';
 }

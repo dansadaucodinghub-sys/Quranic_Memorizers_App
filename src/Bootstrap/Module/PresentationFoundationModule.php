@@ -81,6 +81,8 @@ final readonly class PresentationFoundationModule implements Module
             [],
             new ClosureServiceFactory(static fn (DependencyResolver $resolver): ViewRegistry =>
                 new ViewRegistry([
+                    'pages.media-governance' => $root . '/resources/views/pages/media-governance.php',
+                    'fragments.media-governance' => $root . '/resources/views/fragments/media-governance.php',
                     'layouts.application' => $root . '/resources/views/layouts/application.php',
                     'pages.home' => $root . '/resources/views/pages/home.php',
                     'pages.system-about' => $root . '/resources/views/pages/system-about.php',

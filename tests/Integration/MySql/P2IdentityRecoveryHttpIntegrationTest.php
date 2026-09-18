@@ -301,10 +301,15 @@ final class P2IdentityRecoveryHttpIntegrationTest extends MySqlIntegrationTestCa
             ['competition.result_publications.reconcile', 900],
             ['competition.appeals.process', 900],
             // This fixture deliberately creates only identity tables. Keep
-            // unrelated P8 maintenance work out of this scheduler assertion.
+            // unrelated P8/P9 maintenance work out of this identity-only assertion.
             ['record_passports.project', 60],
             ['trusted_archive.seal_pending', 60],
             ['trusted_archive.reconcile', 900],
+            ['media.scans.process', 60],
+            ['media.processing.process', 60],
+            ['media.staging.cleanup', 900],
+            ['media.uploads.expire', 300],
+            ['media.assets.reconcile', 900],
             ] as [$taskId, $intervalSeconds]
         ) {
             $this->markCurrentScheduleSlotSucceeded($taskId, $intervalSeconds);
@@ -315,7 +320,7 @@ final class P2IdentityRecoveryHttpIntegrationTest extends MySqlIntegrationTestCa
             $schedule->exitCode(),
             $schedule->standardOutput() . $schedule->standardError(),
         );
-        self::assertStringContainsString('Succeeded: 3', $schedule->standardOutput());
+        self::assertStringContainsString('Succeeded: 2', $schedule->standardOutput());
         self::assertSame('DELIVERED', $this->scalar('SELECT status FROM account_security_notifications'));
 
         $repeat = ApplicationFactory::fromCurrentProcess()->createConsoleApplication()->run(['schedule:run']);

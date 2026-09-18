@@ -6,6 +6,7 @@ namespace Qmdb\Modules\CertificateIssuance\Infrastructure\Security;
 
 use Qmdb\Modules\CertificateIssuance\Application\CertificateSigningKeyProvider;
 use Qmdb\Modules\CertificateIssuance\Domain\CertificateSigningKey;
+use Qmdb\Shared\Configuration\EnvironmentVariables;
 
 /**
  * Production adapter for a process-secret provider.  Deployments should inject
@@ -14,7 +15,7 @@ use Qmdb\Modules\CertificateIssuance\Domain\CertificateSigningKey;
  */
 final readonly class EnvironmentCertificateSigningKeyProvider implements CertificateSigningKeyProvider
 {
-    public function __construct(private bool $production)
+    public function __construct(private bool $production, private EnvironmentVariables $environment)
     {
     }
 
@@ -33,7 +34,7 @@ final readonly class EnvironmentCertificateSigningKeyProvider implements Certifi
         }
 
         $variable = 'QMDB_CERTIFICATE_SIGNING_KEY_' . strtoupper(str_replace('-', '_', $key->providerKeyReference));
-        $encoded = getenv($variable);
+        $encoded = $this->environment->optionalString($variable);
         if (!is_string($encoded) || $encoded === '') {
             throw new \RuntimeException('Certificate signing key is unavailable from the configured provider.');
         }
@@ -63,7 +64,7 @@ final readonly class EnvironmentCertificateSigningKeyProvider implements Certifi
         }
 
         $variable = 'QMDB_CERTIFICATE_SIGNING_KEY_' . strtoupper(str_replace('-', '_', $key->providerKeyReference));
-        $encoded = getenv($variable);
+        $encoded = $this->environment->optionalString($variable);
         if (!is_string($encoded) || $encoded === '') {
             return false;
         }

@@ -7,6 +7,7 @@ namespace Qmdb\Tests\Architecture;
 use FilesystemIterator;
 use PHPUnit\Framework\TestCase;
 use RecursiveDirectoryIterator;
+use RecursiveCallbackFilterIterator;
 use RecursiveIteratorIterator;
 use RuntimeException;
 use SplFileInfo;
@@ -139,6 +140,18 @@ final class SourceArchitectureTest extends TestCase
                 || str_contains($path, '/Modules/CompetitionLive/Infrastructure/')
                 || str_contains($path, '/Modules/CompetitionPublication/Infrastructure/')
                 || str_contains($path, '/Modules/CompetitionAppealAdjudication/Infrastructure/')
+                || str_contains($path, '/Modules/CertificateIssuance/Infrastructure/')
+                || str_contains($path, '/Modules/CertificateVerification/Infrastructure/')
+                || str_contains($path, '/Modules/RecordPassport/Infrastructure/')
+                || str_contains($path, '/Modules/TrustedArchive/Infrastructure/')
+                || str_contains($path, '/Modules/MediaCatalog/Infrastructure/')
+                || str_contains($path, '/Modules/MediaIngestion/Infrastructure/')
+                || str_contains($path, '/Modules/MediaProcessing/Infrastructure/')
+                || str_contains($path, '/Modules/MediaModeration/Infrastructure/')
+                || str_contains($path, '/Modules/MediaDelivery/Infrastructure/')
+                || str_ends_with($path, '/Modules/CertificateIssuance/Interface/Console/CompetitionP8VerifyConsoleCommand.php')
+                || str_ends_with($path, '/Modules/MediaCatalog/Interface/Console/CompetitionP9VerifyConsoleCommand.php')
+                || str_ends_with($path, '/Modules/MediaCatalog/Interface/Console/MediaP9RuntimeConsoleCommand.php')
                 || str_contains($path, '/Modules/QuranReferenceGovernance/Infrastructure/')
                 || str_contains($path, '/Modules/CompetitionConfiguration/Interface/Console/')
                 || str_contains($path, '/Modules/CompetitionRegistration/Interface/Console/')
@@ -167,12 +180,14 @@ final class SourceArchitectureTest extends TestCase
         }
     }
 
-    public function testOnlyAuthorizedP2ThroughP7DomainModulesExist(): void
+    public function testOnlyAuthorizedP2ThroughP9DomainModulesExist(): void
     {
         $modules = glob($this->projectRoot() . '/src/Modules/*', GLOB_ONLYDIR);
         self::assertIsArray($modules);
         self::assertSame(
             [
+                'CertificateIssuance',
+                'CertificateVerification',
                 'CompetitionAppealAdjudication',
                 'CompetitionConfiguration',
                 'CompetitionJudging',
@@ -190,16 +205,23 @@ final class SourceArchitectureTest extends TestCase
                 'IdentityResolution',
                 'IdentitySecurityNotifications',
                 'IdentitySessions',
+                'MediaCatalog',
+                'MediaDelivery',
+                'MediaIngestion',
+                'MediaModeration',
+                'MediaProcessing',
                 'OrganizationAffiliations',
                 'Organizations',
                 'People',
                 'QuranReferenceGovernance',
+                'RecordPassport',
                 'SecurityAudit',
                 'SecurityAuthorization',
                 'SecurityPrivilegedAccess',
                 'SecurityWeb',
                 'Tenancy',
                 'TenancyContext',
+                'TrustedArchive',
             ],
             array_map('basename', $modules),
         );
@@ -222,9 +244,14 @@ final class SourceArchitectureTest extends TestCase
         $forbiddenNames = ['id_rsa', 'id_ed25519'];
         $forbiddenSuffixes = ['.key', '.pem', '.p12', '.pfx'];
         $iterator = new RecursiveIteratorIterator(
-            new RecursiveDirectoryIterator(
-                $this->projectRoot(),
-                FilesystemIterator::SKIP_DOTS,
+            new RecursiveCallbackFilterIterator(
+                new RecursiveDirectoryIterator($this->projectRoot(), FilesystemIterator::SKIP_DOTS),
+                static function (SplFileInfo $entry): bool {
+                    $path = str_replace('\\', '/', $entry->getPathname()) . ($entry->isDir() ? '/' : '');
+                    return !str_contains($path, '/vendor/')
+                        && !str_contains($path, '/.git/')
+                        && !str_contains($path, '/.runtime/');
+                },
             ),
         );
 
@@ -234,14 +261,6 @@ final class SourceArchitectureTest extends TestCase
             }
 
             $path = str_replace('\\', '/', $file->getPathname());
-
-            if (
-                str_contains($path, '/vendor/')
-                || str_contains($path, '/.git/')
-                || str_contains($path, '/.runtime/')
-            ) {
-                continue;
-            }
 
             $name = strtolower($file->getFilename());
             self::assertNotContains($name, $forbiddenNames, sprintf('%s is a private-key file.', $path));

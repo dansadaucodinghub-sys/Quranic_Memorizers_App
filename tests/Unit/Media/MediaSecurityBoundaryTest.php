@@ -18,9 +18,13 @@ final class MediaSecurityBoundaryTest extends TestCase
     }
     public function testSingleRangesAreBoundedAndUnsatisfiableRangesFail(): void
     {
-        $range=MediaRange::fromHeader('bytes=10-19',100); self::assertSame(10,$range?->start); self::assertSame(10,$range?->length());
-        self::assertSame(90,MediaRange::fromHeader('bytes=-10',100)?->start);
-        $this->expectException(\InvalidArgumentException::class); MediaRange::fromHeader('bytes=100-101',100);
+        $range = MediaRange::fromHeader('bytes=10-19', 100);
+        self::assertNotNull($range);
+        self::assertSame(10, $range->start);
+        self::assertSame(10, $range->length());
+        self::assertSame(90, MediaRange::fromHeader('bytes=-10', 100)?->start);
+        $this->expectException(\InvalidArgumentException::class);
+        MediaRange::fromHeader('bytes=100-101', 100);
     }
     public function testEvidenceLifecycleDoesNotPermitDirectPublicationOrDeliveryWhileHeld(): void
     {

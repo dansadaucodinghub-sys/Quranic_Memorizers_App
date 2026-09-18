@@ -7,6 +7,10 @@ useDefault = true
 description = "Generated and dependency roots are governed by repository policy and lockfile scanning"
 paths = ['''(?:^|[\\/])(?:\.git|\.runtime|vendor|node_modules|\.phpstan\.cache|\.build|build|coverage)[\\/]''']
 
+[[allowlists]]
+description = "Exact generated Trivy vulnerability database contains upstream advisory examples, not application credentials"
+paths = ['''(?:^|[\\/])var[\\/]cache[\\/]trivy[\\/]db[\\/]trivy\.db$''']
+
 # These are exact, non-production credentials used only by the isolated MySQL CI service.
 [[allowlists]]
 description = "Exact QMDB CI-only MySQL values"

@@ -10,7 +10,7 @@
     "ext-pdo": "*",
     "ext-pdo_mysql": "*",
     "ext-sodium": "*",
-    "dompdf/dompdf": "3.1",
+    "dompdf/dompdf": "^3.1.6",
     "endroid/qr-code": "^6.1",
     "monolog/monolog": "^3.10",
     "nyholm/psr7": "^1.8",

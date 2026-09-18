@@ -263,6 +263,11 @@ final class ConfigurationArchitectureTest extends TestCase
             'DB_SCHEMA_USERNAME',
             'DB_SCHEMA_PASSWORD',
             'DB_SCHEMA_LOCK_TIMEOUT_SECONDS',
+            'QMDB_MEDIA_SCANNER_BINARY',
+            'QMDB_MEDIA_SCANNER_DATABASE',
+            'QMDB_MEDIA_SCAN_TIMEOUT_SECONDS',
+            'QMDB_MEDIA_FFMPEG_BINARY',
+            'QMDB_MEDIA_FFPROBE_BINARY',
         ], $assignments);
     }
 

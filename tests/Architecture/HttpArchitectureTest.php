@@ -164,6 +164,7 @@ final class HttpArchitectureTest extends TestCase
             'ext-pdo',
             'ext-pdo_mysql',
             'ext-sodium',
+            'dompdf/dompdf',
             'endroid/qr-code',
             'monolog/monolog',
             'nyholm/psr7',

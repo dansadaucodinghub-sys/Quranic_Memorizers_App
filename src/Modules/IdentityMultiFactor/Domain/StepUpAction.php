@@ -87,10 +87,16 @@ enum StepUpAction: string
     case TRUSTED_ARCHIVE_SEAL = 'TRUSTED_ARCHIVE_SEAL';
     case TRUSTED_ARCHIVE_HOLD = 'TRUSTED_ARCHIVE_HOLD';
     case LEGACY_RECORD_IMPORT_APPROVE = 'LEGACY_RECORD_IMPORT_APPROVE';
+    case MEDIA_APPROVE = 'MEDIA_APPROVE';
+    case MEDIA_CONSENT_GRANT = 'MEDIA_CONSENT_GRANT';
+    case MEDIA_REJECT = 'MEDIA_REJECT';
+    case MEDIA_HOLD = 'MEDIA_HOLD';
+    case MEDIA_REMOVE = 'MEDIA_REMOVE';
 
     public function requirement(): AuthenticationAssuranceLevel
     {
         return match ($this) {
+            self::MEDIA_APPROVE, self::MEDIA_REJECT, self::MEDIA_HOLD, self::MEDIA_REMOVE, self::MEDIA_CONSENT_GRANT => AuthenticationAssuranceLevel::PHISHING_RESISTANT,
             self::MFA_ENROLL_TOTP, self::MFA_REGISTER_PASSKEY, self::ORGANIZATION_AFFILIATION_ACCEPT, self::ORGANIZATION_AFFILIATION_LEAVE, self::PROFILE_DUPLICATE_REPORT => AuthenticationAssuranceLevel::PRIMARY,
             self::AUTHORIZATION_PLATFORM_ROLE_ASSIGN,
             self::AUTHORIZATION_PLATFORM_ROLE_REVOKE,
@@ -128,6 +134,7 @@ enum StepUpAction: string
     public function continuation(): string
     {
         return match ($this) {
+            self::MEDIA_APPROVE, self::MEDIA_REJECT, self::MEDIA_HOLD, self::MEDIA_REMOVE, self::MEDIA_CONSENT_GRANT => '/workspace/media',
             self::MFA_ENROLL_TOTP => '/account/security/mfa/totp/enroll',
             self::MFA_REGISTER_PASSKEY => '/account/security/passkeys/register',
             self::MFA_DISABLE => '/account/security/mfa/disable',

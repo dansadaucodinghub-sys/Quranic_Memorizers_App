@@ -173,5 +173,8 @@ return static function (): MigrationRegistry {
         ->register(new CreateMediaFoundationMigration())
         ->register(new ExtendMediaEvidenceRuntimeMigration())
         ->register(new CreateMediaOperationReceiptMigration())
+        ->register(new \Qmdb\Modules\MediaModeration\Infrastructure\Migration\CompleteMediaGovernanceMigration())
+        ->register(new \Qmdb\Modules\MediaModeration\Infrastructure\Migration\ExtendMediaGovernanceSecurityMigration())
+        ->register(new \Qmdb\Modules\MediaModeration\Infrastructure\Migration\CreateMediaConsentReviewMigration())
         ->build();
 };

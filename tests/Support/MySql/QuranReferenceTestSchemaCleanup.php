@@ -27,6 +27,11 @@ final class QuranReferenceTestSchemaCleanup
 
         foreach (
             [
+                // P9 children precede identity, tenancy, and person parent teardown.
+                'media_consent_reviews', 'media_governance_operations', 'media_operation_receipts',
+                'media_scan_results', 'media_events', 'media_holds', 'media_delivery_policies',
+                'media_variants', 'media_processing_jobs', 'media_upload_parts',
+                'media_upload_sessions', 'media_assets',
                 // Downstream P8 tables must be removed before the P7 result
                 // publication tables they reference. This remains an ordered
                 // teardown; foreign-key checks are never disabled.

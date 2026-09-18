@@ -139,6 +139,23 @@ final class ProductionRouteSecurityPolicyCatalog
         'workspace.media.upload.form' => 'media.assets.upload',
         'workspace.media.upload' => 'media.assets.upload',
         'workspace.media.content' => 'workspace.media.view',
+        'workspace.media.index' => 'workspace.media.view',
+        'workspace.media.approve.form' => 'workspace.media.approve',
+        'workspace.media.approve' => 'workspace.media.approve',
+        'workspace.media.reject.form' => 'workspace.media.reject',
+        'workspace.media.reject' => 'workspace.media.reject',
+        'workspace.media.withdraw-consent.form' => 'media.assets.manage_own',
+        'workspace.media.withdraw-consent' => 'media.assets.manage_own',
+        'workspace.media.consent-review.form' => 'workspace.media.review',
+        'workspace.media.consent-review' => 'workspace.media.review',
+        'workspace.media.hold.form' => 'workspace.media.hold',
+        'workspace.media.hold' => 'workspace.media.hold',
+        'workspace.media.release-hold.form' => 'workspace.media.hold',
+        'workspace.media.release-hold' => 'workspace.media.hold',
+        'workspace.media.remove.form' => 'workspace.media.remove',
+        'workspace.media.remove' => 'workspace.media.remove',
+        'workspace.media.archive.form' => 'workspace.media.remove',
+        'workspace.media.archive' => 'workspace.media.remove',
         'platform.profile_claim.index' => 'platform.people_profile_claims.authorize',
         'platform.profile_claim.authorization.form' => 'platform.people_profile_claims.authorize',
         'platform.profile_claim.authorization.submit' => 'platform.people_profile_claims.authorize',
@@ -304,11 +321,26 @@ final class ProductionRouteSecurityPolicyCatalog
         'workspace.certificates.issue' => 'CERTIFICATE_ISSUE',
         'workspace.certificates.revoke' => 'CERTIFICATE_REVOKE',
         'workspace.certificates.archive' => 'CERTIFICATE_ARCHIVE',
-        'workspace.media.upload' => 'media.upload',
+        'workspace.media.approve' => 'MEDIA_APPROVE',
+        'workspace.media.consent-review' => 'MEDIA_CONSENT_GRANT',
+        'workspace.media.reject' => 'MEDIA_REJECT',
+        'workspace.media.hold' => 'MEDIA_HOLD',
+        'workspace.media.release-hold' => 'MEDIA_HOLD',
+        'workspace.media.remove' => 'MEDIA_REMOVE',
+        'workspace.media.archive' => 'MEDIA_REMOVE',
     ];
 
     /** @var array<string, string> */
     private const array CSRF_ACTIONS = [
+        'workspace.media.upload' => 'media.upload',
+        'workspace.media.approve' => 'media.approve',
+        'workspace.media.reject' => 'media.reject',
+        'workspace.media.withdraw-consent' => 'media.withdraw_consent',
+        'workspace.media.consent-review' => 'media.consent_review',
+        'workspace.media.hold' => 'media.hold',
+        'workspace.media.release-hold' => 'media.release_hold',
+        'workspace.media.remove' => 'media.remove',
+        'workspace.media.archive' => 'media.archive',
         'account.registration.submit' => 'account.register',
         'account.email_verification.resend.submit' => 'account.email.resend',
         'account.email_verification.submit' => 'account.email.verify',
@@ -454,6 +486,15 @@ final class ProductionRouteSecurityPolicyCatalog
 
     /** @var list<string> */
     private const array IDEMPOTENT = [
+        'workspace.media.upload',
+        'workspace.media.approve',
+        'workspace.media.reject',
+        'workspace.media.withdraw-consent',
+        'workspace.media.consent-review',
+        'workspace.media.hold',
+        'workspace.media.release-hold',
+        'workspace.media.remove',
+        'workspace.media.archive',
         'account.registration.submit', 'account.password_recovery.reset.submit',
         'platform.security.accounts.suspend', 'platform.security.accounts.reactivate',
         'account.privileged_access.temporary.request.submit', 'account.privileged_access.support.request.submit',
@@ -553,7 +594,7 @@ final class ProductionRouteSecurityPolicyCatalog
 
         return new RouteSecurityPolicy(
             $classification,
-            $classification === RouteSecurityClassification::TENANT_REQUIRED || str_starts_with($route, 'workspace.organizations.') || str_starts_with($route, 'workspace.competition.') || str_starts_with($route, 'workspace.certificates.'),
+            $classification === RouteSecurityClassification::TENANT_REQUIRED || str_starts_with($route, 'workspace.organizations.') || str_starts_with($route, 'workspace.competition.') || str_starts_with($route, 'workspace.certificates.') || str_starts_with($route, 'workspace.media.'),
             $permission,
             $assurance,
             self::STEP_UP_ACTIONS[$route] ?? null,
@@ -571,6 +612,8 @@ final class ProductionRouteSecurityPolicyCatalog
     private function assuranceForPermission(?string $permission): ?string
     {
         return match ($permission) {
+            'workspace.media.approve', 'workspace.media.reject', 'workspace.media.hold', 'workspace.media.remove' => 'PHISHING_RESISTANT',
+            'workspace.media.view', 'workspace.media.review', 'media.assets.upload', 'media.assets.manage_own' => 'PHISHING_RESISTANT',
             'platform.accounts.view', 'platform.security_events.view',
             'workspace.organizations.manage', 'workspace.organization_units.manage',
             'workspace.organization_affiliations.manage', 'workspace.organization_affiliation_assignments.manage' => 'MULTI_FACTOR',

@@ -10,7 +10,7 @@ use Qmdb\Modules\MediaProcessing\Application\MediaScannerHealthCheck;
 /** ClamAV adapter. It never interpolates media data into a shell command. */
 final readonly class ClamAvMediaScanner implements MediaScanner, MediaScannerHealthCheck
 {
-    public function __construct(private string $binary, private int $timeoutSeconds = 30)
+    public function __construct(private string $binary, private int $timeoutSeconds = 30, private ?string $databaseDirectory = null)
     {
         if ($binary === '' || str_contains($binary, "\0") || $timeoutSeconds < 1 || $timeoutSeconds > 300) {
             throw new \InvalidArgumentException('Scanner configuration is invalid.');
@@ -30,7 +30,7 @@ final readonly class ClamAvMediaScanner implements MediaScanner, MediaScannerHea
             if (file_put_contents($file, $contents, LOCK_EX) !== strlen($contents)) {
                 return ['clean' => false, 'engine' => 'CLAMAV', 'safe_code' => 'TEMPORARY_STORAGE_UNAVAILABLE'];
             }
-            $result = $this->run([$this->binary, '--no-summary', '--', $file]);
+            $result = $this->run([$this->binary, ...$this->databaseArguments(), '--no-summary', '--', $file]);
             return match ($result['exit']) {
                 0 => ['clean' => true, 'engine' => 'CLAMAV', 'safe_code' => 'CLEAN'],
                 1 => ['clean' => false, 'engine' => 'CLAMAV', 'safe_code' => 'INFECTED'],
@@ -48,30 +48,45 @@ final readonly class ClamAvMediaScanner implements MediaScanner, MediaScannerHea
         if (!is_file($this->binary)) {
             return ['healthy' => false, 'engine' => 'CLAMAV', 'safe_code' => 'BINARY_UNAVAILABLE'];
         }
-        $result = $this->run([$this->binary, '--version']);
-        return ['healthy' => $result['exit'] === 0, 'engine' => 'CLAMAV', 'safe_code' => $result['exit'] === 0 ? 'READY' : 'VERSION_FAILED'];
+        try {
+            $result = \Qmdb\Modules\MediaProcessing\Infrastructure\Process\BoundedMediaProcess::run([$this->binary, ...$this->databaseArguments(), '--version'], $this->timeoutSeconds);
+            if ($result['exit'] !== 0 || preg_match('~\AClamAV [0-9.]+/[0-9]+/(.+)~', trim($result['stdout']), $matches) !== 1) {
+                return ['healthy' => false, 'engine' => 'CLAMAV', 'safe_code' => 'DATABASE_UNAVAILABLE'];
+            }
+            $date = new \DateTimeImmutable($matches[1]);
+            $age = time() - $date->getTimestamp();
+            $healthy = $age >= -86400 && $age <= 604800 && $this->scan('QMDB harmless scanner readiness sample')['clean'];
+            return ['healthy' => $healthy, 'engine' => 'CLAMAV', 'safe_code' => $healthy ? 'READY' : 'DATABASE_STALE_OR_SCAN_FAILED'];
+        } catch (\Throwable) {
+            return ['healthy' => false, 'engine' => 'CLAMAV', 'safe_code' => 'HEALTH_CHECK_FAILED'];
+        }
+    }
+    /** @return list<string> */
+    private function databaseArguments(): array
+    {
+        if ($this->databaseDirectory === null) {
+            return [];
+        }
+        // ClamAV's Windows database loader rejects mixed path separators even though
+        // PHP and proc_open accept them. Resolve the operator-configured directory.
+        $directory = realpath($this->databaseDirectory);
+        if ($directory === false || !is_dir($directory)) {
+            throw new \RuntimeException('Configured scanner database directory is unavailable.');
+        }
+        return ['--database=' . $directory];
     }
 
-    /** @param list<string> $command @return array{exit:int} */
+    /**
+     * @param non-empty-list<string> $command
+     * @return array{exit:int}
+     */
     private function run(array $command): array
     {
-        $pipes = [];
-        $process = proc_open($command, [0 => ['pipe', 'r'], 1 => ['pipe', 'w'], 2 => ['pipe', 'w']], $pipes, null, null, ['bypass_shell' => true]);
-        if (!is_resource($process)) {
+        try {
+            $result = \Qmdb\Modules\MediaProcessing\Infrastructure\Process\BoundedMediaProcess::run($command, $this->timeoutSeconds);
+            return ['exit' => $result['exit']];
+        } catch (\RuntimeException) {
             return ['exit' => 2];
         }
-        fclose($pipes[0]);
-        stream_set_blocking($pipes[1], false);
-        stream_set_blocking($pipes[2], false);
-        $deadline = microtime(true) + $this->timeoutSeconds;
-        while (proc_get_status($process)['running'] && microtime(true) < $deadline) {
-            usleep(10_000);
-        }
-        if (proc_get_status($process)['running']) {
-            proc_terminate($process);
-        }
-        fclose($pipes[1]);
-        fclose($pipes[2]);
-        return ['exit' => proc_close($process)];
     }
 }

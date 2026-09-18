@@ -44,7 +44,7 @@ final class LocalCertificateArtifactRenderer implements CertificateArtifactRende
         $pdf->loadHtml($this->html($qr, $display), 'UTF-8');
         $pdf->render();
         $bytes = $pdf->output();
-        if (!is_string($bytes) || $bytes === '' || strlen($bytes) > self::MAX_PDF_BYTES || !str_starts_with($bytes, '%PDF-')) {
+        if ($bytes === '' || strlen($bytes) > self::MAX_PDF_BYTES || !str_starts_with($bytes, '%PDF-')) {
             throw new \RuntimeException('Certificate PDF renderer produced an invalid artifact.');
         }
 

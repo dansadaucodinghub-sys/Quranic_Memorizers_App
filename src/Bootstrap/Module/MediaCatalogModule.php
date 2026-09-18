@@ -20,8 +20,14 @@ use Qmdb\Shared\Module\ModuleRegistrationContext;
 
 final readonly class MediaCatalogModule implements Module
 {
-    public function id(): ModuleId { return new ModuleId('media.catalog'); }
-    public function dependencies(): array { return [new ModuleId('foundation.database'), new ModuleId('foundation.background'), new ModuleId('tenancy.context'), new ModuleId('people.profiles')]; }
+    public function id(): ModuleId
+    {
+        return new ModuleId('media.catalog');
+    }
+    public function dependencies(): array
+    {
+        return [new ModuleId('foundation.database'), new ModuleId('foundation.background'), new ModuleId('tenancy.context'), new ModuleId('people.profiles')];
+    }
     public function register(ModuleRegistrationContext $context): void
     {
         $context->service(ServiceDefinition::instance(MediaLifecycle::class, 'media.catalog', new MediaLifecycle()));

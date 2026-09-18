@@ -31,6 +31,7 @@ use Qmdb\Modules\IdentityAccess\Interface\Http\IdentityCsrf;
 use Qmdb\Modules\IdentityAccess\Configuration\IdentityAccessConfiguration;
 use Qmdb\Shared\Configuration\ApplicationConfiguration;
 use Qmdb\Shared\Configuration\ApplicationEnvironment;
+use Qmdb\Shared\Configuration\EnvironmentVariables;
 use Qmdb\Shared\Database\Connection\DatabaseConnectionProvider;
 use Qmdb\Shared\Database\Transaction\TransactionManager;
 use Qmdb\Shared\Time\Clock;
@@ -49,7 +50,10 @@ use Qmdb\Shared\Module\ModuleRegistrationContext;
 
 final readonly class CertificateIssuanceModule implements Module
 {
-    public function id(): ModuleId { return new ModuleId('certificate.issuance'); }
+    public function id(): ModuleId
+    {
+        return new ModuleId('certificate.issuance');
+    }
     public function dependencies(): array
     {
         return [new ModuleId('competition.result_publication'), new ModuleId('competition.results'), new ModuleId('people.profiles'), new ModuleId('identity.access'), new ModuleId('foundation.database'), new ModuleId('security.authorization'), new ModuleId('security.audit'), new ModuleId('security.web'), new ModuleId('tenancy.context')];
@@ -63,14 +67,16 @@ final readonly class CertificateIssuanceModule implements Module
         $context->alias(CertificateSignatureVerifier::class, Ed25519CertificateSignatureVerifier::class);
         $context->service(ServiceDefinition::instance(LocalCertificateArtifactRenderer::class, 'certificate.issuance', new LocalCertificateArtifactRenderer()));
         $context->alias(CertificateArtifactRenderer::class, LocalCertificateArtifactRenderer::class);
-        $artifactRoot = getenv('QMDB_CERTIFICATE_ARTIFACT_ROOT');
-        $context->service(ServiceDefinition::instance(LocalCertificateArtifactStore::class, 'certificate.issuance', new LocalCertificateArtifactStore(is_string($artifactRoot) && $artifactRoot !== '' ? $artifactRoot : getcwd() . DIRECTORY_SEPARATOR . 'runtime' . DIRECTORY_SEPARATOR . 'certificate-artifacts')));
+        $context->service(ServiceDefinition::factory(LocalCertificateArtifactStore::class, 'certificate.issuance', [EnvironmentVariables::class], new ClosureServiceFactory(static function (DependencyResolver $resolver): LocalCertificateArtifactStore {
+            $artifactRoot = ServiceReference::get($resolver, EnvironmentVariables::class)->optionalString('QMDB_CERTIFICATE_ARTIFACT_ROOT');
+            return new LocalCertificateArtifactStore($artifactRoot !== null && $artifactRoot !== '' ? $artifactRoot : getcwd() . DIRECTORY_SEPARATOR . 'runtime' . DIRECTORY_SEPARATOR . 'certificate-artifacts');
+        })));
         $context->alias(CertificateArtifactStore::class, LocalCertificateArtifactStore::class);
         $context->service(ServiceDefinition::factory(MySqlCertificateNumberAllocator::class, 'certificate.issuance', [DatabaseConnectionProvider::class], new ClosureServiceFactory(static fn (DependencyResolver $resolver): MySqlCertificateNumberAllocator => new MySqlCertificateNumberAllocator(ServiceReference::get($resolver, DatabaseConnectionProvider::class)))));
         $context->alias(CertificateNumberAllocator::class, MySqlCertificateNumberAllocator::class);
         $context->service(ServiceDefinition::factory(MySqlCertificateIssuanceRepository::class, 'certificate.issuance', [DatabaseConnectionProvider::class], new ClosureServiceFactory(static fn (DependencyResolver $resolver): MySqlCertificateIssuanceRepository => new MySqlCertificateIssuanceRepository(ServiceReference::get($resolver, DatabaseConnectionProvider::class)))));
         $context->alias(CertificateIssuanceRepository::class, MySqlCertificateIssuanceRepository::class);
-        $context->service(ServiceDefinition::factory(EnvironmentCertificateSigningKeyProvider::class, 'certificate.issuance', [ApplicationConfiguration::class], new ClosureServiceFactory(static fn (DependencyResolver $resolver): EnvironmentCertificateSigningKeyProvider => new EnvironmentCertificateSigningKeyProvider(ServiceReference::get($resolver, ApplicationConfiguration::class)->environment() === ApplicationEnvironment::PRODUCTION))));
+        $context->service(ServiceDefinition::factory(EnvironmentCertificateSigningKeyProvider::class, 'certificate.issuance', [ApplicationConfiguration::class, EnvironmentVariables::class], new ClosureServiceFactory(static fn (DependencyResolver $resolver): EnvironmentCertificateSigningKeyProvider => new EnvironmentCertificateSigningKeyProvider(ServiceReference::get($resolver, ApplicationConfiguration::class)->environment() === ApplicationEnvironment::PRODUCTION, ServiceReference::get($resolver, EnvironmentVariables::class)))));
         $context->alias(CertificateSigningKeyProvider::class, EnvironmentCertificateSigningKeyProvider::class);
         $context->service(ServiceDefinition::factory(OpenDecisionCertificateProductionIssuanceGate::class, 'certificate.issuance', [ApplicationConfiguration::class], new ClosureServiceFactory(static fn (DependencyResolver $resolver): OpenDecisionCertificateProductionIssuanceGate => new OpenDecisionCertificateProductionIssuanceGate(ServiceReference::get($resolver, ApplicationConfiguration::class)->environment() === ApplicationEnvironment::PRODUCTION))));
         $context->alias(CertificateProductionIssuanceGate::class, OpenDecisionCertificateProductionIssuanceGate::class);

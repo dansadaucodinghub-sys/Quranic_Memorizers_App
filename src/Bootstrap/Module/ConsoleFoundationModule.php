@@ -93,6 +93,7 @@ use Qmdb\Modules\CompetitionResults\Infrastructure\Persistence\CompetitionP6Main
 use Qmdb\Shared\Database\Connection\DatabaseConnectionProvider;
 use Qmdb\Shared\Background\Scheduler\ScheduledTaskMap;
 use Qmdb\Shared\Configuration\ApplicationConfiguration;
+use Qmdb\Shared\Configuration\EnvironmentVariables;
 
 final readonly class ConsoleFoundationModule implements Module
 {
@@ -336,6 +337,9 @@ final readonly class ConsoleFoundationModule implements Module
             CompetitionP9VerifyConsoleCommand::class,
             MediaScanWorker::class,
             MediaProcessingWorker::class,
+            \Qmdb\Modules\MediaProcessing\Application\MediaMaintenanceWorker::class,
+            \Qmdb\Modules\MediaProcessing\Application\MediaRuntimeReadiness::class,
+            EnvironmentVariables::class,
             CompetitionP6MaintenanceService::class,
             CompetitionP7LiveMaintenanceService::class,
             CompetitionResultPublicationProjectionService::class,
@@ -398,10 +402,12 @@ final readonly class ConsoleFoundationModule implements Module
                 $registry->register(ServiceReference::get($resolver, CompetitionP7ProductionReadinessConsoleCommand::class));
                 $registry->register(ServiceReference::get($resolver, CompetitionP8VerifyConsoleCommand::class));
                 $registry->register(ServiceReference::get($resolver, CompetitionP9VerifyConsoleCommand::class));
-                foreach ([
+                foreach (
+                    [
                     ['media:scans:process', 'scans:process'], ['media:scans:verify', 'scans:verify'], ['media:processing:process', 'processing:process'], ['media:processing:verify', 'processing:verify'], ['media:assets:verify', 'assets:verify'], ['media:assets:reconcile', 'assets:reconcile'], ['media:storage:verify', 'storage:verify'], ['media:storage:reconcile', 'storage:reconcile'], ['media:staging:cleanup', 'staging:cleanup'], ['media:uploads:expire', 'uploads:expire'], ['competition:p9:production-readiness:verify', 'production-readiness'], ['competition:p9:production-smoke:verify', 'production-smoke'],
-                ] as [$name, $operation]) {
-                    $registry->register(new MediaP9RuntimeConsoleCommand($name, $operation, ServiceReference::get($resolver, DatabaseConnectionProvider::class), ServiceReference::get($resolver, ScheduledTaskMap::class), ServiceReference::get($resolver, MediaScanWorker::class), ServiceReference::get($resolver, MediaProcessingWorker::class)));
+                    ] as [$name, $operation]
+                ) {
+                    $registry->register(new MediaP9RuntimeConsoleCommand($name, $operation, ServiceReference::get($resolver, DatabaseConnectionProvider::class), ServiceReference::get($resolver, ScheduledTaskMap::class), ServiceReference::get($resolver, MediaScanWorker::class), ServiceReference::get($resolver, MediaProcessingWorker::class), ServiceReference::get($resolver, EnvironmentVariables::class), ServiceReference::get($resolver, \Qmdb\Modules\MediaProcessing\Application\MediaMaintenanceWorker::class), ServiceReference::get($resolver, \Qmdb\Modules\MediaProcessing\Application\MediaRuntimeReadiness::class)));
                 }
                 $p7LiveMaintenance = ServiceReference::get($resolver, CompetitionP7LiveMaintenanceService::class);
                 foreach (

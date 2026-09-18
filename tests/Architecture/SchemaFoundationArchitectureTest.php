@@ -70,7 +70,7 @@ use SplFileInfo;
 
 final class SchemaFoundationArchitectureTest extends TestCase
 {
-    public function testProductionManifestsPreserveHistoricalPrefixAndAllowOnlyAuthorizedP4ThroughP7Extensions(): void
+    public function testProductionManifestsPreserveHistoricalPrefixAndAllowOnlyAuthorizedP4ThroughP9Extensions(): void
     {
         $migrationFactory = require dirname(__DIR__, 2) . '/database/migrations.php';
         $seedFactory = require dirname(__DIR__, 2) . '/database/seeds.php';
@@ -85,7 +85,7 @@ final class SchemaFoundationArchitectureTest extends TestCase
         }
 
         $ordered = $migrations->ordered();
-        self::assertCount(74, $ordered);
+        self::assertCount(86, $ordered);
         self::assertSame(
             [
                 CreateScheduledTaskRunsMigration::class,
@@ -222,8 +222,20 @@ final class SchemaFoundationArchitectureTest extends TestCase
             '20260913100000_create_competition_p7_outbox',
             '20260913110000_create_competition_p7_operation_receipts',
             '20260913120000_create_competition_result_publication_projections',
+            '20260915100000_create_certificate_governance',
+            '20260915101000_create_certificate_issuance',
+            '20260915102000_create_record_passports',
+            '20260915103000_create_trusted_archive',
+            '20260915104000_create_legacy_record_import',
+            '20260915106000_create_certificate_operation_idempotency',
+            '20260915110000_create_media_foundation',
+            '20260915111000_extend_media_evidence_runtime',
+            '20260915113000_create_media_operation_receipts',
+            '20260917120000_complete_media_governance',
+            '20260917121000_extend_media_governance_security',
+            '20260917140000_create_media_consent_reviews',
         ], array_slice(array_map(static fn (Migration $migration): string => $migration->id()->value(), $ordered), 47));
-        self::assertCount(18, $seeds->ordered());
+        self::assertCount(20, $seeds->ordered());
         self::assertSame(
             [
                 SeedFoundationalAuthorizationCatalog::class,
@@ -241,6 +253,10 @@ final class SchemaFoundationArchitectureTest extends TestCase
             SeedCompetitionP7AuthorizationCatalog::class,
             $seeds->ordered()[17]::class,
         );
+        self::assertSame([
+            '20260915105000_seed_p8_authorization_catalog',
+            '20260915112000_seed_p9_media_authorization_catalog',
+        ], array_map(static fn (\Qmdb\Shared\Schema\Seed\Seed $seed): string => $seed->id()->value(), array_slice($seeds->ordered(), 18)));
     }
 
     public function testNoDiscoveryOrHttpMutationSurfaceExists(): void

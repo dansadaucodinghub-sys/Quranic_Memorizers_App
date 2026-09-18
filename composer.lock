@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "342d8c27b8e601d76e52fcd1c9a457d0",
+    "content-hash": "699efe8f47f990c2e175f6371dd7c024",
     "packages": [
         {
             "name": "bacon/bacon-qr-code",
@@ -297,16 +297,16 @@
         },
         {
             "name": "dompdf/dompdf",
-            "version": "v3.1.0",
+            "version": "v3.1.6",
             "source": {
                 "type": "git",
                 "url": "https://github.com/dompdf/dompdf.git",
-                "reference": "a51bd7a063a65499446919286fb18b518177155a"
+                "reference": "6d4b4eb8500f7a786da8868ba463a71b725a4005"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/dompdf/dompdf/zipball/a51bd7a063a65499446919286fb18b518177155a",
-                "reference": "a51bd7a063a65499446919286fb18b518177155a",
+                "url": "https://api.github.com/repos/dompdf/dompdf/zipball/6d4b4eb8500f7a786da8868ba463a71b725a4005",
+                "reference": "6d4b4eb8500f7a786da8868ba463a71b725a4005",
                 "shasum": ""
             },
             "require": {
@@ -355,9 +355,9 @@
             "homepage": "https://github.com/dompdf/dompdf",
             "support": {
                 "issues": "https://github.com/dompdf/dompdf/issues",
-                "source": "https://github.com/dompdf/dompdf/tree/v3.1.0"
+                "source": "https://github.com/dompdf/dompdf/tree/v3.1.6"
             },
-            "time": "2025-01-15T14:09:04+00:00"
+            "time": "2026-07-20T12:29:38+00:00"
         },
         {
             "name": "dompdf/php-font-lib",

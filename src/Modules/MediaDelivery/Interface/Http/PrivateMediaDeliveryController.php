@@ -5,31 +5,104 @@ declare(strict_types=1);
 namespace Qmdb\Modules\MediaDelivery\Interface\Http;
 
 use Nyholm\Psr7\Factory\Psr17Factory;
-use Psr\Http\Message\ResponseInterface;
-use Psr\Http\Message\ServerRequestInterface;
+use Psr\Http\Message\{ResponseInterface, ServerRequestInterface};
 use Qmdb\Modules\IdentitySessions\Interface\Http\AuthenticatedRequestGuard;
 use Qmdb\Modules\MediaCatalog\Application\MediaEvidenceRepository;
+use Qmdb\Modules\MediaDelivery\Domain\MediaRange;
 use Qmdb\Modules\MediaIngestion\Application\MediaBlobStore;
-use Qmdb\Modules\SecurityAuthorization\Application\AuthorizationRequest;
-use Qmdb\Modules\SecurityAuthorization\Application\AuthorizationRequirementGuard;
-use Qmdb\Modules\SecurityAuthorization\Application\AuthorizationSubject;
-use Qmdb\Modules\SecurityAuthorization\Domain\PermissionCode;
-use Qmdb\Modules\SecurityAuthorization\Domain\WorkspaceAuthorizationScope;
+use Qmdb\Modules\SecurityAuthorization\Application\{AuthorizationRequest, AuthorizationRequirementGuard, AuthorizationSubject};
+use Qmdb\Modules\SecurityAuthorization\Application\Exception\AuthorizationDeniedException;
+use Qmdb\Modules\SecurityAuthorization\Domain\{PermissionCode, WorkspaceAuthorizationScope};
 use Qmdb\Modules\TenancyContext\Application\Exception\TenantContextRequiredException;
 use Qmdb\Modules\TenancyContext\Application\TenantContextRequiredGuard;
 use Qmdb\Shared\Http\Contract\Controller;
 use Qmdb\Shared\Http\Routing\RouteAttributes;
 use Qmdb\Shared\Identifier\UuidV7;
 
-/** Tenant-private, approval/consent/hold-gated binary delivery with ETag and one bounded Range. */
+/** Private delivery rechecks authorization and revocable policy on every request, including 304s. */
 final readonly class PrivateMediaDeliveryController implements Controller
 {
-    public function __construct(private AuthenticatedRequestGuard $authentication, private TenantContextRequiredGuard $tenant, private AuthorizationRequirementGuard $authorization, private MediaEvidenceRepository $assets, private MediaBlobStore $storage, private Psr17Factory $responses) {}
+    public function __construct(
+        private AuthenticatedRequestGuard $authentication,
+        private TenantContextRequiredGuard $tenant,
+        private AuthorizationRequirementGuard $authorization,
+        private MediaEvidenceRepository $assets,
+        private MediaBlobStore $storage,
+        private Psr17Factory $responses,
+    ) {
+    }
+
     public function handle(ServerRequestInterface $request): ResponseInterface
     {
-        $actor=$this->authentication->context($request);if($actor===null)return $this->authentication->rejection($request);
-        try{$tenant=$this->tenant->require($request,true);$this->authorization->requireAllowed(new AuthorizationRequest(AuthorizationSubject::fromAuthenticatedContext($actor),new PermissionCode('workspace.media.view'),new WorkspaceAuthorizationScope($tenant)));$parameters=$request->getAttribute(RouteAttributes::PARAMETERS);if(!is_array($parameters)||!is_string($parameters['assetId']??null))throw new \InvalidArgumentException();$record=$this->assets->findDeliverable($tenant->workspaceInternalId,UuidV7::fromString($parameters['assetId']));if($record===null)return $this->responses->createResponse(404)->withHeader('Cache-Control','private, no-store');$etag='"'.bin2hex($record['sha256']).'"';if(trim($request->getHeaderLine('If-None-Match'))===$etag)return $this->responses->createResponse(304)->withHeader('ETag',$etag)->withHeader('Cache-Control','private, no-store');$contents=$this->storage->get($record['storage_key']);if(strlen($contents)!==$record['byte_size']||!hash_equals($record['sha256'],hash('sha256',$contents,true)))throw new \RuntimeException('Private media integrity verification failed.');return $this->deliver($request,$contents,$record['mime_type'],$etag);
-        }catch(\Qmdb\Modules\SecurityAuthorization\Application\Exception\AuthorizationDeniedException){return $this->responses->createResponse(403)->withHeader('Cache-Control','private, no-store');}catch(TenantContextRequiredException){return $this->responses->createResponse(303)->withHeader('Location','/account/workspaces?context_required=1')->withHeader('Cache-Control','private, no-store');}catch(\InvalidArgumentException){return $this->responses->createResponse(404)->withHeader('Cache-Control','private, no-store');}
+        $actor = $this->authentication->context($request);
+        if ($actor === null) {
+            return $this->authentication->rejection($request);
+        }
+        try {
+            $tenant = $this->tenant->require($request, $request->hasHeader('X-QMDB-Tenant-Context-Version'));
+            if ($actor->accountInternalId !== $tenant->accountInternalId || $actor->sessionInternalId !== $tenant->sessionInternalId) {
+                return $this->response(403);
+            }
+            $this->authorization->requireAllowed(new AuthorizationRequest(AuthorizationSubject::fromAuthenticatedContext($actor), new PermissionCode('workspace.media.view'), new WorkspaceAuthorizationScope($tenant)));
+            $parameters = $request->getAttribute(RouteAttributes::PARAMETERS);
+            if (!is_array($parameters) || !is_string($parameters['assetId'] ?? null)) {
+                throw new \InvalidArgumentException('Missing media identifier.');
+            }
+            $record = $this->assets->findDeliverable($tenant->workspaceInternalId, UuidV7::fromString($parameters['assetId']));
+            if ($record === null) {
+                return $this->response(404);
+            }
+            if ($record['byte_size'] < 1 || $record['byte_size'] >= 16_777_216 || !in_array($record['mime_type'], ['audio/mpeg', 'video/mp4'], true)) {
+                throw new \RuntimeException('Media delivery representation is invalid.');
+            }
+            $contents = $this->storage->get($record['storage_key']);
+            if (strlen($contents) !== $record['byte_size'] || !hash_equals($record['sha256'], hash('sha256', $contents, true))) {
+                throw new \RuntimeException('Private media integrity verification failed.');
+            }
+            $etag = '"' . bin2hex($record['sha256']) . '"';
+            if (trim($request->getHeaderLine('If-None-Match')) === $etag) {
+                return $this->response(304)->withHeader('ETag', $etag);
+            }
+            return $this->deliver($request, $contents, $record['mime_type'], $etag);
+        } catch (AuthorizationDeniedException) {
+            return $this->response(403);
+        } catch (TenantContextRequiredException) {
+            return $this->response(303)->withHeader('Location', '/account/workspaces?context_required=1');
+        } catch (\InvalidArgumentException) {
+            return $this->response(404);
+        }
     }
-    private function deliver(ServerRequestInterface $request,string $contents,string $mime,string $etag):ResponseInterface{$size=strlen($contents);$start=0;$end=$size-1;$status=200;$range=$request->getHeaderLine('Range');if($range!==''){if(preg_match('/\Abytes=(\d+)-(\d*)\z/',$range,$matches)!==1)return $this->responses->createResponse(416)->withHeader('Content-Range','bytes */'.$size)->withHeader('Cache-Control','private, no-store');$start=(int)$matches[1];$end=$matches[2]===''?$end:(int)$matches[2];if($start>$end||$start>=$size)return $this->responses->createResponse(416)->withHeader('Content-Range','bytes */'.$size)->withHeader('Cache-Control','private, no-store');$end=min($end,$size-1);$status=206;}$body=substr($contents,$start,$end-$start+1);$response=$this->responses->createResponse($status)->withHeader('Content-Type',$mime)->withHeader('Content-Length',(string)strlen($body))->withHeader('Accept-Ranges','bytes')->withHeader('ETag',$etag)->withHeader('Cache-Control','private, no-store')->withHeader('X-Content-Type-Options','nosniff');if($status===206)$response=$response->withHeader('Content-Range','bytes '.$start.'-'.$end.'/'.$size);$response->getBody()->write($body);return$response;}
+
+    private function deliver(ServerRequestInterface $request, string $contents, string $mime, string $etag): ResponseInterface
+    {
+        $size = strlen($contents);
+        $header = $request->getHeaderLine('Range');
+        if ($request->hasHeader('If-Range') && $request->getHeaderLine('If-Range') !== $etag) {
+            $header = '';
+        }
+        try {
+            $range = MediaRange::fromHeader($header, $size);
+        } catch (\InvalidArgumentException) {
+            return $this->response(416)->withHeader('Content-Range', 'bytes */' . $size);
+        }
+        $body = $range === null ? $contents : substr($contents, $range->start, $range->length());
+        $response = $this->response($range === null ? 200 : 206)
+            ->withHeader('Content-Type', $mime)
+            ->withHeader('Content-Disposition', 'inline')
+            ->withHeader('Content-Length', (string) strlen($body))
+            ->withHeader('Accept-Ranges', 'bytes')
+            ->withHeader('ETag', $etag);
+        if ($range !== null) {
+            $response = $response->withHeader('Content-Range', 'bytes ' . $range->start . '-' . $range->end . '/' . $size);
+        }
+        $response->getBody()->write($body);
+        return $response;
+    }
+
+    private function response(int $status): ResponseInterface
+    {
+        return $this->responses->createResponse($status)
+            ->withHeader('Cache-Control', 'private, no-store')
+            ->withHeader('X-Content-Type-Options', 'nosniff');
+    }
 }

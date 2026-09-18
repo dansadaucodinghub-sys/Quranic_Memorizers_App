@@ -54,13 +54,24 @@ final readonly class AuthorizationMySqlFixture
         if (!$seeds instanceof SeedRegistry) {
             throw new \RuntimeException('Seed fixture registry is invalid.');
         }
-        foreach ($seeds->ordered() as $seed) {
-            if ($seed->id()->value() > '20260902050100_seed_people_identity_resolution_authorization') {
-                continue;
+        // Fixture seed statements are DML. Batch their writes atomically instead of
+        // issuing a durable commit for every row on each serial test rebuild.
+        $this->connection->beginTransaction();
+        try {
+            foreach ($seeds->ordered() as $seed) {
+                if ($seed->id()->value() > '20260902050100_seed_people_identity_resolution_authorization') {
+                    continue;
+                }
+                foreach ($seed->steps() as $step) {
+                    $this->connection->prepare($step->sql())->execute($step->parameters());
+                }
             }
-            foreach ($seed->steps() as $step) {
-                $this->connection->prepare($step->sql())->execute($step->parameters());
+            $this->connection->commit();
+        } catch (\Throwable $exception) {
+            if ($this->connection->inTransaction()) {
+                $this->connection->rollBack();
             }
+            throw $exception;
         }
     }
 

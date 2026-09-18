@@ -136,6 +136,7 @@ enum SecurityEventCode: string
     case TRUSTED_ARCHIVE_HOLD_PLACED = 'trusted_archive.hold_placed';
     case LEGACY_RECORD_IMPORT_APPROVED = 'legacy_record_import.approved';
     case MEDIA_ASSET_UPLOADED = 'media.asset.uploaded';
+    case MEDIA_GOVERNANCE_CHANGED = 'media.governance.changed';
 
     public function severity(): SecurityEventSeverity
     {

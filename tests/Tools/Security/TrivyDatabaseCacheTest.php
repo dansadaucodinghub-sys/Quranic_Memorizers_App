@@ -79,6 +79,25 @@ final class TrivyDatabaseCacheTest extends TestCase
         self::assertSame('old-db', file_get_contents($cache . '/db/trivy.db'));
     }
 
+    public function testLongAcquisitionValidatesAgainstCompletionTime(): void
+    {
+        $clock = $this->now;
+        $cache = $this->root . '/slow-download';
+        $database = new TrivyDatabaseCache(function (array $command) use (&$clock): ProcessResult {
+            $clock = $clock->modify('+20 minutes');
+            $this->writeCache($command[4]);
+            $this->writeMetadata($command[4], ['DownloadedAt' => $clock->format(DATE_ATOM)]);
+            return new ProcessResult($command, 0, '', '');
+        }, static function () use (&$clock): \DateTimeImmutable {
+            return $clock;
+        });
+
+        $result = $database->ensureCurrent($this->root . '/trivy', $cache);
+
+        self::assertSame($clock->format(DATE_ATOM), $result['downloaded_at']);
+        self::assertFileExists($cache . '/db/trivy.db');
+    }
+
     #[DataProvider('invalidCacheProvider')]
     public function testInvalidAndStaleCachesHaveDistinctFailureCategories(string $case, int $expectedCode): void
     {

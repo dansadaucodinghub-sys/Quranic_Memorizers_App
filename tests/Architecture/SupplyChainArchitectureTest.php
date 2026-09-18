@@ -67,6 +67,22 @@ final class SupplyChainArchitectureTest extends TestCase
         );
     }
 
+    public function testGeneratedVulnerabilityDatabaseExclusionDoesNotHideSourceOrOtherCacheFiles(): void
+    {
+        $configuration = file_get_contents(dirname(__DIR__, 2) . '/tools/security/gitleaks.toml');
+        self::assertIsString($configuration);
+        $pattern = <<<'REGEX'
+(?:^|[\\/])var[\\/]cache[\\/]trivy[\\/]db[\\/]trivy\.db$
+REGEX;
+        self::assertStringContainsString($pattern, $configuration);
+        foreach (['var/cache/trivy/db/trivy.db', 'C:\\repo\\var\\cache\\trivy\\db\\trivy.db'] as $path) {
+            self::assertSame(1, preg_match('~' . $pattern . '~', $path));
+        }
+        foreach (['src/trivy.db', 'tests/credentials.php', 'var/cache/trivy/db/credentials.php', 'var/cache/trivy/db/trivy.db.php', 'var/cache/other.db'] as $path) {
+            self::assertSame(0, preg_match('~' . $pattern . '~', $path));
+        }
+    }
+
     public function testWindowsSecurityToolsAreChecksumPinnedAndRunEquivalentScans(): void
     {
         $root = dirname(__DIR__, 2);

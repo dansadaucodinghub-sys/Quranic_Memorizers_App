@@ -10,7 +10,9 @@ use Qmdb\Shared\Background\Scheduler\ScheduledTaskHandler;
 /** Bounded P9 task dispatch. Workers never approve or publish evidence. */
 final readonly class MediaRuntimeScheduledTask implements ScheduledTaskHandler
 {
-    public function __construct(private MediaScanWorker $scans, private MediaProcessingWorker $processing) {}
+    public function __construct(private MediaScanWorker $scans, private MediaProcessingWorker $processing, private MediaMaintenanceWorker $maintenance)
+    {
+    }
     public function __invoke(ScheduledTaskExecutionContext $context): mixed
     {
         $allowed = ['media.scans.process', 'media.processing.process', 'media.staging.cleanup', 'media.uploads.expire', 'media.assets.reconcile'];
@@ -23,8 +25,6 @@ final readonly class MediaRuntimeScheduledTask implements ScheduledTaskHandler
         if ($context->taskId()->value() === 'media.processing.process') {
             return $this->processing->processOne();
         }
-        // Processing, expiry, and reconciliation have distinct repository contracts and are
-        // intentionally not inferred from a scheduler identifier.
-        return ['claimed' => false, 'outcome' => 'NO_IMPLEMENTATION'];
+        return $this->maintenance->run(str_replace('.', ':', substr($context->taskId()->value(), 6)));
     }
 }

@@ -20,13 +20,21 @@ use Qmdb\Shared\Module\ModuleRegistrationContext;
 
 final readonly class MediaIngestionModule implements Module
 {
-    public function id(): ModuleId { return new ModuleId('media.ingestion'); }
-    public function dependencies(): array { return [new ModuleId('media.catalog'), new ModuleId('security.web'), new ModuleId('security.audit')]; }
+    public function id(): ModuleId
+    {
+        return new ModuleId('media.ingestion');
+    }
+    public function dependencies(): array
+    {
+        return [new ModuleId('media.catalog'), new ModuleId('security.web'), new ModuleId('security.audit'), new ModuleId('identity.access'), new ModuleId('identity.sessions'), new ModuleId('tenancy.context'), new ModuleId('security.authorization'), new ModuleId('foundation.http')];
+    }
     public function register(ModuleRegistrationContext $context): void
     {
+        $context->service(ServiceDefinition::factory(\Qmdb\Modules\MediaIngestion\Interface\Http\MediaUploadController::class, 'media.ingestion', [\Qmdb\Modules\IdentitySessions\Interface\Http\AuthenticatedRequestGuard::class, \Qmdb\Modules\TenancyContext\Application\TenantContextRequiredGuard::class, \Qmdb\Modules\IdentityAccess\Interface\Http\IdentityCsrf::class, \Qmdb\Modules\MediaIngestion\Application\AuthorizedMediaUploadService::class, \Nyholm\Psr7\Factory\Psr17Factory::class, \Qmdb\Modules\SecurityAuthorization\Application\AuthorizationRequirementGuard::class], new ClosureServiceFactory(static fn (DependencyResolver $resolver): \Qmdb\Modules\MediaIngestion\Interface\Http\MediaUploadController => new \Qmdb\Modules\MediaIngestion\Interface\Http\MediaUploadController(ServiceReference::get($resolver, \Qmdb\Modules\IdentitySessions\Interface\Http\AuthenticatedRequestGuard::class), ServiceReference::get($resolver, \Qmdb\Modules\TenancyContext\Application\TenantContextRequiredGuard::class), ServiceReference::get($resolver, \Qmdb\Modules\IdentityAccess\Interface\Http\IdentityCsrf::class), ServiceReference::get($resolver, \Qmdb\Modules\MediaIngestion\Application\AuthorizedMediaUploadService::class), ServiceReference::get($resolver, \Nyholm\Psr7\Factory\Psr17Factory::class), ServiceReference::get($resolver, \Qmdb\Modules\SecurityAuthorization\Application\AuthorizationRequirementGuard::class)))));
         $root = getcwd() . DIRECTORY_SEPARATOR . 'runtime' . DIRECTORY_SEPARATOR . 'media-private';
         $context->service(ServiceDefinition::instance(LocalPrivateMediaBlobStore::class, 'media.ingestion', new LocalPrivateMediaBlobStore($root)));
         $context->alias(MediaBlobStore::class, LocalPrivateMediaBlobStore::class);
+        $context->alias(\Qmdb\Modules\MediaIngestion\Application\MediaStagingCleaner::class, LocalPrivateMediaBlobStore::class);
         $context->service(ServiceDefinition::factory(MediaUploadWorkflow::class, 'media.ingestion', [MediaEvidenceRepository::class, MediaBlobStore::class, MediaLifecycle::class], new ClosureServiceFactory(static fn (DependencyResolver $resolver): MediaUploadWorkflow => new MediaUploadWorkflow(ServiceReference::get($resolver, MediaEvidenceRepository::class), ServiceReference::get($resolver, MediaBlobStore::class), ServiceReference::get($resolver, MediaLifecycle::class)))));
         $context->service(ServiceDefinition::factory(AuthorizedMediaUploadService::class, 'media.ingestion', [MediaUploadWorkflow::class, MediaEvidenceRepository::class, \Qmdb\Modules\SecurityAuthorization\Application\AuthorizationRequirementGuard::class, \Qmdb\Modules\IdentityAccess\Security\RateLimit\IdentityRateLimiter::class, \Qmdb\Modules\IdentityAccess\Security\Fingerprint\IdentityFingerprintGenerator::class, \Qmdb\Modules\SecurityAudit\Application\SecurityAuditEventAppender::class, \Qmdb\Shared\Database\Transaction\TransactionManager::class, \Qmdb\Shared\Time\Clock::class], new ClosureServiceFactory(static fn (DependencyResolver $resolver): AuthorizedMediaUploadService => new AuthorizedMediaUploadService(ServiceReference::get($resolver, MediaUploadWorkflow::class), ServiceReference::get($resolver, MediaEvidenceRepository::class), ServiceReference::get($resolver, \Qmdb\Modules\SecurityAuthorization\Application\AuthorizationRequirementGuard::class), ServiceReference::get($resolver, \Qmdb\Modules\IdentityAccess\Security\RateLimit\IdentityRateLimiter::class), ServiceReference::get($resolver, \Qmdb\Modules\IdentityAccess\Security\Fingerprint\IdentityFingerprintGenerator::class), ServiceReference::get($resolver, \Qmdb\Modules\SecurityAudit\Application\SecurityAuditEventAppender::class), ServiceReference::get($resolver, \Qmdb\Shared\Database\Transaction\TransactionManager::class), ServiceReference::get($resolver, \Qmdb\Shared\Time\Clock::class)))));
     }

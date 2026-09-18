@@ -36,6 +36,10 @@ final readonly class MediaP9AuthorizationCatalog
             'workspace.media_manager' => ['workspace.media.view', 'workspace.media.review', 'workspace.media.approve', 'workspace.media.reject', 'workspace.media.hold', 'workspace.media.remove'],
             'workspace.media_auditor' => ['workspace.media.view', 'workspace.media.audit'],
         ];
-        foreach ($mappings as $role => $permissions) foreach ($permissions as $permission) $builder->map(new RoleCode($role), new PermissionCode($permission));
+        foreach ($mappings as $role => $permissions) {
+            foreach ($permissions as $permission) {
+                $builder->map(new RoleCode($role), new PermissionCode($permission));
+            }
+        }
     }
 }

@@ -149,6 +149,9 @@ final readonly class ApplicationHttpModule implements Module
             new ModuleId('competition.result_publication'),
             new ModuleId('competition.appeal_adjudication'),
             new ModuleId('certificate.verification'),
+            new ModuleId('media.ingestion'),
+            new ModuleId('media.moderation'),
+            new ModuleId('media.delivery'),
         ];
     }
 
@@ -257,6 +260,7 @@ final readonly class ApplicationHttpModule implements Module
             PublicCertificateVerificationController::class,
             CertificateGovernanceController::class,
             MediaUploadController::class,
+            \Qmdb\Modules\MediaModeration\Interface\Http\MediaGovernanceController::class,
             PrivateMediaDeliveryController::class,
         ];
         $context->service(ServiceDefinition::factory(

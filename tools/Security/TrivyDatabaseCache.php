@@ -28,12 +28,21 @@ final class TrivyDatabaseCache
     /** @var \Closure(list<string>, string): ProcessResult */
     private \Closure $run;
 
-    /** @param callable(list<string>, string): ProcessResult|null $runner */
-    public function __construct(?callable $runner = null)
+    /** @var \Closure(): \DateTimeImmutable */
+    private \Closure $clock;
+
+    /**
+     * @param callable(list<string>, string): ProcessResult|null $runner
+     * @param callable(): \DateTimeImmutable|null $clock
+     */
+    public function __construct(?callable $runner = null, ?callable $clock = null)
     {
         $this->run = $runner === null
             ? static fn (array $command, string $directory): ProcessResult => self::runNative($command, $directory)
             : \Closure::fromCallable($runner);
+        $this->clock = $clock === null
+            ? static fn (): \DateTimeImmutable => new \DateTimeImmutable('now', new \DateTimeZone('UTC'))
+            : \Closure::fromCallable($clock);
     }
 
     /**
@@ -41,7 +50,6 @@ final class TrivyDatabaseCache
      */
     public function ensureCurrent(string $binary, string $cacheRoot, ?\DateTimeImmutable $now = null): array
     {
-        $now ??= new \DateTimeImmutable('now', new \DateTimeZone('UTC'));
         try {
             return $this->validate($cacheRoot, $now);
         } catch (TrivyDatabaseException $exception) {
@@ -69,7 +77,6 @@ final class TrivyDatabaseCache
         if (!is_file($binary) || !is_readable($binary)) {
             throw new TrivyDatabaseException('Pinned Trivy binary is unavailable.', TrivyDatabaseException::POLICY_INVALID);
         }
-        $now ??= new \DateTimeImmutable('now', new \DateTimeZone('UTC'));
         $parent = dirname($cacheRoot);
         if (!is_dir($parent) && !mkdir($parent, 0755, true) && !is_dir($parent)) {
             throw new TrivyDatabaseException('Trivy cache parent is unavailable.', TrivyDatabaseException::CACHE_UNREADABLE);
@@ -96,6 +103,8 @@ final class TrivyDatabaseCache
                     $errors[] = $repository . ': ' . $this->summary($result->output());
                     continue;
                 }
+                // Acquisition and mirror fallback can exceed the clock-skew window.
+                // With the runtime clock, assess freshness at completion, not at start.
                 $metadata = $this->validate($temporary, $now);
                 $this->publish($temporary, $cacheRoot);
                 return $metadata;
@@ -119,7 +128,7 @@ final class TrivyDatabaseCache
      */
     public function validate(string $cacheRoot, ?\DateTimeImmutable $now = null): array
     {
-        $now ??= new \DateTimeImmutable('now', new \DateTimeZone('UTC'));
+        $now ??= ($this->clock)();
         $database = $cacheRoot . '/db/trivy.db';
         $metadataPath = $cacheRoot . '/db/metadata.json';
         if (!is_dir($cacheRoot) || !is_readable($cacheRoot) || !is_file($database) || !is_readable($database) || filesize($database) < 1) {
