@@ -5,7 +5,7 @@ import { adoptTenantContextResponse, tenantContextVersion } from './tenant-conte
 const FRAGMENT_MEDIA_TYPE = 'text/vnd.qmdb.fragment+html';
 
 function safeNavigation(response, base) {
-    const value = (response.headers.get('X-QMDB-Navigate') ?? '').trim();
+    const value = (response.headers.get('X-QMDB-Navigate') ?? response.headers.get('Location') ?? '').trim();
     if (!value) return '';
     if (!value.startsWith('/') || value.startsWith('//') || /[\u0000-\u001f\u007f]/.test(value)) {
         throw new QmdbFetchError({ code: 'UNSAFE_NAVIGATION_REJECTED', title: 'Unsafe navigation rejected' });
@@ -61,6 +61,9 @@ export async function submitMutationForm(form, { signal, fetchImpl = globalThis.
         }));
     }
     const navigate = safeNavigation(response, base);
+    if ([302, 303].includes(response.status) && navigate) {
+        return { fragment: null, requestId, status: response.status, ok: true, navigate };
+    }
     const contentType = (response.headers.get('Content-Type') ?? '').toLowerCase();
     if (contentType.startsWith(FRAGMENT_MEDIA_TYPE) && response.headers.get('X-QMDB-Fragment') === '1') {
         const fragment = parseSafeFragment(await response.text(), base);

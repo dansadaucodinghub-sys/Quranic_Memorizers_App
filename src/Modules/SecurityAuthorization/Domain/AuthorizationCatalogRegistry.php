@@ -117,6 +117,7 @@ final readonly class AuthorizationCatalogRegistry
         CompetitionP7AuthorizationCatalog::extend($builder);
         CertificateP8AuthorizationCatalog::extend($builder);
         MediaP9AuthorizationCatalog::extend($builder);
+        CommunityP10AuthorizationCatalog::extend($builder);
 
         return $builder->build();
     }

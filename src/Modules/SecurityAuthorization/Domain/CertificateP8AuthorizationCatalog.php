@@ -22,10 +22,18 @@ final readonly class CertificateP8AuthorizationCatalog
     ];
     public static function extend(AuthorizationCatalogBuilder $builder): void
     {
-        $time=new DateTimeImmutable('2026-09-15T00:00:00.000000Z');
-        foreach(self::PERMISSIONS as [$id,$code,$scope,$assurance])$builder->permission(new PermissionDefinition(PermissionId::fromString($id),new PermissionCode($code),AuthorizationScopeType::from($scope),AuthenticationAssuranceLevel::from($assurance),PermissionStatus::ACTIVE,'certificate.issuance',1,$time,$time));
-        foreach(self::ROLES as [$id,$code,$scope])$builder->role(new RoleDefinition(RoleId::fromString($id),new RoleCode($code),AuthorizationScopeType::from($scope),RoleStatus::ACTIVE,true,1,$time,$time));
-        $mappings=['workspace.certificate_manager'=>['workspace.certificates.view','workspace.certificates.manage_templates','workspace.certificates.prepare'],'workspace.certificate_issuer'=>['workspace.certificates.view','workspace.certificates.prepare','workspace.certificates.issue','workspace.certificates.revoke','workspace.certificates.supersede','workspace.certificates.archive'],'workspace.record_passport_manager'=>['workspace.record_passports.view','workspace.record_passports.manage'],'workspace.archive_auditor'=>['workspace.trusted_archive.view','workspace.trusted_archive.verify'],'workspace.legacy_record_importer'=>['workspace.legacy_records.import'],'platform.certificate_key_custodian'=>['platform.certificate_signing_keys.view','platform.certificate_signing_keys.manage']];
-        foreach($mappings as $role=>$permissions)foreach($permissions as $permission)$builder->map(new RoleCode($role),new PermissionCode($permission));
+        $time = new DateTimeImmutable('2026-09-15T00:00:00.000000Z');
+        foreach (self::PERMISSIONS as [$id,$code,$scope,$assurance]) {
+            $builder->permission(new PermissionDefinition(PermissionId::fromString($id), new PermissionCode($code), AuthorizationScopeType::from($scope), AuthenticationAssuranceLevel::from($assurance), PermissionStatus::ACTIVE, 'certificate.issuance', 1, $time, $time));
+        }
+        foreach (self::ROLES as [$id,$code,$scope]) {
+            $builder->role(new RoleDefinition(RoleId::fromString($id), new RoleCode($code), AuthorizationScopeType::from($scope), RoleStatus::ACTIVE, true, 1, $time, $time));
+        }
+        $mappings = ['workspace.certificate_manager' => ['workspace.certificates.view','workspace.certificates.manage_templates','workspace.certificates.prepare'],'workspace.certificate_issuer' => ['workspace.certificates.view','workspace.certificates.prepare','workspace.certificates.issue','workspace.certificates.revoke','workspace.certificates.supersede','workspace.certificates.archive'],'workspace.record_passport_manager' => ['workspace.record_passports.view','workspace.record_passports.manage'],'workspace.archive_auditor' => ['workspace.trusted_archive.view','workspace.trusted_archive.verify'],'workspace.legacy_record_importer' => ['workspace.legacy_records.import'],'platform.certificate_key_custodian' => ['platform.certificate_signing_keys.view','platform.certificate_signing_keys.manage']];
+        foreach ($mappings as $role => $permissions) {
+            foreach ($permissions as $permission) {
+                $builder->map(new RoleCode($role), new PermissionCode($permission));
+            }
+        }
     }
 }

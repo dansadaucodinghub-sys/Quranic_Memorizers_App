@@ -92,11 +92,14 @@ enum StepUpAction: string
     case MEDIA_REJECT = 'MEDIA_REJECT';
     case MEDIA_HOLD = 'MEDIA_HOLD';
     case MEDIA_REMOVE = 'MEDIA_REMOVE';
+    case CLIP_PUBLISH = 'CLIP_PUBLISH';
+    case COMMUNITY_MODERATION_DECIDE = 'COMMUNITY_MODERATION_DECIDE';
 
     public function requirement(): AuthenticationAssuranceLevel
     {
         return match ($this) {
-            self::MEDIA_APPROVE, self::MEDIA_REJECT, self::MEDIA_HOLD, self::MEDIA_REMOVE, self::MEDIA_CONSENT_GRANT => AuthenticationAssuranceLevel::PHISHING_RESISTANT,
+            self::MEDIA_APPROVE, self::MEDIA_REJECT, self::MEDIA_HOLD, self::MEDIA_REMOVE, self::MEDIA_CONSENT_GRANT,
+            self::CLIP_PUBLISH, self::COMMUNITY_MODERATION_DECIDE => AuthenticationAssuranceLevel::PHISHING_RESISTANT,
             self::MFA_ENROLL_TOTP, self::MFA_REGISTER_PASSKEY, self::ORGANIZATION_AFFILIATION_ACCEPT, self::ORGANIZATION_AFFILIATION_LEAVE, self::PROFILE_DUPLICATE_REPORT => AuthenticationAssuranceLevel::PRIMARY,
             self::AUTHORIZATION_PLATFORM_ROLE_ASSIGN,
             self::AUTHORIZATION_PLATFORM_ROLE_REVOKE,
@@ -135,6 +138,8 @@ enum StepUpAction: string
     {
         return match ($this) {
             self::MEDIA_APPROVE, self::MEDIA_REJECT, self::MEDIA_HOLD, self::MEDIA_REMOVE, self::MEDIA_CONSENT_GRANT => '/workspace/media',
+            self::CLIP_PUBLISH => '/workspace/community/review',
+            self::COMMUNITY_MODERATION_DECIDE => '/workspace/community/moderation',
             self::MFA_ENROLL_TOTP => '/account/security/mfa/totp/enroll',
             self::MFA_REGISTER_PASSKEY => '/account/security/passkeys/register',
             self::MFA_DISABLE => '/account/security/mfa/disable',

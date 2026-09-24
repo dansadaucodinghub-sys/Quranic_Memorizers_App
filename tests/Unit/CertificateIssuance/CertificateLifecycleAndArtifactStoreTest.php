@@ -30,12 +30,20 @@ final class CertificateLifecycleAndArtifactStoreTest extends TestCase
             $store->put('certificates/a/manifest.json', '{"safe":false}', 'application/json');
         } finally {
             $path = $root . DIRECTORY_SEPARATOR . 'certificates' . DIRECTORY_SEPARATOR . 'a' . DIRECTORY_SEPARATOR . 'manifest.json';
-            if (is_file($path)) unlink($path);
+            if (is_file($path)) {
+                unlink($path);
+            }
             $directory = dirname($path);
-            if (is_dir($directory)) rmdir($directory);
+            if (is_dir($directory)) {
+                rmdir($directory);
+            }
             $directory = dirname($directory);
-            if (is_dir($directory)) rmdir($directory);
-            if (is_dir($root)) rmdir($root);
+            if (is_dir($directory)) {
+                rmdir($directory);
+            }
+            if (is_dir($root)) {
+                rmdir($root);
+            }
         }
     }
 

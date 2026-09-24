@@ -28,8 +28,10 @@ final class CertificatePublicIdentifierPolicy
     public static function serial(int $year, string $workspaceCode, int $sequence): string
     {
         $normalized = strtoupper($workspaceCode);
-        if ($year < 2000 || $year > 9999 || $sequence < 1 || $sequence > 999999
-            || preg_match('/\A[A-Z0-9][A-Z0-9_-]{0,63}\z/', $normalized) !== 1) {
+        if (
+            $year < 2000 || $year > 9999 || $sequence < 1 || $sequence > 999999
+            || preg_match('/\A[A-Z0-9][A-Z0-9_-]{0,63}\z/', $normalized) !== 1
+        ) {
             throw new \InvalidArgumentException('Certificate serial allocation input is invalid.');
         }
 

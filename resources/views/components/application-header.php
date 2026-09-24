@@ -16,21 +16,43 @@ $path = $view->string('current_path');
         <nav aria-label="Primary"><ul class="primary-nav">
             <li><a href="/?lang=<?= $escape->escapeAttribute($locale) ?>"><?= $escape->escapeText($translator->trans('nav.home')) ?></a></li>
             <li><a href="/system/about?lang=<?= $escape->escapeAttribute($locale) ?>"><?= $escape->escapeText($translator->trans('nav.about')) ?></a></li>
+            <li><a href="/community?lang=<?= $escape->escapeAttribute($locale) ?>"><?= $escape->escapeText($translator->trans('nav.community')) ?></a></li>
             <li><a href="/system/status?lang=<?= $escape->escapeAttribute($locale) ?>"><?= $escape->escapeText($translator->trans('nav.status')) ?></a></li>
         </ul></nav>
         <div class="header-controls">
-            <?php if ($view->boolean('tenant_authenticated')): ?>
+            <?php if ($view->boolean('tenant_authenticated')) : ?>
             <div class="workspace-context-links" data-qmdb-workspace-context
                  data-qmdb-tenant-context-version="<?= $escape->escapeAttribute((string)$view->integer('tenant_context_version')) ?>">
                 <span><?= $escape->escapeText($translator->trans('workspace.context')) ?></span>
-                <?php if ($view->string('tenant_workspace_name') !== ''): ?>
+                <a class="workspace-context-change" href="/account/community/profile?lang=<?= $escape->escapeAttribute($locale) ?>">
+                    <?= $escape->escapeText($translator->trans('community.profile.title')) ?>
+                </a>
+                <a class="workspace-context-change" href="/workspace/community/clips?lang=<?= $escape->escapeAttribute($locale) ?>">
+                    <?= $escape->escapeText($translator->trans('community.creator.title')) ?>
+                </a>
+                <a class="workspace-context-change" href="/account/community/safety?lang=<?= $escape->escapeAttribute($locale) ?>">
+                    <?= $escape->escapeText($translator->trans('community.social.safety_title')) ?>
+                </a>
+                <a class="workspace-context-change" href="/account/community/followers?lang=<?= $escape->escapeAttribute($locale) ?>">
+                    <?= $escape->escapeText($translator->trans('community.social.followers_title')) ?>
+                </a>
+                <a class="workspace-context-change" href="/account/community/following?lang=<?= $escape->escapeAttribute($locale) ?>">
+                    <?= $escape->escapeText($translator->trans('community.social.following_title')) ?>
+                </a>
+                <a class="workspace-context-change" href="/account/community/bookmarks?lang=<?= $escape->escapeAttribute($locale) ?>">
+                    <?= $escape->escapeText($translator->trans('community.bookmarks.title')) ?>
+                </a>
+                <a class="workspace-context-change" href="/account/community/appeals?lang=<?= $escape->escapeAttribute($locale) ?>">
+                    <?= $escape->escapeText($translator->trans('community.appeal.title')) ?>
+                </a>
+                <?php if ($view->string('tenant_workspace_name') !== '') : ?>
                     <a class="workspace-context-control" href="/workspace?lang=<?= $escape->escapeAttribute($locale) ?>">
                         <strong><?= $escape->escapeText($view->string('tenant_workspace_name')) ?></strong>
                     </a>
                     <a class="workspace-context-change" href="/account/workspaces?lang=<?= $escape->escapeAttribute($locale) ?>">
                         <?= $escape->escapeText($translator->trans('workspace.change')) ?>
                     </a>
-                <?php else: ?>
+                <?php else : ?>
                     <a class="workspace-context-control" href="/account/workspaces?lang=<?= $escape->escapeAttribute($locale) ?>">
                         <strong><?= $escape->escapeText($translator->trans('workspace.choose')) ?></strong>
                     </a>

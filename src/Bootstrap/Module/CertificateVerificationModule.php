@@ -23,8 +23,14 @@ use Qmdb\Shared\Module\ModuleRegistrationContext;
 
 final readonly class CertificateVerificationModule implements Module
 {
-    public function id(): ModuleId { return new ModuleId('certificate.verification'); }
-    public function dependencies(): array { return [new ModuleId('certificate.issuance'), new ModuleId('foundation.database'), new ModuleId('foundation.http'), new ModuleId('security.web')]; }
+    public function id(): ModuleId
+    {
+        return new ModuleId('certificate.verification');
+    }
+    public function dependencies(): array
+    {
+        return [new ModuleId('certificate.issuance'), new ModuleId('foundation.database'), new ModuleId('foundation.http'), new ModuleId('security.web')];
+    }
     public function register(ModuleRegistrationContext $context): void
     {
         $context->service(ServiceDefinition::factory(MySqlPublicCertificateVerificationReader::class, 'certificate.verification', [DatabaseConnectionProvider::class], new ClosureServiceFactory(static fn (DependencyResolver $resolver): MySqlPublicCertificateVerificationReader => new MySqlPublicCertificateVerificationReader(ServiceReference::get($resolver, DatabaseConnectionProvider::class)))));

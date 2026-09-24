@@ -59,6 +59,17 @@ use Qmdb\Modules\CertificateVerification\Interface\Http\PublicCertificateVerific
 use Qmdb\Modules\CertificateIssuance\Interface\Http\CertificateGovernanceController;
 use Qmdb\Modules\MediaIngestion\Interface\Http\MediaUploadController;
 use Qmdb\Modules\MediaDelivery\Interface\Http\PrivateMediaDeliveryController;
+use Qmdb\Modules\Community\Interface\Http\CommunityPublicClipController;
+use Qmdb\Modules\Community\Interface\Http\CommunityReportController;
+use Qmdb\Modules\Community\Interface\Http\CommunityFeedController;
+use Qmdb\Modules\Community\Interface\Http\CommunityProfileController;
+use Qmdb\Modules\Community\Interface\Http\CommunityCreatorClipController;
+use Qmdb\Modules\Community\Interface\Http\CommunityClipReviewController;
+use Qmdb\Modules\Community\Interface\Http\CommunityModerationController;
+use Qmdb\Modules\Community\Interface\Http\CommunityModerationAppealController;
+use Qmdb\Modules\Community\Interface\Http\CommunitySocialController;
+use Qmdb\Modules\Community\Interface\Http\CommunityEngagementController;
+use Qmdb\Modules\Community\Interface\Http\CommunityBookmarksController;
 use Qmdb\Shared\Http\Routing\HttpMethod;
 use Qmdb\Shared\Http\Routing\Route;
 use Qmdb\Shared\Http\Routing\RouteCollection;
@@ -121,6 +132,17 @@ return static function (
     MediaUploadController $mediaUpload,
     \Qmdb\Modules\MediaModeration\Interface\Http\MediaGovernanceController $mediaGovernance,
     PrivateMediaDeliveryController $privateMediaDelivery,
+    CommunityPublicClipController $communityPublicClip,
+    CommunityReportController $communityReport,
+    CommunityFeedController $communityFeed,
+    CommunityProfileController $communityProfile,
+    CommunityCreatorClipController $communityCreatorClip,
+    CommunityClipReviewController $communityClipReview,
+    CommunityModerationController $communityModeration,
+    CommunityModerationAppealController $communityAppeals,
+    CommunitySocialController $communitySocial,
+    CommunityEngagementController $communityEngagement,
+    CommunityBookmarksController $communityBookmarks,
 ): RouteCollection {
     return new RouteCollection(
         new Route('system.home', [HttpMethod::GET], new RoutePattern('/'), $homeController),
@@ -153,6 +175,48 @@ return static function (
         new Route('workspace.media.archive', [HttpMethod::POST], new RoutePattern('/workspace/media/{assetId}/archive'), $mediaGovernance),
         new Route('workspace.media.upload', [HttpMethod::POST], new RoutePattern('/workspace/media/uploads'), $mediaUpload),
         new Route('workspace.media.content', [HttpMethod::GET], new RoutePattern('/workspace/media/{assetId}/content'), $privateMediaDelivery),
+        new Route('community.clip.detail', [HttpMethod::GET], new RoutePattern('/clips/{clipId}'), $communityPublicClip),
+        new Route('community.clip.media', [HttpMethod::GET], new RoutePattern('/clips/{clipId}/media'), $communityPublicClip),
+        new Route('community.clip.comments', [HttpMethod::GET], new RoutePattern('/clips/{clipId}/comments'), $communityEngagement),
+        new Route('community.clip.comment.create', [HttpMethod::POST], new RoutePattern('/clips/{clipId}/comments'), $communityEngagement),
+        new Route('community.clip.comment.reply', [HttpMethod::POST], new RoutePattern('/clips/{clipId}/comments/{commentId}/reply'), $communityEngagement),
+        new Route('community.clip.comment.edit', [HttpMethod::POST], new RoutePattern('/clips/{clipId}/comments/{commentId}/edit'), $communityEngagement),
+        new Route('community.clip.comment.remove', [HttpMethod::POST], new RoutePattern('/clips/{clipId}/comments/{commentId}/remove'), $communityEngagement),
+        new Route('community.clip.interaction', [HttpMethod::POST], new RoutePattern('/clips/{clipId}/interactions/{kind}'), $communityEngagement),
+        new Route('community.feed.index', [HttpMethod::GET], new RoutePattern('/community'), $communityFeed),
+        new Route('community.feed.discover', [HttpMethod::GET], new RoutePattern('/community/discover'), $communityFeed),
+        new Route('community.profile.detail', [HttpMethod::GET], new RoutePattern('/community/profiles/{profileId}'), $communityFeed),
+        new Route('community.profile.clips', [HttpMethod::GET], new RoutePattern('/community/profiles/{profileId}/clips'), $communityFeed),
+        new Route('account.community.feed', [HttpMethod::GET], new RoutePattern('/account/community/feed'), $communityFeed),
+        new Route('account.community.profile', [HttpMethod::GET], new RoutePattern('/account/community/profile'), $communityProfile),
+        new Route('account.community.profile.update', [HttpMethod::POST], new RoutePattern('/account/community/profile/update'), $communityProfile),
+        new Route('account.community.report.form', [HttpMethod::GET], new RoutePattern('/clips/{clipId}/report'), $communityReport),
+        new Route('account.community.report.submit', [HttpMethod::POST], new RoutePattern('/community/reports'), $communityReport),
+        new Route('workspace.community.clips.index', [HttpMethod::GET], new RoutePattern('/workspace/community/clips'), $communityCreatorClip),
+        new Route('workspace.community.clips.create', [HttpMethod::POST], new RoutePattern('/workspace/community/clips'), $communityCreatorClip),
+        new Route('workspace.community.clips.update', [HttpMethod::POST], new RoutePattern('/workspace/community/clips/{clipId}/update'), $communityCreatorClip),
+        new Route('workspace.community.clips.submit', [HttpMethod::POST], new RoutePattern('/workspace/community/clips/{clipId}/submit'), $communityCreatorClip),
+        new Route('workspace.community.clips.hide', [HttpMethod::POST], new RoutePattern('/workspace/community/clips/{clipId}/hide'), $communityCreatorClip),
+        new Route('workspace.community.clips.remove', [HttpMethod::POST], new RoutePattern('/workspace/community/clips/{clipId}/remove'), $communityCreatorClip),
+        new Route('workspace.community.clips.archive', [HttpMethod::POST], new RoutePattern('/workspace/community/clips/{clipId}/archive'), $communityCreatorClip),
+        new Route('workspace.community.review.index', [HttpMethod::GET], new RoutePattern('/workspace/community/review'), $communityClipReview),
+        new Route('workspace.community.review.publish', [HttpMethod::POST], new RoutePattern('/workspace/community/review/{clipId}/publish'), $communityClipReview),
+        new Route('workspace.community.moderation.index', [HttpMethod::GET], new RoutePattern('/workspace/community/moderation'), $communityModeration),
+        new Route('workspace.community.moderation.detail', [HttpMethod::GET], new RoutePattern('/workspace/community/moderation/{caseId}'), $communityModeration),
+        new Route('workspace.community.moderation.assign', [HttpMethod::POST], new RoutePattern('/workspace/community/moderation/{caseId}/assign'), $communityModeration),
+        new Route('workspace.community.moderation.start', [HttpMethod::POST], new RoutePattern('/workspace/community/moderation/{caseId}/start'), $communityModeration),
+        new Route('workspace.community.moderation.decide', [HttpMethod::POST], new RoutePattern('/workspace/community/moderation/{caseId}/decide'), $communityModeration),
+        new Route('workspace.community.moderation.comment.decide', [HttpMethod::POST], new RoutePattern('/workspace/community/moderation/comments/{commentId}/decide'), $communityModeration),
+        new Route('account.community.appeals.index', [HttpMethod::GET], new RoutePattern('/account/community/appeals'), $communityAppeals),
+        new Route('account.community.appeals.submit', [HttpMethod::POST], new RoutePattern('/account/community/appeals/{caseId}'), $communityAppeals),
+        new Route('workspace.community.appeals.index', [HttpMethod::GET], new RoutePattern('/workspace/community/appeals'), $communityAppeals),
+        new Route('workspace.community.appeals.detail', [HttpMethod::GET], new RoutePattern('/workspace/community/appeals/{appealId}'), $communityAppeals),
+        new Route('workspace.community.appeals.decide', [HttpMethod::POST], new RoutePattern('/workspace/community/appeals/{appealId}/decide'), $communityAppeals),
+        new Route('account.community.safety', [HttpMethod::GET], new RoutePattern('/account/community/safety'), $communitySocial),
+        new Route('account.community.followers', [HttpMethod::GET], new RoutePattern('/account/community/followers'), $communitySocial),
+        new Route('account.community.following', [HttpMethod::GET], new RoutePattern('/account/community/following'), $communitySocial),
+        new Route('account.community.bookmarks', [HttpMethod::GET], new RoutePattern('/account/community/bookmarks'), $communityBookmarks),
+        new Route('account.community.social.action', [HttpMethod::POST], new RoutePattern('/account/community/social/{profileId}/{action}'), $communitySocial),
         new Route('system.about.page', [HttpMethod::GET], new RoutePattern('/system/about'), $aboutPageController),
         new Route('system.status.page', [HttpMethod::GET], new RoutePattern('/system/status'), $statusPageController),
         new Route(

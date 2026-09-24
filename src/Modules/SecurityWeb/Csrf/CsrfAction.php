@@ -205,4 +205,12 @@ enum CsrfAction: string
     case MEDIA_RELEASE_HOLD = 'media.release_hold';
     case MEDIA_REMOVE = 'media.remove';
     case MEDIA_ARCHIVE = 'media.archive';
+    case COMMUNITY_REPORT = 'community.report';
+    case COMMUNITY_PROFILE_SAVE = 'community.profile.save';
+    case COMMUNITY_CLIP_MUTATE = 'community.clip.mutate';
+    case COMMUNITY_CLIP_REVIEW = 'community.clip.review';
+    case COMMUNITY_MODERATION = 'community.moderation';
+    case COMMUNITY_APPEAL = 'community.appeal';
+    case COMMUNITY_SOCIAL = 'community.social';
+    case COMMUNITY_ENGAGEMENT = 'community.engagement';
 }

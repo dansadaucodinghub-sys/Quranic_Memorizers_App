@@ -137,6 +137,11 @@ enum SecurityEventCode: string
     case LEGACY_RECORD_IMPORT_APPROVED = 'legacy_record_import.approved';
     case MEDIA_ASSET_UPLOADED = 'media.asset.uploaded';
     case MEDIA_GOVERNANCE_CHANGED = 'media.governance.changed';
+    case COMMUNITY_CLIP_PUBLISHED = 'community.clip.published';
+    case COMMUNITY_REPORT_SUBMITTED = 'community.report.submitted';
+    case COMMUNITY_MODERATION_DECIDED = 'community.moderation.decided';
+    case COMMUNITY_MODERATION_APPEALED = 'community.moderation.appealed';
+    case COMMUNITY_MODERATION_APPEAL_DECIDED = 'community.moderation.appeal_decided';
 
     public function severity(): SecurityEventSeverity
     {

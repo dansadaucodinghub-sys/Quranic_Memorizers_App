@@ -17,7 +17,17 @@ use Qmdb\Shared\Module\ModuleRegistrationContext;
 
 final readonly class RecordPassportModule implements Module
 {
-    public function id(): ModuleId { return new ModuleId('record.passport'); }
-    public function dependencies(): array { return [new ModuleId('certificate.issuance'), new ModuleId('people.profiles'), new ModuleId('competition.result_publication'), new ModuleId('foundation.database'), new ModuleId('security.authorization'), new ModuleId('security.web'), new ModuleId('tenancy.context')]; }
-    public function register(ModuleRegistrationContext $context): void { $context->service(ServiceDefinition::instance(RecordPassportProjectionPolicy::class, 'record.passport', new RecordPassportProjectionPolicy())); $context->service(ServiceDefinition::factory(RecordPassportProjector::class, 'record.passport', [DatabaseConnectionProvider::class], new ClosureServiceFactory(static fn (DependencyResolver $resolver): RecordPassportProjector => new RecordPassportProjector(ServiceReference::get($resolver, DatabaseConnectionProvider::class))))); }
+    public function id(): ModuleId
+    {
+        return new ModuleId('record.passport');
+    }
+    public function dependencies(): array
+    {
+        return [new ModuleId('certificate.issuance'), new ModuleId('people.profiles'), new ModuleId('competition.result_publication'), new ModuleId('foundation.database'), new ModuleId('security.authorization'), new ModuleId('security.web'), new ModuleId('tenancy.context')];
+    }
+    public function register(ModuleRegistrationContext $context): void
+    {
+        $context->service(ServiceDefinition::instance(RecordPassportProjectionPolicy::class, 'record.passport', new RecordPassportProjectionPolicy()));
+        $context->service(ServiceDefinition::factory(RecordPassportProjector::class, 'record.passport', [DatabaseConnectionProvider::class], new ClosureServiceFactory(static fn (DependencyResolver $resolver): RecordPassportProjector => new RecordPassportProjector(ServiceReference::get($resolver, DatabaseConnectionProvider::class)))));
+    }
 }

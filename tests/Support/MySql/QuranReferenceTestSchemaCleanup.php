@@ -27,6 +27,21 @@ final class QuranReferenceTestSchemaCleanup
 
         foreach (
             [
+                // P10 children must be removed before their P9 media, P4 Qur'an,
+                // Person, Account, and Workspace parents in serial test rebuilds.
+                'community_moderation_appeal_reviews', 'community_moderation_appeals',
+                'community_notification_events', 'community_notification_intents',
+                'community_moderation_decisions', 'community_moderation_events',
+                'community_moderation_assignments', 'community_reports', 'community_moderation_cases',
+                'community_operation_receipts',
+                'community_global_operation_receipts', 'community_social_events',
+                'community_interaction_events',
+                'community_comment_events', 'community_comments',
+                'community_reactions', 'community_bookmarks',
+                'recitation_clip_public_snapshots', 'recitation_clip_events',
+                'recitation_clip_quran_references', 'recitation_clips',
+                'community_follows', 'community_blocks', 'community_mutes',
+                'community_profile_events', 'community_profiles',
                 // P9 children precede identity, tenancy, and person parent teardown.
                 'media_consent_reviews', 'media_governance_operations', 'media_operation_receipts',
                 'media_scan_results', 'media_events', 'media_holds', 'media_delivery_policies',

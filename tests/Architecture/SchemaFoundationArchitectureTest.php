@@ -70,7 +70,7 @@ use SplFileInfo;
 
 final class SchemaFoundationArchitectureTest extends TestCase
 {
-    public function testProductionManifestsPreserveHistoricalPrefixAndAllowOnlyAuthorizedP4ThroughP9Extensions(): void
+    public function testProductionManifestsPreserveHistoricalPrefixAndAppendAuthorizedP10Extensions(): void
     {
         $migrationFactory = require dirname(__DIR__, 2) . '/database/migrations.php';
         $seedFactory = require dirname(__DIR__, 2) . '/database/seeds.php';
@@ -85,7 +85,7 @@ final class SchemaFoundationArchitectureTest extends TestCase
         }
 
         $ordered = $migrations->ordered();
-        self::assertCount(86, $ordered);
+        self::assertCount(97, $ordered);
         self::assertSame(
             [
                 CreateScheduledTaskRunsMigration::class,
@@ -234,8 +234,21 @@ final class SchemaFoundationArchitectureTest extends TestCase
             '20260917120000_complete_media_governance',
             '20260917121000_extend_media_governance_security',
             '20260917140000_create_media_consent_reviews',
-        ], array_slice(array_map(static fn (Migration $migration): string => $migration->id()->value(), $ordered), 47));
-        self::assertCount(20, $seeds->ordered());
+        ], array_slice(array_map(static fn (Migration $migration): string => $migration->id()->value(), $ordered), 47, 39));
+        self::assertSame([
+            '20260922100000_create_recitation_clip_foundation',
+            '20260922101000_create_community_safety_foundation',
+            '20260922103000_extend_community_security_vocabulary',
+            '20260922104000_create_community_operation_receipts',
+            '20260922105000_create_community_social_operations',
+            '20260922110000_create_community_interaction_events',
+            '20260922111000_add_community_feed_keyset_index',
+            '20260922112000_add_clip_supersession_constraint',
+            '20260922113000_create_community_moderation_appeals',
+            '20260922113500_harden_community_moderation_appeal_tenant_key',
+            '20260922114000_create_community_notification_intents',
+        ], array_map(static fn (Migration $migration): string => $migration->id()->value(), array_slice($ordered, 86)));
+        self::assertCount(21, $seeds->ordered());
         self::assertSame(
             [
                 SeedFoundationalAuthorizationCatalog::class,
@@ -256,7 +269,11 @@ final class SchemaFoundationArchitectureTest extends TestCase
         self::assertSame([
             '20260915105000_seed_p8_authorization_catalog',
             '20260915112000_seed_p9_media_authorization_catalog',
-        ], array_map(static fn (\Qmdb\Shared\Schema\Seed\Seed $seed): string => $seed->id()->value(), array_slice($seeds->ordered(), 18)));
+        ], array_map(static fn (\Qmdb\Shared\Schema\Seed\Seed $seed): string => $seed->id()->value(), array_slice($seeds->ordered(), 18, 2)));
+        self::assertSame(
+            '20260922102000_seed_p10_community_authorization',
+            $seeds->ordered()[20]->id()->value()
+        );
     }
 
     public function testNoDiscoveryOrHttpMutationSurfaceExists(): void

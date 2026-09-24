@@ -31,6 +31,9 @@ final class ProductionRouteSecurityPolicyCatalog
         'competition.public.results.edition', 'competition.public.results.category', 'competition.public.results.round',
         'competition.public.live', 'competition.public.live.snapshot', 'competition.public.live.stream',
         'certificate.public.verify', 'certificate.public.manifest', 'certificate.public.pdf',
+        'community.clip.detail', 'community.clip.media', 'community.clip.comments',
+        'community.feed.index', 'community.feed.discover',
+        'community.profile.detail', 'community.profile.clips',
     ];
 
     /** @var list<string> */
@@ -84,17 +87,45 @@ final class ProductionRouteSecurityPolicyCatalog
         'account.competition_judging.score.form', 'account.competition_judging.score.submit',
         'account.competition_judging.score.lock.form', 'account.competition_judging.score.lock',
         'account.competition_appeal.index', 'account.competition_appeal.detail',
+        'account.community.report.form', 'account.community.report.submit',
+        'account.community.feed',
+        'account.community.profile',
+        'account.community.safety', 'account.community.followers', 'account.community.following',
+        'account.community.bookmarks',
+        'account.community.appeals.index', 'account.community.appeals.submit',
+        'account.community.social.action',
+        'community.clip.comment.create', 'community.clip.comment.reply',
+        'community.clip.comment.edit', 'community.clip.comment.remove', 'community.clip.interaction',
         'account.competition_appeal.withdraw.form', 'account.competition_appeal.withdraw',
     ];
 
     /** @var list<string> */
     private const array TENANT_REQUIRED = [
+        'account.community.profile.update',
         'workspace.current', 'workspace.privileged_access.approve.form',
         'workspace.privileged_access.approve.submit',
     ];
 
     /** @var array<string, string> */
     private const array BASE_ROLE_PERMISSIONS = [
+        'workspace.community.clips.index' => 'community.clips.create',
+        'workspace.community.clips.create' => 'community.clips.create',
+        'workspace.community.clips.update' => 'community.clips.manage_own',
+        'workspace.community.clips.submit' => 'community.clips.manage_own',
+        'workspace.community.clips.hide' => 'community.clips.manage_own',
+        'workspace.community.clips.remove' => 'community.clips.manage_own',
+        'workspace.community.clips.archive' => 'community.clips.manage_own',
+        'workspace.community.review.index' => 'workspace.community.clips.review',
+        'workspace.community.review.publish' => 'workspace.community.clips.review',
+        'workspace.community.moderation.index' => 'workspace.community.moderation.review',
+        'workspace.community.moderation.detail' => 'workspace.community.reports.view',
+        'workspace.community.moderation.assign' => 'workspace.community.moderation.review',
+        'workspace.community.moderation.start' => 'workspace.community.moderation.review',
+        'workspace.community.moderation.decide' => 'workspace.community.moderation.decide',
+        'workspace.community.moderation.comment.decide' => 'workspace.community.moderation.decide',
+        'workspace.community.appeals.index' => 'workspace.community.moderation.decide',
+        'workspace.community.appeals.detail' => 'workspace.community.moderation.decide',
+        'workspace.community.appeals.decide' => 'workspace.community.moderation.decide',
         'platform.security.accounts.detail' => 'platform.accounts.view',
         'platform.security.accounts.suspend' => 'platform.accounts.suspend',
         'platform.security.accounts.reactivate' => 'platform.accounts.reactivate',
@@ -261,6 +292,10 @@ final class ProductionRouteSecurityPolicyCatalog
 
     /** @var array<string, string> */
     private const array STEP_UP_ACTIONS = [
+        'workspace.community.review.publish' => 'CLIP_PUBLISH',
+        'workspace.community.moderation.decide' => 'COMMUNITY_MODERATION_DECIDE',
+        'workspace.community.moderation.comment.decide' => 'COMMUNITY_MODERATION_DECIDE',
+        'workspace.community.appeals.decide' => 'COMMUNITY_MODERATION_DECIDE',
         'platform.security.accounts.suspend' => 'ACCOUNT_SUSPEND',
         'platform.security.accounts.reactivate' => 'ACCOUNT_REACTIVATE',
         'account.privileged_access.approve.submit' => 'TEMPORARY_PRIVILEGE_APPROVE',
@@ -332,6 +367,27 @@ final class ProductionRouteSecurityPolicyCatalog
 
     /** @var array<string, string> */
     private const array CSRF_ACTIONS = [
+        'account.community.profile.update' => 'community.profile.save',
+        'account.community.social.action' => 'community.social',
+        'community.clip.comment.create' => 'community.engagement',
+        'community.clip.comment.reply' => 'community.engagement',
+        'community.clip.comment.edit' => 'community.engagement',
+        'community.clip.comment.remove' => 'community.engagement',
+        'community.clip.interaction' => 'community.engagement',
+        'workspace.community.clips.create' => 'community.clip.mutate',
+        'workspace.community.clips.update' => 'community.clip.mutate',
+        'workspace.community.clips.submit' => 'community.clip.mutate',
+        'workspace.community.clips.hide' => 'community.clip.mutate',
+        'workspace.community.clips.remove' => 'community.clip.mutate',
+        'workspace.community.clips.archive' => 'community.clip.mutate',
+        'workspace.community.review.publish' => 'community.clip.review',
+        'workspace.community.moderation.assign' => 'community.moderation',
+        'workspace.community.moderation.start' => 'community.moderation',
+        'workspace.community.moderation.decide' => 'community.moderation',
+        'workspace.community.moderation.comment.decide' => 'community.moderation',
+        'account.community.appeals.submit' => 'community.appeal',
+        'workspace.community.appeals.decide' => 'community.appeal',
+        'account.community.report.submit' => 'community.report',
         'workspace.media.upload' => 'media.upload',
         'workspace.media.approve' => 'media.approve',
         'workspace.media.reject' => 'media.reject',
@@ -486,6 +542,18 @@ final class ProductionRouteSecurityPolicyCatalog
 
     /** @var list<string> */
     private const array IDEMPOTENT = [
+        'account.community.profile.update',
+        'account.community.social.action',
+        'community.clip.comment.create', 'community.clip.comment.reply',
+        'community.clip.comment.edit', 'community.clip.comment.remove', 'community.clip.interaction',
+        'workspace.community.clips.create', 'workspace.community.clips.submit',
+        'workspace.community.clips.update',
+        'workspace.community.clips.hide', 'workspace.community.clips.remove',
+        'workspace.community.clips.archive',
+        'workspace.community.review.publish',
+        'workspace.community.moderation.assign', 'workspace.community.moderation.start',
+        'workspace.community.moderation.decide',
+        'account.community.report.submit',
         'workspace.media.upload',
         'workspace.media.approve',
         'workspace.media.reject',
@@ -594,7 +662,7 @@ final class ProductionRouteSecurityPolicyCatalog
 
         return new RouteSecurityPolicy(
             $classification,
-            $classification === RouteSecurityClassification::TENANT_REQUIRED || str_starts_with($route, 'workspace.organizations.') || str_starts_with($route, 'workspace.competition.') || str_starts_with($route, 'workspace.certificates.') || str_starts_with($route, 'workspace.media.'),
+            $classification === RouteSecurityClassification::TENANT_REQUIRED || str_starts_with($route, 'workspace.organizations.') || str_starts_with($route, 'workspace.competition.') || str_starts_with($route, 'workspace.certificates.') || str_starts_with($route, 'workspace.media.') || str_starts_with($route, 'workspace.community.'),
             $permission,
             $assurance,
             self::STEP_UP_ACTIONS[$route] ?? null,
@@ -612,6 +680,11 @@ final class ProductionRouteSecurityPolicyCatalog
     private function assuranceForPermission(?string $permission): ?string
     {
         return match ($permission) {
+            'community.clips.create', 'community.clips.manage_own' => 'PRIMARY',
+            'workspace.community.clips.review' => 'PHISHING_RESISTANT',
+            'workspace.community.moderation.review' => 'MULTI_FACTOR',
+            'workspace.community.reports.view' => 'MULTI_FACTOR',
+            'workspace.community.moderation.decide' => 'PHISHING_RESISTANT',
             'workspace.media.approve', 'workspace.media.reject', 'workspace.media.hold', 'workspace.media.remove' => 'PHISHING_RESISTANT',
             'workspace.media.view', 'workspace.media.review', 'media.assets.upload', 'media.assets.manage_own' => 'PHISHING_RESISTANT',
             'platform.accounts.view', 'platform.security_events.view',

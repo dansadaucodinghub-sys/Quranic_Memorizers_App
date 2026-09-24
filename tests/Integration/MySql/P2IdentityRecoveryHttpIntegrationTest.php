@@ -49,6 +49,9 @@ use Qmdb\Shared\Infrastructure\Persistence\MySql\Connection\MySqlConnectionProvi
 use Qmdb\Shared\Background\Scheduler\Migration\CreateScheduledTaskRunsMigration;
 use Qmdb\Shared\Presentation\Response\FragmentRequestDetector;
 use Qmdb\Shared\Schema\Migration\Migration;
+use Qmdb\Shared\Configuration\ApplicationConfigurationFactory;
+use Qmdb\Shared\Configuration\Infrastructure\DotenvEnvironmentLoader;
+use Qmdb\Modules\SecurityAudit\Configuration\SecurityAuditConfigurationFactory;
 use Qmdb\Tests\Support\MySql\MySqlIntegrationTestCase;
 
 #[\PHPUnit\Framework\Attributes\Group('AuthenticationAbuse')]
@@ -286,7 +289,13 @@ final class P2IdentityRecoveryHttpIntegrationTest extends MySqlIntegrationTestCa
         );
         $this->markCurrentScheduleSlotSucceeded('organizations.affiliations.maintain', 900);
         $this->markCurrentScheduleSlotSucceeded('people.profile_claims.maintain', 900);
-        $this->markCurrentScheduleSlotSucceeded('security.audit.checkpoint', 900);
+        // The audit interval is configurable (3600 seconds by default), not the
+        // 900-second interval used by the P3 tasks. A guessed slot made this
+        // assertion depend on which quarter of the hour the suite reached it.
+        $environment = (new DotenvEnvironmentLoader())->load(dirname(__DIR__, 3));
+        $application = (new ApplicationConfigurationFactory())->create($environment->variables(), $environment->source());
+        $audit = (new SecurityAuditConfigurationFactory())->create($environment->variables(), $application);
+        $this->markCurrentScheduleSlotSucceeded('security.audit.checkpoint', $audit->checkpointIntervalSeconds);
         foreach (
             [
             ['competition.rounds.process', 60],
@@ -310,6 +319,7 @@ final class P2IdentityRecoveryHttpIntegrationTest extends MySqlIntegrationTestCa
             ['media.staging.cleanup', 900],
             ['media.uploads.expire', 300],
             ['media.assets.reconcile', 900],
+            ['community.notifications.deliver', 60],
             ] as [$taskId, $intervalSeconds]
         ) {
             $this->markCurrentScheduleSlotSucceeded($taskId, $intervalSeconds);

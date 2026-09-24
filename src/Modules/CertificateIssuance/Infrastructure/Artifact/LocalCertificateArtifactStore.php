@@ -53,6 +53,12 @@ final readonly class LocalCertificateArtifactStore implements CertificateArtifac
         return $value;
     }
 
-    private function path(string $objectKey): string { return rtrim($this->root, DIRECTORY_SEPARATOR) . DIRECTORY_SEPARATOR . str_replace('/', DIRECTORY_SEPARATOR, $objectKey); }
-    private function validObjectKey(string $objectKey): bool { return preg_match('~\A[a-z0-9][a-z0-9._/-]{2,300}\z~', $objectKey) === 1 && !str_contains($objectKey, '..'); }
+    private function path(string $objectKey): string
+    {
+        return rtrim($this->root, DIRECTORY_SEPARATOR) . DIRECTORY_SEPARATOR . str_replace('/', DIRECTORY_SEPARATOR, $objectKey);
+    }
+    private function validObjectKey(string $objectKey): bool
+    {
+        return preg_match('~\A[a-z0-9][a-z0-9._/-]{2,300}\z~', $objectKey) === 1 && !str_contains($objectKey, '..');
+    }
 }

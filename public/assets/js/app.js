@@ -14,6 +14,7 @@ import { startGeographyDependentSelects } from './geography-dependent-select.js'
 import { OrganizationAffiliationRosterController } from './organization-affiliation-roster-controller.js';
 import { PersonIdentityResolutionController } from './person-identity-resolution-controller.js';
 import { QuranReaderController } from './quran-reader-controller.js';
+import { CommunityFormController } from './community-form-controller.js';
 
 function start() {
     const liveRegion = new LiveRegion(document.getElementById('qmdb-live-region'));
@@ -22,6 +23,7 @@ function start() {
     new ThemeController({ selector: document.querySelector('[data-qmdb-theme]'), liveRegion }).start();
     new PartialRefreshController({ coordinator, liveRegion, focusManager }).start();
     new ModalController({ coordinator, liveRegion, focusManager }).start();
+    new CommunityFormController({ liveRegion, focusManager }).start();
     new ProgressiveFormController({ liveRegion, focusManager }).start();
     new PasskeyLoginController({ liveRegion }).start();
     new PasskeyRegistrationController({ liveRegion }).start();

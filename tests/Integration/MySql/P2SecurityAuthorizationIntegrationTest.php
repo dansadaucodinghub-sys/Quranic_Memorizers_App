@@ -79,9 +79,12 @@ final class P2SecurityAuthorizationIntegrationTest extends MySqlIntegrationTestC
         ));
         self::assertCount(1, $forwardOnlyCorrections);
         self::assertFalse($forwardOnlyCorrections[0]->reversible());
-        // The P8 certificate and P9 media catalogs are governed additive
-        // seed; this integration fixture validates the current registry.
-        self::assertCount(20, $seeds->ordered());
+        // Preserve the historical P0-P9 prefix while requiring the additive P10 seed.
+        self::assertCount(21, $seeds->ordered());
+        self::assertSame(
+            '20260922102000_seed_p10_community_authorization',
+            $seeds->ordered()[20]->id()->value(),
+        );
         self::assertSame(64, strlen($seedChecksum->hexadecimal($seeds->ordered()[0])));
 
         self::assertSame(45, $this->fixture->tableCount('authorization_permissions'));

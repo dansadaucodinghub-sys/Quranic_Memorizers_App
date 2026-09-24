@@ -98,6 +98,12 @@ final readonly class PublicCertificateVerificationController implements Controll
         return $response;
     }
 
-    private function notFound(): ResponseInterface { return $this->responses->createResponse(404)->withHeader('Cache-Control', 'public, max-age=60'); }
-    private function escape(string $value): string { return htmlspecialchars($value, ENT_QUOTES | ENT_SUBSTITUTE, 'UTF-8'); }
+    private function notFound(): ResponseInterface
+    {
+        return $this->responses->createResponse(404)->withHeader('Cache-Control', 'public, max-age=60');
+    }
+    private function escape(string $value): string
+    {
+        return htmlspecialchars($value, ENT_QUOTES | ENT_SUBSTITUTE, 'UTF-8');
+    }
 }

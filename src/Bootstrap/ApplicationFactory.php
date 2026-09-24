@@ -44,6 +44,7 @@ use Qmdb\Bootstrap\Module\MediaDeliveryModule;
 use Qmdb\Bootstrap\Module\MediaIngestionModule;
 use Qmdb\Bootstrap\Module\MediaModerationModule;
 use Qmdb\Bootstrap\Module\MediaProcessingModule;
+use Qmdb\Bootstrap\Module\CommunityRecitationClipsModule;
 use Qmdb\Bootstrap\Module\RecordPassportModule;
 use Qmdb\Bootstrap\Module\TrustedArchiveModule;
 use Qmdb\Bootstrap\Module\CertificateVerificationModule;
@@ -256,6 +257,7 @@ final readonly class ApplicationFactory
             new MediaProcessingModule(),
             new MediaModerationModule(),
             new MediaDeliveryModule(),
+            new CommunityRecitationClipsModule(),
             new ApplicationHttpModule($this->projectRoot),
             new ConsoleFoundationModule(),
         ]);

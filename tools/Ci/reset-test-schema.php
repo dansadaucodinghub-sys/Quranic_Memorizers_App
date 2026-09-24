@@ -80,12 +80,12 @@ try {
             ':referenced_schema' => $database,
         ]);
         /** @var list<array{TABLE_NAME: string, REFERENCED_TABLE_NAME: string}> $foreignKeys */
-    $foreignKeys = $foreignKeyStatement->fetchAll(\PDO::FETCH_ASSOC);
-    $referencedTables = [];
-    foreach ($foreignKeys as $foreignKey) {
-        $childTable = $foreignKey['TABLE_NAME'];
-        $parentTable = $foreignKey['REFERENCED_TABLE_NAME'];
-        if (
+        $foreignKeys = $foreignKeyStatement->fetchAll(\PDO::FETCH_ASSOC);
+        $referencedTables = [];
+        foreach ($foreignKeys as $foreignKey) {
+            $childTable = $foreignKey['TABLE_NAME'];
+            $parentTable = $foreignKey['REFERENCED_TABLE_NAME'];
+            if (
                 $childTable !== $parentTable
                 && isset($remainingTables[$childTable], $remainingTables[$parentTable])
             ) {

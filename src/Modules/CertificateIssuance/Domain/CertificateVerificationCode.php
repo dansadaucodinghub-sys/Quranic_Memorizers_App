@@ -21,7 +21,16 @@ final readonly class CertificateVerificationCode
         return new self($value);
     }
 
-    public function value(): string { return $this->value; }
-    public function hash(): string { return hash('sha256', $this->value, true); }
-    public function fingerprint(): string { return substr($this->hash(), 0, 16); }
+    public function value(): string
+    {
+        return $this->value;
+    }
+    public function hash(): string
+    {
+        return hash('sha256', $this->value, true);
+    }
+    public function fingerprint(): string
+    {
+        return substr($this->hash(), 0, 16);
+    }
 }

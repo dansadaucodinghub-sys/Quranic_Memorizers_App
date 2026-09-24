@@ -58,3 +58,20 @@
 .workspace-empty { border-inline-start: .25rem solid var(--color-accent); margin-block-start: var(--space-5); padding: var(--space-4); }
 .workspace-account-actions { margin-block-start: var(--space-6); }
 .status-banner { border-inline-start: .25rem solid var(--color-ready); margin-block-start: var(--space-5); padding: var(--space-3) var(--space-4); }
+[data-qmdb-community-clip] video,
+[data-qmdb-community-clip] audio { display: block; inline-size: 100%; max-inline-size: 48rem; margin-block: var(--space-5); }
+[data-qmdb-community-clip] video { block-size: auto; background: #000; }
+.community-feed-list { list-style: none; margin: var(--space-6) 0; padding: 0; }
+.community-feed-list > li { border-block-start: var(--border-width) solid var(--color-border); padding-block: var(--space-6); }
+.community-feed-item { max-inline-size: 48rem; }
+.community-feed-item h2 { font-size: clamp(1.1rem, 2vw, 1.45rem); margin-block: 0 var(--space-2); }
+.community-feed-item p { overflow-wrap: anywhere; }
+[data-qmdb-community-feed] form[role="search"] { align-items: end; display: flex; flex-wrap: wrap; gap: var(--space-3); }
+[data-qmdb-community-feed] form[role="search"] label { font-weight: 700; }
+[data-qmdb-community-feed] form[role="search"] input,
+[data-qmdb-community-feed] form[role="search"] select { background: var(--color-surface); border: var(--border-width) solid var(--color-border); border-radius: var(--radius-sm); color: var(--color-text); font: inherit; min-block-size: var(--touch-target); padding: var(--space-2) var(--space-3); }
+[data-qmdb-community-feed] form[role="search"] input { inline-size: 8rem; }
+[data-qmdb-community-feed] form[role="search"] button { min-block-size: var(--touch-target); }
+[data-qmdb-community-profile] form { display: grid; gap: var(--space-4); max-inline-size: 38rem; }
+[data-qmdb-community-profile] label { display: block; font-weight: 700; margin-block-end: var(--space-2); }
+[data-qmdb-community-profile] input[type="text"], [data-qmdb-community-profile] select { background: var(--color-surface); border: var(--border-width) solid var(--color-border); border-radius: var(--radius-sm); color: var(--color-text); font: inherit; inline-size: 100%; min-block-size: var(--touch-target); padding: var(--space-2) var(--space-3); }

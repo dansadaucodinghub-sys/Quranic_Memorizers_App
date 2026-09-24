@@ -14,5 +14,8 @@ final readonly class RenderedCertificateArtifacts
         }
     }
 
-    public function pdfSha256(): string { return hash('sha256', $this->pdf, true); }
+    public function pdfSha256(): string
+    {
+        return hash('sha256', $this->pdf, true);
+    }
 }

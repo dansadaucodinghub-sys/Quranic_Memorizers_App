@@ -20,11 +20,14 @@ final readonly class MediaRuntimeScheduledTask implements ScheduledTaskHandler
             throw new \LogicException('Unregistered P9 scheduler task cannot be dispatched.');
         }
         if ($context->taskId()->value() === 'media.scans.process') {
-            return $this->scans->processOne();
+            $this->scans->processOne();
+            return null;
         }
         if ($context->taskId()->value() === 'media.processing.process') {
-            return $this->processing->processOne();
+            $this->processing->processOne();
+            return null;
         }
-        return $this->maintenance->run(str_replace('.', ':', substr($context->taskId()->value(), 6)));
+        $this->maintenance->run(str_replace('.', ':', substr($context->taskId()->value(), 6)));
+        return null;
     }
 }

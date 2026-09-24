@@ -43,15 +43,73 @@ final class CertificatePublicVerificationRouteTest extends TestCase
         $manifest = '{"certificate_number":"QMDB-001","schema_version":1}';
         $hash = hash('sha256', $manifest, true);
         $controller = new PublicCertificateVerificationController(
-            new class($manifest, $hash) implements PublicCertificateVerificationReader {
-                public function __construct(private string $manifest, private string $hash) {}
-                public function byVerificationCode(string $verificationCode): ?array { if ($verificationCode === '') return null; return ['certificate_number' => 'QMDB-001', 'certificate_type' => 'MERIT', 'status' => 'ISSUED', 'issued_at' => null, 'manifest' => $this->manifest, 'manifest_sha256' => $this->hash, 'signature' => str_repeat('s', 64), 'public_key' => str_repeat('p', 32), 'key_status' => 'ACTIVE', 'pdf_sha256' => str_repeat('p', 32)]; }
-                public function pdfByVerificationCode(string $verificationCode): ?array { return null; }
+            new class ($manifest, $hash) implements PublicCertificateVerificationReader {
+                public function __construct(private string $manifest, private string $hash)
+                {
+                }
+
+                public function byVerificationCode(string $verificationCode): ?array
+                {
+                    if ($verificationCode === '') {
+                        return null;
+                    }
+
+                    return [
+                        'certificate_number' => 'QMDB-001',
+                        'certificate_type' => 'MERIT',
+                        'status' => 'ISSUED',
+                        'issued_at' => null,
+                        'manifest' => $this->manifest,
+                        'manifest_sha256' => $this->hash,
+                        'signature' => str_repeat('s', 64),
+                        'public_key' => str_repeat('p', 32),
+                        'key_status' => 'ACTIVE',
+                        'pdf_sha256' => str_repeat('p', 32),
+                    ];
+                }
+
+                public function pdfByVerificationCode(string $verificationCode): ?array
+                {
+                    return null;
+                }
             },
-            new class implements CertificateSignatureVerifier { public function verify(CertificateSigningKey $key, string $canonicalManifest, string $signature): bool { return true; } },
-            new class implements CertificateArtifactStore { public function put(string $objectKey, string $contents, string $mediaType): void {} public function get(string $objectKey): string { throw new \RuntimeException('Not used by this test.'); } },
-            new class implements IdentityRateLimiter { public function consume(array $attempts, \DateTimeImmutable $now): IdentityRateLimitDecision { return IdentityRateLimitDecision::allowed(); } public function reset(array $attempts): void {} },
-            new class implements IdentityFingerprintGenerator { public function generate(string $domain, string $value): IdentityFingerprint { return new IdentityFingerprint(hash('sha256', $domain . $value, true)); } },
+            new class implements CertificateSignatureVerifier {
+                public function verify(
+                    CertificateSigningKey $key,
+                    string $canonicalManifest,
+                    string $signature,
+                ): bool {
+                    return true;
+                }
+            },
+            new class implements CertificateArtifactStore {
+                public function put(string $objectKey, string $contents, string $mediaType): void
+                {
+                }
+
+                public function get(string $objectKey): string
+                {
+                    throw new \RuntimeException('Not used by this test.');
+                }
+            },
+            new class implements IdentityRateLimiter {
+                public function consume(
+                    array $attempts,
+                    \DateTimeImmutable $now,
+                ): IdentityRateLimitDecision {
+                    return IdentityRateLimitDecision::allowed();
+                }
+
+                public function reset(array $attempts): void
+                {
+                }
+            },
+            new class implements IdentityFingerprintGenerator {
+                public function generate(string $domain, string $value): IdentityFingerprint
+                {
+                    return new IdentityFingerprint(hash('sha256', $domain . $value, true));
+                }
+            },
             new Psr17Factory(),
         );
         $response = $controller->handle(HttpTestFactory::request('GET', '/verify/certificates/test')->withAttribute(RouteAttributes::PARAMETERS, ['verificationCode' => 'test'])->withHeader('If-None-Match', '"' . bin2hex($hash) . '"'));
@@ -67,15 +125,84 @@ final class CertificatePublicVerificationRouteTest extends TestCase
         $pdf = "%PDF-1.4\nP8 test artifact\n";
         $pdfHash = hash('sha256', $pdf, true);
         $controller = new PublicCertificateVerificationController(
-            new class($manifest, $manifestHash, $pdfHash) implements PublicCertificateVerificationReader {
-                public function __construct(private string $manifest, private string $manifestHash, private string $pdfHash) {}
-                public function byVerificationCode(string $verificationCode): ?array { if ($verificationCode === '') return null; return ['certificate_number' => 'QMDB-002', 'certificate_type' => 'MERIT', 'status' => 'ISSUED', 'issued_at' => null, 'manifest' => $this->manifest, 'manifest_sha256' => $this->manifestHash, 'signature' => str_repeat('s', 64), 'public_key' => str_repeat('p', 32), 'key_status' => 'ACTIVE', 'pdf_sha256' => $this->pdfHash]; }
-                public function pdfByVerificationCode(string $verificationCode): ?array { return $verificationCode === '' ? null : ['object_key' => 'certificates/p8/certificate.pdf', 'pdf_sha256' => $this->pdfHash, 'certificate_number' => 'QMDB-002']; }
+            new class ($manifest, $manifestHash, $pdfHash) implements PublicCertificateVerificationReader {
+                public function __construct(
+                    private string $manifest,
+                    private string $manifestHash,
+                    private string $pdfHash,
+                ) {
+                }
+
+                public function byVerificationCode(string $verificationCode): ?array
+                {
+                    if ($verificationCode === '') {
+                        return null;
+                    }
+
+                    return [
+                        'certificate_number' => 'QMDB-002',
+                        'certificate_type' => 'MERIT',
+                        'status' => 'ISSUED',
+                        'issued_at' => null,
+                        'manifest' => $this->manifest,
+                        'manifest_sha256' => $this->manifestHash,
+                        'signature' => str_repeat('s', 64),
+                        'public_key' => str_repeat('p', 32),
+                        'key_status' => 'ACTIVE',
+                        'pdf_sha256' => $this->pdfHash,
+                    ];
+                }
+
+                public function pdfByVerificationCode(string $verificationCode): ?array
+                {
+                    return $verificationCode === '' ? null : [
+                        'object_key' => 'certificates/p8/certificate.pdf',
+                        'pdf_sha256' => $this->pdfHash,
+                        'certificate_number' => 'QMDB-002',
+                    ];
+                }
             },
-            new class implements CertificateSignatureVerifier { public function verify(CertificateSigningKey $key, string $canonicalManifest, string $signature): bool { return true; } },
-            new class($pdf) implements CertificateArtifactStore { public function __construct(private string $pdf) {} public function put(string $objectKey, string $contents, string $mediaType): void {} public function get(string $objectKey): string { return $this->pdf; } },
-            new class implements IdentityRateLimiter { public function consume(array $attempts, \DateTimeImmutable $now): IdentityRateLimitDecision { return IdentityRateLimitDecision::allowed(); } public function reset(array $attempts): void {} },
-            new class implements IdentityFingerprintGenerator { public function generate(string $domain, string $value): IdentityFingerprint { return new IdentityFingerprint(hash('sha256', $domain . $value, true)); } },
+            new class implements CertificateSignatureVerifier {
+                public function verify(
+                    CertificateSigningKey $key,
+                    string $canonicalManifest,
+                    string $signature,
+                ): bool {
+                    return true;
+                }
+            },
+            new class ($pdf) implements CertificateArtifactStore {
+                public function __construct(private string $pdf)
+                {
+                }
+
+                public function put(string $objectKey, string $contents, string $mediaType): void
+                {
+                }
+
+                public function get(string $objectKey): string
+                {
+                    return $this->pdf;
+                }
+            },
+            new class implements IdentityRateLimiter {
+                public function consume(
+                    array $attempts,
+                    \DateTimeImmutable $now,
+                ): IdentityRateLimitDecision {
+                    return IdentityRateLimitDecision::allowed();
+                }
+
+                public function reset(array $attempts): void
+                {
+                }
+            },
+            new class implements IdentityFingerprintGenerator {
+                public function generate(string $domain, string $value): IdentityFingerprint
+                {
+                    return new IdentityFingerprint(hash('sha256', $domain . $value, true));
+                }
+            },
             new Psr17Factory(),
         );
         $response = $controller->handle(HttpTestFactory::request('GET', '/verify/certificates/test/pdf')->withAttribute(RouteAttributes::PARAMETERS, ['verificationCode' => 'test']));

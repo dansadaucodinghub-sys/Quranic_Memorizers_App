@@ -16,6 +16,19 @@
 
     <exclude-pattern>vendor/*</exclude-pattern>
 
+    <!-- Applied schema and seed artifacts are byte-frozen by the migration ledger. -->
+    <exclude-pattern>src/Modules/CertificateIssuance/Infrastructure/Migration/CreateCertificateGovernanceMigration.php</exclude-pattern>
+    <exclude-pattern>src/Modules/CertificateIssuance/Infrastructure/Migration/CreateCertificateIssuanceMigration.php</exclude-pattern>
+    <exclude-pattern>src/Modules/CertificateIssuance/Infrastructure/Migration/CreateCertificateOperationIdempotencyMigration.php</exclude-pattern>
+    <exclude-pattern>src/Modules/CertificateIssuance/Infrastructure/Seed/SeedP8AuthorizationCatalog.php</exclude-pattern>
+    <exclude-pattern>src/Modules/MediaCatalog/Infrastructure/Migration/CreateMediaFoundationMigration.php</exclude-pattern>
+    <exclude-pattern>src/Modules/MediaCatalog/Infrastructure/Migration/CreateMediaOperationReceiptMigration.php</exclude-pattern>
+    <exclude-pattern>src/Modules/MediaCatalog/Infrastructure/Seed/SeedP9MediaAuthorizationCatalog.php</exclude-pattern>
+    <exclude-pattern>src/Modules/MediaCatalog/Infrastructure/Migration/ExtendMediaEvidenceRuntimeMigration.php</exclude-pattern>
+    <exclude-pattern>src/Modules/RecordPassport/Infrastructure/Migration/CreateRecordPassportMigration.php</exclude-pattern>
+    <exclude-pattern>src/Modules/TrustedArchive/Infrastructure/Migration/CreateLegacyRecordImportMigration.php</exclude-pattern>
+    <exclude-pattern>src/Modules/TrustedArchive/Infrastructure/Migration/CreateTrustedArchiveMigration.php</exclude-pattern>
+
     <rule ref="PSR12"/>
     <rule ref="PSR1.Files.SideEffects">
         <exclude-pattern>tools/bootstrap.php</exclude-pattern>

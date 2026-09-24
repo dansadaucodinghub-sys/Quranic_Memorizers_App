@@ -14,6 +14,7 @@ export class ProgressiveFormController {
     }
 
     async handleSubmit(event) {
+        if (event.defaultPrevented) return;
         const form = event.target instanceof HTMLFormElement
             ? event.target.closest('form[data-qmdb-progressive-form]')
             : null;

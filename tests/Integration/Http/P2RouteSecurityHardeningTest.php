@@ -50,6 +50,9 @@ final class P2RouteSecurityHardeningTest extends TestCase
             'competition.public.results.round',
             'competition.public.live', 'competition.public.live.snapshot', 'competition.public.live.stream',
             'certificate.public.verify', 'certificate.public.manifest', 'certificate.public.pdf',
+            'community.clip.detail', 'community.clip.media', 'community.clip.comments',
+            'community.feed.index', 'community.feed.discover',
+            'community.profile.detail', 'community.profile.clips',
         ], true);
         foreach ($routes as $route) {
             $name = $route['name'];

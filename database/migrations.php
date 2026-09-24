@@ -85,6 +85,16 @@ use Qmdb\Modules\TrustedArchive\Infrastructure\Migration\CreateLegacyRecordImpor
 use Qmdb\Modules\MediaCatalog\Infrastructure\Migration\CreateMediaFoundationMigration;
 use Qmdb\Modules\MediaCatalog\Infrastructure\Migration\ExtendMediaEvidenceRuntimeMigration;
 use Qmdb\Modules\MediaCatalog\Infrastructure\Migration\CreateMediaOperationReceiptMigration;
+use Qmdb\Modules\Community\Infrastructure\Migration\CreateRecitationClipFoundationMigration;
+use Qmdb\Modules\Community\Infrastructure\Migration\CreateCommunitySafetyFoundationMigration;
+use Qmdb\Modules\Community\Infrastructure\Migration\ExtendCommunitySecurityVocabularyMigration;
+use Qmdb\Modules\Community\Infrastructure\Migration\CreateCommunityOperationReceiptsMigration;
+use Qmdb\Modules\Community\Infrastructure\Migration\CreateCommunitySocialOperationMigration;
+use Qmdb\Modules\Community\Infrastructure\Migration\CreateCommunityInteractionEventMigration;
+use Qmdb\Modules\Community\Infrastructure\Migration\AddRecitationClipSupersessionConstraintMigration;
+use Qmdb\Modules\Community\Infrastructure\Migration\CreateCommunityModerationAppealsMigration;
+use Qmdb\Modules\Community\Infrastructure\Migration\CreateCommunityNotificationIntentMigration;
+use Qmdb\Modules\Community\Infrastructure\Migration\HardenCommunityModerationAppealTenantKeyMigration;
 use Qmdb\Shared\Schema\Migration\MigrationRegistry;
 use Qmdb\Shared\Schema\Migration\MigrationRegistryBuilder;
 
@@ -176,5 +186,16 @@ return static function (): MigrationRegistry {
         ->register(new \Qmdb\Modules\MediaModeration\Infrastructure\Migration\CompleteMediaGovernanceMigration())
         ->register(new \Qmdb\Modules\MediaModeration\Infrastructure\Migration\ExtendMediaGovernanceSecurityMigration())
         ->register(new \Qmdb\Modules\MediaModeration\Infrastructure\Migration\CreateMediaConsentReviewMigration())
+        ->register(new CreateRecitationClipFoundationMigration())
+        ->register(new CreateCommunitySafetyFoundationMigration())
+        ->register(new ExtendCommunitySecurityVocabularyMigration())
+        ->register(new CreateCommunityOperationReceiptsMigration())
+        ->register(new CreateCommunitySocialOperationMigration())
+        ->register(new CreateCommunityInteractionEventMigration())
+        ->register(new \Qmdb\Modules\Community\Infrastructure\Migration\AddCommunityFeedKeysetIndexMigration())
+        ->register(new AddRecitationClipSupersessionConstraintMigration())
+        ->register(new CreateCommunityModerationAppealsMigration())
+        ->register(new HardenCommunityModerationAppealTenantKeyMigration())
+        ->register(new CreateCommunityNotificationIntentMigration())
         ->build();
 };

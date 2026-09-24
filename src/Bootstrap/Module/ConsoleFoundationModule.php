@@ -86,6 +86,10 @@ use Qmdb\Modules\CompetitionPublication\Infrastructure\Persistence\CompetitionRe
 use Qmdb\Modules\CompetitionAppealAdjudication\Infrastructure\Persistence\CompetitionAppealMaintenanceService;
 use Qmdb\Modules\CertificateIssuance\Interface\Console\CompetitionP8VerifyConsoleCommand;
 use Qmdb\Modules\MediaCatalog\Interface\Console\CompetitionP9VerifyConsoleCommand;
+use Qmdb\Modules\Community\Interface\Console\CompetitionP10VerifyConsoleCommand;
+use Qmdb\Modules\Community\Interface\Console\CommunityNotificationsDeliverConsoleCommand;
+use Qmdb\Modules\Community\Interface\Console\CompetitionP10ProductionReadinessConsoleCommand;
+use Qmdb\Modules\Community\Interface\Console\CompetitionP10ProductionSmokeConsoleCommand;
 use Qmdb\Modules\MediaCatalog\Interface\Console\MediaP9RuntimeConsoleCommand;
 use Qmdb\Modules\MediaProcessing\Application\MediaScanWorker;
 use Qmdb\Modules\MediaProcessing\Application\MediaProcessingWorker;
@@ -128,6 +132,7 @@ final readonly class ConsoleFoundationModule implements Module
             new ModuleId('trusted.archive'),
             new ModuleId('media.catalog'),
             new ModuleId('media.processing'),
+            new ModuleId('community.recitation_clips'),
             new ModuleId('reference.geography'),
             new ModuleId('people.profiles'),
             new ModuleId('organizations.registry'),
@@ -335,6 +340,10 @@ final readonly class ConsoleFoundationModule implements Module
             CompetitionP7ProductionReadinessConsoleCommand::class,
             CompetitionP8VerifyConsoleCommand::class,
             CompetitionP9VerifyConsoleCommand::class,
+            CompetitionP10VerifyConsoleCommand::class,
+            CommunityNotificationsDeliverConsoleCommand::class,
+            CompetitionP10ProductionReadinessConsoleCommand::class,
+            CompetitionP10ProductionSmokeConsoleCommand::class,
             MediaScanWorker::class,
             MediaProcessingWorker::class,
             \Qmdb\Modules\MediaProcessing\Application\MediaMaintenanceWorker::class,
@@ -402,6 +411,10 @@ final readonly class ConsoleFoundationModule implements Module
                 $registry->register(ServiceReference::get($resolver, CompetitionP7ProductionReadinessConsoleCommand::class));
                 $registry->register(ServiceReference::get($resolver, CompetitionP8VerifyConsoleCommand::class));
                 $registry->register(ServiceReference::get($resolver, CompetitionP9VerifyConsoleCommand::class));
+                $registry->register(ServiceReference::get($resolver, CompetitionP10VerifyConsoleCommand::class));
+                $registry->register(ServiceReference::get($resolver, CommunityNotificationsDeliverConsoleCommand::class));
+                $registry->register(ServiceReference::get($resolver, CompetitionP10ProductionReadinessConsoleCommand::class));
+                $registry->register(ServiceReference::get($resolver, CompetitionP10ProductionSmokeConsoleCommand::class));
                 foreach (
                     [
                     ['media:scans:process', 'scans:process'], ['media:scans:verify', 'scans:verify'], ['media:processing:process', 'processing:process'], ['media:processing:verify', 'processing:verify'], ['media:assets:verify', 'assets:verify'], ['media:assets:reconcile', 'assets:reconcile'], ['media:storage:verify', 'storage:verify'], ['media:storage:reconcile', 'storage:reconcile'], ['media:staging:cleanup', 'staging:cleanup'], ['media:uploads:expire', 'uploads:expire'], ['competition:p9:production-readiness:verify', 'production-readiness'], ['competition:p9:production-smoke:verify', 'production-smoke'],

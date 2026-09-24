@@ -152,6 +152,7 @@ final readonly class ApplicationHttpModule implements Module
             new ModuleId('media.ingestion'),
             new ModuleId('media.moderation'),
             new ModuleId('media.delivery'),
+            new ModuleId('community.recitation_clips'),
         ];
     }
 
@@ -262,6 +263,17 @@ final readonly class ApplicationHttpModule implements Module
             MediaUploadController::class,
             \Qmdb\Modules\MediaModeration\Interface\Http\MediaGovernanceController::class,
             PrivateMediaDeliveryController::class,
+            \Qmdb\Modules\Community\Interface\Http\CommunityPublicClipController::class,
+            \Qmdb\Modules\Community\Interface\Http\CommunityReportController::class,
+            \Qmdb\Modules\Community\Interface\Http\CommunityFeedController::class,
+            \Qmdb\Modules\Community\Interface\Http\CommunityProfileController::class,
+            \Qmdb\Modules\Community\Interface\Http\CommunityCreatorClipController::class,
+            \Qmdb\Modules\Community\Interface\Http\CommunityClipReviewController::class,
+            \Qmdb\Modules\Community\Interface\Http\CommunityModerationController::class,
+            \Qmdb\Modules\Community\Interface\Http\CommunityModerationAppealController::class,
+            \Qmdb\Modules\Community\Interface\Http\CommunitySocialController::class,
+            \Qmdb\Modules\Community\Interface\Http\CommunityEngagementController::class,
+            \Qmdb\Modules\Community\Interface\Http\CommunityBookmarksController::class,
         ];
         $context->service(ServiceDefinition::factory(
             RouteCollection::class,
