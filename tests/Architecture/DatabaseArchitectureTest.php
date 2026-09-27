@@ -54,6 +54,8 @@ final class DatabaseArchitectureTest extends TestCase
                 || str_contains($normalized, '/Modules/MediaModeration/Infrastructure/')
                 || str_contains($normalized, '/Modules/MediaDelivery/Infrastructure/')
                 || str_contains($normalized, '/Modules/Community/Infrastructure/')
+                || str_contains($normalized, '/Modules/SearchAnalytics/Infrastructure/')
+                || str_contains($normalized, '/Modules/ProductionHardening/Infrastructure/')
                 || str_ends_with($normalized, '/Modules/CertificateIssuance/Interface/Console/CompetitionP8VerifyConsoleCommand.php')
                 || str_ends_with($normalized, '/Modules/MediaCatalog/Interface/Console/CompetitionP9VerifyConsoleCommand.php')
                 || str_ends_with($normalized, '/Modules/Community/Interface/Console/CompetitionP10VerifyConsoleCommand.php')

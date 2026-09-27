@@ -23,6 +23,8 @@ use Qmdb\Modules\CompetitionLive\Infrastructure\Seed\SeedCompetitionP7Authorizat
 use Qmdb\Modules\CertificateIssuance\Infrastructure\Seed\SeedP8AuthorizationCatalog;
 use Qmdb\Modules\MediaCatalog\Infrastructure\Seed\SeedP9MediaAuthorizationCatalog;
 use Qmdb\Modules\Community\Infrastructure\Seed\SeedP10CommunityAuthorizationCatalog;
+use Qmdb\Modules\SearchAnalytics\Infrastructure\Seed\SeedP11SearchAnalyticsReportingCatalog;
+use Qmdb\Modules\ProductionHardening\Infrastructure\Seed\SeedP12ProductionHardeningCatalog;
 use Qmdb\Shared\Schema\Seed\SeedRegistry;
 use Qmdb\Shared\Schema\Seed\SeedRegistryBuilder;
 
@@ -49,5 +51,7 @@ return static function (): SeedRegistry {
         ->register(new SeedP8AuthorizationCatalog())
         ->register(new SeedP9MediaAuthorizationCatalog())
         ->register(new SeedP10CommunityAuthorizationCatalog())
+        ->register(new SeedP11SearchAnalyticsReportingCatalog())
+        ->register(new SeedP12ProductionHardeningCatalog())
         ->build();
 };

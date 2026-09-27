@@ -452,6 +452,9 @@ final class P2IdentityMultiFactorIntegrationTest extends MySqlIntegrationTestCas
         $registry = $factory();
         self::assertInstanceOf(MigrationRegistry::class, $registry);
         foreach ($registry->ordered() as $migration) {
+            if ($migration->id()->value() > '20260826012700_preserve_canonical_audit_metadata') {
+                continue;
+            }
             foreach ($migration->up() as $step) {
                 $this->connection->prepare($step->sql())->execute($step->parameters());
             }

@@ -34,6 +34,8 @@ final class ProductionRouteSecurityPolicyCatalog
         'community.clip.detail', 'community.clip.media', 'community.clip.comments',
         'community.feed.index', 'community.feed.discover',
         'community.profile.detail', 'community.profile.clips',
+        'public.search', 'public.statistics',
+        'api.v1.results.index',
     ];
 
     /** @var list<string> */
@@ -97,6 +99,8 @@ final class ProductionRouteSecurityPolicyCatalog
         'community.clip.comment.create', 'community.clip.comment.reply',
         'community.clip.comment.edit', 'community.clip.comment.remove', 'community.clip.interaction',
         'account.competition_appeal.withdraw.form', 'account.competition_appeal.withdraw',
+        'account.notifications', 'account.notifications.read',
+        'account.privacy', 'account.privacy.request',
     ];
 
     /** @var list<string> */
@@ -108,6 +112,36 @@ final class ProductionRouteSecurityPolicyCatalog
 
     /** @var array<string, string> */
     private const array BASE_ROLE_PERMISSIONS = [
+        'workspace.integrations' => 'workspace.integrations.view',
+        'workspace.integrations.clients.create' => 'workspace.integrations.manage',
+        'workspace.integrations.clients.rotate' => 'workspace.integrations.manage',
+        'workspace.integrations.clients.revoke' => 'workspace.integrations.manage',
+        'workspace.integrations.webhooks.create' => 'workspace.integrations.manage',
+        'workspace.integrations.webhooks.suspend' => 'workspace.integrations.manage',
+        'workspace.privacy' => 'workspace.privacy.view',
+        'platform.integrations' => 'platform.integrations.manage',
+        'platform.integrations.clients.create' => 'platform.integrations.manage',
+        'platform.integrations.clients.rotate' => 'platform.integrations.manage',
+        'platform.integrations.clients.revoke' => 'platform.integrations.manage',
+        'platform.integrations.webhooks.create' => 'platform.integrations.manage',
+        'platform.integrations.webhooks.suspend' => 'platform.integrations.manage',
+        'platform.privacy' => 'platform.privacy.manage',
+        'platform.operations' => 'platform.operations.view',
+        'platform.audit.integrity' => 'platform.audit.verify',
+        'workspace.search' => 'workspace.search.view',
+        'workspace.analytics' => 'workspace.analytics.view',
+        'workspace.reports' => 'workspace.reports.view',
+        'workspace.reports.request' => 'workspace.reports.run',
+        'workspace.reports.approvals' => 'workspace.reports.approve_sensitive',
+        'workspace.reports.approve' => 'workspace.reports.approve_sensitive',
+        'workspace.export.download' => 'workspace.reports.export',
+        'platform.search' => 'platform.search.view',
+        'platform.analytics' => 'platform.analytics.view',
+        'platform.reports' => 'platform.analytics.view',
+        'platform.reports.request' => 'platform.reports.run_national',
+        'platform.reports.approvals' => 'platform.reports.approve_sensitive',
+        'platform.reports.approve' => 'platform.reports.approve_sensitive',
+        'platform.export.download' => 'platform.reports.run_national',
         'workspace.community.clips.index' => 'community.clips.create',
         'workspace.community.clips.create' => 'community.clips.create',
         'workspace.community.clips.update' => 'community.clips.manage_own',
@@ -292,6 +326,20 @@ final class ProductionRouteSecurityPolicyCatalog
 
     /** @var array<string, string> */
     private const array STEP_UP_ACTIONS = [
+        'workspace.integrations.clients.create' => 'P12_PRIVILEGED_OPERATION',
+        'workspace.integrations.clients.rotate' => 'P12_PRIVILEGED_OPERATION',
+        'workspace.integrations.clients.revoke' => 'P12_PRIVILEGED_OPERATION',
+        'workspace.integrations.webhooks.create' => 'P12_PRIVILEGED_OPERATION',
+        'workspace.integrations.webhooks.suspend' => 'P12_PRIVILEGED_OPERATION',
+        'platform.integrations.clients.create' => 'P12_PRIVILEGED_OPERATION',
+        'platform.integrations.clients.rotate' => 'P12_PRIVILEGED_OPERATION',
+        'platform.integrations.clients.revoke' => 'P12_PRIVILEGED_OPERATION',
+        'platform.integrations.webhooks.create' => 'P12_PRIVILEGED_OPERATION',
+        'platform.integrations.webhooks.suspend' => 'P12_PRIVILEGED_OPERATION',
+        'workspace.reports.request' => 'P11_REPORT_RUN',
+        'platform.reports.request' => 'P11_REPORT_RUN',
+        'workspace.reports.approve' => 'P11_REPORT_RUN',
+        'platform.reports.approve' => 'P11_REPORT_RUN',
         'workspace.community.review.publish' => 'CLIP_PUBLISH',
         'workspace.community.moderation.decide' => 'COMMUNITY_MODERATION_DECIDE',
         'workspace.community.moderation.comment.decide' => 'COMMUNITY_MODERATION_DECIDE',
@@ -367,6 +415,22 @@ final class ProductionRouteSecurityPolicyCatalog
 
     /** @var array<string, string> */
     private const array CSRF_ACTIONS = [
+        'account.notifications.read' => 'p12.production_hardening',
+        'account.privacy.request' => 'p12.production_hardening',
+        'workspace.integrations.clients.create' => 'p12.production_hardening',
+        'workspace.integrations.clients.rotate' => 'p12.production_hardening',
+        'workspace.integrations.clients.revoke' => 'p12.production_hardening',
+        'workspace.integrations.webhooks.create' => 'p12.production_hardening',
+        'workspace.integrations.webhooks.suspend' => 'p12.production_hardening',
+        'platform.integrations.clients.create' => 'p12.production_hardening',
+        'platform.integrations.clients.rotate' => 'p12.production_hardening',
+        'platform.integrations.clients.revoke' => 'p12.production_hardening',
+        'platform.integrations.webhooks.create' => 'p12.production_hardening',
+        'platform.integrations.webhooks.suspend' => 'p12.production_hardening',
+        'workspace.reports.request' => 'p11.report.request',
+        'platform.reports.request' => 'p11.report.request',
+        'workspace.reports.approve' => 'p11.report.request',
+        'platform.reports.approve' => 'p11.report.request',
         'account.community.profile.update' => 'community.profile.save',
         'account.community.social.action' => 'community.social',
         'community.clip.comment.create' => 'community.engagement',
@@ -542,6 +606,15 @@ final class ProductionRouteSecurityPolicyCatalog
 
     /** @var list<string> */
     private const array IDEMPOTENT = [
+        'account.notifications.read', 'account.privacy.request',
+        'workspace.integrations.clients.create', 'workspace.integrations.clients.rotate',
+        'workspace.integrations.clients.revoke', 'workspace.integrations.webhooks.create',
+        'workspace.integrations.webhooks.suspend',
+        'platform.integrations.clients.create', 'platform.integrations.clients.rotate',
+        'platform.integrations.clients.revoke', 'platform.integrations.webhooks.create',
+        'platform.integrations.webhooks.suspend',
+        'workspace.reports.request', 'platform.reports.request',
+        'workspace.reports.approve', 'platform.reports.approve',
         'account.community.profile.update',
         'account.community.social.action',
         'community.clip.comment.create', 'community.clip.comment.reply',
@@ -662,13 +735,14 @@ final class ProductionRouteSecurityPolicyCatalog
 
         return new RouteSecurityPolicy(
             $classification,
-            $classification === RouteSecurityClassification::TENANT_REQUIRED || str_starts_with($route, 'workspace.organizations.') || str_starts_with($route, 'workspace.competition.') || str_starts_with($route, 'workspace.certificates.') || str_starts_with($route, 'workspace.media.') || str_starts_with($route, 'workspace.community.'),
+            $classification === RouteSecurityClassification::TENANT_REQUIRED || str_starts_with($route, 'workspace.organizations.') || str_starts_with($route, 'workspace.competition.') || str_starts_with($route, 'workspace.certificates.') || str_starts_with($route, 'workspace.media.') || str_starts_with($route, 'workspace.community.') || str_starts_with($route, 'workspace.search') || str_starts_with($route, 'workspace.analytics') || str_starts_with($route, 'workspace.reports') || str_starts_with($route, 'workspace.export.') || str_starts_with($route, 'workspace.integrations') || str_starts_with($route, 'workspace.privacy'),
             $permission,
             $assurance,
             self::STEP_UP_ACTIONS[$route] ?? null,
             self::CSRF_ACTIONS[$route] ?? null,
             in_array($route, self::IDEMPOTENT, true),
             $classification !== RouteSecurityClassification::PUBLIC
+                || str_starts_with($route, 'api.v1.')
                 || str_contains($route, 'verification')
                 || str_contains($route, '.password_recovery.')
                 || str_contains($route, '.mfa.')
@@ -680,6 +754,16 @@ final class ProductionRouteSecurityPolicyCatalog
     private function assuranceForPermission(?string $permission): ?string
     {
         return match ($permission) {
+            'workspace.integrations.view', 'workspace.privacy.view', 'platform.operations.view' => 'MULTI_FACTOR',
+            'workspace.integrations.manage', 'workspace.privacy.manage', 'platform.integrations.manage',
+            'platform.privacy.manage', 'platform.operations.manage', 'platform.incidents.manage',
+            'platform.backup.verify', 'platform.keys.rotate' => 'PHISHING_RESISTANT',
+            'workspace.search.view', 'workspace.analytics.view', 'workspace.reports.view' => 'PRIMARY',
+            'workspace.analytics.view_sensitive', 'workspace.reports.run' => 'MULTI_FACTOR',
+            'workspace.reports.export', 'workspace.reports.approve_sensitive' => 'PHISHING_RESISTANT',
+            'platform.search.view', 'platform.analytics.view' => 'MULTI_FACTOR',
+            'platform.analytics.view_sensitive', 'platform.reports.run_national',
+            'platform.reports.approve_sensitive', 'platform.p11.audit' => 'PHISHING_RESISTANT',
             'community.clips.create', 'community.clips.manage_own' => 'PRIMARY',
             'workspace.community.clips.review' => 'PHISHING_RESISTANT',
             'workspace.community.moderation.review' => 'MULTI_FACTOR',

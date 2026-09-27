@@ -79,11 +79,11 @@ final class P2SecurityAuthorizationIntegrationTest extends MySqlIntegrationTestC
         ));
         self::assertCount(1, $forwardOnlyCorrections);
         self::assertFalse($forwardOnlyCorrections[0]->reversible());
-        // Preserve the historical P0-P9 prefix while requiring the additive P10 seed.
-        self::assertCount(21, $seeds->ordered());
+        // Preserve the historical P0-P11 prefix while requiring the additive P12 seed.
+        self::assertCount(23, $seeds->ordered());
         self::assertSame(
-            '20260922102000_seed_p10_community_authorization',
-            $seeds->ordered()[20]->id()->value(),
+            '20260927110000_seed_p12_production_hardening_catalog',
+            $seeds->ordered()[22]->id()->value(),
         );
         self::assertSame(64, strlen($seedChecksum->hexadecimal($seeds->ordered()[0])));
 

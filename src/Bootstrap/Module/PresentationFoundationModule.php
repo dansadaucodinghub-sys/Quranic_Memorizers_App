@@ -83,6 +83,10 @@ final readonly class PresentationFoundationModule implements Module
                 new ViewRegistry([
                     'pages.media-governance' => $root . '/resources/views/pages/media-governance.php',
                     'fragments.media-governance' => $root . '/resources/views/fragments/media-governance.php',
+                    'pages.p11-portal' => $root . '/resources/views/pages/p11-portal.php',
+                    'fragments.p11-portal' => $root . '/resources/views/fragments/p11-portal.php',
+                    'pages.p12-portal' => $root . '/resources/views/pages/p12-portal.php',
+                    'fragments.p12-portal' => $root . '/resources/views/fragments/p12-portal.php',
                     'pages.community-clip' => $root . '/resources/views/pages/community-clip.php',
                     'fragments.community-clip' => $root . '/resources/views/fragments/community-clip.php',
                     'pages.community-comments' => $root . '/resources/views/pages/community-comments.php',

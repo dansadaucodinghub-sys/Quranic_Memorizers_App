@@ -90,6 +90,18 @@ use Qmdb\Modules\Community\Interface\Console\CompetitionP10VerifyConsoleCommand;
 use Qmdb\Modules\Community\Interface\Console\CommunityNotificationsDeliverConsoleCommand;
 use Qmdb\Modules\Community\Interface\Console\CompetitionP10ProductionReadinessConsoleCommand;
 use Qmdb\Modules\Community\Interface\Console\CompetitionP10ProductionSmokeConsoleCommand;
+use Qmdb\Modules\SearchAnalytics\Interface\Console\CompetitionP11VerifyConsoleCommand;
+use Qmdb\Modules\SearchAnalytics\Interface\Console\CompetitionP11ProductionReadinessConsoleCommand;
+use Qmdb\Modules\SearchAnalytics\Interface\Console\CompetitionP11ProductionSmokeConsoleCommand;
+use Qmdb\Modules\SearchAnalytics\Interface\Console\P11RuntimeConsoleCommand;
+use Qmdb\Modules\SearchAnalytics\Infrastructure\Persistence\P11MaintenanceService;
+use Qmdb\Modules\SearchAnalytics\Infrastructure\Persistence\MySqlP11Repository;
+use Qmdb\Modules\ProductionHardening\Interface\Console\CompetitionP12VerifyConsoleCommand;
+use Qmdb\Modules\ProductionHardening\Interface\Console\CompetitionP12ProductionReadinessConsoleCommand;
+use Qmdb\Modules\ProductionHardening\Interface\Console\CompetitionP12ProductionSmokeConsoleCommand;
+use Qmdb\Modules\ProductionHardening\Interface\Console\P12RuntimeConsoleCommand;
+use Qmdb\Modules\ProductionHardening\Infrastructure\Persistence\P12MaintenanceService;
+use Qmdb\Modules\ProductionHardening\Infrastructure\Persistence\MySqlProductionHardeningRepository;
 use Qmdb\Modules\MediaCatalog\Interface\Console\MediaP9RuntimeConsoleCommand;
 use Qmdb\Modules\MediaProcessing\Application\MediaScanWorker;
 use Qmdb\Modules\MediaProcessing\Application\MediaProcessingWorker;
@@ -133,6 +145,8 @@ final readonly class ConsoleFoundationModule implements Module
             new ModuleId('media.catalog'),
             new ModuleId('media.processing'),
             new ModuleId('community.recitation_clips'),
+            new ModuleId('search.analytics_reporting'),
+            new ModuleId('production.hardening'),
             new ModuleId('reference.geography'),
             new ModuleId('people.profiles'),
             new ModuleId('organizations.registry'),
@@ -344,6 +358,16 @@ final readonly class ConsoleFoundationModule implements Module
             CommunityNotificationsDeliverConsoleCommand::class,
             CompetitionP10ProductionReadinessConsoleCommand::class,
             CompetitionP10ProductionSmokeConsoleCommand::class,
+            CompetitionP11VerifyConsoleCommand::class,
+            CompetitionP11ProductionReadinessConsoleCommand::class,
+            CompetitionP11ProductionSmokeConsoleCommand::class,
+            MySqlP11Repository::class,
+            P11MaintenanceService::class,
+            CompetitionP12VerifyConsoleCommand::class,
+            CompetitionP12ProductionReadinessConsoleCommand::class,
+            CompetitionP12ProductionSmokeConsoleCommand::class,
+            MySqlProductionHardeningRepository::class,
+            P12MaintenanceService::class,
             MediaScanWorker::class,
             MediaProcessingWorker::class,
             \Qmdb\Modules\MediaProcessing\Application\MediaMaintenanceWorker::class,
@@ -415,6 +439,53 @@ final readonly class ConsoleFoundationModule implements Module
                 $registry->register(ServiceReference::get($resolver, CommunityNotificationsDeliverConsoleCommand::class));
                 $registry->register(ServiceReference::get($resolver, CompetitionP10ProductionReadinessConsoleCommand::class));
                 $registry->register(ServiceReference::get($resolver, CompetitionP10ProductionSmokeConsoleCommand::class));
+                $registry->register(ServiceReference::get($resolver, CompetitionP11VerifyConsoleCommand::class));
+                $registry->register(ServiceReference::get($resolver, CompetitionP11ProductionReadinessConsoleCommand::class));
+                $registry->register(ServiceReference::get($resolver, CompetitionP11ProductionSmokeConsoleCommand::class));
+                $registry->register(ServiceReference::get($resolver, CompetitionP12VerifyConsoleCommand::class));
+                $registry->register(ServiceReference::get($resolver, CompetitionP12ProductionReadinessConsoleCommand::class));
+                $registry->register(ServiceReference::get($resolver, CompetitionP12ProductionSmokeConsoleCommand::class));
+                $p12Repository = ServiceReference::get($resolver, MySqlProductionHardeningRepository::class);
+                $p12Maintenance = ServiceReference::get($resolver, P12MaintenanceService::class);
+                foreach (
+                    [
+                    ['integrations:outbox:publish', 'outbox:publish'],
+                    ['notifications:deliver', 'notifications:deliver'],
+                    ['webhooks:deliver', 'webhooks:deliver'],
+                    ['integrations:webhooks:deliver', 'webhooks:deliver'],
+                    ['integrations:webhooks:retry', 'webhooks:deliver'],
+                    ['integrations:webhooks:verify', 'webhooks:verify'],
+                    ['production-hardening:reconcile', 'work:reconcile'],
+                    ['privacy:retention:process', 'retention:process'],
+                    ['operations:cleanup', 'operations:cleanup'],
+                    ['audit:lineage:verify', 'audit:verify'],
+                    ['privacy:verify', 'privacy:verify'],
+                    ['backups:verify', 'backups:verify'],
+                    ['operations:restores:verify', 'restores:verify'],
+                    ['operations:verify', 'operations:verify'],
+                    ] as [$name, $operation]
+                ) {
+                    $registry->register(new P12RuntimeConsoleCommand($name, $operation, $p12Repository, $p12Maintenance));
+                }
+                $p11Repository = ServiceReference::get($resolver, MySqlP11Repository::class);
+                $p11Maintenance = ServiceReference::get($resolver, P11MaintenanceService::class);
+                foreach (
+                    [
+                    ['search:projections:verify', 'search:verify'],
+                    ['search:projections:rebuild', 'search:rebuild'],
+                    ['search:projections:reconcile', 'search:reconcile'],
+                    ['analytics:metrics:verify', 'metrics:verify'],
+                    ['analytics:snapshots:process', 'snapshots:process'],
+                    ['analytics:snapshots:rebuild', 'snapshots:rebuild'],
+                    ['analytics:snapshots:reconcile', 'snapshots:reconcile'],
+                    ['reports:process', 'reports:process'],
+                    ['reports:verify', 'reports:verify'],
+                    ['reports:reconcile', 'reports:reconcile'],
+                    ['exports:cleanup', 'exports:cleanup'],
+                    ] as [$name, $operation]
+                ) {
+                    $registry->register(new P11RuntimeConsoleCommand($name, $operation, $p11Repository, $p11Maintenance));
+                }
                 foreach (
                     [
                     ['media:scans:process', 'scans:process'], ['media:scans:verify', 'scans:verify'], ['media:processing:process', 'processing:process'], ['media:processing:verify', 'processing:verify'], ['media:assets:verify', 'assets:verify'], ['media:assets:reconcile', 'assets:reconcile'], ['media:storage:verify', 'storage:verify'], ['media:storage:reconcile', 'storage:reconcile'], ['media:staging:cleanup', 'staging:cleanup'], ['media:uploads:expire', 'uploads:expire'], ['competition:p9:production-readiness:verify', 'production-readiness'], ['competition:p9:production-smoke:verify', 'production-smoke'],

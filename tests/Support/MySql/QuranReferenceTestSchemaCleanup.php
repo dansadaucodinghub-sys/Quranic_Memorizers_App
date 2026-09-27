@@ -27,6 +27,28 @@ final class QuranReferenceTestSchemaCleanup
 
         foreach (
             [
+                // P12 operational, privacy, integration, and notification
+                // records must be removed before P11 and identity parents.
+                'p12_operation_receipts', 'restore_verification_runs', 'backup_verification_runs',
+                'backup_artifacts', 'key_rotation_records', 'incident_events', 'security_incidents',
+                'operational_alert_intents', 'operational_metric_samples', 'operational_sli_definitions',
+                'operational_service_catalog', 'audit_verification_runs', 'audit_checkpoints', 'audit_events',
+                'idempotency_records', 'outbox_events', 'data_export_deliveries', 'anonymization_events',
+                'data_holds', 'privacy_request_assignments', 'privacy_request_events', 'privacy_requests',
+                'retention_policy_records', 'privacy_notice_versions', 'processing_purposes',
+                'webhook_delivery_attempts', 'webhook_deliveries',
+                'webhook_subscriptions', 'external_provider_references', 'integration_events',
+                'api_credentials', 'api_client_scopes', 'api_clients', 'notification_dead_letters',
+                'notification_delivery_attempts', 'notification_deliveries', 'notification_preferences',
+                'notifications', 'notification_templates',
+                // P11 projections and report artifacts reference P2-P10
+                // authority tables and must be removed before legacy fixtures.
+                'p11_notification_intents', 'p11_operation_receipts', 'reporting_events',
+                'export_artifacts', 'export_jobs', 'report_runs', 'report_definitions',
+                'analytics_snapshot_events', 'analytics_snapshot_values', 'analytics_snapshot_runs',
+                'analytics_dashboard_widgets', 'analytics_dashboard_definitions',
+                'analytics_metric_definitions', 'analytics_privacy_policies',
+                'search_projection_checkpoints', 'search_projection_events', 'search_projection_documents',
                 // P10 children must be removed before their P9 media, P4 Qur'an,
                 // Person, Account, and Workspace parents in serial test rebuilds.
                 'community_moderation_appeal_reviews', 'community_moderation_appeals',

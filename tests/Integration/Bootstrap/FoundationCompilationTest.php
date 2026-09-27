@@ -39,6 +39,7 @@ use Qmdb\Bootstrap\Module\PeopleIdentityResolutionModule;
 use Qmdb\Bootstrap\Module\PresentationFoundationModule;
 use Qmdb\Bootstrap\Module\QuranReferenceGovernanceModule;
 use Qmdb\Bootstrap\Module\SchemaFoundationModule;
+use Qmdb\Bootstrap\Module\SearchAnalyticsReportingModule;
 use Qmdb\Bootstrap\Module\SecurityWebModule;
 use Qmdb\Bootstrap\Module\SecurityAuthorizationModule;
 use Qmdb\Bootstrap\Module\SecurityAuditModule;
@@ -120,6 +121,8 @@ final class FoundationCompilationTest extends TestCase
             'identity.account_state',
             'media.delivery',
             'people.identity_resolution',
+            'search.analytics_reporting',
+            'production.hardening',
             'application.http',
             'media.processing',
             'record.passport',
@@ -248,6 +251,8 @@ final class FoundationCompilationTest extends TestCase
             new \Qmdb\Bootstrap\Module\MediaModerationModule(),
             new \Qmdb\Bootstrap\Module\MediaDeliveryModule(),
             new \Qmdb\Bootstrap\Module\CommunityRecitationClipsModule(),
+            new SearchAnalyticsReportingModule(dirname(__DIR__, 3)),
+            new \Qmdb\Bootstrap\Module\ProductionHardeningModule(),
             new ApplicationHttpModule(dirname(__DIR__, 3)),
             new ConsoleFoundationModule(),
         ]);

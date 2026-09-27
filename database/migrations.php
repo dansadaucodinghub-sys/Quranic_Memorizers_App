@@ -95,6 +95,15 @@ use Qmdb\Modules\Community\Infrastructure\Migration\AddRecitationClipSupersessio
 use Qmdb\Modules\Community\Infrastructure\Migration\CreateCommunityModerationAppealsMigration;
 use Qmdb\Modules\Community\Infrastructure\Migration\CreateCommunityNotificationIntentMigration;
 use Qmdb\Modules\Community\Infrastructure\Migration\HardenCommunityModerationAppealTenantKeyMigration;
+use Qmdb\Modules\SearchAnalytics\Infrastructure\Migration\CreateSearchProjectionFoundationMigration;
+use Qmdb\Modules\SearchAnalytics\Infrastructure\Migration\CreateAnalyticsCatalogMigration;
+use Qmdb\Modules\SearchAnalytics\Infrastructure\Migration\CreateAnalyticsSnapshotRuntimeMigration;
+use Qmdb\Modules\SearchAnalytics\Infrastructure\Migration\CreateReportingExportRuntimeMigration;
+use Qmdb\Modules\SearchAnalytics\Infrastructure\Migration\HardenAnalyticsSnapshotIdentityMigration;
+use Qmdb\Modules\ProductionHardening\Infrastructure\Migration\CreateNotificationsIntegrationsMigration;
+use Qmdb\Modules\ProductionHardening\Infrastructure\Migration\CreatePrivacySecurityOperationsMigration;
+use Qmdb\Modules\ProductionHardening\Infrastructure\Migration\CreateAuditOutboxIdempotencyMigration;
+use Qmdb\Modules\ProductionHardening\Infrastructure\Migration\CreateOperationalAssuranceMigration;
 use Qmdb\Shared\Schema\Migration\MigrationRegistry;
 use Qmdb\Shared\Schema\Migration\MigrationRegistryBuilder;
 
@@ -197,5 +206,14 @@ return static function (): MigrationRegistry {
         ->register(new CreateCommunityModerationAppealsMigration())
         ->register(new HardenCommunityModerationAppealTenantKeyMigration())
         ->register(new CreateCommunityNotificationIntentMigration())
+        ->register(new CreateSearchProjectionFoundationMigration())
+        ->register(new CreateAnalyticsCatalogMigration())
+        ->register(new CreateAnalyticsSnapshotRuntimeMigration())
+        ->register(new CreateReportingExportRuntimeMigration())
+        ->register(new HardenAnalyticsSnapshotIdentityMigration())
+        ->register(new CreateNotificationsIntegrationsMigration())
+        ->register(new CreatePrivacySecurityOperationsMigration())
+        ->register(new CreateAuditOutboxIdempotencyMigration())
+        ->register(new CreateOperationalAssuranceMigration())
         ->build();
 };

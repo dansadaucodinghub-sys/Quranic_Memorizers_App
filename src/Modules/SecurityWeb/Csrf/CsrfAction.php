@@ -213,4 +213,6 @@ enum CsrfAction: string
     case COMMUNITY_APPEAL = 'community.appeal';
     case COMMUNITY_SOCIAL = 'community.social';
     case COMMUNITY_ENGAGEMENT = 'community.engagement';
+    case P11_REPORT_REQUEST = 'p11.report.request';
+    case P12_PRODUCTION_HARDENING = 'p12.production_hardening';
 }

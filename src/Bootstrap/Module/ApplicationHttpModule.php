@@ -153,6 +153,8 @@ final readonly class ApplicationHttpModule implements Module
             new ModuleId('media.moderation'),
             new ModuleId('media.delivery'),
             new ModuleId('community.recitation_clips'),
+            new ModuleId('search.analytics_reporting'),
+            new ModuleId('production.hardening'),
         ];
     }
 
@@ -274,6 +276,8 @@ final readonly class ApplicationHttpModule implements Module
             \Qmdb\Modules\Community\Interface\Http\CommunitySocialController::class,
             \Qmdb\Modules\Community\Interface\Http\CommunityEngagementController::class,
             \Qmdb\Modules\Community\Interface\Http\CommunityBookmarksController::class,
+            \Qmdb\Modules\SearchAnalytics\Interface\Http\P11PortalController::class,
+            \Qmdb\Modules\ProductionHardening\Interface\Http\P12PortalController::class,
         ];
         $context->service(ServiceDefinition::factory(
             RouteCollection::class,

@@ -70,7 +70,7 @@ use SplFileInfo;
 
 final class SchemaFoundationArchitectureTest extends TestCase
 {
-    public function testProductionManifestsPreserveHistoricalPrefixAndAppendAuthorizedP10Extensions(): void
+    public function testProductionManifestsPreserveHistoricalPrefixAndAppendAuthorizedP12Extensions(): void
     {
         $migrationFactory = require dirname(__DIR__, 2) . '/database/migrations.php';
         $seedFactory = require dirname(__DIR__, 2) . '/database/seeds.php';
@@ -85,7 +85,7 @@ final class SchemaFoundationArchitectureTest extends TestCase
         }
 
         $ordered = $migrations->ordered();
-        self::assertCount(97, $ordered);
+        self::assertCount(106, $ordered);
         self::assertSame(
             [
                 CreateScheduledTaskRunsMigration::class,
@@ -247,8 +247,17 @@ final class SchemaFoundationArchitectureTest extends TestCase
             '20260922113000_create_community_moderation_appeals',
             '20260922113500_harden_community_moderation_appeal_tenant_key',
             '20260922114000_create_community_notification_intents',
+            '20260925100000_create_search_projection_foundation',
+            '20260925101000_create_analytics_catalog',
+            '20260925102000_create_analytics_snapshot_runtime',
+            '20260925103000_create_reporting_export_runtime',
+            '20260925104000_harden_analytics_snapshot_identity',
+            '20260927100000_create_notifications_integrations',
+            '20260927101000_create_privacy_security_operations',
+            '20260927102000_create_audit_outbox_idempotency',
+            '20260927103000_create_operational_assurance',
         ], array_map(static fn (Migration $migration): string => $migration->id()->value(), array_slice($ordered, 86)));
-        self::assertCount(21, $seeds->ordered());
+        self::assertCount(23, $seeds->ordered());
         self::assertSame(
             [
                 SeedFoundationalAuthorizationCatalog::class,
@@ -273,6 +282,14 @@ final class SchemaFoundationArchitectureTest extends TestCase
         self::assertSame(
             '20260922102000_seed_p10_community_authorization',
             $seeds->ordered()[20]->id()->value()
+        );
+        self::assertSame(
+            '20260925110000_seed_p11_search_analytics_reporting_catalog',
+            $seeds->ordered()[21]->id()->value(),
+        );
+        self::assertSame(
+            '20260927110000_seed_p12_production_hardening_catalog',
+            $seeds->ordered()[22]->id()->value(),
         );
     }
 

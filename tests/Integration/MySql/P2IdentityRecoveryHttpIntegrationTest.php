@@ -320,6 +320,19 @@ final class P2IdentityRecoveryHttpIntegrationTest extends MySqlIntegrationTestCa
             ['media.uploads.expire', 300],
             ['media.assets.reconcile', 900],
             ['community.notifications.deliver', 60],
+            ['analytics.snapshots.process', 300],
+            ['analytics.snapshots.reconcile', 900],
+            ['reports.process', 60],
+            ['reports.reconcile', 900],
+            ['exports.cleanup', 900],
+            ['outbox.publish', 15],
+            ['notifications.deliver', 60],
+            ['webhooks.deliver', 30],
+            ['p12.work.reconcile', 300],
+            ['privacy.retention.process', 86400],
+            ['operations.cleanup', 900],
+            ['audit.lineage.verify', 3600],
+            ['backups.metadata.verify', 86400],
             ] as [$taskId, $intervalSeconds]
         ) {
             $this->markCurrentScheduleSlotSucceeded($taskId, $intervalSeconds);

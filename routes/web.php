@@ -70,6 +70,8 @@ use Qmdb\Modules\Community\Interface\Http\CommunityModerationAppealController;
 use Qmdb\Modules\Community\Interface\Http\CommunitySocialController;
 use Qmdb\Modules\Community\Interface\Http\CommunityEngagementController;
 use Qmdb\Modules\Community\Interface\Http\CommunityBookmarksController;
+use Qmdb\Modules\SearchAnalytics\Interface\Http\P11PortalController;
+use Qmdb\Modules\ProductionHardening\Interface\Http\P12PortalController;
 use Qmdb\Shared\Http\Routing\HttpMethod;
 use Qmdb\Shared\Http\Routing\Route;
 use Qmdb\Shared\Http\Routing\RouteCollection;
@@ -143,9 +145,48 @@ return static function (
     CommunitySocialController $communitySocial,
     CommunityEngagementController $communityEngagement,
     CommunityBookmarksController $communityBookmarks,
+    P11PortalController $p11Portal,
+    P12PortalController $p12Portal,
 ): RouteCollection {
     return new RouteCollection(
         new Route('system.home', [HttpMethod::GET], new RoutePattern('/'), $homeController),
+        new Route('public.search', [HttpMethod::GET], new RoutePattern('/search'), $p11Portal),
+        new Route('public.statistics', [HttpMethod::GET], new RoutePattern('/statistics'), $p11Portal),
+        new Route('workspace.search', [HttpMethod::GET], new RoutePattern('/workspace/search'), $p11Portal),
+        new Route('workspace.analytics', [HttpMethod::GET], new RoutePattern('/workspace/analytics'), $p11Portal),
+        new Route('workspace.reports', [HttpMethod::GET], new RoutePattern('/workspace/reports'), $p11Portal),
+        new Route('workspace.reports.request', [HttpMethod::POST], new RoutePattern('/workspace/reports'), $p11Portal),
+        new Route('workspace.reports.approvals', [HttpMethod::GET], new RoutePattern('/workspace/reports/approvals'), $p11Portal),
+        new Route('workspace.reports.approve', [HttpMethod::POST], new RoutePattern('/workspace/reports/{reportId}/approve'), $p11Portal),
+        new Route('workspace.export.download', [HttpMethod::GET], new RoutePattern('/workspace/exports/{exportId}/download'), $p11Portal),
+        new Route('platform.search', [HttpMethod::GET], new RoutePattern('/platform/search'), $p11Portal),
+        new Route('platform.analytics', [HttpMethod::GET], new RoutePattern('/platform/analytics'), $p11Portal),
+        new Route('platform.reports', [HttpMethod::GET], new RoutePattern('/platform/reports'), $p11Portal),
+        new Route('platform.reports.request', [HttpMethod::POST], new RoutePattern('/platform/reports'), $p11Portal),
+        new Route('platform.reports.approvals', [HttpMethod::GET], new RoutePattern('/platform/reports/approvals'), $p11Portal),
+        new Route('platform.reports.approve', [HttpMethod::POST], new RoutePattern('/platform/reports/{reportId}/approve'), $p11Portal),
+        new Route('platform.export.download', [HttpMethod::GET], new RoutePattern('/platform/exports/{exportId}/download'), $p11Portal),
+        new Route('account.notifications', [HttpMethod::GET], new RoutePattern('/account/notifications'), $p12Portal),
+        new Route('account.notifications.read', [HttpMethod::POST], new RoutePattern('/account/notifications/read'), $p12Portal),
+        new Route('account.privacy', [HttpMethod::GET], new RoutePattern('/account/privacy/requests'), $p12Portal),
+        new Route('account.privacy.request', [HttpMethod::POST], new RoutePattern('/account/privacy/requests'), $p12Portal),
+        new Route('workspace.integrations', [HttpMethod::GET], new RoutePattern('/workspace/integrations'), $p12Portal),
+        new Route('workspace.integrations.clients.create', [HttpMethod::POST], new RoutePattern('/workspace/integrations/clients'), $p12Portal),
+        new Route('workspace.integrations.clients.rotate', [HttpMethod::POST], new RoutePattern('/workspace/integrations/clients/rotate'), $p12Portal),
+        new Route('workspace.integrations.clients.revoke', [HttpMethod::POST], new RoutePattern('/workspace/integrations/clients/revoke'), $p12Portal),
+        new Route('workspace.integrations.webhooks.create', [HttpMethod::POST], new RoutePattern('/workspace/integrations/webhooks'), $p12Portal),
+        new Route('workspace.integrations.webhooks.suspend', [HttpMethod::POST], new RoutePattern('/workspace/integrations/webhooks/suspend'), $p12Portal),
+        new Route('workspace.privacy', [HttpMethod::GET], new RoutePattern('/workspace/privacy/requests'), $p12Portal),
+        new Route('platform.integrations', [HttpMethod::GET], new RoutePattern('/platform/integrations'), $p12Portal),
+        new Route('platform.integrations.clients.create', [HttpMethod::POST], new RoutePattern('/platform/integrations/clients'), $p12Portal),
+        new Route('platform.integrations.clients.rotate', [HttpMethod::POST], new RoutePattern('/platform/integrations/clients/rotate'), $p12Portal),
+        new Route('platform.integrations.clients.revoke', [HttpMethod::POST], new RoutePattern('/platform/integrations/clients/revoke'), $p12Portal),
+        new Route('platform.integrations.webhooks.create', [HttpMethod::POST], new RoutePattern('/platform/integrations/webhooks'), $p12Portal),
+        new Route('platform.integrations.webhooks.suspend', [HttpMethod::POST], new RoutePattern('/platform/integrations/webhooks/suspend'), $p12Portal),
+        new Route('platform.privacy', [HttpMethod::GET], new RoutePattern('/platform/privacy/requests'), $p12Portal),
+        new Route('platform.operations', [HttpMethod::GET], new RoutePattern('/platform/operations'), $p12Portal),
+        new Route('platform.audit.integrity', [HttpMethod::GET], new RoutePattern('/platform/audit/integrity'), $p12Portal),
+        new Route('api.v1.results.index', [HttpMethod::GET], new RoutePattern('/api/v1/results'), $p12Portal),
         new Route('certificate.public.verify', [HttpMethod::GET], new RoutePattern('/verify/certificates/{verificationCode}'), $publicCertificateVerification),
         new Route('certificate.public.manifest', [HttpMethod::GET], new RoutePattern('/verify/certificates/{verificationCode}/manifest'), $publicCertificateVerification),
         new Route('certificate.public.pdf', [HttpMethod::GET], new RoutePattern('/verify/certificates/{verificationCode}/pdf'), $publicCertificateVerification),

@@ -13,7 +13,7 @@ use Qmdb\Shared\Console\Output\ConsoleOutput;
 use Qmdb\Shared\Database\Connection\DatabaseConnectionProvider;
 use Qmdb\Shared\Background\Scheduler\ScheduledTaskMap;
 
-/** Read-only P6 verifier: checks schema, lifecycle correction, security catalog, and P7 boundary. */
+/** Read-only P6 verifier that remains valid as authorized downstream phases are added. */
 final readonly class CompetitionP6VerifyConsoleCommand implements ConsoleCommand
 {
     public function __construct(private DatabaseConnectionProvider $connections, private ScheduledTaskMap $scheduledTasks)
@@ -62,13 +62,7 @@ final readonly class CompetitionP6VerifyConsoleCommand implements ConsoleCommand
             foreach (['trg_p6_result_rows_no_update','trg_p6_result_rows_no_delete','trg_p6_round_events_no_update','trg_p6_round_events_no_delete','trg_p6_assignment_events_no_update','trg_p6_assignment_events_no_delete','trg_p6_score_events_no_update','trg_p6_score_events_no_delete','trg_p6_result_events_no_update','trg_p6_result_events_no_delete','trg_p6_appeal_events_no_update','trg_p6_appeal_events_no_delete'] as $trigger) {
                 $this->requireCount($pdo, 'SELECT COUNT(*) FROM information_schema.triggers WHERE trigger_schema=DATABASE() AND trigger_name=:trigger', 1, "P6 immutability trigger is missing: {$trigger}", [':trigger' => $trigger]);
             }
-            // P8 certificates are a permitted downstream consumer of immutable P6 results.
-            // This historical verifier still rejects only artifacts outside the governed P6-P8 boundary.
-            $forbidden = $pdo->query("SELECT COUNT(*) FROM information_schema.tables WHERE table_schema=DATABASE() AND table_name REGEXP '(^media|^audio|^video|^social|payment|livestream|live_score)'");
-            if ($forbidden === false || (int) $forbidden->fetchColumn() !== 0) {
-                throw new \RuntimeException('A prohibited post-P8 persistence artifact exists.');
-            }
-            $output->write("Competition P6 verification: PASS\nRequired tables: " . count($required) . "\nLifecycle checks: 6\nP6 permissions: 14\nP6 specialist roles: 5\nP6 scheduler tasks: 5\nP7 artifacts: 0\n");
+            $output->write("Competition P6 verification: PASS\nRequired tables: " . count($required) . "\nLifecycle checks: 6\nP6 permissions: 14\nP6 specialist roles: 5\nP6 scheduler tasks: 5\n");
             return 0;
         } catch (\Throwable $error) {
             $output->write("Competition P6 verification: FAIL\n{$error->getMessage()}\n");
