@@ -70,7 +70,7 @@ use SplFileInfo;
 
 final class SchemaFoundationArchitectureTest extends TestCase
 {
-    public function testProductionManifestsPreserveHistoricalPrefixAndAppendAuthorizedP12Extensions(): void
+    public function testProductionManifestsPreserveHistoricalPrefixAndAppendAuthorizedP13Extensions(): void
     {
         $migrationFactory = require dirname(__DIR__, 2) . '/database/migrations.php';
         $seedFactory = require dirname(__DIR__, 2) . '/database/seeds.php';
@@ -85,7 +85,7 @@ final class SchemaFoundationArchitectureTest extends TestCase
         }
 
         $ordered = $migrations->ordered();
-        self::assertCount(106, $ordered);
+        self::assertCount(109, $ordered);
         self::assertSame(
             [
                 CreateScheduledTaskRunsMigration::class,
@@ -256,8 +256,11 @@ final class SchemaFoundationArchitectureTest extends TestCase
             '20260927101000_create_privacy_security_operations',
             '20260927102000_create_audit_outbox_idempotency',
             '20260927103000_create_operational_assurance',
+            '20260928100000_create_offline_platform_foundation',
+            '20260928101000_create_pilot_rollout_control_plane',
+            '20260928102000_extend_secure_offline_runtime',
         ], array_map(static fn (Migration $migration): string => $migration->id()->value(), array_slice($ordered, 86)));
-        self::assertCount(23, $seeds->ordered());
+        self::assertCount(24, $seeds->ordered());
         self::assertSame(
             [
                 SeedFoundationalAuthorizationCatalog::class,
@@ -290,6 +293,10 @@ final class SchemaFoundationArchitectureTest extends TestCase
         self::assertSame(
             '20260927110000_seed_p12_production_hardening_catalog',
             $seeds->ordered()[22]->id()->value(),
+        );
+        self::assertSame(
+            '20260928110000_seed_p13_pilot_offline_rollout_catalog',
+            $seeds->ordered()[23]->id()->value(),
         );
     }
 

@@ -102,6 +102,11 @@ use Qmdb\Modules\ProductionHardening\Interface\Console\CompetitionP12ProductionS
 use Qmdb\Modules\ProductionHardening\Interface\Console\P12RuntimeConsoleCommand;
 use Qmdb\Modules\ProductionHardening\Infrastructure\Persistence\P12MaintenanceService;
 use Qmdb\Modules\ProductionHardening\Infrastructure\Persistence\MySqlProductionHardeningRepository;
+use Qmdb\Modules\PilotOfflineRollout\Application\P13MaintenanceService;
+use Qmdb\Modules\PilotOfflineRollout\Interface\Console\CompetitionP13VerifyConsoleCommand;
+use Qmdb\Modules\PilotOfflineRollout\Interface\Console\CompetitionP13ProductionReadinessConsoleCommand;
+use Qmdb\Modules\PilotOfflineRollout\Interface\Console\CompetitionP13ProductionSmokeConsoleCommand;
+use Qmdb\Modules\PilotOfflineRollout\Interface\Console\P13RuntimeConsoleCommand;
 use Qmdb\Modules\MediaCatalog\Interface\Console\MediaP9RuntimeConsoleCommand;
 use Qmdb\Modules\MediaProcessing\Application\MediaScanWorker;
 use Qmdb\Modules\MediaProcessing\Application\MediaProcessingWorker;
@@ -147,6 +152,7 @@ final readonly class ConsoleFoundationModule implements Module
             new ModuleId('community.recitation_clips'),
             new ModuleId('search.analytics_reporting'),
             new ModuleId('production.hardening'),
+            new ModuleId('pilot.offline_rollout'),
             new ModuleId('reference.geography'),
             new ModuleId('people.profiles'),
             new ModuleId('organizations.registry'),
@@ -368,6 +374,10 @@ final readonly class ConsoleFoundationModule implements Module
             CompetitionP12ProductionSmokeConsoleCommand::class,
             MySqlProductionHardeningRepository::class,
             P12MaintenanceService::class,
+            CompetitionP13VerifyConsoleCommand::class,
+            CompetitionP13ProductionReadinessConsoleCommand::class,
+            CompetitionP13ProductionSmokeConsoleCommand::class,
+            P13MaintenanceService::class,
             MediaScanWorker::class,
             MediaProcessingWorker::class,
             \Qmdb\Modules\MediaProcessing\Application\MediaMaintenanceWorker::class,
@@ -445,6 +455,31 @@ final readonly class ConsoleFoundationModule implements Module
                 $registry->register(ServiceReference::get($resolver, CompetitionP12VerifyConsoleCommand::class));
                 $registry->register(ServiceReference::get($resolver, CompetitionP12ProductionReadinessConsoleCommand::class));
                 $registry->register(ServiceReference::get($resolver, CompetitionP12ProductionSmokeConsoleCommand::class));
+                $registry->register(ServiceReference::get($resolver, CompetitionP13VerifyConsoleCommand::class));
+                $registry->register(ServiceReference::get($resolver, CompetitionP13ProductionReadinessConsoleCommand::class));
+                $registry->register(ServiceReference::get($resolver, CompetitionP13ProductionSmokeConsoleCommand::class));
+                $p13Maintenance = ServiceReference::get($resolver, P13MaintenanceService::class);
+                foreach (
+                    [
+                    ['pilot:readiness:verify', 'pilot:readiness'],
+                    ['pilot:health:verify', 'pilot:health'],
+                    ['rollout:plans:verify', 'rollout:plans'],
+                    ['rollout:waves:process', 'rollout:waves'],
+                    ['rollout:waves:verify', 'rollout:waves'],
+                    ['rollout:health:verify', 'rollout:health'],
+                    ['offline:devices:verify', 'devices:verify'],
+                    ['offline:packages:prepare', 'packages:prepare'],
+                    ['offline:packages:verify', 'packages:verify'],
+                    ['offline:packages:expire', 'packages:expire'],
+                    ['offline:packages:reconcile', 'packages:reconcile'],
+                    ['offline:sync:verify', 'sync:verify'],
+                    ['offline:sync:reconcile', 'sync:reconcile'],
+                    ['offline:conflicts:verify', 'conflicts:verify'],
+                    ['offline:receipts:verify', 'receipts:verify'],
+                    ] as [$name, $operation]
+                ) {
+                    $registry->register(new P13RuntimeConsoleCommand($name, $operation, $p13Maintenance));
+                }
                 $p12Repository = ServiceReference::get($resolver, MySqlProductionHardeningRepository::class);
                 $p12Maintenance = ServiceReference::get($resolver, P12MaintenanceService::class);
                 foreach (

@@ -120,6 +120,7 @@ final readonly class AuthorizationCatalogRegistry
         CommunityP10AuthorizationCatalog::extend($builder);
         SearchAnalyticsP11AuthorizationCatalog::extend($builder);
         ProductionHardeningP12AuthorizationCatalog::extend($builder);
+        PilotOfflineRolloutP13AuthorizationCatalog::extend($builder);
 
         return $builder->build();
     }

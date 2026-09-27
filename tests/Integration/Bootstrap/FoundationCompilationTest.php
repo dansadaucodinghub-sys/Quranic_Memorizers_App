@@ -37,6 +37,7 @@ use Qmdb\Bootstrap\Module\OrganizationsAffiliationsModule;
 use Qmdb\Bootstrap\Module\PeopleProfilesModule;
 use Qmdb\Bootstrap\Module\PeopleIdentityResolutionModule;
 use Qmdb\Bootstrap\Module\PresentationFoundationModule;
+use Qmdb\Bootstrap\Module\PilotOfflineRolloutModule;
 use Qmdb\Bootstrap\Module\QuranReferenceGovernanceModule;
 use Qmdb\Bootstrap\Module\SchemaFoundationModule;
 use Qmdb\Bootstrap\Module\SearchAnalyticsReportingModule;
@@ -123,6 +124,7 @@ final class FoundationCompilationTest extends TestCase
             'people.identity_resolution',
             'search.analytics_reporting',
             'production.hardening',
+            'pilot.offline_rollout',
             'application.http',
             'media.processing',
             'record.passport',
@@ -253,6 +255,7 @@ final class FoundationCompilationTest extends TestCase
             new \Qmdb\Bootstrap\Module\CommunityRecitationClipsModule(),
             new SearchAnalyticsReportingModule(dirname(__DIR__, 3)),
             new \Qmdb\Bootstrap\Module\ProductionHardeningModule(),
+            new PilotOfflineRolloutModule(),
             new ApplicationHttpModule(dirname(__DIR__, 3)),
             new ConsoleFoundationModule(),
         ]);

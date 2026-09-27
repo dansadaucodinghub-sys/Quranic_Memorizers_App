@@ -30,7 +30,7 @@ final class CompetitionP12FoundationIntegrationTest extends SchemaMySqlIntegrati
         self::assertSame(16, $this->scalarCount($database, "SELECT COUNT(*) FROM authorization_permissions WHERE owning_module='production.hardening'"));
         self::assertSame(4, $this->scalarCount($database, 'SELECT COUNT(*) FROM processing_purposes'));
         self::assertSame(4, $this->scalarCount($database, "SELECT COUNT(*) FROM privacy_notice_versions WHERE status_code='ACTIVE'"));
-        self::assertSame(6, $this->scalarCount($database, "SELECT COUNT(*) FROM notification_templates WHERE status_code='ACTIVE'"));
+        self::assertSame(6, $this->scalarCount($database, "SELECT COUNT(*) FROM notification_templates WHERE template_code IN ('PRIVACY_REQUEST_STATUS','SECURITY_INCIDENT_NOTICE','INTEGRATION_SUSPENDED') AND status_code='ACTIVE'"));
         self::assertSame(4, $this->scalarCount($database, "SELECT COUNT(*) FROM retention_policy_records WHERE status_code='ACTIVE'"));
         self::assertSame(6, $this->scalarCount($database, "SELECT COUNT(*) FROM operational_service_catalog WHERE status_code='ACTIVE'"));
         self::assertSame(5, $this->scalarCount($database, "SELECT COUNT(*) FROM operational_sli_definitions WHERE status_code='ACTIVE'"));

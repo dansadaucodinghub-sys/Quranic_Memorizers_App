@@ -104,6 +104,9 @@ use Qmdb\Modules\ProductionHardening\Infrastructure\Migration\CreateNotification
 use Qmdb\Modules\ProductionHardening\Infrastructure\Migration\CreatePrivacySecurityOperationsMigration;
 use Qmdb\Modules\ProductionHardening\Infrastructure\Migration\CreateAuditOutboxIdempotencyMigration;
 use Qmdb\Modules\ProductionHardening\Infrastructure\Migration\CreateOperationalAssuranceMigration;
+use Qmdb\Modules\PilotOfflineRollout\Infrastructure\Migration\CreateOfflinePlatformFoundationMigration;
+use Qmdb\Modules\PilotOfflineRollout\Infrastructure\Migration\CreatePilotRolloutControlPlaneMigration;
+use Qmdb\Modules\PilotOfflineRollout\Infrastructure\Migration\ExtendSecureOfflineRuntimeMigration;
 use Qmdb\Shared\Schema\Migration\MigrationRegistry;
 use Qmdb\Shared\Schema\Migration\MigrationRegistryBuilder;
 
@@ -215,5 +218,8 @@ return static function (): MigrationRegistry {
         ->register(new CreatePrivacySecurityOperationsMigration())
         ->register(new CreateAuditOutboxIdempotencyMigration())
         ->register(new CreateOperationalAssuranceMigration())
+        ->register(new CreateOfflinePlatformFoundationMigration())
+        ->register(new CreatePilotRolloutControlPlaneMigration())
+        ->register(new ExtendSecureOfflineRuntimeMigration())
         ->build();
 };

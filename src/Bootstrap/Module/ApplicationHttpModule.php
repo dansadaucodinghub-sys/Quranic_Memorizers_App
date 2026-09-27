@@ -155,6 +155,7 @@ final readonly class ApplicationHttpModule implements Module
             new ModuleId('community.recitation_clips'),
             new ModuleId('search.analytics_reporting'),
             new ModuleId('production.hardening'),
+            new ModuleId('pilot.offline_rollout'),
         ];
     }
 
@@ -278,6 +279,8 @@ final readonly class ApplicationHttpModule implements Module
             \Qmdb\Modules\Community\Interface\Http\CommunityBookmarksController::class,
             \Qmdb\Modules\SearchAnalytics\Interface\Http\P11PortalController::class,
             \Qmdb\Modules\ProductionHardening\Interface\Http\P12PortalController::class,
+            \Qmdb\Modules\PilotOfflineRollout\Interface\Http\P13PortalController::class,
+            \Qmdb\Modules\PilotOfflineRollout\Interface\Http\OfflineProtocolController::class,
         ];
         $context->service(ServiceDefinition::factory(
             RouteCollection::class,

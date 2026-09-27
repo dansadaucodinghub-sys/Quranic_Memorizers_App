@@ -35,6 +35,12 @@ paths = ['''(?:^|[\\/])tests[\\/](?:Support[\\/]Http[\\/]ProductionHttpRuntimeFa
 regexes = ['''test-csrf-signing-key-with-at-least-32-bytes''']
 
 [[allowlists]]
+description = "P13 offline device key table identifier is schema metadata, not a credential"
+condition = "AND"
+paths = ['''(?:^|[\\/])tests[\\/]Support[\\/]MySql[\\/]QuranReferenceTestSchemaCleanup\.php$''']
+regexes = ['''offline_device_keys''']
+
+[[allowlists]]
 description = "Frozen ER relationship identifiers are not credentials"
 condition = "AND"
 paths = ['''(?:^|[\\/])docs[\\/]data[\\/]04-entity-relationship-model\.md$''']

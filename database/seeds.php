@@ -25,6 +25,7 @@ use Qmdb\Modules\MediaCatalog\Infrastructure\Seed\SeedP9MediaAuthorizationCatalo
 use Qmdb\Modules\Community\Infrastructure\Seed\SeedP10CommunityAuthorizationCatalog;
 use Qmdb\Modules\SearchAnalytics\Infrastructure\Seed\SeedP11SearchAnalyticsReportingCatalog;
 use Qmdb\Modules\ProductionHardening\Infrastructure\Seed\SeedP12ProductionHardeningCatalog;
+use Qmdb\Modules\PilotOfflineRollout\Infrastructure\Seed\SeedP13PilotOfflineRolloutCatalog;
 use Qmdb\Shared\Schema\Seed\SeedRegistry;
 use Qmdb\Shared\Schema\Seed\SeedRegistryBuilder;
 
@@ -53,5 +54,6 @@ return static function (): SeedRegistry {
         ->register(new SeedP10CommunityAuthorizationCatalog())
         ->register(new SeedP11SearchAnalyticsReportingCatalog())
         ->register(new SeedP12ProductionHardeningCatalog())
+        ->register(new SeedP13PilotOfflineRolloutCatalog())
         ->build();
 };

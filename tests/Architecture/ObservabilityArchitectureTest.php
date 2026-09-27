@@ -139,6 +139,9 @@ final class ObservabilityArchitectureTest extends TestCase
             if (preg_match('/\.(?:js|jsx|ts|tsx|vue)$/i', $path) !== 1) {
                 continue;
             }
+            if (str_ends_with(str_replace('\\', '/', $path), '/public/offline-service-worker.js')) {
+                continue;
+            }
             self::assertStringContainsString('/public/assets/js/', $path, $path);
             self::assertStringEndsWith('.js', $path, $path);
         }

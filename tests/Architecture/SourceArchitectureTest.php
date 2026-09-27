@@ -152,6 +152,7 @@ final class SourceArchitectureTest extends TestCase
                 || str_contains($path, '/Modules/Community/Infrastructure/')
                 || str_contains($path, '/Modules/SearchAnalytics/Infrastructure/')
                 || str_contains($path, '/Modules/ProductionHardening/Infrastructure/')
+                || str_contains($path, '/Modules/PilotOfflineRollout/Infrastructure/')
                 || str_ends_with($path, '/Modules/CertificateIssuance/Interface/Console/CompetitionP8VerifyConsoleCommand.php')
                 || str_ends_with($path, '/Modules/MediaCatalog/Interface/Console/CompetitionP9VerifyConsoleCommand.php')
                 || str_ends_with($path, '/Modules/MediaCatalog/Interface/Console/MediaP9RuntimeConsoleCommand.php')
@@ -183,7 +184,7 @@ final class SourceArchitectureTest extends TestCase
         }
     }
 
-    public function testOnlyAuthorizedP2ThroughP12DomainModulesExist(): void
+    public function testOnlyAuthorizedP2ThroughP13DomainModulesExist(): void
     {
         $modules = glob($this->projectRoot() . '/src/Modules/*', GLOB_ONLYDIR);
         self::assertIsArray($modules);
@@ -217,6 +218,7 @@ final class SourceArchitectureTest extends TestCase
                 'OrganizationAffiliations',
                 'Organizations',
                 'People',
+                'PilotOfflineRollout',
                 'ProductionHardening',
                 'QuranReferenceGovernance',
                 'RecordPassport',

@@ -55,6 +55,10 @@ final class P2RouteSecurityHardeningTest extends TestCase
             'community.profile.detail', 'community.profile.clips',
             'public.search', 'public.statistics',
             'api.v1.results.index',
+            // These routes use detached device signatures, package authority, timestamps, and nonce replay protection.
+            'offline.v1.devices.authenticate', 'offline.v1.packages.current', 'offline.v1.packages.download',
+            'offline.v1.packages.activate', 'offline.v1.sync.open', 'offline.v1.sync.change',
+            'offline.v1.sync.complete', 'offline.v1.sync.receipts',
         ], true);
         foreach ($routes as $route) {
             $name = $route['name'];

@@ -47,6 +47,7 @@ use Qmdb\Bootstrap\Module\MediaProcessingModule;
 use Qmdb\Bootstrap\Module\CommunityRecitationClipsModule;
 use Qmdb\Bootstrap\Module\SearchAnalyticsReportingModule;
 use Qmdb\Bootstrap\Module\ProductionHardeningModule;
+use Qmdb\Bootstrap\Module\PilotOfflineRolloutModule;
 use Qmdb\Bootstrap\Module\RecordPassportModule;
 use Qmdb\Bootstrap\Module\TrustedArchiveModule;
 use Qmdb\Bootstrap\Module\CertificateVerificationModule;
@@ -262,6 +263,7 @@ final readonly class ApplicationFactory
             new CommunityRecitationClipsModule(),
             new SearchAnalyticsReportingModule($this->projectRoot),
             new ProductionHardeningModule(),
+            new PilotOfflineRolloutModule(),
             new ApplicationHttpModule($this->projectRoot),
             new ConsoleFoundationModule(),
         ]);

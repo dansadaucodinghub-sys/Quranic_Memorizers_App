@@ -215,4 +215,5 @@ enum CsrfAction: string
     case COMMUNITY_ENGAGEMENT = 'community.engagement';
     case P11_REPORT_REQUEST = 'p11.report.request';
     case P12_PRODUCTION_HARDENING = 'p12.production_hardening';
+    case P13_PILOT_OFFLINE_ROLLOUT = 'p13.pilot_offline_rollout';
 }

@@ -48,8 +48,8 @@ final class BackgroundConsoleIntegrationTest extends TestCase
         $result = $this->console()->run(['schedule:run'], '8.5.0', ['json', 'mbstring']);
 
         self::assertSame(ExitCode::FAILURE, $result->exitCode());
-        self::assertStringContainsString("Due: 38\n", $result->standardOutput());
-        self::assertStringContainsString("Failed: 38\n", $result->standardOutput());
+        self::assertStringContainsString("Due: 49\n", $result->standardOutput());
+        self::assertStringContainsString("Failed: 49\n", $result->standardOutput());
         self::assertStringContainsString("Succeeded: 0\n", $result->standardOutput());
         self::assertStringNotContainsString('password', strtolower($result->standardError()));
     }

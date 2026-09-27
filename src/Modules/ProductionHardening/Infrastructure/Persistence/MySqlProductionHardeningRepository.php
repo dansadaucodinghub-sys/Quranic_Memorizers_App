@@ -59,7 +59,10 @@ final readonly class MySqlProductionHardeningRepository
             'permissions' => $this->count("SELECT COUNT(*) FROM authorization_permissions WHERE owning_module='production.hardening' AND status='ACTIVE'"),
             'purposes' => $this->count('SELECT COUNT(*) FROM processing_purposes WHERE effective_until IS NULL'),
             'notices' => $this->count("SELECT COUNT(*) FROM privacy_notice_versions WHERE status_code='ACTIVE'"),
-            'templates' => $this->count("SELECT COUNT(*) FROM notification_templates WHERE status_code='ACTIVE'"),
+            'templates' => $this->count(
+                "SELECT COUNT(*) FROM notification_templates WHERE status_code='ACTIVE'"
+                . " AND template_code IN ('PRIVACY_REQUEST_STATUS','SECURITY_INCIDENT_NOTICE','INTEGRATION_SUSPENDED')",
+            ),
             'policies' => $this->count("SELECT COUNT(*) FROM retention_policy_records WHERE status_code='ACTIVE'"),
             'services' => $this->count("SELECT COUNT(*) FROM operational_service_catalog WHERE status_code='ACTIVE'"),
             'slis' => $this->count("SELECT COUNT(*) FROM operational_sli_definitions WHERE status_code='ACTIVE'"),

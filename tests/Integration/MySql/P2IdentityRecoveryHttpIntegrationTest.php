@@ -333,6 +333,18 @@ final class P2IdentityRecoveryHttpIntegrationTest extends MySqlIntegrationTestCa
             ['operations.cleanup', 900],
             ['audit.lineage.verify', 3600],
             ['backups.metadata.verify', 86400],
+            // The identity-only fixture does not install P13 business tables.
+            ['pilot.readiness.reconcile', 300],
+            ['pilot.health.snapshot', 300],
+            ['rollout.waves.process', 300],
+            ['rollout.health.snapshot', 300],
+            ['offline.packages.process', 30],
+            ['offline.packages.expire', 60],
+            ['offline.packages.reconcile', 300],
+            ['offline.devices.reconcile', 300],
+            ['offline.sync.reconcile', 60],
+            ['offline.conflicts.notify', 300],
+            ['offline.receipts.reconcile', 300],
             ] as [$taskId, $intervalSeconds]
         ) {
             $this->markCurrentScheduleSlotSucceeded($taskId, $intervalSeconds);

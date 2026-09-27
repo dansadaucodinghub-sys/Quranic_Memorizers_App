@@ -25,12 +25,11 @@ final class CompetitionP12ArchitectureTest extends TestCase
     public function testP12DoesNotStartOfflineVenueOrP13Capabilities(): void
     {
         $module = strtolower($this->read('src/Bootstrap/Module/ProductionHardeningModule.php'));
-        $migrations = strtolower($this->read('database/migrations.php'));
 
-        self::assertStringNotContainsString('offlinepackage', $module . $migrations);
-        self::assertStringNotContainsString('offlinesync', $module . $migrations);
-        self::assertStringNotContainsString('pilotrollout', $module . $migrations);
-        self::assertStringNotContainsString('p13', $module . $migrations);
+        self::assertStringNotContainsString('offlinepackage', $module);
+        self::assertStringNotContainsString('offlinesync', $module);
+        self::assertStringNotContainsString('pilotrollout', $module);
+        self::assertStringNotContainsString('p13', $module);
     }
 
     public function testP12RoutesAndViewsUseClosedRegisteredSurfaces(): void

@@ -27,6 +27,20 @@ final class QuranReferenceTestSchemaCleanup
 
         foreach (
             [
+                // P13 device, package, synchronization, pilot, rollout, and
+                // operational records depend on P2-P12 authority tables.
+                'offline_operation_events', 'offline_conflict_decisions', 'offline_conflict_assignments',
+                'offline_sync_receipts', 'offline_sync_changes', 'offline_device_nonces',
+                'offline_package_events', 'offline_package_artifacts', 'offline_package_entities',
+                'offline_device_events', 'offline_device_keys', 'p13_operation_receipts',
+                'venue_reconciliation_reports', 'synchronization_conflicts', 'synchronization_batches',
+                'offline_submission_events', 'offline_assignment_packages', 'venue_edge_node_registrations',
+                'rollout_health_snapshots', 'rollout_events', 'rollout_decisions',
+                'rollout_wave_assignments', 'rollout_waves', 'rollout_plans',
+                'pilot_findings', 'pilot_incidents', 'pilot_events', 'pilot_runs',
+                'pilot_site_readiness_checks', 'pilot_sites', 'pilot_programs',
+                'dead_letter_records', 'background_job_ledger', 'operational_announcements',
+                'configuration_versions', 'feature_flag_versions', 'feature_flags',
                 // P12 operational, privacy, integration, and notification
                 // records must be removed before P11 and identity parents.
                 'p12_operation_receipts', 'restore_verification_runs', 'backup_verification_runs',
