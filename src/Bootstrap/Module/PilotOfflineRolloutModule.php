@@ -5,7 +5,20 @@ declare(strict_types=1);
 namespace Qmdb\Bootstrap\Module;
 
 use Qmdb\Modules\PilotOfflineRollout\Application\P13MaintenanceService;
+use Qmdb\Modules\PilotOfflineRollout\Application\P13AdministrativeMutationService;
+use Qmdb\Modules\PilotOfflineRollout\Application\P13MutationRequestParser;
+use Qmdb\Modules\PilotOfflineRollout\Application\P13RouteRuntimeCatalog;
+use Qmdb\Modules\PilotOfflineRollout\Application\MappedOfflineOperationHandler;
+use Qmdb\Modules\PilotOfflineRollout\Infrastructure\Persistence\OfflineAuthoritativeContextFactory;
+use Qmdb\Modules\PilotOfflineRollout\Application\OfflineOperationDispatcher;
+use Qmdb\Modules\PilotOfflineRollout\Application\P13NativeOfflineOperationAdapter;
+use Qmdb\Modules\PilotOfflineRollout\Application\P6OfflineScoreDraftAdapter;
+use Qmdb\Modules\PilotOfflineRollout\Application\P6OfflineScoreSheetSubmissionAdapter;
+use Qmdb\Modules\PilotOfflineRollout\Application\P7OfflineParticipantOperationAdapter;
 use Qmdb\Modules\PilotOfflineRollout\Application\ScheduledP13MaintenanceTask;
+use Qmdb\Modules\CompetitionLive\Application\CompetitionLiveParticipantWorkflowService;
+use Qmdb\Modules\CompetitionResults\Application\CompetitionP6WorkflowService;
+use Qmdb\Modules\CompetitionScoring\Application\CompetitionScoreSheetService;
 use Qmdb\Modules\PilotOfflineRollout\Domain\CanonicalJson;
 use Qmdb\Modules\PilotOfflineRollout\Domain\DeviceRequestSignature;
 use Qmdb\Modules\PilotOfflineRollout\Domain\OfflineCryptographicMaterial;
@@ -21,8 +34,13 @@ use Qmdb\Modules\PilotOfflineRollout\Interface\Http\OfflineProtocolController;
 use Nyholm\Psr7\Factory\Psr17Factory;
 use Qmdb\Modules\IdentityAccess\Interface\Http\IdentityAccessView;
 use Qmdb\Modules\IdentityAccess\Interface\Http\IdentityCsrf;
+use Qmdb\Modules\IdentityAccess\Security\Fingerprint\IdentityFingerprintGenerator;
+use Qmdb\Modules\IdentityAccess\Security\RateLimit\IdentityRateLimiter;
 use Qmdb\Modules\IdentitySessions\Interface\Http\AuthenticatedRequestGuard;
+use Qmdb\Modules\IdentityMultiFactor\Application\StepUpGuard;
+use Qmdb\Modules\SecurityAuthorization\Application\AuthorizationRequirementGuard;
 use Qmdb\Modules\TenancyContext\Application\TenantContextRequiredGuard;
+use Qmdb\Modules\SecurityAudit\Application\SecurityAuditEventAppender;
 use Qmdb\Shared\Background\Scheduler\FixedIntervalSchedule;
 use Qmdb\Shared\Background\Scheduler\ScheduledTaskId;
 use Qmdb\Shared\Background\Scheduler\ScheduledTaskMap;
@@ -30,6 +48,7 @@ use Qmdb\Shared\Background\Scheduler\ScheduledTaskRegistration;
 use Qmdb\Shared\Configuration\EnvironmentVariables;
 use Qmdb\Shared\Configuration\ApplicationConfiguration;
 use Qmdb\Shared\Database\Connection\DatabaseConnectionProvider;
+use Qmdb\Shared\Database\Transaction\TransactionManager;
 use Qmdb\Shared\DependencyInjection\ClosureServiceFactory;
 use Qmdb\Shared\DependencyInjection\DependencyResolver;
 use Qmdb\Shared\DependencyInjection\ServiceDefinition;
@@ -37,6 +56,7 @@ use Qmdb\Shared\DependencyInjection\ServiceReference;
 use Qmdb\Shared\Module\Module;
 use Qmdb\Shared\Module\ModuleId;
 use Qmdb\Shared\Module\ModuleRegistrationContext;
+use Qmdb\Shared\Time\Clock;
 
 final readonly class PilotOfflineRolloutModule implements Module
 {
@@ -80,15 +100,50 @@ final readonly class PilotOfflineRolloutModule implements Module
             new ClosureServiceFactory(static fn (DependencyResolver $resolver): OfflinePackageCryptography => ServiceReference::get($resolver, OfflineCryptographicMaterial::class)->cryptography()),
         ));
         $context->service(ServiceDefinition::factory(
+            OfflineAuthoritativeContextFactory::class,
+            self::ID,
+            [DatabaseConnectionProvider::class],
+            new ClosureServiceFactory(static fn (DependencyResolver $resolver): OfflineAuthoritativeContextFactory => new OfflineAuthoritativeContextFactory(ServiceReference::get($resolver, DatabaseConnectionProvider::class))),
+        ));
+        $context->service(ServiceDefinition::factory(P7OfflineParticipantOperationAdapter::class, self::ID, [CompetitionLiveParticipantWorkflowService::class], new ClosureServiceFactory(static fn (DependencyResolver $resolver): P7OfflineParticipantOperationAdapter => new P7OfflineParticipantOperationAdapter(ServiceReference::get($resolver, CompetitionLiveParticipantWorkflowService::class)))));
+        $context->service(ServiceDefinition::factory(P6OfflineScoreDraftAdapter::class, self::ID, [CompetitionScoreSheetService::class], new ClosureServiceFactory(static fn (DependencyResolver $resolver): P6OfflineScoreDraftAdapter => new P6OfflineScoreDraftAdapter(ServiceReference::get($resolver, CompetitionScoreSheetService::class)))));
+        $context->service(ServiceDefinition::factory(P6OfflineScoreSheetSubmissionAdapter::class, self::ID, [CompetitionP6WorkflowService::class], new ClosureServiceFactory(static fn (DependencyResolver $resolver): P6OfflineScoreSheetSubmissionAdapter => new P6OfflineScoreSheetSubmissionAdapter(ServiceReference::get($resolver, CompetitionP6WorkflowService::class)))));
+        $context->service(ServiceDefinition::factory(P13NativeOfflineOperationAdapter::class, self::ID, [SecurityAuditEventAppender::class, Clock::class], new ClosureServiceFactory(static fn (DependencyResolver $resolver): P13NativeOfflineOperationAdapter => new P13NativeOfflineOperationAdapter(ServiceReference::get($resolver, SecurityAuditEventAppender::class), ServiceReference::get($resolver, Clock::class)))));
+        $context->service(ServiceDefinition::factory(
+            OfflineOperationDispatcher::class,
+            self::ID,
+            [P7OfflineParticipantOperationAdapter::class, P6OfflineScoreDraftAdapter::class, P6OfflineScoreSheetSubmissionAdapter::class, P13NativeOfflineOperationAdapter::class],
+            new ClosureServiceFactory(static function (DependencyResolver $resolver): OfflineOperationDispatcher {
+                $p7 = ServiceReference::get($resolver, P7OfflineParticipantOperationAdapter::class);
+                $draft = ServiceReference::get($resolver, P6OfflineScoreDraftAdapter::class);
+                $submission = ServiceReference::get($resolver, P6OfflineScoreSheetSubmissionAdapter::class);
+                $native = ServiceReference::get($resolver, P13NativeOfflineOperationAdapter::class);
+                $handlers = [];
+                foreach (['PARTICIPANT_CHECK_IN', 'PARTICIPANT_ABSENT', 'PARTICIPANT_CALLED', 'PARTICIPANT_READY', 'PERFORMANCE_STARTED', 'PERFORMANCE_INTERRUPTED', 'PERFORMANCE_RESUMED', 'PERFORMANCE_COMPLETED'] as $operation) {
+                    $handlers[] = new MappedOfflineOperationHandler($operation, 'P7_LIVE', $p7->apply(...));
+                }
+                $handlers[] = new MappedOfflineOperationHandler('SCORE_DRAFT_SAVED', 'P6_SCORING', $draft->apply(...));
+                $handlers[] = new MappedOfflineOperationHandler('SCORE_SHEET_SUBMITTED', 'P6_SCORING', $submission->apply(...));
+                foreach (['VENUE_INCIDENT_RECORDED', 'OPERATIONAL_NOTE_RECORDED', 'JUDGE_ACKNOWLEDGEMENT_RECORDED'] as $operation) {
+                    $handlers[] = new MappedOfflineOperationHandler($operation, 'P13_OFFLINE', $native->apply(...));
+                }
+
+                return new OfflineOperationDispatcher($handlers);
+            }),
+        ));
+        $context->service(ServiceDefinition::factory(
             MySqlPilotOfflineRolloutRepository::class,
             self::ID,
-            [DatabaseConnectionProvider::class, CanonicalJson::class, OfflinePackageCryptography::class, OfflineOperationPolicy::class, PilotRolloutLifecycle::class],
+            [DatabaseConnectionProvider::class, CanonicalJson::class, OfflinePackageCryptography::class, OfflineOperationPolicy::class, PilotRolloutLifecycle::class, OfflineOperationDispatcher::class, OfflineAuthoritativeContextFactory::class, TransactionManager::class],
             new ClosureServiceFactory(static fn (DependencyResolver $resolver): MySqlPilotOfflineRolloutRepository => new MySqlPilotOfflineRolloutRepository(
                 ServiceReference::get($resolver, DatabaseConnectionProvider::class),
                 ServiceReference::get($resolver, CanonicalJson::class),
                 ServiceReference::get($resolver, OfflinePackageCryptography::class),
                 ServiceReference::get($resolver, OfflineOperationPolicy::class),
                 ServiceReference::get($resolver, PilotRolloutLifecycle::class),
+                ServiceReference::get($resolver, OfflineOperationDispatcher::class),
+                ServiceReference::get($resolver, OfflineAuthoritativeContextFactory::class),
+                ServiceReference::get($resolver, TransactionManager::class),
             )),
         ));
         $context->service(ServiceDefinition::factory(
@@ -97,16 +152,31 @@ final readonly class PilotOfflineRolloutModule implements Module
             [MySqlPilotOfflineRolloutRepository::class],
             new ClosureServiceFactory(static fn (DependencyResolver $resolver): P13MaintenanceService => new P13MaintenanceService(ServiceReference::get($resolver, MySqlPilotOfflineRolloutRepository::class))),
         ));
+        $context->service(ServiceDefinition::instance(P13MutationRequestParser::class, self::ID, new P13MutationRequestParser()));
+        $context->service(ServiceDefinition::instance(P13RouteRuntimeCatalog::class, self::ID, new P13RouteRuntimeCatalog()));
+        $context->service(ServiceDefinition::factory(
+            P13AdministrativeMutationService::class,
+            self::ID,
+            [MySqlPilotOfflineRolloutRepository::class, P13MutationRequestParser::class, SecurityAuditEventAppender::class, Clock::class],
+            new ClosureServiceFactory(static fn (DependencyResolver $resolver): P13AdministrativeMutationService => new P13AdministrativeMutationService(ServiceReference::get($resolver, MySqlPilotOfflineRolloutRepository::class), ServiceReference::get($resolver, P13MutationRequestParser::class), ServiceReference::get($resolver, SecurityAuditEventAppender::class), ServiceReference::get($resolver, Clock::class))),
+        ));
         $context->service(ServiceDefinition::factory(
             P13PortalController::class,
             self::ID,
-            [MySqlPilotOfflineRolloutRepository::class, AuthenticatedRequestGuard::class, TenantContextRequiredGuard::class, IdentityCsrf::class, IdentityAccessView::class],
+            [MySqlPilotOfflineRolloutRepository::class, P13AdministrativeMutationService::class, AuthenticatedRequestGuard::class, TenantContextRequiredGuard::class, AuthorizationRequirementGuard::class, StepUpGuard::class, IdentityRateLimiter::class, IdentityFingerprintGenerator::class, Clock::class, IdentityCsrf::class, IdentityAccessView::class, TransactionManager::class],
             new ClosureServiceFactory(static fn (DependencyResolver $resolver): P13PortalController => new P13PortalController(
                 ServiceReference::get($resolver, MySqlPilotOfflineRolloutRepository::class),
+                ServiceReference::get($resolver, P13AdministrativeMutationService::class),
                 ServiceReference::get($resolver, AuthenticatedRequestGuard::class),
                 ServiceReference::get($resolver, TenantContextRequiredGuard::class),
+                ServiceReference::get($resolver, AuthorizationRequirementGuard::class),
+                ServiceReference::get($resolver, StepUpGuard::class),
+                ServiceReference::get($resolver, IdentityRateLimiter::class),
+                ServiceReference::get($resolver, IdentityFingerprintGenerator::class),
+                ServiceReference::get($resolver, Clock::class),
                 ServiceReference::get($resolver, IdentityCsrf::class),
                 ServiceReference::get($resolver, IdentityAccessView::class),
+                ServiceReference::get($resolver, TransactionManager::class),
             )),
         ));
         $context->service(ServiceDefinition::factory(
@@ -143,6 +213,9 @@ final readonly class PilotOfflineRolloutModule implements Module
             ScheduledTaskMap::class,
             OfflinePackageCryptography::class,
             ApplicationConfiguration::class,
+            OfflineOperationDispatcher::class,
+            P13RouteRuntimeCatalog::class,
+            P13MaintenanceService::class,
         ];
         $context->service(ServiceDefinition::factory(
             CompetitionP13VerifyConsoleCommand::class,
@@ -154,6 +227,9 @@ final readonly class PilotOfflineRolloutModule implements Module
                 ServiceReference::get($resolver, ScheduledTaskMap::class),
                 ServiceReference::get($resolver, OfflinePackageCryptography::class),
                 ServiceReference::get($resolver, ApplicationConfiguration::class),
+                ServiceReference::get($resolver, OfflineOperationDispatcher::class),
+                ServiceReference::get($resolver, P13RouteRuntimeCatalog::class),
+                ServiceReference::get($resolver, P13MaintenanceService::class),
             )),
         ));
         $context->service(ServiceDefinition::factory(
@@ -166,6 +242,9 @@ final readonly class PilotOfflineRolloutModule implements Module
                 ServiceReference::get($resolver, ScheduledTaskMap::class),
                 ServiceReference::get($resolver, OfflinePackageCryptography::class),
                 ServiceReference::get($resolver, ApplicationConfiguration::class),
+                ServiceReference::get($resolver, OfflineOperationDispatcher::class),
+                ServiceReference::get($resolver, P13RouteRuntimeCatalog::class),
+                ServiceReference::get($resolver, P13MaintenanceService::class),
             )),
         ));
         $context->service(ServiceDefinition::factory(
@@ -178,6 +257,9 @@ final readonly class PilotOfflineRolloutModule implements Module
                 ServiceReference::get($resolver, ScheduledTaskMap::class),
                 ServiceReference::get($resolver, OfflinePackageCryptography::class),
                 ServiceReference::get($resolver, ApplicationConfiguration::class),
+                ServiceReference::get($resolver, OfflineOperationDispatcher::class),
+                ServiceReference::get($resolver, P13RouteRuntimeCatalog::class),
+                ServiceReference::get($resolver, P13MaintenanceService::class),
             )),
         ));
     }

@@ -11,6 +11,15 @@ use Qmdb\Modules\PilotOfflineRollout\Domain\DeviceRequestSignature;
 use Qmdb\Modules\PilotOfflineRollout\Domain\OfflineOperationPolicy;
 use Qmdb\Modules\PilotOfflineRollout\Domain\OfflinePackageCryptography;
 use Qmdb\Modules\PilotOfflineRollout\Domain\PilotRolloutLifecycle;
+use Qmdb\Modules\PilotOfflineRollout\Application\MappedOfflineOperationHandler;
+use Qmdb\Modules\PilotOfflineRollout\Application\OfflineOperationDispatcher;
+use Qmdb\Modules\PilotOfflineRollout\Application\OfflineOperationContext;
+use Qmdb\Modules\PilotOfflineRollout\Application\OfflineOperationResult;
+use Qmdb\Modules\PilotOfflineRollout\Application\P13RouteRuntimeCatalog;
+use Qmdb\Modules\PilotOfflineRollout\Application\P13MaintenanceService;
+use Qmdb\Modules\PilotOfflineRollout\Application\P13MutationRequestParser;
+use Qmdb\Modules\PilotOfflineRollout\Infrastructure\Persistence\MySqlPilotOfflineRolloutRepository;
+use Qmdb\Shared\Identifier\UuidV7;
 
 final class P13DomainTest extends TestCase
 {
@@ -75,5 +84,73 @@ final class P13DomainTest extends TestCase
         $lifecycle->assertWaveTransition('ACTIVE', 'CONTAINED');
         $this->expectException(\DomainException::class);
         $lifecycle->assertPilotTransition('DRAFT', 'ACTIVE');
+    }
+
+    public function testRouteRuntimeCatalogCoversExactFrozenSurface(): void
+    {
+        $entries = (new P13RouteRuntimeCatalog())->entries();
+        self::assertCount(62, $entries);
+        self::assertCount(40, P13RouteRuntimeCatalog::MUTATIONS);
+        self::assertCount(35, P13RouteRuntimeCatalog::BROWSER_MUTATIONS);
+        foreach ($entries as $route => $entry) {
+            self::assertNotSame('', $entry['controller'], $route);
+            self::assertNotSame('', $entry['application_service'], $route);
+            self::assertNotSame('', $entry['runtime_capability'], $route);
+        }
+    }
+
+    public function testDispatcherRequiresExactlyOneConcreteHandlerPerAllowedOperation(): void
+    {
+        $handlers = [];
+        foreach (OfflineOperationPolicy::ALLOWED as $operation) {
+            $handlers[] = new MappedOfflineOperationHandler(
+                $operation,
+                in_array($operation, ['SCORE_DRAFT_SAVED', 'SCORE_SHEET_SUBMITTED'], true) ? 'P6_SCORING' : (str_starts_with($operation, 'PARTICIPANT_') || str_starts_with($operation, 'PERFORMANCE_') ? 'P7_LIVE' : 'P13_OFFLINE'),
+                static fn (OfflineOperationContext $context): OfflineOperationResult => OfflineOperationResult::accepted($context->entityId, 2, 'APPLIED'),
+            );
+        }
+        $dispatcher = new OfflineOperationDispatcher($handlers);
+        self::assertCount(13, $dispatcher->registrations());
+
+        $this->expectException(\LogicException::class);
+        new OfflineOperationDispatcher(array_slice($handlers, 0, 12));
+    }
+
+    public function testDispatcherRejectsDuplicateHandlerRegistration(): void
+    {
+        $handlers = [];
+        foreach (OfflineOperationPolicy::ALLOWED as $operation) {
+            $handlers[] = new MappedOfflineOperationHandler($operation, 'P13_OFFLINE', static fn (OfflineOperationContext $context): OfflineOperationResult => OfflineOperationResult::accepted($context->entityId, 2, 'APPLIED'));
+        }
+        $handlers[] = $handlers[0];
+        $this->expectException(\LogicException::class);
+        new OfflineOperationDispatcher($handlers);
+    }
+
+    public function testOfflineOperationResultIsClosedOverAllProtocolOutcomes(): void
+    {
+        $entity = UuidV7::generate();
+        self::assertSame('ACCEPTED', OfflineOperationResult::accepted($entity, 2, 'APPLIED')->status);
+        self::assertSame('DUPLICATE', OfflineOperationResult::duplicate($entity, 2, 'APPLIED')->status);
+        self::assertSame('CONFLICT', OfflineOperationResult::conflict($entity, 'VERSION_MISMATCH', 1)->status);
+        self::assertSame('REJECTED', OfflineOperationResult::rejected($entity, 'PAYLOAD_INVALID')->status);
+    }
+
+    public function testEveryP13MaintenanceOperationHasAnOperationSpecificRepositoryHandler(): void
+    {
+        self::assertCount(17, P13MaintenanceService::HANDLERS);
+        self::assertNotContains('verifyRuntime', P13MaintenanceService::HANDLERS);
+        self::assertCount(count(P13MaintenanceService::HANDLERS), array_unique(P13MaintenanceService::HANDLERS));
+        foreach (P13MaintenanceService::HANDLERS as $operation => $method) {
+            self::assertTrue(method_exists(MySqlPilotOfflineRolloutRepository::class, $method), $operation);
+            self::assertTrue((new \ReflectionMethod(MySqlPilotOfflineRolloutRepository::class, $method))->isPublic(), $operation);
+        }
+    }
+
+    public function testAdministrativeParserTreatsAnUncheckedReadinessCheckboxAsFalse(): void
+    {
+        $parser = new P13MutationRequestParser();
+        self::assertFalse($parser->boolean([], 'blocking'));
+        self::assertTrue($parser->boolean(['blocking' => '1'], 'blocking'));
     }
 }
