@@ -33,7 +33,7 @@ final readonly class QuranPublicReferenceController implements Controller
         }
         try {
             return match ($route) {
-                'quran.public.home' => $this->render($request, 'pages.quran-public-home', 'fragments.quran-public-home', ['summary' => $this->repository->home()], 'title.quran_reference'),
+                'quran.public.home' => $this->render($request, 'pages.quran-public-home', 'fragments.quran-public-home', ['summary' => $this->repository->home() ?? []], 'title.quran_reference'),
                 'quran.public.surahs' => $this->render($request, 'pages.quran-surah-directory', 'fragments.quran-surah-directory', ['surahs' => $this->repository->surahs()], 'title.quran_reference'),
                 'quran.public.surah' => $this->surah($request),
                 'quran.public.ayah' => $this->ayah($request),

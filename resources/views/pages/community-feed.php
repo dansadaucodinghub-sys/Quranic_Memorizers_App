@@ -3,9 +3,9 @@
 declare(strict_types=1);
 
 ?>
-<article class="shell prose-page" data-qmdb-community-feed>
-    <p class="eyebrow"><?= $escape->escapeText($translator->trans('community.clip.eyebrow')) ?></p>
-    <h1><?= $escape->escapeText($translator->trans($view->string('title_key'))) ?></h1>
+<article class="public-inner-page community-public-page" data-qmdb-community-feed>
+    <header class="public-page-hero shell"><p class="eyebrow"><?= $escape->escapeText($translator->trans('community.clip.eyebrow')) ?></p><h1><?= $escape->escapeText($translator->trans($view->string('title_key'))) ?></h1><p class="lead"><?= $escape->escapeText($translator->trans('community.public.body')) ?></p></header>
+    <div class="shell public-feed-workspace">
     <?php if ($view->string('profile_alias') !== '') : ?>
         <p><bdi><?= $escape->escapeText($view->string('profile_alias')) ?></bdi></p>
     <?php endif; ?>
@@ -35,4 +35,5 @@ declare(strict_types=1);
         </div>
     <?php endif; ?>
     <?= $renderer->render('fragments.community-feed', $view, $translator)->trustedHtml() ?>
+    </div>
 </article>

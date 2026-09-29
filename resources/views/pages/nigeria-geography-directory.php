@@ -9,10 +9,9 @@ $areas = $view->list('areas');
 $search = $view->list('search');
 $query = $view->string('search_query');
 ?>
-<article class="shell prose-page geography-directory">
-    <p class="eyebrow">QMDB</p>
-    <h1><?= $escape->escapeText($translator->trans('geography.directory_heading')) ?></h1>
-    <p class="lead"><?= $escape->escapeText($translator->trans('geography.directory_intro')) ?></p>
+<article class="public-inner-page geography-directory">
+    <header class="public-page-hero shell"><p class="eyebrow"><?= $escape->escapeText($translator->trans('geography.public.eyebrow')) ?></p><h1><?= $escape->escapeText($translator->trans('geography.directory_heading')) ?></h1><p class="lead"><?= $escape->escapeText($translator->trans('geography.directory_intro')) ?></p></header>
+    <div class="shell public-directory-workspace">
     <p><?= $escape->escapeText($translator->trans('geography.official_names_note')) ?></p>
     <dl class="facts"><div><dt><?= $escape->escapeText($translator->trans('geography.country')) ?></dt><dd><?= $escape->escapeText((string) ($country['common_name'] ?? 'Nigeria')) ?></dd></div><div><dt><?= $escape->escapeText($translator->trans('geography.result_count')) ?></dt><dd><?= $escape->escapeText((string) count($areas)) ?></dd></div></dl>
     <form method="get" action="/locations/nigeria" class="stacked-form">
@@ -43,4 +42,5 @@ $query = $view->string('search_query');
         <?= $renderer->render('components.geography-level-one-select', new ViewData(['areas' => $areas, 'selected_public_id' => '']), $translator)->trustedHtml() ?>
         <div id="geography-level-two-region" data-qmdb-geography-child-region aria-live="polite" aria-busy="false"><p><?= $escape->escapeText($translator->trans('geography.choose_level_two')) ?></p></div>
     </section>
+    </div>
 </article>

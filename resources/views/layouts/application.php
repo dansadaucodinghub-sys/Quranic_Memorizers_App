@@ -23,19 +23,25 @@ $shared = new ViewData([
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <meta name="theme-color" content="#043f35">
     <meta name="color-scheme" content="light dark">
+    <meta name="description" content="<?= $escape->escapeAttribute($translator->trans('app.description')) ?>">
+    <meta property="og:site_name" content="MusabaqaHub">
+    <meta property="og:title" content="<?= $escape->escapeAttribute($view->string('title')) ?>">
+    <meta property="og:description" content="<?= $escape->escapeAttribute($translator->trans('app.description')) ?>">
+    <meta property="og:type" content="website">
+    <meta property="og:image" content="/assets/brand/musabaqahub-logo.png">
     <link rel="icon" type="image/png" href="/assets/brand/musabaqahub-app-icon.png">
     <link rel="apple-touch-icon" href="/assets/brand/musabaqahub-app-icon.png">
     <link rel="manifest" href="/site.webmanifest">
     <title><?= $escape->escapeText($view->string('title')) ?></title>
     <meta name="qmdb-tenant-context-version" content="<?= $escape->escapeAttribute((string)$view->integer('tenant_context_version')) ?>">
     <meta name="qmdb-tenant-context-present" content="<?= $view->string('tenant_workspace_id') === '' ? '0' : '1' ?>">
-    <?php foreach (['tokens.css', 'base.css', 'layout.css', 'components.css', 'themes.css', 'utilities.css'] as $cssFile): ?>
+    <?php foreach (['tokens.css', 'base.css', 'layout.css', 'components.css', 'public-site.css', 'themes.css', 'utilities.css'] as $cssFile): ?>
     <link rel="stylesheet" href="<?= $escape->escapeAttribute($assets->css($cssFile)->value()) ?>">
     <?php endforeach; ?>
     <script nonce="<?= $escape->escapeAttribute($view->string('nonce')) ?>">(()=>{try{const k='qmdb.theme',a=['system','light','dark','high-contrast','emerald-gold'],v=localStorage.getItem(k);document.documentElement.dataset.theme=a.includes(v)?v:'system'}catch(e){document.documentElement.dataset.theme='system'}})();</script>
     <script type="module" src="<?= $escape->escapeAttribute($assets->js('app.js')->value()) ?>"></script>
 </head>
-<body>
+<body class="<?= $view->boolean('tenant_authenticated') ? 'authenticated-shell' : 'public-shell' ?>">
     <a class="skip-link" href="#main-content"><?= $escape->escapeText($translator->trans('a11y.skip_to_content')) ?></a>
     <?= $renderer->render('components.application-header', $shared, $translator)->trustedHtml() ?>
     <main id="main-content" class="site-main" tabindex="-1"><?= $content->trustedHtml() ?></main>

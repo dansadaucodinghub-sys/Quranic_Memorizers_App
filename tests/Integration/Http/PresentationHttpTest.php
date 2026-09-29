@@ -22,6 +22,13 @@ final class PresentationHttpTest extends TestCase
         self::assertStringContainsString('id="qmdb-live-region"', $html);
         self::assertStringContainsString('id="qmdb-dialog"', $html);
         self::assertStringContainsString('data-qmdb-theme', $html);
+        self::assertStringContainsString('The trusted home of Quran competitions', $html);
+        self::assertStringContainsString('class="mobile-navigation"', $html);
+        self::assertStringContainsString('href="/search?lang=en"', $html);
+        self::assertStringContainsString('href="/statistics?lang=en"', $html);
+        self::assertStringNotContainsString('Current implementation batch', $html);
+        self::assertStringNotContainsString('Current phase', $html);
+        self::assertStringNotContainsString('QMDB-P', $html);
         self::assertStringNotContainsString('onclick=', strtolower($html));
         self::assertMatchesRegularExpression('/<script nonce="[A-Za-z0-9_-]{22,}">/', $html);
         self::assertStringNotContainsString("'unsafe-inline'", $response->getHeaderLine('Content-Security-Policy'));
@@ -53,6 +60,8 @@ final class PresentationHttpTest extends TestCase
         );
         self::assertSame('1', $fragment->getHeaderLine('X-QMDB-Fragment'));
         self::assertSame(1, substr_count((string) $fragment->getBody(), 'data-qmdb-fragment-root'));
+        self::assertStringNotContainsString('Current implementation batch', (string) $page->getBody());
+        self::assertStringNotContainsString('Current phase', (string) $fragment->getBody());
         self::assertStringNotContainsString('<script', strtolower((string) $fragment->getBody()));
         self::assertStringNotContainsString('<html', strtolower((string) $fragment->getBody()));
     }

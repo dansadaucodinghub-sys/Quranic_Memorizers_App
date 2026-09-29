@@ -19,7 +19,7 @@ test('application shell exposes the MusabaqaHub brand and install metadata', asy
     assert.match(header, /class="account-menu"/);
     assert.match(header, /aria-current="page"/);
     assert.match(footer, /brand\.promise/);
-    assert.match(home, /musabaqahub-logo\.png/);
+    assert.match(home, /class="preview-brand-logo" src="\/assets\/brand\/musabaqahub-app-icon\.png"/);
 
     const manifest = JSON.parse(manifestSource);
     assert.equal(manifest.name, 'MusabaqaHub');

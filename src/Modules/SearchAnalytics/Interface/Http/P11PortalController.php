@@ -169,12 +169,16 @@ final readonly class P11PortalController implements Controller
         } else {
             $data['approvals'] = $this->repository->approvalRuns($workspaceId);
         }
+        $titleKey = $scope === 'PUBLIC'
+            ? ($section === 'search' ? 'title.public_search' : 'title.public_statistics')
+            : 'analytics.title';
+
         return $this->views->render(
             $request,
             'pages.p11-portal',
             'fragments.p11-portal',
             new ViewData(array_merge($data, $extra)),
-            'analytics.title',
+            $titleKey,
             $status,
             $csrf['cookie'] ?? null,
             $scope !== 'PUBLIC',
