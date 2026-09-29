@@ -44,7 +44,7 @@ final readonly class IdentityAccessConfigurationFactory
             $this->positive($variables, 'AUTH_RATE_LIMIT_BLOCK_SECONDS', 900),
             $variables->optionalString('AUTH_CONTACT_ENCRYPTION_KEY_ID') ?? 'local-v1',
             $mailFrom,
-            $variables->optionalString('MAIL_FROM_NAME') ?? 'Qur’an Memorizer DB',
+            $variables->optionalString('MAIL_FROM_NAME') ?? 'MusabaqaHub',
         );
     }
 

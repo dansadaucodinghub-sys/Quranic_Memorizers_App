@@ -50,7 +50,7 @@ final class LocalizationFoundationTest extends TestCase
         $catalog = $this->catalog();
         self::assertGreaterThan(40, $catalog->count());
         self::assertContains('title.home', $catalog->keys());
-        self::assertSame('Qur’an Memorizer DB', (new Translator($catalog, new Locale('en')))->trans('app.name'));
+        self::assertSame('MusabaqaHub', (new Translator($catalog, new Locale('en')))->trans('app.name'));
         self::assertStringContainsString(
             'القرآن',
             (new Translator($catalog, new Locale('ar')))->trans('app.name'),

@@ -21,6 +21,11 @@ $shared = new ViewData([
 <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="theme-color" content="#043f35">
+    <meta name="color-scheme" content="light dark">
+    <link rel="icon" type="image/png" href="/assets/brand/musabaqahub-app-icon.png">
+    <link rel="apple-touch-icon" href="/assets/brand/musabaqahub-app-icon.png">
+    <link rel="manifest" href="/site.webmanifest">
     <title><?= $escape->escapeText($view->string('title')) ?></title>
     <meta name="qmdb-tenant-context-version" content="<?= $escape->escapeAttribute((string)$view->integer('tenant_context_version')) ?>">
     <meta name="qmdb-tenant-context-present" content="<?= $view->string('tenant_workspace_id') === '' ? '0' : '1' ?>">

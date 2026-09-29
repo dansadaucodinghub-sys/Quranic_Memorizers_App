@@ -1,13 +1,21 @@
 *, *::before, *::after { box-sizing: border-box; }
-html { background: var(--color-bg); color: var(--color-text); font-family: var(--font-sans); line-height: 1.6; }
-body { margin: 0; min-inline-size: 0; }
-img, svg { max-inline-size: 100%; }
+html { background: var(--color-bg); color: var(--color-text); font-family: var(--font-sans); line-height: 1.6; scroll-behavior: smooth; }
+body { margin: 0; min-inline-size: 0; overflow-wrap: anywhere; }
+body::before { background-image: linear-gradient(45deg, transparent 48%, var(--pattern-color) 49%, var(--pattern-color) 51%, transparent 52%), linear-gradient(-45deg, transparent 48%, var(--pattern-color) 49%, var(--pattern-color) 51%, transparent 52%); background-size: 3.5rem 3.5rem; content: ""; inset: 0; opacity: .42; pointer-events: none; position: fixed; z-index: -1; }
+img, svg, video { block-size: auto; max-inline-size: 100%; }
 a { color: var(--color-primary); text-underline-offset: .2em; }
-a:hover { text-decoration-thickness: .15em; }
-button, select { color: inherit; font: inherit; min-block-size: var(--touch-target); }
-:focus-visible { outline: .2rem solid var(--color-focus); outline-offset: .2rem; }
-h1, h2, h3 { line-height: 1.18; text-wrap: balance; }
-h1 { font-size: clamp(2.1rem, 6vw, 4.7rem); letter-spacing: -.035em; margin-block: var(--space-3) var(--space-6); max-inline-size: 14ch; }
-h2 { font-size: clamp(1.45rem, 3vw, 2.2rem); }
+a:hover { text-decoration-thickness: .13em; }
+button, input, select, textarea { color: inherit; font: inherit; }
+button, select, input:not([type="hidden"]):not([type="checkbox"]):not([type="radio"]) { min-block-size: var(--touch-target); }
+button { cursor: pointer; }
+:focus-visible { outline: .2rem solid var(--color-focus); outline-offset: .18rem; }
+::selection { background: var(--color-accent); color: #11241e; }
+h1, h2, h3, h4 { color: var(--color-primary-strong); font-family: var(--font-display); line-height: 1.15; text-wrap: balance; }
+h1 { font-size: clamp(2.35rem, 6vw, 5.1rem); letter-spacing: -.035em; margin-block: var(--space-3) var(--space-6); max-inline-size: 13ch; }
+h2 { font-size: clamp(1.6rem, 3.5vw, 2.65rem); }
+h3 { font-size: clamp(1.15rem, 2vw, 1.45rem); }
 p { max-inline-size: 68ch; }
 dl, dd { margin: 0; }
+hr { border: 0; border-block-start: var(--border-width) solid var(--color-border); }
+table { border-collapse: separate; border-spacing: 0; inline-size: 100%; }
+th { text-align: start; }

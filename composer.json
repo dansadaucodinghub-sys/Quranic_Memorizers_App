@@ -1,6 +1,6 @@
 {
   "name": "quran-memorizer/qmdb",
-  "description": "Core PHP foundation for the Qur’an Memorizer DB platform.",
+  "description": "Core PHP foundation for the MusabaqaHub Quran competition platform.",
   "type": "project",
   "license": "proprietary",
   "require": {

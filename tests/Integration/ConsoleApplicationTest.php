@@ -26,7 +26,7 @@ final class ConsoleApplicationTest extends TestCase
 
         foreach (
             [
-                'Qur’an Memorizer DB',
+                'MusabaqaHub',
                 'QMDB',
                 'QMDB-P0-FRZ-001',
                 'P3',

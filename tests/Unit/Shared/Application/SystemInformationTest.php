@@ -29,7 +29,7 @@ final class SystemInformationTest extends TestCase
     {
         $information = ($this->handler())(new GetSystemInformation());
 
-        self::assertSame('Qur’an Memorizer DB', $information->applicationName());
+        self::assertSame('MusabaqaHub', $information->applicationName());
         self::assertSame('QMDB', $information->applicationCode());
         self::assertSame('QMDB-P0-FRZ-001', $information->frozenBaseline());
         self::assertSame('P3', $information->currentPhase());

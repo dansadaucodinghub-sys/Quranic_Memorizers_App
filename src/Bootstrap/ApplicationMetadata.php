@@ -19,7 +19,7 @@ final readonly class ApplicationMetadata
     public static function current(): self
     {
         return new self(
-            applicationName: 'Qur’an Memorizer DB',
+            applicationName: 'MusabaqaHub',
             applicationCode: 'QMDB',
             frozenBaseline: 'QMDB-P0-FRZ-001',
             currentPhase: 'P3',

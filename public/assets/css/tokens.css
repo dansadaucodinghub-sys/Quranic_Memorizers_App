@@ -1,36 +1,50 @@
 :root {
     color-scheme: light dark;
     --font-sans: Inter, "Segoe UI", Arial, sans-serif;
+    --font-display: Georgia, "Times New Roman", serif;
     --font-arabic: Tahoma, Arial, sans-serif;
     --space-1: .25rem;
     --space-2: .5rem;
     --space-3: .75rem;
     --space-4: 1rem;
+    --space-5: 1.25rem;
     --space-6: 1.5rem;
     --space-8: 2rem;
+    --space-10: 2.5rem;
     --space-12: 3rem;
-    --radius-sm: .4rem;
-    --radius-md: .75rem;
+    --space-16: 4rem;
+    --radius-sm: .5rem;
+    --radius-md: .8rem;
     --radius-lg: 1.25rem;
+    --radius-xl: 1.75rem;
     --border-width: 1px;
-    --shadow-soft: 0 1rem 2.5rem rgb(15 42 34 / .10);
+    --shadow-soft: 0 1rem 3rem rgb(1 45 37 / .10);
+    --shadow-card: 0 .3rem 1.2rem rgb(1 45 37 / .08);
     --motion-fast: 160ms;
-    --content-width: 74rem;
+    --content-width: 86rem;
     --reading-width: 48rem;
     --touch-target: 2.75rem;
-    --color-bg: #f5f7f3;
-    --color-surface: #ffffff;
-    --color-surface-raised: #eef3ef;
-    --color-text: #14221d;
-    --color-muted: #52645d;
-    --color-border: #cbd6d0;
-    --color-primary: #075e45;
-    --color-primary-strong: #034534;
+    --color-bg: #f7f3e9;
+    --color-surface: #fffdf8;
+    --color-surface-raised: #f0eadc;
+    --color-text: #102a24;
+    --color-muted: #5c6c66;
+    --color-border: #d8d2c4;
+    --color-primary: #075b4b;
+    --color-primary-strong: #043f35;
+    --color-brand-deep: #043f35;
+    --color-primary-soft: #e7f2ed;
     --color-primary-text: #ffffff;
-    --color-accent: #a57922;
+    --color-accent: #bd8623;
+    --color-accent-strong: #926214;
+    --color-accent-soft: #f7ead0;
     --color-focus: #0068d7;
-    --color-ready: #0b6b46;
+    --color-ready: #087a4e;
     --color-not-ready: #9b3c19;
+    --pattern-color: rgb(7 91 75 / .045);
 }
 
-:lang(ar) { --font-sans: var(--font-arabic); }
+:lang(ar) {
+    --font-sans: var(--font-arabic);
+    --font-display: "Noto Naskh Arabic", Tahoma, serif;
+}
